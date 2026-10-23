@@ -62,4 +62,31 @@ describe('SettingsStore', () => {
       rmSync(directory, { recursive: true, force: true })
     }
   })
+
+  it('preserves legacy settings that predate the onboarding flag', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'base-case-settings-'))
+    const database = new AppDatabase(directory)
+
+    try {
+      database.setSetting(
+        'app',
+        JSON.stringify({
+          theme: 'dark',
+          language: 'typescript',
+          editor: { fontSize: 15, tabSize: 4, wordWrap: true },
+          dailyGoalMinutes: 45,
+          reviewReminders: false,
+        }),
+      )
+
+      const settings = new SettingsStore(database).get()
+      expect(settings.theme).toBe('dark')
+      expect(settings.language).toBe('typescript')
+      expect(settings.editor.fontSize).toBe(15)
+      expect(settings.onboardingCompleted).toBe(false)
+    } finally {
+      database.close()
+      rmSync(directory, { recursive: true, force: true })
+    }
+  })
 })
