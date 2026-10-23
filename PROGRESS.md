@@ -12,7 +12,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Area | Status | Last updated | Notes |
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
-| Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete. Pending: final name/trademark check; GitHub milestones/labels/board |
+| Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS end to end verified and packaged; Windows CI green (Node, Go, judge conformance, installers); clean-VM installs pending |
 | Phase 2 — App foundation | Not started | — | Shell, SQLite, content loader, design system |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
@@ -28,14 +28,14 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 1. Download the Windows installers from the Build installers run and install them on a clean Windows VM. Record the result.
 2. Install the macOS DMG on a clean macOS VM (or fresh user account) and record the result.
-3. Decide the final name/domain and complete a basic trademark search. The code currently uses the provisional name “Base Case.”
+3. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
 4. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 5. Start Phase 2: typed IPC envelopes, structured logging, design system, repository layer, FTS5, settings, and Playwright smoke tests.
 
 ## Blockers
 
 - **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. Both packages build successfully in CI.
-- **Name/trademark decision:** required before public branding or a domain purchase. Does not block Phase 2 engineering.
+- **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 2 engineering.
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
@@ -59,8 +59,9 @@ This is the living status document for the project. `PLAN.md` describes the inte
   - Key paths: `.github/workflows/ci.yml`, `.github/workflows/judge.yml`, `packages/schema/src/validate.test.ts`, `services/judge/internal/judge/runtimes.go`, `services/judge/internal/judge/runner_test.go`, `scripts/annotate-go-tests.mjs`.
 - Next:
   - Install the Windows and macOS artifacts on clean VMs and record the result.
-  - Confirm the final name/trademark, then start Phase 2.
+  - Complete the trademark search, then start Phase 2.
 - Notes/decisions:
+  - Product name confirmed as “Base Case” (D019); a trademark search and domain registration remain before public branding.
   - CI now installs Python and Node for judge tests. Production still must bundle or transpile runtimes before alpha (ADR-0010 remains Proposed).
   - The Windows TypeScript timeout was a fixture mismatch, not a judge defect: real problems apply language multipliers, so TypeScript gets 6 s for pair-sum.
 

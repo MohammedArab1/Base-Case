@@ -1,6 +1,6 @@
 # Base Case — Build Plan
 
-> **Working name:** Base Case (not final; avoid any LeetCode-adjacent trademark)
+> **Name:** Base Case (chosen; complete a trademark search before public launch)
 > **Status:** Draft v1.1
 > **Last updated:** 2026-10-23
 > **Owner:** Solo maintainer
@@ -1317,7 +1317,7 @@ These are non-negotiable for a public open-source project:
 
 Trademark-safe naming:
 
-- Working name: Base Case.
+- Name: Base Case.
 - Avoid "Leet," "LeetCode," "NeetCode," and confusingly similar marks.
 - Use "Open on LeetCode" links only as a convenience; do not imply affiliation.
 - Use generic list names such as "The 150" or "75 Essentials" with attribution notes.
@@ -2325,7 +2325,8 @@ The schedule assumes full-time work. Durations are targets, not promises. Each p
 
 **Tasks**
 
-- [ ] Confirm working name/domain and do a basic trademark search. Avoid LeetCode-adjacent names.
+- [x] Confirm the product name: Base Case (D019). Domain registration is still pending.
+- [ ] Do a basic trademark search before public launch. Avoid LeetCode-adjacent names.
 - [x] Confirm licenses: MIT for code, CC BY-SA 4.0 for content. Add `LICENSE`, `CONTENT_LICENSE`, `NOTICE`.
 - [x] Confirm the supported OS matrix: macOS and Windows only. Record minimum versions.
 - [x] Create `PROGRESS.md` from the template in Section 0.1 and record the initial status.
@@ -3032,7 +3033,7 @@ Review this table monthly. Add a "trigger" action for each high risk.
 | D016 | No telemetry | Accepted | Privacy |
 | D017 | No debugger/LSP | Accepted | Scope |
 | D018 | No custom native checkers | Accepted | Security |
-| D019 | Working name "Base Case" | Provisional | Trademark/domain check pending |
+| D019 | Name "Base Case" | Accepted | Chosen by the project owner; trademark search still recommended before public launch |
 | D020 | English-only v1 | Accepted | Focus |
 | D021 | macOS and Windows only for v1 | Accepted | Linux deferred to reduce packaging/sandbox scope |
 | D022 | Maintain `PROGRESS.md` as living status | Accepted | Returning developer needs a reliable "what is done / what is next" record |
@@ -3040,7 +3041,7 @@ Review this table monthly. Add a "trigger" action for each high risk.
 
 ### 16.2 Open questions
 
-- What is the final name/domain? (Decide before Phase 0 ends.)
+- Resolved: the final name is "Base Case" (D019). A trademark search is still recommended before public launch.
 - Resolved: MIT + CC BY-SA 4.0 (ADR-0008).
 - Resolved: macOS 13+, Windows 10 21H2+ / 11 (D021).
 - Bundle runtimes or download language packs on first use? (Phase 3; the 190 MB spike installer leaves ~160 MB under budget.)
