@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pattern question",
+      "body": "Ask a question that points at the relevant pattern without naming the algorithm."
+    },
+    {
+      "level": 2,
+      "title": "Approach",
+      "body": "Describe the approach in one or two sentences."
+    },
+    {
+      "level": 3,
+      "title": "Algorithm outline",
+      "body": "Outline the steps. Do not include complete code."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "Provide pseudocode only after explicit confirmation. Never provide full code before level 4."
+    }
+  ]
+}

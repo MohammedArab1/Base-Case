@@ -1,0 +1,33 @@
+Base Case
+=========
+
+This product includes software and assets from third parties. The project
+itself does not include copied LeetCode statements, examples, constraints, test
+cases, or editorial content.
+
+Planned runtime and library dependencies (verify exact versions and licenses in
+the lockfile and packaged notices before release):
+
+| Component | License | Use |
+|---|---|---|
+| Electron | MIT | Desktop shell |
+| React / React DOM | MIT | Renderer UI |
+| Vite / electron-vite | MIT | Build tooling |
+| electron-builder | MIT | Packaging |
+| CodeMirror 6 | MIT | Code editor |
+| Excalidraw | MIT | System design canvas |
+| react-markdown / remark / rehype | MIT | Markdown rendering |
+| KaTeX | MIT | Math rendering |
+| better-sqlite3 (or node:sqlite) | MIT / Node license | Local database |
+| Zod | MIT | IPC validation |
+| ts-fsrs | MIT | Spaced repetition scheduling |
+| Go standard library | BSD-3-Clause | Judge sidecar |
+| Python (python-build-standalone) | PSF-2.0 | Bundled Python runtime |
+| Node.js | MIT | Bundled JavaScript runtime |
+| JetBrains Mono (optional) | OFL-1.1 | Bundled monospace font |
+
+Content licenses are recorded per problem and design file. The bundled core
+pack is CC BY-SA 4.0. See `CONTENT_LICENSE`.
+
+If you believe a third-party work is included without proper attribution,
+contact the maintainer so it can be corrected or removed promptly.

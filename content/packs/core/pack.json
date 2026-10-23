@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "core",
+  "name": "Core Interview Pack",
+  "version": "0.1.0",
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problems by the Base Case contributors.",
+  "problems": ["pair-sum"],
+  "designs": []
+}

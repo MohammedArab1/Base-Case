@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What do you need to remember?",
+      "body": "As you scan the list, what information about the values you have already seen would let you answer immediately for the current value?"
+    },
+    {
+      "level": 2,
+      "title": "Look for the complement",
+      "body": "For a value `x`, the value you need is `target - x`. A hash map from a value to its index can tell you whether that complement has already appeared."
+    },
+    {
+      "level": 3,
+      "title": "One pass, check before inserting",
+      "body": "Walk through the list once. For each index `i`, check whether `target - nums[i]` is already in the map. If it is, return the stored index and `i`. Otherwise store `nums[i] -> i`. Check before inserting so one element cannot pair with itself."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nseen = empty map\nfor i from 0 to length(nums) - 1:\n    complement = target - nums[i]\n    if complement is in seen:\n        return [seen[complement], i]\n    seen[nums[i]] = i\nreturn empty list\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and test it against the examples."
+    }
+  ]
+}

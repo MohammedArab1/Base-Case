@@ -1,0 +1,55 @@
+name: Content issue
+description: Report an incorrect, ambiguous, or problematic problem or design scenario.
+title: '[Content]: '
+labels: ['type:bug', 'area:content']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Include the content ID (for example `core/pair-sum`). Do not paste
+        copyrighted material from another judge. If you believe content
+        infringes your rights, follow `SECURITY.md` instead of opening a public
+        issue.
+  - type: input
+    id: content-id
+    attributes:
+      label: Content ID
+      placeholder: core/pair-sum
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Issue type
+      options:
+        - Incorrect expected output
+        - Ambiguous statement
+        - Missing or weak tests
+        - Hint leaks too much
+        - Explanation is wrong
+        - Reference solution is wrong
+        - License / attribution problem
+        - Copied or non-original content
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Explain the issue and, for a wrong test, include the input, expected, and actual output.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested fix
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I identified the specific content ID.
+          required: true
+        - label: I did not paste copyrighted content from another judge.
+          required: true

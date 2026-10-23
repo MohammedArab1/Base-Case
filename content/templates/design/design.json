@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "core/example-design",
+  "slug": "example-design",
+  "title": "Design an Example System",
+  "difficulty": "medium",
+  "tags": ["storage", "caching"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Replace with a concrete functional requirement",
+      "Replace with a second functional requirement"
+    ],
+    "nonFunctional": [
+      "Replace with a measurable latency or availability target",
+      "Replace with a scale or durability requirement"
+    ]
+  },
+  "scale": {
+    "writesPerDay": 100000,
+    "readsPerDay": 1000000,
+    "retentionYears": 3
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "referenceScene": "reference.excalidraw.json",
+  "followUps": ["Replace with a deep-dive question", "Replace with a failure-mode question"],
+  "commonMistakes": [
+    "Ignoring the read/write ratio",
+    "Describing components without explaining data flow"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by <author>.",
+  "version": 1
+}

@@ -1,0 +1,12 @@
+node_modules
+dist
+apps/desktop/dist
+out
+build
+coverage
+pnpm-lock.yaml
+PLAN.md
+PROGRESS.md
+**/*.jsonl
+services/judge
+content/packs/**/reference.excalidraw.json

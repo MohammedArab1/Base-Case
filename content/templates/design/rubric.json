@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements-clarification",
+      "name": "Requirements clarification",
+      "description": "Identifies functional and non-functional requirements before drawing.",
+      "levels": {
+        "1": "Jumps to components without clarifying requirements.",
+        "2": "Lists requirements only after prompting, or misses key constraints.",
+        "3": "Clarifies the main requirements and states reasonable assumptions.",
+        "4": "Prioritizes requirements, resolves ambiguity, and records explicit assumptions."
+      }
+    },
+    {
+      "id": "estimation",
+      "name": "Back-of-envelope estimation",
+      "description": "Quantifies traffic, storage, and bandwidth to justify design choices.",
+      "levels": {
+        "1": "No estimates or estimates that are off by orders of magnitude.",
+        "2": "Provides partial estimates with unclear assumptions.",
+        "3": "Produces reasonable estimates for traffic, storage, and read/write ratio.",
+        "4": "Uses estimates to drive design decisions and checks them for consistency."
+      }
+    },
+    {
+      "id": "api-data-model",
+      "name": "API and data model",
+      "description": "Defines the core API and the persisted entities and relationships.",
+      "levels": {
+        "1": "No usable API or data model.",
+        "2": "Sketchy API or model with missing key fields or relationships.",
+        "3": "Defines the main endpoints and entities with sensible keys and indexes.",
+        "4": "Explains API contracts, schema choices, indexes, and evolution strategy."
+      }
+    },
+    {
+      "id": "high-level-architecture",
+      "name": "High-level architecture",
+      "description": "Shows components, boundaries, and the main request/data flow.",
+      "levels": {
+        "1": "Missing or incoherent component diagram.",
+        "2": "Shows components but not how requests or data move between them.",
+        "3": "Shows a coherent architecture and explains the main flows.",
+        "4": "Makes boundaries and failure domains explicit and justifies the shape."
+      }
+    },
+    {
+      "id": "deep-dives",
+      "name": "Deep dives",
+      "description": "Explores the hard parts of the chosen design in detail.",
+      "levels": {
+        "1": "No deep dive, or a deep dive unrelated to the requirements.",
+        "2": "Mentions a hard problem but stays at a high level.",
+        "3": "Explains at least one critical mechanism such as partitioning, caching, or consistency.",
+        "4": "Explains mechanisms, failure behavior, and the trade-offs between alternatives."
+      }
+    },
+    {
+      "id": "trade-offs",
+      "name": "Trade-offs",
+      "description": "Compares alternatives and explains why the chosen design fits.",
+      "levels": {
+        "1": "No alternatives or trade-offs discussed.",
+        "2": "Lists alternatives without connecting them to requirements.",
+        "3": "Compares meaningful alternatives and justifies the choice.",
+        "4": "Quantifies trade-offs and explains when the decision would change."
+      }
+    },
+    {
+      "id": "communication",
+      "name": "Communication",
+      "description": "Explains the design clearly and keeps the discussion structured.",
+      "levels": {
+        "1": "Disorganized or impossible to follow.",
+        "2": "Understandable but unstructured or missing context.",
+        "3": "Clear structure, defined terms, and a coherent narrative.",
+        "4": "Adapts depth to the audience, summarizes decisions, and handles questions precisely."
+      }
+    }
+  ]
+}
