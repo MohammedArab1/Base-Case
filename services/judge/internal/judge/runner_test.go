@@ -57,6 +57,13 @@ func pairSumRequest(language, code string) RunRequest {
 		Limits: Limits{
 			TimeMs:   2000,
 			MemoryMb: 256,
+			// Mirrors content/packs/core/problems/pair-sum/problem.json so the
+			// fixture exercises the same limits as the app.
+			LanguageMultipliers: map[string]float64{
+				"python":     3,
+				"javascript": 3,
+				"typescript": 3,
+			},
 		},
 		Checker: Checker{Kind: "unordered"},
 		Tests: []Test{
