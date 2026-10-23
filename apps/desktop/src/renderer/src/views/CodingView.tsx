@@ -10,6 +10,7 @@ import type {
 import { CodeEditor } from '../components/CodeEditor'
 import { Markdown } from '../components/Markdown'
 import { ResultsPanel } from '../components/ResultsPanel'
+import { matchesShortcut, shortcuts } from '../lib/shortcuts'
 import { useSettings } from '../settings'
 
 interface CodingViewProps {
@@ -71,6 +72,7 @@ function ProblemList({
   readonly onOpenProblem: (problemId: string) => void
 }): JSX.Element {
   const [query, setQuery] = useState('')
+  const [remoteResults, setRemoteResults] = useState<readonly ProblemSummary[] | null>(null)
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase()
@@ -83,33 +85,69 @@ function ProblemList({
     })
   }, [problems, query])
 
+  useEffect(() => {
+    const normalized = query.trim()
+
+    if (!normalized) {
+      setRemoteResults(null)
+      return
+    }
+
+    let cancelled = false
+    setRemoteResults(null)
+
+    const timer = window.setTimeout(() => {
+      void window.baseCase.content
+        .search(normalized)
+        .then((results) => {
+          if (!cancelled) {
+            setRemoteResults(results)
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setRemoteResults(null)
+          }
+        })
+    }, 150)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
+  }, [problems, query])
+
+  const visibleProblems = remoteResults ?? filtered
+  const packCount = new Set(problems.map((problem) => problem.packId)).size
+
   return (
     <div className="workspace-stack">
       <div className="list-toolbar">
         <div>
-          <h2>Core pack</h2>
+          <h2>Problem library</h2>
           <p className="muted">
-            {problems.length} {problems.length === 1 ? 'problem' : 'problems'} · original content
+            {problems.length} {problems.length === 1 ? 'problem' : 'problems'} · {packCount}{' '}
+            {packCount === 1 ? 'pack' : 'packs'} · original content
           </p>
         </div>
         <input
           className="input search-input"
           type="search"
-          placeholder="Search title or pattern"
+          placeholder="Search title, pattern, or statement"
           aria-label="Search problems"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>
 
-      {filtered.length === 0 ? (
+      {visibleProblems.length === 0 ? (
         <section className="empty-state">
           <h2>No matches</h2>
-          <p>Try a different title or pattern. The core pack currently contains one problem.</p>
+          <p>Try a different title, pattern, or phrase from the statement.</p>
         </section>
       ) : (
         <div className="problem-list">
-          {filtered.map((problem) => (
+          {visibleProblems.map((problem) => (
             <button
               key={problem.id}
               type="button"
@@ -124,6 +162,7 @@ function ProblemList({
                       {pattern}
                     </span>
                   ))}
+                  <span className="tag tag-pack">{problem.packName}</span>
                 </span>
               </span>
               <span className={difficultyClass(problem.difficulty)}>{problem.difficulty}</span>
@@ -306,9 +345,15 @@ function ProblemWorkspace({
 
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+      if (matchesShortcut(event, shortcuts.runSamples)) {
         event.preventDefault()
-        void run(event.shiftKey ? 'submit' : 'sample')
+        void run('sample')
+        return
+      }
+
+      if (matchesShortcut(event, shortcuts.submit)) {
+        event.preventDefault()
+        void run('submit')
       }
     }
 

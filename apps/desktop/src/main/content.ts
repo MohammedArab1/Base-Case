@@ -1,10 +1,11 @@
 import { existsSync } from 'node:fs'
-import { readFile } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { app } from 'electron'
 import { validatePack } from '@base-case/schema'
 import type { HintFile, PackManifest, Problem, Signature, TestCase } from '@base-case/schema'
 import type { Language, ProblemDetail, ProblemSummary } from '../shared/types'
+import { getLogger } from './logger'
 
 interface LoadedProblem {
   readonly manifest: Problem
@@ -12,6 +13,17 @@ interface LoadedProblem {
   readonly hints: HintFile
   readonly sampleTests: readonly TestCase[]
   readonly hiddenTests: readonly TestCase[]
+  readonly packId: string
+  readonly packName: string
+  readonly source: ProblemSummary['source']
+}
+
+export interface ProblemSearchDocument {
+  readonly problemId: string
+  readonly title: string
+  readonly patterns: string
+  readonly packName: string
+  readonly body: string
 }
 
 export interface JudgeRunParams {
@@ -54,6 +66,19 @@ function contentRoot(): string {
 
 async function readJson<T>(path: string): Promise<T> {
   return JSON.parse(await readFile(path, 'utf8')) as T
+}
+
+async function packDirectories(root: string): Promise<string[]> {
+  try {
+    const entries = await readdir(root, { withFileTypes: true })
+
+    return entries
+      .filter((entry) => entry.isDirectory() && existsSync(join(root, entry.name, 'pack.json')))
+      .map((entry) => join(root, entry.name))
+      .sort()
+  } catch {
+    return []
+  }
 }
 
 function parseJsonLines<T>(contents: string, path: string): T[] {
@@ -212,24 +237,48 @@ function languageTemplates(signature: Signature): Record<Language, string> {
 }
 
 export class ContentRepository {
-  private readonly packDirectory = join(contentRoot(), 'packs', 'core')
   private readonly problems = new Map<string, LoadedProblem>()
 
-  async initialize(): Promise<void> {
-    const validation = await validatePack(this.packDirectory)
+  async initialize(userDataPath?: string): Promise<void> {
+    this.problems.clear()
 
-    if (!validation.ok || !validation.pack) {
-      const details = validation.issues.map((issue) => `${issue.path}: ${issue.message}`).join('\n')
-      throw new Error(`The bundled content pack is invalid.\n${details}`)
+    const bundledRoot = join(contentRoot(), 'packs')
+    const bundledPacks = await packDirectories(bundledRoot)
+
+    if (bundledPacks.length === 0) {
+      throw new Error(`The bundled content directory has no packs: ${bundledRoot}`)
     }
 
-    for (const slug of validation.pack.problems) {
-      await this.loadProblem(slug, validation.pack)
+    for (const directory of bundledPacks) {
+      await this.loadPack(directory, 'bundled', true)
+    }
+
+    if (userDataPath) {
+      for (const directory of await packDirectories(join(userDataPath, 'packs'))) {
+        await this.loadPack(directory, 'user', false)
+      }
     }
   }
 
   listProblems(): ProblemSummary[] {
     return [...this.problems.values()].map((problem) => this.summary(problem))
+  }
+
+  getSummaries(ids: readonly string[]): ProblemSummary[] {
+    return ids
+      .map((problemId) => this.problems.get(problemId))
+      .filter((problem): problem is LoadedProblem => problem !== undefined)
+      .map((problem) => this.summary(problem))
+  }
+
+  searchDocuments(): ProblemSearchDocument[] {
+    return [...this.problems.values()].map((problem) => ({
+      problemId: problem.manifest.id,
+      title: problem.manifest.title,
+      patterns: problem.manifest.patterns.join(' '),
+      packName: problem.packName,
+      body: problem.statement,
+    }))
   }
 
   getProblem(problemId: string): ProblemDetail {
@@ -292,12 +341,60 @@ export class ContentRepository {
     }
   }
 
-  private async loadProblem(slug: string, pack: PackManifest): Promise<void> {
-    const directory = join(this.packDirectory, 'problems', slug)
+  private async loadPack(
+    directory: string,
+    source: ProblemSummary['source'],
+    required: boolean,
+  ): Promise<void> {
+    const validation = await validatePack(directory)
+
+    if (!validation.ok || !validation.pack) {
+      const details = validation.issues.map((issue) => `${issue.path}: ${issue.message}`).join('\n')
+      const message = `Content pack is invalid: ${directory}\n${details}`
+
+      if (required) {
+        throw new Error(message)
+      }
+
+      getLogger('content').warn('pack.skipped', {
+        directory,
+        issues: validation.issues.slice(0, 5),
+      })
+      return
+    }
+
+    for (const slug of validation.pack.problems) {
+      try {
+        await this.loadProblem(directory, validation.pack, slug, source)
+      } catch (error) {
+        if (required) {
+          throw error
+        }
+
+        getLogger('content').warn('problem.skipped', {
+          pack: validation.pack.id,
+          slug,
+          message: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
+  }
+
+  private async loadProblem(
+    packDirectory: string,
+    pack: PackManifest,
+    slug: string,
+    source: ProblemSummary['source'],
+  ): Promise<void> {
+    const directory = join(packDirectory, 'problems', slug)
     const manifest = await readJson<Problem>(join(directory, 'problem.json'))
 
     if (manifest.id !== `${pack.id}/${slug}`) {
       throw new Error(`Problem ${slug} has an unexpected id: ${manifest.id}`)
+    }
+
+    if (this.problems.has(manifest.id)) {
+      throw new Error(`Duplicate content id "${manifest.id}" from ${packDirectory}`)
     }
 
     const [statement, hints, sampleJsonl, hiddenJsonl] = await Promise.all([
@@ -313,6 +410,9 @@ export class ContentRepository {
       hints,
       sampleTests: parseJsonLines<TestCase>(sampleJsonl, join(directory, manifest.tests.sample)),
       hiddenTests: parseJsonLines<TestCase>(hiddenJsonl, join(directory, manifest.tests.hidden)),
+      packId: pack.id,
+      packName: pack.name,
+      source,
     })
   }
 
@@ -323,6 +423,9 @@ export class ContentRepository {
       title: problem.manifest.title,
       difficulty: problem.manifest.difficulty,
       patterns: problem.manifest.patterns,
+      packId: problem.packId,
+      packName: problem.packName,
+      source: problem.source,
     }
   }
 }

@@ -50,6 +50,7 @@ const api: BaseCaseApi = {
   content: {
     list: () => invoke<ProblemSummary[]>(channels.contentList),
     get: (problemId: string) => invoke<ProblemDetail>(channels.contentGet, problemId),
+    search: (query: string) => invoke<ProblemSummary[]>(channels.contentSearch, query),
   },
   judge: {
     run: (input: RunInput) => invoke<RunResult>(channels.judgeRun, input),

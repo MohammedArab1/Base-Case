@@ -20,6 +20,9 @@ const logs = []
 let child = null
 let cdp = null
 let aiServer = null
+let fatalError = null
+let childExit = null
+let stopping = false
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -35,6 +38,8 @@ function stopElectron() {
   if (!child) {
     return
   }
+
+  stopping = true
 
   try {
     if (process.platform === 'win32') {
@@ -53,6 +58,13 @@ async function waitForTarget() {
   const deadline = Date.now() + 30_000
 
   while (Date.now() < deadline) {
+    if (fatalError) {
+      throw fatalError
+    }
+    if (childExit) {
+      throw new Error(childExit)
+    }
+
     try {
       const response = await fetch(`http://127.0.0.1:${port}/json/list`)
       if (response.ok) {
@@ -148,6 +160,13 @@ async function waitForValue(expression, predicate, label, timeout = 20_000) {
   let lastValue
 
   while (Date.now() < deadline) {
+    if (fatalError) {
+      throw fatalError
+    }
+    if (childExit) {
+      throw new Error(childExit)
+    }
+
     const value = await evaluate(expression)
     lastValue = value
 
@@ -198,7 +217,19 @@ async function main() {
   )
 
   child.stdout.on('data', (chunk) => logs.push(chunk.toString()))
-  child.stderr.on('data', (chunk) => logs.push(chunk.toString()))
+  child.stderr.on('data', (chunk) => {
+    const text = chunk.toString()
+    logs.push(text)
+
+    if (/Uncaught Exception|A JavaScript error occurred in the main process/i.test(text)) {
+      fatalError = new Error(`The Electron main process crashed: ${text.slice(-4000)}`)
+    }
+  })
+  child.on('exit', (code, signal) => {
+    if (!stopping) {
+      childExit = `Electron exited while the smoke test was running (code=${code ?? 'null'}, signal=${signal ?? 'null'})`
+    }
+  })
 
   const target = await waitForTarget()
   cdp = await connect(target.webSocketDebuggerUrl)
@@ -224,6 +255,14 @@ async function main() {
 
   const initialSettings = await evaluate('window.baseCase.settings.get()')
   assert(initialSettings.theme === 'system', 'Default theme is not system')
+
+  const searchResults = await evaluate("window.baseCase.content.search('hash')")
+  assert(
+    Array.isArray(searchResults) && searchResults.some((problem) => problem.id === 'core/pair-sum'),
+    'FTS search did not find pair-sum by pattern',
+  )
+  const emptySearch = await evaluate("window.baseCase.content.search('zzzz-no-match')")
+  assert(emptySearch.length === 0, 'FTS search returned results for a missing term')
 
   const updatedSettings = await evaluate(
     `window.baseCase.settings.update(${JSON.stringify({ theme: 'dark', editor: { fontSize: 15 } })})`,
@@ -492,7 +531,7 @@ export { Solution }
   )
   await waitForValue(
     'document.body.innerText',
-    (value) => typeof value === 'string' && value.includes('Core pack'),
+    (value) => typeof value === 'string' && value.includes('Problem library'),
     'the coding list',
   )
 
@@ -550,10 +589,39 @@ export { Solution }
     'the settings view',
   )
 
+  const platform = await evaluate('window.baseCase.platform')
+  const primaryModifier = platform === 'darwin' ? 'metaKey' : 'ctrlKey'
+  await evaluate(
+    `window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ${primaryModifier}: true, bubbles: true }))`,
+  )
+  await waitForValue(
+    "Boolean(document.querySelector('.command-palette'))",
+    (value) => value === true,
+    'the command palette',
+  )
+
+  const paletteNavigation = await evaluate(
+    `(() => {
+      const item = [...document.querySelectorAll('.command-item')].find((button) =>
+        button.textContent.includes('Go to Today'),
+      )
+      item?.click()
+      return Boolean(item)
+    })()`,
+  )
+  assert(paletteNavigation, 'The command palette did not list navigation commands')
+  await waitForValue(
+    'document.body.innerText',
+    (value) => typeof value === 'string' && value.includes('Reviews, a place to continue'),
+    'the Today view opened from the command palette',
+  )
+
   const summary = {
     problems: problems.length,
     settings: persistedSettings.theme === 'dark' && persistedSettings.editor.fontSize === 15,
     logs: logText.includes('app.start'),
+    search: searchResults.length > 0 && emptySearch.length === 0,
+    palette: paletteNavigation,
     sample: `${sampleResult.passed}/${sampleResult.total} ${sampleResult.status}`,
     submit: `${submitResult.passed}/${submitResult.total} ${submitResult.status}`,
     wrongAnswer: wrongResult.firstFailure?.status,
@@ -569,6 +637,9 @@ export { Solution }
   }
 
   console.log(JSON.stringify(summary, null, 2))
+
+  assert(!fatalError, 'The Electron main process reported an error')
+  assert(!childExit, 'Electron exited before the smoke test finished')
 }
 
 try {

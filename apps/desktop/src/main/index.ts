@@ -15,6 +15,46 @@ const isDevelopment = Boolean(rendererUrl)
 
 app.setName('Base Case')
 
+process.on('uncaughtException', (error) => {
+  let logsPath = 'the app data folder'
+
+  try {
+    logsPath = join(app.getPath('userData'), 'logs')
+  } catch {
+    // app.getPath can fail before the app is ready.
+  }
+
+  getLogger('main').error('process.uncaught_exception', {
+    message: error.stack ?? error.message,
+  })
+
+  try {
+    const choice = dialog.showMessageBoxSync({
+      type: 'error',
+      title: 'Base Case encountered an unexpected error',
+      message: error.message || 'An unexpected error occurred.',
+      detail: `The app will close. Logs are in:\n${logsPath}`,
+      buttons: ['Quit', 'Open logs folder'],
+      defaultId: 0,
+      cancelId: 0,
+    })
+
+    if (choice === 1) {
+      void shell.openPath(logsPath)
+    }
+  } catch {
+    // Never let the error dialog mask the original failure.
+  } finally {
+    app.exit(1)
+  }
+})
+
+process.on('unhandledRejection', (reason) => {
+  getLogger('main').error('process.unhandled_rejection', {
+    message: reason instanceof Error ? (reason.stack ?? reason.message) : String(reason),
+  })
+})
+
 function createWindow(): void {
   const log = getLogger('main')
   const userDataPath = app.getPath('userData')
@@ -126,7 +166,7 @@ app
     const content = new ContentRepository()
 
     try {
-      await content.initialize()
+      await content.initialize(userDataPath)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       logger.error('content.load.failed', { message })
@@ -136,6 +176,7 @@ app
     }
 
     const database = new AppDatabase(userDataPath)
+    database.replaceProblemIndex(content.searchDocuments())
     const settings = new SettingsStore(database)
     const judge = new JudgeClient()
     const ai = new AiService(database, content)

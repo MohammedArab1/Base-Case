@@ -1,6 +1,10 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import type { JSX } from 'react'
 import type { ProblemSummary, SectionId, Stats } from '../../shared/types'
+import { CommandPalette } from './components/CommandPalette'
+import type { Command } from './components/CommandPalette'
+import { matchesShortcut, shortcutLabel, shortcuts } from './lib/shortcuts'
+import { useSettings } from './settings'
 
 const CodingView = lazy(() =>
   import('./views/CodingView').then((module) => ({ default: module.CodingView })),
@@ -59,7 +63,9 @@ const sections: readonly Section[] = [
 ]
 
 function App(): JSX.Element {
+  const { settings, update } = useSettings()
   const [section, setSection] = useState<SectionId>('today')
+  const [paletteOpen, setPaletteOpen] = useState(false)
   const [problems, setProblems] = useState<readonly ProblemSummary[]>([])
   const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null)
   const [stats, setStats] = useState<Stats | null>(null)
@@ -117,6 +123,82 @@ function App(): JSX.Element {
     setSelectedProblemId(problemId)
     setSection('coding')
   }
+
+  const resolvedTheme = useMemo<'light' | 'dark'>(() => {
+    if (settings.theme !== 'system') {
+      return settings.theme
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }, [settings.theme])
+
+  const commands = useMemo<readonly Command[]>(() => {
+    const navigation = sections.map((item, index) => ({
+      id: `nav-${item.id}`,
+      label: `Go to ${item.title}`,
+      section: 'Navigate',
+      shortcut: shortcutLabel({ key: String(index + 1), meta: true }),
+      run: () => setSection(item.id),
+    }))
+
+    return [
+      ...navigation,
+      {
+        id: 'theme-system',
+        label: 'Theme: follow system',
+        section: 'Appearance',
+        run: () => void update({ theme: 'system' }),
+      },
+      {
+        id: 'theme-light',
+        label: 'Theme: light',
+        section: 'Appearance',
+        run: () => void update({ theme: 'light' }),
+      },
+      {
+        id: 'theme-dark',
+        label: 'Theme: dark',
+        section: 'Appearance',
+        run: () => void update({ theme: 'dark' }),
+      },
+      {
+        id: 'theme-toggle',
+        label: `Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} theme`,
+        section: 'Appearance',
+        run: () => void update({ theme: resolvedTheme === 'dark' ? 'light' : 'dark' }),
+      },
+    ]
+  }, [resolvedTheme, update])
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent): void => {
+      if (matchesShortcut(event, shortcuts.commandPalette)) {
+        event.preventDefault()
+        setPaletteOpen((current) => !current)
+        return
+      }
+
+      if (paletteOpen) {
+        if (event.key === 'Escape') {
+          setPaletteOpen(false)
+        }
+        return
+      }
+
+      const index = ['1', '2', '3', '4', '5', '6'].findIndex((key) =>
+        matchesShortcut(event, { key, meta: true }),
+      )
+      const target = index >= 0 ? sections[index] : undefined
+
+      if (target) {
+        event.preventDefault()
+        setSection(target.id)
+      }
+    }
+
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [paletteOpen])
 
   const renderContent = (): JSX.Element => {
     if (loading) {
@@ -228,7 +310,14 @@ function App(): JSX.Element {
           </div>
           <div className="topbar-actions">
             <span className="badge">Offline-first</span>
-            <span className="badge badge-muted">Phase 1 spike</span>
+            <button
+              type="button"
+              className="badge badge-muted badge-action"
+              onClick={() => setPaletteOpen(true)}
+              aria-haspopup="dialog"
+            >
+              {shortcutLabel(shortcuts.commandPalette)} commands
+            </button>
           </div>
         </header>
 
@@ -248,6 +337,12 @@ function App(): JSX.Element {
           </Suspense>
         </main>
       </div>
+
+      <CommandPalette
+        open={paletteOpen}
+        commands={commands}
+        onClose={() => setPaletteOpen(false)}
+      />
     </div>
   )
 }

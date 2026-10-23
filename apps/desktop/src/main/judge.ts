@@ -100,15 +100,23 @@ export class JudgeClient {
 
     this.child = null
 
+    const shutdown = `${JSON.stringify({ id: 'shutdown', method: 'shutdown' })}\n`
+
     try {
-      child.stdin.write(`${JSON.stringify({ id: 'shutdown', method: 'shutdown' })}\n`)
+      if (!child.stdin.destroyed && child.stdin.writable) {
+        child.stdin.end(shutdown)
+      }
     } catch {
       // The process may already be gone.
     }
 
     setTimeout(() => {
-      if (!child.killed) {
-        child.kill()
+      try {
+        if (child.exitCode === null && !child.killed) {
+          child.kill()
+        }
+      } catch {
+        // The process may already be gone.
       }
     }, 500)
   }
@@ -129,6 +137,20 @@ export class JudgeClient {
       this.failAll(new Error(`Judge sidecar failed to start: ${error.message}`))
     })
 
+    // stdin/stdout are pipes to a short-lived sidecar. When the sidecar exits
+    // first, writes surface EPIPE asynchronously; an unhandled stream error
+    // would otherwise crash the entire main process during shutdown.
+    child.stdin.on('error', (error: NodeJS.ErrnoException) => {
+      if (error.code !== 'EPIPE') {
+        console.error(`[judge] stdin error: ${error.message}`)
+      }
+    })
+    child.stdout.on('error', (error: NodeJS.ErrnoException) => {
+      if (error.code !== 'EPIPE') {
+        console.error(`[judge] stdout error: ${error.message}`)
+      }
+    })
+
     child.on('exit', (code, signal) => {
       if (this.child === child) {
         this.child = null
@@ -136,6 +158,12 @@ export class JudgeClient {
       this.failAll(
         new Error(`Judge sidecar exited (code=${code ?? 'null'}, signal=${signal ?? 'null'})`),
       )
+    })
+
+    child.stderr.on('error', (error: NodeJS.ErrnoException) => {
+      if (error.code !== 'EPIPE') {
+        console.error(`[judge] stderr error: ${error.message}`)
+      }
     })
 
     child.stderr.on('data', (chunk: Buffer) => {
@@ -203,7 +231,22 @@ export class JudgeClient {
         })
 
         try {
-          child.stdin.write(`${JSON.stringify({ id, method, params })}\n`)
+          if (child.stdin.destroyed || !child.stdin.writable) {
+            throw new Error('Judge sidecar input is closed.')
+          }
+
+          child.stdin.write(
+            `${JSON.stringify({ id, method, params })}\n`,
+            (error: NodeJS.ErrnoException | null | undefined) => {
+              if (!error || error.code === 'EPIPE') {
+                return
+              }
+
+              clearTimeout(timer)
+              this.pending.delete(id)
+              reject(error)
+            },
+          )
         } catch (error) {
           clearTimeout(timer)
           this.pending.delete(id)

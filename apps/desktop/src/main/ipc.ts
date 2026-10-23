@@ -21,6 +21,7 @@ import {
   runInputSchema,
   saveDraftSchema,
   sceneJsonSchema,
+  searchQuerySchema,
   settingsPatchSchema,
 } from './ipc-schemas'
 import type { JudgeClient } from './judge'
@@ -98,6 +99,9 @@ export function registerIpc({ content, database, judge, ai, settings }: Services
 
   register(channels.contentList, noInputSchema, () => content.listProblems())
   register(channels.contentGet, problemIdSchema, (problemId) => content.getProblem(problemId))
+  register(channels.contentSearch, searchQuerySchema, (query) =>
+    content.getSummaries(database.searchProblemIds(query)),
+  )
 
   register(channels.judgeStatus, noInputSchema, () => judge.status())
 

@@ -6,6 +6,7 @@ export const channels = {
   appInfo: 'app:info',
   contentList: 'content:list',
   contentGet: 'content:get',
+  contentSearch: 'content:search',
   judgeStatus: 'judge:status',
   judgeRun: 'judge:run',
   draftGet: 'draft:get',

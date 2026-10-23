@@ -15,6 +15,8 @@ export const languageSchema = z.enum(['python', 'typescript'])
 
 export const problemIdSchema = z.string().min(1).max(200)
 
+export const searchQuerySchema = z.string().max(200)
+
 export const noInputSchema = z.undefined()
 
 const failureSchema: z.ZodType<Failure> = z.object({

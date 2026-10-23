@@ -283,6 +283,16 @@ h1 {
   color: var(--muted);
 }
 
+button.badge-action {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button.badge-action:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .content {
   width: min(1040px, 100%);
   padding: 30px 40px 56px;

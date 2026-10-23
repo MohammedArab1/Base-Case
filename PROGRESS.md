@@ -14,7 +14,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC envelopes, structured logging, settings/theme, window state, and app menu done; command palette, search, and repositories next |
+| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, and user pack loading done; design system, onboarding, and pack management next |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Continue Phase 2: command palette and shortcut registry, content search with FTS5, user pack directory, repository split, onboarding shell, and Playwright smoke coverage.
+1. Continue Phase 2: pack install/uninstall UI, design-system migration, onboarding shell, repository split, and Playwright smoke coverage.
 2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Re-run the uninstall row of the full Windows checklist on a fresh install.
 4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -39,6 +39,31 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 2 — Command palette, shortcuts, and content search
+
+- Status: in progress
+- Done:
+  - Added a command palette (`Cmd/Ctrl+K`) with fuzzy filtering, keyboard navigation, and commands for navigation and theme switching. It also lists problems from the loaded content packs.
+  - Added a shortcut registry (`lib/shortcuts.ts`) and bound `Cmd/Ctrl+1…6` navigation plus `Cmd/Ctrl+Enter` / `Cmd/Ctrl+Shift+Enter` run and submit handling.
+  - Added SQLite migration 2 with an FTS5 `problem_search` table indexing title, patterns, pack name, and statement.
+  - Added `content:search` to the IPC contract and used it from the coding list with a local-filter fallback while the debounced query runs.
+  - Added user pack loading from `<userData>/packs/*`; invalid or duplicate user packs are logged and skipped, while a broken bundled pack still fails startup.
+  - Problem summaries now carry pack id, pack name, and source; the coding list shows the pack count and a pack tag.
+  - Fixed a main-process crash on quit: the judge client now handles asynchronous EPIPE on `stdin`/`stdout`/`stderr`, checks stream state before shutdown writes, and guards `kill()`.
+  - Added main-process `uncaughtException` and `unhandledRejection` handlers that write to the structured log and show an actionable “Quit / Open logs folder” dialog instead of an opaque crash modal.
+  - Hardened `scripts/smoke-electron.mjs`: it now aborts immediately if Electron writes an uncaught-exception line to stderr or exits mid-test, and it covers FTS search, settings/logs, and the command palette.
+- Tests run:
+  - `pnpm typecheck`, `pnpm lint`, `pnpm test` — passed (24 TypeScript tests plus the Go suites).
+  - `pnpm build && pnpm smoke:e2e` — passed with `search: true`, `palette: true`, 5/5 sample, 39/39 hidden, drafts, scene, AI, key storage, attempts, and backup.
+- Files/PRs:
+  - Key paths: `renderer/src/components/CommandPalette.tsx`, `renderer/src/lib/shortcuts.ts`, `shared/ipc.ts`, `main/ipc-schemas.ts`, `main/content.ts`, `main/database.ts`, `main/judge.ts`, `main/index.ts`.
+- Next:
+  - Pack install/uninstall and content management UI; design-system migration; onboarding shell; Playwright smoke.
+- Notes/decisions:
+  - FTS5 is available in Node's bundled SQLite and is covered by a migration test.
+  - Search queries are quote-escaped and prefix-matched; FTS syntax errors return an empty result instead of failing the IPC call.
+  - The smoke harness treats any main-process uncaught exception as fatal even if Electron shows a modal and keeps the window open.
 
 ### 2026-10-23 — Phase 2 — App foundation, part 1
 

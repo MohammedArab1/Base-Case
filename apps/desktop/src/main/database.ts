@@ -64,6 +64,19 @@ const migrations = [
       );
     `,
   },
+  {
+    version: 2,
+    sql: `
+      CREATE VIRTUAL TABLE IF NOT EXISTS problem_search USING fts5(
+        problem_id UNINDEXED,
+        title,
+        patterns,
+        pack_name,
+        body,
+        tokenize = 'unicode61 remove_diacritics 2'
+      );
+    `,
+  },
 ]
 
 export class AppDatabase {
@@ -198,6 +211,63 @@ export class AppDatabase {
 
   deleteSetting(key: string): void {
     this.db.prepare('DELETE FROM settings WHERE key = ?').run(key)
+  }
+
+  replaceProblemIndex(
+    rows: readonly {
+      readonly problemId: string
+      readonly title: string
+      readonly patterns: string
+      readonly packName: string
+      readonly body: string
+    }[],
+  ): void {
+    this.db.exec('BEGIN')
+
+    try {
+      this.db.exec('DELETE FROM problem_search')
+      const insert = this.db.prepare(
+        'INSERT INTO problem_search (problem_id, title, patterns, pack_name, body) VALUES (?, ?, ?, ?, ?)',
+      )
+
+      for (const row of rows) {
+        insert.run(row.problemId, row.title, row.patterns, row.packName, row.body)
+      }
+
+      this.db.exec('COMMIT')
+    } catch (error) {
+      this.db.exec('ROLLBACK')
+      throw error
+    }
+  }
+
+  searchProblemIds(query: string, limit = 50): string[] {
+    const terms = query.trim().split(/\s+/).filter(Boolean).slice(0, 10)
+
+    if (terms.length === 0) {
+      return []
+    }
+
+    // Quote each term so punctuation cannot become FTS operators, then use a
+    // prefix match so typing "pai" finds "pair".
+    const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' AND ')
+
+    try {
+      const rows = this.db
+        .prepare(
+          `SELECT problem_id FROM problem_search
+           WHERE problem_search MATCH ?
+           ORDER BY rank
+           LIMIT ?`,
+        )
+        .all(match, limit) as { problem_id?: string }[]
+
+      return rows
+        .map((row) => row.problem_id)
+        .filter((problemId): problemId is string => typeof problemId === 'string')
+    } catch {
+      return []
+    }
   }
 
   getProviderConfig(): ProviderRow | null {

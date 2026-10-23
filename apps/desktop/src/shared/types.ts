@@ -44,6 +44,9 @@ export interface ProblemSummary {
   readonly title: string
   readonly difficulty: 'easy' | 'medium' | 'hard'
   readonly patterns: readonly string[]
+  readonly packId: string
+  readonly packName: string
+  readonly source: 'bundled' | 'user'
 }
 
 export interface Hint {
@@ -227,6 +230,7 @@ export interface BaseCaseApi {
   readonly content: {
     list(): Promise<ProblemSummary[]>
     get(problemId: string): Promise<ProblemDetail>
+    search(query: string): Promise<ProblemSummary[]>
   }
   readonly judge: {
     run(input: RunInput): Promise<RunResult>

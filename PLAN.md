@@ -2451,19 +2451,19 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [ ] App layout: sidebar, top bar, content area, inspector.
   - [ ] Buttons, inputs, dialogs, tabs, toasts, tooltips, badges, progress.
   - [ ] Empty/error/loading states.
-- [ ] Command palette skeleton.
-- [ ] Keyboard shortcut registry.
+- [x] Command palette skeleton.
+- [x] Keyboard shortcut registry.
 - [ ] SQLite:
   - [x] Driver decision (`node:sqlite`, provisional; revisit in Phase 3).
   - [x] Migration runner.
   - [ ] Core tables from Section 4.3.
   - [ ] Repositories for content, attempts, settings.
   - [x] WAL mode and backup-on-start.
-- [ ] Content loader:
-  - [ ] JSON Schema validation.
-  - [ ] Bundled core pack loading.
-  - [ ] User pack directory.
-  - [ ] FTS5 index and rebuild.
+- [x] Content loader:
+  - [x] JSON Schema validation.
+  - [x] Bundled core pack loading.
+  - [x] User pack directory.
+  - [x] FTS5 index and rebuild.
   - [ ] Pack install/uninstall.
 - [x] Settings store:
   - [x] Theme, language, editor preferences.
