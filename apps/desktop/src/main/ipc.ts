@@ -1,74 +1,74 @@
 import { randomUUID } from 'node:crypto'
 import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { app, dialog, ipcMain } from 'electron'
-import { z } from 'zod'
+import type { IpcMainInvokeEvent } from 'electron'
+import type { ZodType } from 'zod'
+import { channels } from '../shared/ipc'
+import type { Channel, IpcResult } from '../shared/ipc'
 import type { AiContext } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
 import type { AppDatabase } from './database'
+import { toIpcError } from './ipc-errors'
+import {
+  aiConfigSchema,
+  aiContextSchema,
+  draftInputSchema,
+  noInputSchema,
+  pngDataUrlSchema,
+  problemIdSchema,
+  runInputSchema,
+  saveDraftSchema,
+  sceneJsonSchema,
+  settingsPatchSchema,
+} from './ipc-schemas'
 import type { JudgeClient } from './judge'
+import { getLogger } from './logger'
+import type { SettingsStore } from './settings'
 
 interface Services {
   readonly content: ContentRepository
   readonly database: AppDatabase
   readonly judge: JudgeClient
   readonly ai: AiService
+  readonly settings: SettingsStore
 }
 
-const languageSchema = z.enum(['python', 'typescript'])
+function register<I, O>(
+  channel: Channel,
+  inputSchema: ZodType<I>,
+  handler: (input: I, event: IpcMainInvokeEvent) => O | Promise<O>,
+): void {
+  const log = getLogger('ipc')
 
-const failureSchema = z.object({
-  index: z.number().int().nonnegative(),
-  isSample: z.boolean(),
-  status: z.string().max(100),
-  input: z.unknown().optional(),
-  expected: z.unknown().optional(),
-  actual: z.unknown().optional(),
-  userStdout: z.string().max(100_000),
-  userStderr: z.string().max(100_000),
-  runtimeMs: z.number().nonnegative(),
-  memoryBytes: z.number().nonnegative(),
-  error: z
-    .object({
-      type: z.string().max(200),
-      message: z.string().max(10_000),
-      stack: z.string().max(100_000),
-      userLine: z.number().int().nonnegative(),
-    })
-    .optional(),
-  message: z.string().max(10_000).optional(),
-})
+  ipcMain.handle(channel, async (event, rawInput: unknown) => {
+    const started = performance.now()
 
-const runInputSchema = z.object({
-  problemId: z.string().min(1).max(200),
-  language: languageSchema,
-  code: z.string().max(200_000),
-  mode: z.enum(['sample', 'submit']),
-})
+    try {
+      const input = inputSchema.parse(rawInput)
+      const data = await handler(input, event)
 
-const draftInputSchema = z.object({
-  problemId: z.string().min(1).max(200),
-  language: languageSchema,
-})
+      log.debug('ipc.completed', {
+        channel,
+        durationMs: Math.round(performance.now() - started),
+      })
 
-const saveDraftSchema = draftInputSchema.extend({
-  code: z.string().max(200_000),
-})
+      return { ok: true, data } satisfies IpcResult<O>
+    } catch (error) {
+      const normalized = toIpcError(error)
 
-const aiContextSchema: z.ZodType<AiContext> = z.object({
-  problemId: z.string().min(1).max(200),
-  language: languageSchema,
-  code: z.string().max(200_000),
-  failure: failureSchema.optional(),
-}) as z.ZodType<AiContext>
+      log.warn('ipc.failed', {
+        channel,
+        code: normalized.code,
+        message: normalized.message,
+        durationMs: Math.round(performance.now() - started),
+      })
 
-const aiConfigSchema = z.object({
-  type: z.enum(['none', 'mock', 'openai-compatible']),
-  baseUrl: z.string().max(2000),
-  model: z.string().max(200),
-  apiKey: z.string().max(10_000).optional(),
-  clearKey: z.boolean().optional(),
-})
+      return { ok: false, error: normalized } satisfies IpcResult<O>
+    }
+  })
+}
 
 function sendAiEvent(
   sender: Electron.WebContents,
@@ -82,8 +82,8 @@ function sendAiEvent(
   }
 }
 
-export function registerIpc({ content, database, judge, ai }: Services): void {
-  ipcMain.handle('app:info', () => ({
+export function registerIpc({ content, database, judge, ai, settings }: Services): void {
+  register(channels.appInfo, noInputSchema, () => ({
     appVersion: app.getVersion(),
     platform: process.platform,
     versions: {
@@ -93,18 +93,15 @@ export function registerIpc({ content, database, judge, ai }: Services): void {
     },
     userDataPath: app.getPath('userData'),
     databasePath: database.path,
+    logsPath: join(app.getPath('userData'), 'logs'),
   }))
 
-  ipcMain.handle('content:list', () => content.listProblems())
-  ipcMain.handle('content:get', (_event, rawProblemId: unknown) => {
-    const problemId = z.string().min(1).max(200).parse(rawProblemId)
-    return content.getProblem(problemId)
-  })
+  register(channels.contentList, noInputSchema, () => content.listProblems())
+  register(channels.contentGet, problemIdSchema, (problemId) => content.getProblem(problemId))
 
-  ipcMain.handle('judge:status', () => judge.status())
+  register(channels.judgeStatus, noInputSchema, () => judge.status())
 
-  ipcMain.handle('judge:run', async (_event, rawInput: unknown) => {
-    const input = runInputSchema.parse(rawInput)
+  register(channels.judgeRun, runInputSchema, async (input) => {
     const params = content.getRunParams(input.problemId, input.language, input.code, input.mode)
     const result = await judge.run(params)
 
@@ -119,27 +116,23 @@ export function registerIpc({ content, database, judge, ai }: Services): void {
     return result
   })
 
-  ipcMain.handle('draft:get', (_event, rawInput: unknown) => {
-    const input = draftInputSchema.parse(rawInput)
-    return database.getDraft(input.problemId, input.language)
-  })
+  register(channels.draftGet, draftInputSchema, (input) =>
+    database.getDraft(input.problemId, input.language),
+  )
 
-  ipcMain.handle('draft:save', (_event, rawInput: unknown) => {
-    const input = saveDraftSchema.parse(rawInput)
+  register(channels.draftSave, saveDraftSchema, (input) => {
     database.saveDraft(input.problemId, input.language, input.code)
   })
 
-  ipcMain.handle('attempts:stats', () => database.getStats())
+  register(channels.attemptsStats, noInputSchema, () => database.getStats())
 
-  ipcMain.handle('design:get-scene', () => database.getDesignScene())
+  register(channels.designGetScene, noInputSchema, () => database.getDesignScene())
 
-  ipcMain.handle('design:save-scene', (_event, rawScene: unknown) => {
-    const sceneJson = z.string().max(5_000_000).parse(rawScene)
+  register(channels.designSaveScene, sceneJsonSchema, (sceneJson) => {
     database.saveDesignScene(sceneJson)
   })
 
-  ipcMain.handle('design:export-png', async (_event, rawDataUrl: unknown) => {
-    const dataUrl = z.string().max(20_000_000).parse(rawDataUrl)
+  register(channels.designExportPng, pngDataUrlSchema, async (dataUrl) => {
     const match = /^data:image\/png;base64,(.+)$/.exec(dataUrl)
 
     if (!match?.[1]) {
@@ -160,20 +153,13 @@ export function registerIpc({ content, database, judge, ai }: Services): void {
     return { saved: true, path: selection.filePath }
   })
 
-  ipcMain.handle('ai:get-status', () => ai.getStatus())
+  register(channels.aiGetStatus, noInputSchema, () => ai.getStatus())
 
-  ipcMain.handle('ai:save-config', (_event, rawInput: unknown) => {
-    const input = aiConfigSchema.parse(rawInput)
-    return ai.saveConfig(input)
-  })
+  register(channels.aiSaveConfig, aiConfigSchema, (input) => ai.saveConfig(input))
 
-  ipcMain.handle('ai:preview', (_event, rawContext: unknown) => {
-    const context = aiContextSchema.parse(rawContext)
-    return ai.preview(context)
-  })
+  register(channels.aiPreview, aiContextSchema, (input) => ai.preview(input))
 
-  ipcMain.handle('ai:explain', async (event, rawContext: unknown) => {
-    const context = aiContextSchema.parse(rawContext)
+  register(channels.aiExplain, aiContextSchema, (context: AiContext, event) => {
     const requestId = randomUUID()
 
     void ai
@@ -193,4 +179,7 @@ export function registerIpc({ content, database, judge, ai }: Services): void {
 
     return { requestId }
   })
+
+  register(channels.settingsGet, noInputSchema, () => settings.get())
+  register(channels.settingsUpdate, settingsPatchSchema, (patch) => settings.update(patch))
 }

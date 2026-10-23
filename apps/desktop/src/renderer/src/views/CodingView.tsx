@@ -10,6 +10,7 @@ import type {
 import { CodeEditor } from '../components/CodeEditor'
 import { Markdown } from '../components/Markdown'
 import { ResultsPanel } from '../components/ResultsPanel'
+import { useSettings } from '../settings'
 
 interface CodingViewProps {
   readonly problems: readonly ProblemSummary[]
@@ -204,7 +205,8 @@ function ProblemWorkspace({
   readonly onBack: () => void
   readonly onStatsChanged: () => void
 }): JSX.Element {
-  const [language, setLanguage] = useState<Language>('python')
+  const { settings } = useSettings()
+  const [language, setLanguage] = useState<Language>(settings.language)
   const [code, setCode] = useState('')
   const [draftReady, setDraftReady] = useState(false)
   const [result, setResult] = useState<RunResult | null>(null)

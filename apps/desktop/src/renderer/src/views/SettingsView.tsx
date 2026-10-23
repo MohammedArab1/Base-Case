@@ -6,7 +6,10 @@ import type {
   AppInfo,
   JudgeStatus,
   SaveAiConfigInput,
+  SettingsPatch,
+  ThemePreference,
 } from '../../../shared/types'
+import { useSettings } from '../settings'
 
 interface AiForm {
   readonly type: AiProviderType
@@ -32,6 +35,7 @@ function breakablePath(path: string): JSX.Element {
 }
 
 export function SettingsView(): JSX.Element {
+  const { settings, update } = useSettings()
   const [provider, setProvider] = useState<AiProviderStatus | null>(null)
   const [judgeStatus, setJudgeStatus] = useState<JudgeStatus | null>(null)
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
@@ -46,6 +50,8 @@ export function SettingsView(): JSX.Element {
   const [loadingJudge, setLoadingJudge] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [savingSettings, setSavingSettings] = useState(false)
+  const [settingsMessage, setSettingsMessage] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -80,6 +86,21 @@ export function SettingsView(): JSX.Element {
       cancelled = true
     }
   }, [])
+
+  const changeSettings = async (patch: SettingsPatch): Promise<void> => {
+    setSavingSettings(true)
+    setSettingsMessage(null)
+    setError(null)
+
+    try {
+      await update(patch)
+      setSettingsMessage('Saved.')
+    } catch (settingsError: unknown) {
+      setError(settingsError instanceof Error ? settingsError.message : String(settingsError))
+    } finally {
+      setSavingSettings(false)
+    }
+  }
 
   const refreshJudge = async (): Promise<void> => {
     setLoadingJudge(true)
@@ -134,6 +155,122 @@ export function SettingsView(): JSX.Element {
           <p>{error}</p>
         </div>
       ) : null}
+
+      <section className="settings-card">
+        <div className="settings-card-heading">
+          <div>
+            <h2>Appearance and editor</h2>
+            <p className="muted">Theme, preferred language, and editor defaults.</p>
+          </div>
+          {savingSettings ? <span className="muted">Saving…</span> : null}
+        </div>
+
+        <div className="form-grid">
+          <label className="field">
+            <span>Theme</span>
+            <select
+              className="input"
+              value={settings.theme}
+              onChange={(event) =>
+                void changeSettings({ theme: event.target.value as ThemePreference })
+              }
+            >
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
+
+          <label className="field">
+            <span>Preferred language</span>
+            <select
+              className="input"
+              value={settings.language}
+              onChange={(event) =>
+                void changeSettings({
+                  language: event.target.value === 'typescript' ? 'typescript' : 'python',
+                })
+              }
+            >
+              <option value="python">Python</option>
+              <option value="typescript">TypeScript</option>
+            </select>
+          </label>
+
+          <label className="field">
+            <span>Editor font size</span>
+            <select
+              className="input"
+              value={settings.editor.fontSize}
+              onChange={(event) =>
+                void changeSettings({ editor: { fontSize: Number(event.target.value) } })
+              }
+            >
+              {[11, 12, 13, 14, 15, 16, 18, 20].map((size) => (
+                <option key={size} value={size}>
+                  {size}px
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="field">
+            <span>Tab size</span>
+            <select
+              className="input"
+              value={settings.editor.tabSize}
+              onChange={(event) =>
+                void changeSettings({ editor: { tabSize: Number(event.target.value) } })
+              }
+            >
+              {[2, 4, 8].map((size) => (
+                <option key={size} value={size}>
+                  {size} spaces
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="field">
+            <span>Daily goal</span>
+            <select
+              className="input"
+              value={settings.dailyGoalMinutes}
+              onChange={(event) =>
+                void changeSettings({ dailyGoalMinutes: Number(event.target.value) })
+              }
+            >
+              {[15, 20, 30, 45, 60, 90, 120].map((minutes) => (
+                <option key={minutes} value={minutes}>
+                  {minutes} minutes
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={settings.editor.wordWrap}
+              onChange={(event) =>
+                void changeSettings({ editor: { wordWrap: event.target.checked } })
+              }
+            />
+            Wrap long lines
+          </label>
+
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={settings.reviewReminders}
+              onChange={(event) => void changeSettings({ reviewReminders: event.target.checked })}
+            />
+            Review reminders
+          </label>
+        </div>
+
+        {settingsMessage ? <p className="muted">{settingsMessage}</p> : null}
+      </section>
 
       <section className="settings-card">
         <div className="settings-card-heading">
@@ -306,6 +443,12 @@ export function SettingsView(): JSX.Element {
               <dt>Database</dt>
               <dd>
                 <code>{appInfo.databasePath}</code>
+              </dd>
+            </div>
+            <div className="info-wide">
+              <dt>Logs</dt>
+              <dd>
+                <code>{appInfo.logsPath}</code>
               </dd>
             </div>
           </dl>

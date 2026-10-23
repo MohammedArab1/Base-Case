@@ -1,13 +1,41 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { channels } from '../shared/ipc'
+import type { Channel, IpcResult } from '../shared/ipc'
 import type {
   AiContext,
   AiEvent,
+  AppInfo,
+  AppSettings,
   BaseCaseApi,
+  DesignScenePayload,
   DraftInput,
+  JudgeStatus,
+  ProblemDetail,
+  ProblemSummary,
   RunInput,
+  RunResult,
   SaveAiConfigInput,
   SaveDraftInput,
+  SettingsPatch,
+  Stats,
 } from '../shared/types'
+
+interface BridgeError extends Error {
+  code?: string
+}
+
+async function invoke<O>(channel: Channel, input?: unknown): Promise<O> {
+  const result = (await ipcRenderer.invoke(channel, input)) as IpcResult<O>
+
+  if (result?.ok) {
+    return result.data
+  }
+
+  const error = new Error(result?.error?.message ?? 'The app returned an invalid IPC response.')
+  error.name = 'BaseCaseIpcError'
+  ;(error as BridgeError).code = result?.error?.code
+  throw error
+}
 
 const api: BaseCaseApi = {
   platform: process.platform,
@@ -17,33 +45,38 @@ const api: BaseCaseApi = {
     node: process.versions.node,
   },
   app: {
-    getInfo: () => ipcRenderer.invoke('app:info'),
+    getInfo: () => invoke<AppInfo>(channels.appInfo),
   },
   content: {
-    list: () => ipcRenderer.invoke('content:list'),
-    get: (problemId: string) => ipcRenderer.invoke('content:get', problemId),
+    list: () => invoke<ProblemSummary[]>(channels.contentList),
+    get: (problemId: string) => invoke<ProblemDetail>(channels.contentGet, problemId),
   },
   judge: {
-    run: (input: RunInput) => ipcRenderer.invoke('judge:run', input),
-    status: () => ipcRenderer.invoke('judge:status'),
+    run: (input: RunInput) => invoke<RunResult>(channels.judgeRun, input),
+    status: () => invoke<JudgeStatus>(channels.judgeStatus),
   },
   drafts: {
-    get: (input: DraftInput) => ipcRenderer.invoke('draft:get', input),
-    save: (input: SaveDraftInput) => ipcRenderer.invoke('draft:save', input),
+    get: (input: DraftInput) => invoke<string | null>(channels.draftGet, input),
+    save: (input: SaveDraftInput) => invoke<void>(channels.draftSave, input),
   },
   attempts: {
-    stats: () => ipcRenderer.invoke('attempts:stats'),
+    stats: () => invoke<Stats>(channels.attemptsStats),
+  },
+  settings: {
+    get: () => invoke<AppSettings>(channels.settingsGet),
+    update: (patch: SettingsPatch) => invoke<AppSettings>(channels.settingsUpdate, patch),
   },
   design: {
-    getScene: () => ipcRenderer.invoke('design:get-scene'),
-    saveScene: (sceneJson: string) => ipcRenderer.invoke('design:save-scene', sceneJson),
-    exportPng: (dataUrl: string) => ipcRenderer.invoke('design:export-png', dataUrl),
+    getScene: () => invoke<DesignScenePayload>(channels.designGetScene),
+    saveScene: (sceneJson: string) => invoke<void>(channels.designSaveScene, sceneJson),
+    exportPng: (dataUrl: string) =>
+      invoke<{ saved: boolean; path?: string }>(channels.designExportPng, dataUrl),
   },
   ai: {
-    getStatus: () => ipcRenderer.invoke('ai:get-status'),
-    saveConfig: (input: SaveAiConfigInput) => ipcRenderer.invoke('ai:save-config', input),
-    preview: (context: AiContext) => ipcRenderer.invoke('ai:preview', context),
-    explain: (context: AiContext) => ipcRenderer.invoke('ai:explain', context),
+    getStatus: () => invoke(channels.aiGetStatus),
+    saveConfig: (input: SaveAiConfigInput) => invoke(channels.aiSaveConfig, input),
+    preview: (context: AiContext) => invoke(channels.aiPreview, context),
+    explain: (context: AiContext) => invoke(channels.aiExplain, context),
     onEvent: (listener: (event: AiEvent) => void) => {
       const handler = (_event: Electron.IpcRendererEvent, payload: AiEvent): void => {
         listener(payload)

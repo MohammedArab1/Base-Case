@@ -1,12 +1,21 @@
 import { useEffect, useRef } from 'react'
 import type { JSX } from 'react'
 import { basicSetup } from 'codemirror'
-import { EditorState } from '@codemirror/state'
+import { Compartment, EditorState } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
 import { javascript } from '@codemirror/lang-javascript'
 import { python } from '@codemirror/lang-python'
 import { oneDark } from '@codemirror/theme-one-dark'
 import type { Language } from '../../../shared/types'
+import { useSettings } from '../settings'
+
+function fontSizeTheme(size: number): ReturnType<typeof EditorView.theme> {
+  return EditorView.theme({
+    '&': {
+      fontSize: `${size}px`,
+    },
+  })
+}
 
 interface CodeEditorProps {
   readonly value: string
@@ -24,6 +33,14 @@ export function CodeEditor({
   const host = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const onChangeRef = useRef(onChange)
+  const { settings } = useSettings()
+  const editorSettings = settings.editor
+  const settingsRef = useRef(editorSettings)
+  const tabSizeCompartment = useRef(new Compartment()).current
+  const fontSizeCompartment = useRef(new Compartment()).current
+  const wrapCompartment = useRef(new Compartment()).current
+
+  settingsRef.current = editorSettings
 
   useEffect(() => {
     onChangeRef.current = onChange
@@ -43,7 +60,9 @@ export function CodeEditor({
           basicSetup,
           languageExtension,
           oneDark,
-          EditorState.tabSize.of(2),
+          tabSizeCompartment.of(EditorState.tabSize.of(settingsRef.current.tabSize)),
+          fontSizeCompartment.of(fontSizeTheme(settingsRef.current.fontSize)),
+          wrapCompartment.of(settingsRef.current.wordWrap ? EditorView.lineWrapping : []),
           EditorView.contentAttributes.of({ 'aria-label': ariaLabel }),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {
@@ -53,7 +72,6 @@ export function CodeEditor({
           EditorView.theme({
             '&': {
               height: '100%',
-              fontSize: '13px',
             },
             '.cm-scroller': {
               fontFamily:
@@ -82,6 +100,29 @@ export function CodeEditor({
     // The editor owns its document after mount. Language changes remount it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, ariaLabel])
+
+  useEffect(() => {
+    const view = viewRef.current
+
+    if (!view) {
+      return
+    }
+
+    view.dispatch({
+      effects: [
+        tabSizeCompartment.reconfigure(EditorState.tabSize.of(editorSettings.tabSize)),
+        fontSizeCompartment.reconfigure(fontSizeTheme(editorSettings.fontSize)),
+        wrapCompartment.reconfigure(editorSettings.wordWrap ? EditorView.lineWrapping : []),
+      ],
+    })
+  }, [
+    editorSettings.fontSize,
+    editorSettings.tabSize,
+    editorSettings.wordWrap,
+    fontSizeCompartment,
+    tabSizeCompartment,
+    wrapCompartment,
+  ])
 
   useEffect(() => {
     const view = viewRef.current

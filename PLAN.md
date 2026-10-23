@@ -2441,10 +2441,10 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Finalize monorepo structure and package boundaries.
-- [ ] Electron main/preload/renderer architecture.
-- [ ] Typed IPC contract with Zod validation and error envelopes.
-- [ ] Structured logging + log rotation.
+- [x] Finalize monorepo structure and package boundaries.
+- [x] Electron main/preload/renderer architecture.
+- [x] Typed IPC contract with Zod validation and error envelopes.
+- [x] Structured logging + log rotation.
 - [ ] Design system:
   - [ ] Tailwind + Radix primitives.
   - [ ] Light/dark tokens.
@@ -2455,24 +2455,24 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [ ] Keyboard shortcut registry.
 - [ ] SQLite:
   - [x] Driver decision (`node:sqlite`, provisional; revisit in Phase 3).
-  - [ ] Migration runner.
+  - [x] Migration runner.
   - [ ] Core tables from Section 4.3.
   - [ ] Repositories for content, attempts, settings.
-  - [ ] WAL mode and backup-on-start.
+  - [x] WAL mode and backup-on-start.
 - [ ] Content loader:
   - [ ] JSON Schema validation.
   - [ ] Bundled core pack loading.
   - [ ] User pack directory.
   - [ ] FTS5 index and rebuild.
   - [ ] Pack install/uninstall.
-- [ ] Settings store:
-  - [ ] Theme, language, editor preferences.
-  - [ ] Data directories.
-  - [ ] AI provider placeholder.
+- [x] Settings store:
+  - [x] Theme, language, editor preferences.
+  - [x] Data directories.
+  - [x] AI provider placeholder.
 - [ ] Onboarding shell and a sample problem stub.
-- [ ] Window state persistence (size/position).
-- [ ] App menu and About/licenses screen.
-- [ ] Unit tests for migrations, repositories, validation.
+- [x] Window state persistence (size/position).
+- [x] App menu and About/licenses screen.
+- [x] Unit tests for migrations, repositories, validation.
 - [ ] Playwright smoke test: launch, navigate, change theme, reopen.
 
 **Deliverables**

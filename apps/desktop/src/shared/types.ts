@@ -1,5 +1,41 @@
 export type Language = 'python' | 'typescript'
 
+export type ThemePreference = 'system' | 'light' | 'dark'
+
+export interface EditorSettings {
+  readonly fontSize: number
+  readonly tabSize: number
+  readonly wordWrap: boolean
+}
+
+export interface AppSettings {
+  readonly theme: ThemePreference
+  readonly language: Language
+  readonly editor: EditorSettings
+  readonly dailyGoalMinutes: number
+  readonly reviewReminders: boolean
+}
+
+export interface SettingsPatch {
+  readonly theme?: ThemePreference
+  readonly language?: Language
+  readonly editor?: Partial<EditorSettings>
+  readonly dailyGoalMinutes?: number
+  readonly reviewReminders?: boolean
+}
+
+export const defaultAppSettings: AppSettings = {
+  theme: 'system',
+  language: 'python',
+  editor: {
+    fontSize: 13,
+    tabSize: 2,
+    wordWrap: false,
+  },
+  dailyGoalMinutes: 30,
+  reviewReminders: true,
+}
+
 export type SectionId = 'today' | 'coding' | 'design' | 'review' | 'progress' | 'settings'
 
 export interface ProblemSummary {
@@ -137,6 +173,7 @@ export interface AppInfo {
   }
   readonly userDataPath: string
   readonly databasePath: string
+  readonly logsPath: string
 }
 
 export type AiProviderType = 'none' | 'mock' | 'openai-compatible'
@@ -201,6 +238,10 @@ export interface BaseCaseApi {
   }
   readonly attempts: {
     stats(): Promise<Stats>
+  }
+  readonly settings: {
+    get(): Promise<AppSettings>
+    update(patch: SettingsPatch): Promise<AppSettings>
   }
   readonly design: {
     getScene(): Promise<DesignScenePayload>

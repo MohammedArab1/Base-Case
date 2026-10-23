@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-23
-> Current phase: Phase 1 — Technical spike (macOS and Windows verified; clean-VM installs pending)
-> Overall status: On track — Windows re-verification of `79bc5f7` passed all eight focused checks; every reported major defect is fixed
-> Next milestone: clean-VM installs, then Phase 2
+> Current phase: Phase 2 — App foundation (started; Phase 1 clean-VM installs still pending)
+> Overall status: On track — Windows/ macOS functional verification is complete; Phase 2 foundation landed with typed IPC, logging, settings, window state, and the app menu
+> Next milestone: finish the Phase 2 shell (command palette, shortcuts, content search, repositories), then clean-VM installs
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -13,8 +13,8 @@ This is the living status document for the project. `PLAN.md` describes the inte
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
-| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; Windows focused re-verification passed on `79bc5f7`. Only clean-VM installs remain |
-| Phase 2 — App foundation | Not started | — | Shell, SQLite, content loader, design system |
+| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
+| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC envelopes, structured logging, settings/theme, window state, and app menu done; command palette, search, and repositories next |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -26,11 +26,11 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
-2. Re-run the uninstall row of the full Windows checklist on a fresh install (the focused delta skipped it).
-3. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
-4. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
-5. Start Phase 2: typed IPC envelopes, structured logging, design system, repository layer, FTS5, settings, and Playwright smoke tests.
+1. Continue Phase 2: command palette and shortcut registry, content search with FTS5, user pack directory, repository split, onboarding shell, and Playwright smoke coverage.
+2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+3. Re-run the uninstall row of the full Windows checklist on a fresh install.
+4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
+5. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 
 ## Blockers
 
@@ -39,6 +39,32 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 2 — App foundation, part 1
+
+- Status: in progress
+- Done:
+  - Added a shared, dependency-free channel contract (`shared/ipc.ts`) and moved every request schema into `main/ipc-schemas.ts`.
+  - Wrapped all IPC handlers in `{ ok, data } | { ok, error }` envelopes with stable error codes (`invalid_request`, `not_found`, `judge_unavailable`, `timeout`, `internal_error`). The preload unwraps envelopes and throws typed `Error` objects, so renderer code keeps its existing promise API.
+  - Added structured JSON logging with size-based rotation (2 MiB × 5 files), level filtering (`BASE_CASE_LOG_LEVEL`), and recursive redaction of API keys, tokens, passwords, and secrets. Logs live under `<userData>/logs/app.log` and the path is exposed in App Info and Settings.
+  - Added a persisted `SettingsStore` backed by SQLite: theme (system/light/dark), preferred language, editor font size/tab size/word wrap, daily goal, and review reminders. Invalid stored values fall back to defaults.
+  - Added a renderer `SettingsProvider` that applies the theme immediately, follows OS theme changes in system mode, and caches the choice to avoid a first-paint flash.
+  - Wired settings into the editor: font size, tab size, and line wrapping reconfigure through CodeMirror compartments without remounting the document. Preferred language seeds new problem workspaces.
+  - Added window size/position/maximized persistence with display-intersection clamping, plus debounced saves on move/resize.
+  - Added a native application menu with File/Edit/View/Window/Help, About, licenses, documentation, and an “Open data folder” action.
+  - Added 16 Vitest tests for logging/rotation, settings persistence/fallback, IPC error mapping, and window-state clamping.
+  - Extended `pnpm smoke:e2e` to exercise settings read/update/persistence and to assert that the startup and IPC log lines reach `app.log`.
+- Tests run:
+  - `pnpm typecheck`, `pnpm lint`, `pnpm test` — passed (20 TypeScript tests plus the Go suites).
+  - `pnpm build && pnpm smoke:e2e` — passed; smoke now reports `settings: true`, `logs: true`, 5/5 sample, 39/39 hidden, drafts, scene, AI, key storage, 3 attempts, 1 backup.
+- Files/PRs:
+  - Key paths: `apps/desktop/src/shared/ipc.ts`, `main/ipc-schemas.ts`, `main/ipc-errors.ts`, `main/logger.ts`, `main/settings.ts`, `main/window-state.ts`, `main/menu.ts`, `renderer/src/settings.tsx`.
+- Next:
+  - Command palette and shortcut registry; FTS5 content search and user packs; repository split; onboarding shell; Playwright smoke.
+- Notes/decisions:
+  - IPC messages are validated at the main boundary; renderer promises still resolve to plain values. Error codes are available on thrown error objects in the preload, but Electron may strip custom properties across `contextBridge`; the main process keeps the authoritative code in logs.
+  - Logging never records request payloads, only channel names, timings, and error codes/messages.
+  - The design-system migration (Tailwind + Radix) is intentionally deferred until the shell features settle, to avoid a large mixed refactor.
 
 ### 2026-10-23 — Phase 1 — Windows re-verification PASS
 

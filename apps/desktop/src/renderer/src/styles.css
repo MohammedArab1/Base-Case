@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bg: #f5f6f8;
   --surface: #ffffff;
   --surface-muted: #eceff4;
@@ -27,7 +27,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
     --bg: #0f1115;
     --surface: #171a21;
     --surface-muted: #1f232c;
@@ -42,6 +43,29 @@
     --success-soft: #173226;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 12px 32px rgb(0 0 0 / 22%);
   }
+}
+
+/* Explicit dark is duplicated from the media query so the renderer can
+   override the OS while the early-boot stylesheet still respects it. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-muted: #1f232c;
+  --sidebar-bg: #12151b;
+  --text: #edf0f5;
+  --muted: #9aa3b2;
+  --border: #2a2f3a;
+  --border-strong: #3a4150;
+  --accent: #8ab0ff;
+  --accent-soft: #1d2a45;
+  --success: #7dd3a8;
+  --success-soft: #173226;
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 12px 32px rgb(0 0 0 / 22%);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 * {

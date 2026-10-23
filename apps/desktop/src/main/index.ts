@@ -1,10 +1,14 @@
 import { join } from 'node:path'
-import { app, BrowserWindow, dialog, shell } from 'electron'
+import { app, BrowserWindow, dialog, screen, shell } from 'electron'
 import { AiService } from './ai'
 import { ContentRepository } from './content'
 import { AppDatabase } from './database'
 import { registerIpc } from './ipc'
 import { JudgeClient } from './judge'
+import { configureLogger, getLogger } from './logger'
+import { installApplicationMenu } from './menu'
+import { SettingsStore } from './settings'
+import { clampWindowState, loadWindowState, saveWindowState } from './window-state'
 
 const rendererUrl = process.env.ELECTRON_RENDERER_URL
 const isDevelopment = Boolean(rendererUrl)
@@ -12,9 +16,17 @@ const isDevelopment = Boolean(rendererUrl)
 app.setName('Base Case')
 
 function createWindow(): void {
+  const log = getLogger('main')
+  const userDataPath = app.getPath('userData')
+  const primary = screen.getPrimaryDisplay().workArea
+  const displays = screen.getAllDisplays().map((display) => display.workArea)
+  const saved = clampWindowState(loadWindowState(userDataPath), displays, primary)
+
   const window = new BrowserWindow({
-    width: 1280,
-    height: 820,
+    ...(saved.x === undefined ? {} : { x: saved.x }),
+    ...(saved.y === undefined ? {} : { y: saved.y }),
+    width: saved.width,
+    height: saved.height,
     minWidth: 1024,
     minHeight: 700,
     show: false,
@@ -29,8 +41,48 @@ function createWindow(): void {
     },
   })
 
+  if (saved.maximized) {
+    window.maximize()
+  }
+
+  const persistState = (): void => {
+    const bounds = window.getNormalBounds()
+    saveWindowState(userDataPath, {
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height,
+      maximized: window.isMaximized(),
+    })
+  }
+
+  let saveTimer: NodeJS.Timeout | null = null
+  const scheduleSave = (): void => {
+    if (saveTimer) {
+      clearTimeout(saveTimer)
+    }
+
+    saveTimer = setTimeout(() => {
+      saveTimer = null
+      persistState()
+    }, 300)
+  }
+
+  window.on('resize', scheduleSave)
+  window.on('move', scheduleSave)
+  window.on('maximize', scheduleSave)
+  window.on('unmaximize', scheduleSave)
+  window.on('close', () => {
+    if (saveTimer) {
+      clearTimeout(saveTimer)
+      saveTimer = null
+    }
+    persistState()
+  })
+
   window.once('ready-to-show', () => {
     window.show()
+    log.info('window.ready', { width: saved.width, height: saved.height })
   })
 
   window.webContents.setWindowOpenHandler(({ url }) => {
@@ -62,25 +114,34 @@ function createWindow(): void {
 app
   .whenReady()
   .then(async () => {
+    const userDataPath = app.getPath('userData')
+    const logger = configureLogger({ directory: join(userDataPath, 'logs') })
+    logger.info('app.start', {
+      version: app.getVersion(),
+      platform: process.platform,
+      arch: process.arch,
+      electron: process.versions.electron,
+    })
+
     const content = new ContentRepository()
 
     try {
       await content.initialize()
     } catch (error) {
-      console.error('Base Case could not load content:', error)
-      dialog.showErrorBox(
-        'Base Case could not load content',
-        error instanceof Error ? error.message : String(error),
-      )
+      const message = error instanceof Error ? error.message : String(error)
+      logger.error('content.load.failed', { message })
+      dialog.showErrorBox('Base Case could not load content', message)
       app.quit()
       return
     }
 
-    const database = new AppDatabase(app.getPath('userData'))
+    const database = new AppDatabase(userDataPath)
+    const settings = new SettingsStore(database)
     const judge = new JudgeClient()
     const ai = new AiService(database, content)
 
-    registerIpc({ content, database, judge, ai })
+    registerIpc({ content, database, judge, ai, settings })
+    installApplicationMenu()
 
     app.on('before-quit', () => {
       judge.stop()
@@ -88,6 +149,7 @@ app
 
     app.on('will-quit', () => {
       database.close()
+      logger.info('app.stop')
     })
 
     createWindow()
@@ -99,6 +161,9 @@ app
     })
   })
   .catch((error: unknown) => {
+    getLogger('main').error('app.start.failed', {
+      message: error instanceof Error ? (error.stack ?? error.message) : String(error),
+    })
     dialog.showErrorBox(
       'Base Case could not start',
       error instanceof Error ? (error.stack ?? error.message) : String(error),

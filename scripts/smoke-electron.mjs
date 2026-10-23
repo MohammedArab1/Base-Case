@@ -1,5 +1,5 @@
 import { execFileSync, spawn } from 'node:child_process'
-import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
@@ -190,6 +190,7 @@ async function main() {
       env: {
         ...process.env,
         BASE_CASE_JUDGE_PATH: judgePath,
+        BASE_CASE_LOG_LEVEL: 'debug',
       },
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -219,6 +220,23 @@ async function main() {
   assert(
     problems.some((problem) => problem.id === 'core/pair-sum'),
     'pair-sum is missing',
+  )
+
+  const initialSettings = await evaluate('window.baseCase.settings.get()')
+  assert(initialSettings.theme === 'system', 'Default theme is not system')
+
+  const updatedSettings = await evaluate(
+    `window.baseCase.settings.update(${JSON.stringify({ theme: 'dark', editor: { fontSize: 15 } })})`,
+  )
+  assert(updatedSettings.theme === 'dark', 'Settings update did not apply the theme')
+  assert(updatedSettings.editor.fontSize === 15, 'Settings update did not apply the font size')
+
+  const persistedSettings = await evaluate('window.baseCase.settings.get()')
+  assert(persistedSettings.theme === 'dark', 'Settings did not persist the theme')
+  assert(persistedSettings.editor.fontSize === 15, 'Settings did not persist the font size')
+
+  await evaluate(
+    `window.baseCase.settings.update(${JSON.stringify({ theme: 'system', editor: { fontSize: 13 } })})`,
   )
 
   const judgeStatus = await evaluate('window.baseCase.judge.status()')
@@ -283,6 +301,12 @@ export { Solution }
 
   const appInfo = await evaluate('window.baseCase.app.getInfo()')
   assert(existsSync(appInfo.databasePath), 'The SQLite database file was not created')
+  assert(existsSync(appInfo.logsPath), 'The log directory was not created')
+  const logPath = join(appInfo.logsPath, 'app.log')
+  assert(existsSync(logPath), 'The app log file was not created')
+  const logText = readFileSync(logPath, 'utf8')
+  assert(logText.includes('app.start'), 'The app log is missing the startup event')
+  assert(logText.includes('"channel":"settings:get"'), 'IPC calls are not logged')
   const backups = readdirSync(join(userDataDirectory, 'backups')).filter((file) =>
     file.endsWith('.db'),
   )
@@ -528,6 +552,8 @@ export { Solution }
 
   const summary = {
     problems: problems.length,
+    settings: persistedSettings.theme === 'dark' && persistedSettings.editor.fontSize === 15,
+    logs: logText.includes('app.start'),
     sample: `${sampleResult.passed}/${sampleResult.total} ${sampleResult.status}`,
     submit: `${submitResult.passed}/${submitResult.total} ${submitResult.status}`,
     wrongAnswer: wrongResult.firstFailure?.status,
