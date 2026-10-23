@@ -111,6 +111,7 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `PLAN.md` — product definition, architecture, phases, risks, decisions.
 - `PROGRESS.md` — living status log; read this first when returning.
 - `docs/spikes/phase-1-report.md` — measurements, gaps, go/no-go.
+- `docs/spikes/windows-verification.md` — Windows install and end-to-end checklist.
 - `docs/install.md` — unsigned macOS/Windows install steps.
 - `docs/architecture/overview.md`
 - `docs/architecture/judge-protocol.md`

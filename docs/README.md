@@ -16,6 +16,7 @@ Start here:
 ## Spikes
 
 - `spikes/phase-1-report.md` — measurements, gaps, demo, go/no-go.
+- `spikes/windows-verification.md` — Windows install and end-to-end checklist with a report template.
 
 ## Install
 

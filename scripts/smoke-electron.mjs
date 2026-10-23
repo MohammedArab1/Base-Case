@@ -1,11 +1,15 @@
 import { execFileSync, spawn } from 'node:child_process'
 import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
+const requireFromDesktop = createRequire(join(root, 'apps/desktop/package.json'))
+const electronPath = requireFromDesktop('electron')
+const pnpmCommand = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 const port = 9300 + Math.floor(Math.random() * 500)
 const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-smoke-'))
 const judgeName = process.platform === 'win32' ? 'judge.exe' : 'judge'
@@ -166,16 +170,16 @@ async function main() {
   }
 
   if (!existsSync(electronMain)) {
-    execFileSync('pnpm', ['build'], { cwd: root, stdio: 'inherit' })
+    execFileSync(pnpmCommand, ['build'], {
+      cwd: root,
+      stdio: 'inherit',
+      shell: process.platform === 'win32',
+    })
   }
 
   child = spawn(
-    'pnpm',
+    electronPath,
     [
-      '--filter',
-      '@base-case/desktop',
-      'exec',
-      'electron',
       `--remote-debugging-port=${port}`,
       '--remote-allow-origins=*',
       `--user-data-dir=${userDataDirectory}`,

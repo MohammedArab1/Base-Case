@@ -49,16 +49,19 @@ This is the living status document for the project. `PLAN.md` describes the inte
   - Go jobs: added `actions/setup-python` and `actions/setup-node` so the Python and TypeScript adapters have real runtimes; prefer `python` over the Windows Store `python3` stub on Windows.
   - Added `scripts/annotate-go-tests.mjs`, which consumes `go test -json` and emits GitHub check annotations, so Windows Go failures name the test and message instead of only “exit code 1”.
   - Raised the slow-output test budget and mirrored the content pack's 3× language multipliers in the judge test fixture, fixing a Windows TypeScript cold-start timeout.
+  - Added `docs/spikes/windows-verification.md`, a complete Windows install and end-to-end checklist with a report template.
+  - Made `scripts/smoke-electron.mjs` spawn Electron from its resolved binary path and use `pnpm.cmd` on Windows, so `pnpm smoke:e2e` can run on Windows.
 - Tests run:
   - GitHub Actions `CI` run `40003640419` — success on `macos-latest` and `windows-latest` (format, lint, typecheck, unit tests, content validation, app bundles).
   - GitHub Actions `Judge conformance` run `40003640429` — success on `macos-latest` and `windows-latest` (doctor, vet, protocol/unit tests).
   - GitHub Actions `Build installers` run `40002549825` — success on both platforms; artifacts `base-case-macOS` (397.9 MB) and `base-case-Windows` (409.6 MB).
-  - Local re-verification: `pnpm --filter @base-case/schema test`, `go test -C services/judge -count=1 ./...`, and Prettier on changed files — passed.
+  - Local re-verification: `pnpm --filter @base-case/schema test`, `go test -C services/judge -count=1 ./...`, `pnpm smoke:e2e` (5/5 sample, 39/39 hidden, draft, scene, mock AI, local SSE, key storage, 3 attempts, 1 backup), and Prettier on changed files — passed.
 - Files/PRs:
-  - `b18153e` initial commit (Phases 0–1); `1a7a617` Windows CI fixes; `9e14439` judge fixture limits.
-  - Key paths: `.github/workflows/ci.yml`, `.github/workflows/judge.yml`, `packages/schema/src/validate.test.ts`, `services/judge/internal/judge/runtimes.go`, `services/judge/internal/judge/runner_test.go`, `scripts/annotate-go-tests.mjs`.
+  - `b18153e` initial commit (Phases 0–1); `1a7a617` Windows CI fixes; `9e14439` judge fixture limits; `47d2931` name decision.
+  - Key paths: `.github/workflows/ci.yml`, `.github/workflows/judge.yml`, `packages/schema/src/validate.test.ts`, `services/judge/internal/judge/runtimes.go`, `services/judge/internal/judge/runner_test.go`, `scripts/annotate-go-tests.mjs`, `docs/spikes/windows-verification.md`.
 - Next:
-  - Install the Windows and macOS artifacts on clean VMs and record the result.
+  - Run `docs/spikes/windows-verification.md` on a Windows machine and file the report.
+  - Install the macOS artifact on a clean VM and record the result.
   - Complete the trademark search, then start Phase 2.
 - Notes/decisions:
   - Product name confirmed as “Base Case” (D019); a trademark search and domain registration remain before public branding.
