@@ -18,6 +18,19 @@ interface AiForm {
 const defaultBaseUrl = 'https://api.openai.com/v1'
 const defaultModel = 'gpt-4o-mini'
 
+function breakablePath(path: string): JSX.Element {
+  return (
+    <>
+      {path.split(/([\\/])/).map((part, index) => (
+        <span key={`${part}-${index}`}>
+          {part}
+          {/^[\\/]$/.test(part) ? <wbr /> : null}
+        </span>
+      ))}
+    </>
+  )
+}
+
 export function SettingsView(): JSX.Element {
   const [provider, setProvider] = useState<AiProviderStatus | null>(null)
   const [judgeStatus, setJudgeStatus] = useState<JudgeStatus | null>(null)
@@ -251,7 +264,7 @@ export function SettingsView(): JSX.Element {
                 <span className={`status-dot ${runtime.available ? '' : 'status-dot-error'}`} />
                 <strong>{runtime.name}</strong>
                 <span className="muted">{runtime.version || runtime.error || 'Not found'}</span>
-                <code>{runtime.path || '—'}</code>
+                <code>{runtime.path ? breakablePath(runtime.path) : '—'}</code>
               </div>
             ))}
           </div>

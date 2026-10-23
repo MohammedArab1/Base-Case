@@ -2399,7 +2399,7 @@ The schedule assumes full-time work. Durations are targets, not promises. Each p
    - [x] Context preview.
 
 6. **macOS and Windows packaging**
-   - [ ] GitHub Actions builds macOS and Windows artifacts.
+   - [x] GitHub Actions builds macOS and Windows artifacts.
    - [ ] Install and launch on at least one clean VM per OS.
    - [x] Document unsigned install steps.
 
@@ -2417,10 +2417,13 @@ The schedule assumes full-time work. Durations are targets, not promises. Each p
 - No unknown blocker for Phase 2.
 - App size and memory are acceptable.
 
-**Phase 1 status (2026-10-23):** macOS is verified end to end; unsigned macOS
-DMG/ZIP build and run with bundled content and judge. Windows packaging is
-configured in `.github/workflows/build.yml` but has not run, and clean-VM
-installation is still pending. See `docs/spikes/phase-1-report.md`.
+**Phase 1 status (2026-10-23):** macOS and Windows are verified end to end.
+Unsigned macOS DMG/ZIP and Windows NSIS/ZIP build in CI with bundled content and
+judge. A physical Windows 11 machine passed the install, judge, persistence,
+canvas, AI, portable-ZIP, and uninstall checks; the Windows-specific runtime,
+process-cleanup, timeout, and canvas issues found by that test were fixed and
+re-verified. Clean-VM installation remains pending for both OSes. See
+`docs/spikes/phase-1-report.md`.
 
 **If the spike fails**
 

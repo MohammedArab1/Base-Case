@@ -1,10 +1,11 @@
 # Phase 1 technical spike report
 
 - Date: 2026-10-23
-- Status: macOS complete; Windows packaging configured but not executed
+- Status: macOS complete; Windows verified on hardware; clean-VM installs pending
 - Decision: **Go** for Phase 2, with judge hardening continuing in Phase 3
 - Environment: macOS 27.2 (arm64), Node 24.22.0, pnpm 12.15.0, Go 1.27.2,
-  Electron 45.0.0, electron-builder 26.15.3
+  Electron 45.0.0, electron-builder 26.15.3; Windows 11 Pro (build 26200, x64),
+  Python 3.12.10, Node 25.8.1
 
 ## What was proven
 
@@ -38,6 +39,10 @@
 - Statuses exercised: `accepted`, `wrong_answer`, `compile_error`,
   `runtime_error`, `time_limit_exceeded`, `output_limit_exceeded`.
 - Cross-compiles for Windows amd64 (`GOOS=windows go build ./...` and `go vet`).
+- Runtime discovery probes candidates and skips a broken Microsoft Store
+  `python3` alias; `doctor` reports `available: false` when the probe fails.
+- Windows runs place each runtime child in a kill-on-close Job Object, so the
+  process tree dies even if the judge sidecar is killed.
 
 ### Editor and canvas
 
@@ -106,6 +111,23 @@ The renderer is large because Excalidraw pulls Mermaid. Lazy loading keeps it
 out of the initial coding path. Phase 5 should evaluate trimming Mermaid or
 loading Excalidraw in a worker if startup or memory regresses.
 
+Windows verification (unsigned NSIS and portable ZIP, commit `79bc5f7`):
+
+| Metric                          |                 Value |
+| ------------------------------- | --------------------: |
+| Installer                       |             171.1 MiB |
+| Portable ZIP                    |             220.1 MiB |
+| Installed size                  |             583.6 MiB |
+| Warm launch to CDP              |            563–590 ms |
+| Python sample / submit          |     257 ms / 2,070 ms |
+| TypeScript sample / submit      |     490 ms / 3,302 ms |
+| Submit with an infinite loop    | 6,226 ms → time limit |
+| Idle working set (process tree) |              428.4 MB |
+
+The Windows idle memory includes four Electron processes plus the judge; it is
+under the 500 MB budget. The installer is smaller than macOS because the
+Windows NSIS build compresses the application more aggressively.
+
 ## Decisions and changes
 
 - **SQLite driver:** `node:sqlite` works and avoids native rebuilds. Adopt it
@@ -122,32 +144,36 @@ loading Excalidraw in a worker if startup or memory regresses.
   this split.
 - **AI transport:** The streaming SSE parser works against a local endpoint.
   Keep the provider abstraction and add provider-specific evals in Phase 6.
-- **Process control:** Process-group kill works on macOS; the Windows build
-  cross-compiles and the workflow is configured, but Job Objects and Windows
-  execution have not been tested on a Windows host.
+- **Process control:** POSIX process-group kill and Windows kill-on-close Job
+  Objects both work. The Windows build was exercised on a physical Windows 11
+  machine, including runtime selection, judge-kill cleanup, and recovery.
+- **Installer mode:** The NSIS assisted installer now produced a per-user
+  install at `%LOCALAPPDATA%\Programs\Base Case` with a per-user shortcut and
+  `/currentuser` uninstall entry (no UAC).
 
 ## Known gaps and blockers
 
-1. **Windows packaging/execution:** The workflow is written
-   (`.github/workflows/build.yml`) but has not run because there is no GitHub
-   remote. Windows NSIS/ZIP artifacts and the judge must be tested on Windows.
-2. **Clean-VM install:** The packaged app was launched on the development
-   machine, not a clean VM. Complete this before exiting Phase 1.
-3. **Sandbox strength:** The spike has temp dirs, sanitized env, timeout,
-   output cap, and process-group kill. Seatbelt and Windows Job Objects are
-   Phase 3.
-4. **Memory limits:** Node gets `--max-old-space-size`; Python has no hard
+1. **Clean-VM install:** The macOS package was launched on the development
+   machine and the Windows package on a physical test machine, not a clean VM.
+   Complete this before exiting Phase 1.
+2. **Sandbox strength:** The spike has temp dirs, sanitized env, timeout,
+   output cap, process-group kill on POSIX, and kill-on-close Job Objects on
+   Windows. Seatbelt remains Phase 3.
+3. **Memory limits:** Node gets `--max-old-space-size`; Python has no hard
    memory cap yet. `peakMemoryBytes` is always zero in the spike. Phase 3 adds
    sampling and enforcement.
-5. **Explicit in-flight cancellation:** The sidecar shuts down cleanly and
+4. **Explicit in-flight cancellation:** The sidecar shuts down cleanly and
    timeouts kill the process group, but there is no concurrent `cancel` request
    while a run is in progress. Phase 3 adds request concurrency and cancel.
-6. **PNG export:** Code path exists; native save dialog not automated.
-7. **Real provider call:** Local SSE exercised the client; a real
+5. **PNG export:** Code path exists; native save dialog was verified manually on
+   Windows but is not automated.
+6. **Real provider call:** Local SSE exercised the client; a real
    OpenAI-compatible provider still needs a manual smoke with a user key.
-8. **Content count:** One original problem; alpha needs 10 coding + 4 design.
-9. **Hidden tests:** They are present in the content pack and extractable. This
+7. **Content count:** One original problem; alpha needs 10 coding + 4 design.
+8. **Hidden tests:** They are present in the content pack and extractable. This
    is a documented limitation, not a security boundary.
+9. **Uninstaller leftover:** The NSIS uninstaller may leave an empty install
+   folder. Files, shortcuts, and registry entries are removed.
 
 ## Demo script
 
@@ -167,21 +193,20 @@ loading Excalidraw in a worker if startup or memory regresses.
 
 ## Go/no-go
 
-**Go.** The riskiest assumptions are validated on macOS: secure Electron shell,
-real multi-language judge, local persistence, canvas persistence, optional AI
-streaming, and unsigned packaging. Installer size (190 MB) and idle memory
-(~265 MB) are within budget. No unknown blocker prevents Phase 2.
+**Go.** The riskiest assumptions are validated on macOS and Windows: secure
+Electron shell, real multi-language judge, local persistence, canvas
+persistence, optional AI streaming, and unsigned packaging. Installer size
+(190 MB macOS, 171 MB Windows) and idle memory (~265 MB macOS, ~428 MB Windows)
+are within budget. No unknown blocker prevents Phase 2.
 
-Phase 1 cannot be marked fully complete until the Windows artifact builds and
-launches on a Windows host or CI runner and a clean-VM install is recorded.
-Those are environment/access blockers, not design blockers.
+Phase 1 cannot be marked fully complete until clean-VM installs are recorded for
+both operating systems. That is an environment/access blocker, not a design
+blocker.
 
 ## Recommended next steps
 
-1. Create the GitHub remote, run `ci.yml` and `build.yml` on macOS + Windows,
-   and record the Windows artifact result.
-2. Install the macOS DMG and Windows build on clean VMs.
-3. Start Phase 2: typed IPC envelopes, structured logging, design system,
+1. Install the macOS DMG and Windows build on clean VMs and record the result.
+2. Start Phase 2: typed IPC envelopes, structured logging, design system,
    repository layer, FTS5, settings, and Playwright smoke tests.
-4. Carry these into Phase 3: runtime bundling decision, Seatbelt/Job Objects,
-   memory sampling, explicit cancellation, and esbuild/sucrase transpilation.
+3. Carry these into Phase 3: runtime bundling decision, Seatbelt, memory
+   sampling, explicit cancellation, and esbuild/sucrase transpilation.

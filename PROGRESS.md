@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-23
-> Current phase: Phase 1 — Technical spike (macOS verified; Windows report triaged, fixes awaiting rebuild)
-> Overall status: On track — macOS verified; Windows CI green; the first Windows artifact exposed runtime-selection, orphan-process, and timeout issues that are fixed in the working tree
-> Next milestone: rebuild the Windows artifacts, re-run the affected checks, then clean-VM verification and Phase 2
+> Current phase: Phase 1 — Technical spike (macOS and Windows verified; clean-VM installs pending)
+> Overall status: On track — Windows re-verification of `79bc5f7` passed all eight focused checks; every reported major defect is fixed
+> Next milestone: clean-VM installs, then Phase 2
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -13,7 +13,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
-| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS verified and packaged; Windows report found runtime-selection, orphan-process, and timeout defects; fixes are in the working tree and need a rebuilt artifact + retest |
+| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; Windows focused re-verification passed on `79bc5f7`. Only clean-VM installs remain |
 | Phase 2 — App foundation | Not started | — | Shell, SQLite, content loader, design system |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
@@ -26,20 +26,43 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Commit the Windows-report fixes, rebuild the Windows artifacts from `main`, and re-run `docs/spikes/windows-verification.md` on the new build (focus: judge runtimes, orphan processes, submit TLE, canvas save state, narrow window).
-2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+1. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+2. Re-run the uninstall row of the full Windows checklist on a fresh install (the focused delta skipped it).
 3. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
 4. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 5. Start Phase 2: typed IPC envelopes, structured logging, design system, repository layer, FTS5, settings, and Playwright smoke tests.
 
 ## Blockers
 
-- **Windows retest:** the first artifact predates the Python runtime fix and does not contain the orphan-process/timeout/canvas fixes. A rebuilt installer must be tested before Phase 1 can close.
-- **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. Both packages build successfully in CI.
+- **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
 - **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 2 engineering.
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 1 — Windows re-verification PASS
+
+- Status: Windows verified; clean-VM installs pending
+- Done:
+  - Re-verified the rebuilt Windows artifact (`Build installers` run `40012846163`, commit `79bc5f7`) on the same physical Windows 11 machine.
+  - All eight focused checks passed: runtime selection with the Store alias present, Python/TypeScript samples and hidden tests, submit-mode TLE, judge-kill process hygiene and recovery, canvas autosave/idle writes/restore, friendly judge errors, minimum-width path wrapping, and the persistence/portable regression.
+  - Confirmed D1–D5 and D7–D9 are fixed. D6 (empty uninstall folder) was not re-run; it remains a minor known issue.
+  - New build: per-user install at `%LOCALAPPDATA%\Programs\Base Case`, per-user shortcut, `/currentuser` uninstall entry, no UAC.
+  - Polish: runtime paths now break at path separators in Settings instead of mid-segment.
+  - Updated `docs/spikes/phase-1-report.md` and `PLAN.md` Phase 1 status with the Windows results and measurements.
+- Tests run:
+  - Windows artifact: Python 5/5 (257 ms) and 39/39 (2,070 ms); TypeScript 5/5 (490 ms) and 39/39 (3,302 ms); submit TLE 6,226 ms; no orphan harness processes after killing the judge; canvas `updated_at` stable over 10 s idle; PNG export 440×340; mock AI streamed; portable build ran both languages.
+  - Local: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm smoke:e2e`, `go test -C services/judge`, and Windows cross-build/vet all passed before the artifact was built.
+  - GitHub Actions `CI` run `40011834533` and `Judge conformance` run `40011834474` — success on macOS and Windows.
+- Files/PRs:
+  - Code: `apps/desktop/src/renderer/src/views/SettingsView.tsx` (path breaking), `docs/install.md`, `docs/spikes/windows-verification.md`, `docs/spikes/phase-1-report.md`, `PLAN.md`, `PROGRESS.md`.
+  - Verification reports are kept local and ignored by git.
+- Next:
+  - Clean-VM installs for both OSes; re-check uninstall on Windows.
+  - Start Phase 2.
+- Notes/decisions:
+  - The focused delta did not repeat the full 21-row checklist. Uninstall, SmartScreen via browser download, display scaling, and a real AI provider remain unverified in this round.
+  - The job-object fix and canvas debounce fix are confirmed on Windows hardware, not just cross-compiled.
 
 ### 2026-10-23 — Phase 1 — Windows verification report triage
 
