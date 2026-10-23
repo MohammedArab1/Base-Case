@@ -10,6 +10,7 @@ import type {
   ThemePreference,
 } from '../../../shared/types'
 import { useSettings } from '../settings'
+import { Toast } from '../ui/Toast'
 
 interface AiForm {
   readonly type: AiProviderType
@@ -20,6 +21,12 @@ interface AiForm {
 
 const defaultBaseUrl = 'https://api.openai.com/v1'
 const defaultModel = 'gpt-4o-mini'
+
+interface SettingsToast {
+  readonly title: string
+  readonly description?: string
+  readonly tone?: 'neutral' | 'danger'
+}
 
 function breakablePath(path: string): JSX.Element {
   return (
@@ -48,10 +55,9 @@ export function SettingsView(): JSX.Element {
   const [clearKey, setClearKey] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loadingJudge, setLoadingJudge] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [savingSettings, setSavingSettings] = useState(false)
-  const [settingsMessage, setSettingsMessage] = useState<string | null>(null)
+  const [toast, setToast] = useState<SettingsToast | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -89,14 +95,16 @@ export function SettingsView(): JSX.Element {
 
   const changeSettings = async (patch: SettingsPatch): Promise<void> => {
     setSavingSettings(true)
-    setSettingsMessage(null)
-    setError(null)
 
     try {
       await update(patch)
-      setSettingsMessage('Saved.')
+      setToast({ title: 'Settings saved' })
     } catch (settingsError: unknown) {
-      setError(settingsError instanceof Error ? settingsError.message : String(settingsError))
+      setToast({
+        title: 'Could not save settings',
+        description: settingsError instanceof Error ? settingsError.message : String(settingsError),
+        tone: 'danger',
+      })
     } finally {
       setSavingSettings(false)
     }
@@ -117,8 +125,6 @@ export function SettingsView(): JSX.Element {
 
   const save = async (): Promise<void> => {
     setSaving(true)
-    setMessage(null)
-    setError(null)
 
     const input: SaveAiConfigInput = {
       type: form.type,
@@ -133,13 +139,17 @@ export function SettingsView(): JSX.Element {
       setProvider(nextProvider)
       setForm((current) => ({ ...current, apiKey: '' }))
       setClearKey(false)
-      setMessage(
-        nextProvider.enabled
+      setToast({
+        title: nextProvider.enabled
           ? 'AI provider saved and enabled.'
           : 'AI provider saved, but it is not enabled.',
-      )
+      })
     } catch (saveError: unknown) {
-      setError(saveError instanceof Error ? saveError.message : String(saveError))
+      setToast({
+        title: 'Could not save the AI provider',
+        description: saveError instanceof Error ? saveError.message : String(saveError),
+        tone: 'danger',
+      })
     } finally {
       setSaving(false)
     }
@@ -149,6 +159,18 @@ export function SettingsView(): JSX.Element {
 
   return (
     <div className="settings-stack">
+      <Toast
+        open={toast !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setToast(null)
+          }
+        }}
+        title={toast?.title ?? ''}
+        description={toast?.description}
+        tone={toast?.tone}
+      />
+
       {error ? (
         <div className="callout callout-error">
           <strong>Something went wrong.</strong>
@@ -268,8 +290,6 @@ export function SettingsView(): JSX.Element {
             Review reminders
           </label>
         </div>
-
-        {settingsMessage ? <p className="muted">{settingsMessage}</p> : null}
       </section>
 
       <section className="settings-card">
@@ -371,7 +391,6 @@ export function SettingsView(): JSX.Element {
           </button>
         </div>
 
-        {message ? <p className="muted">{message}</p> : null}
         <p className="muted small">
           The mock provider returns a canned Socratic hint. A real provider is called only after the
           context preview is confirmed. Local endpoints such as Ollama work without a key.

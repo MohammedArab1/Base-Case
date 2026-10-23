@@ -14,7 +14,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, and user pack loading done; design system, onboarding, and pack management next |
+| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, and the Radix/Tailwind primitive layer done; onboarding and pack management next |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -39,6 +39,28 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 2 — Design-system foundation
+
+- Status: in progress (primitives and first migrations landed)
+- Done:
+  - Added Tailwind CSS 4 through the Vite plugin without importing preflight, so Excalidraw and CodeMirror keep their own resets. Added semantic `bc-*` colors mapped to the existing light/dark CSS variables and a `dark` variant bound to `[data-theme]`.
+  - Added Radix-based primitives: Button, Input/Field, Badge, Dialog, Tooltip, Tabs, Toast, Progress, plus `cn()` (clsx + tailwind-merge).
+  - Migrated the command palette to Radix Dialog + Tailwind, including focus trapping, accessible title/description, keyboard navigation, and the existing smoke-test hooks.
+  - Migrated the top bar actions to the new Button/Badge and wrapped the command trigger in a Tooltip.
+  - Replaced inline settings save confirmations with the new Toast; the first-run settings load and judge errors still use the persistent error panel.
+  - Verified light-theme rendering with CDP screenshots; fixed missing UA-button resets exposed by intentionally skipping preflight.
+- Tests run:
+  - `pnpm typecheck`, `pnpm lint`, `pnpm test` — passed.
+  - `pnpm build && pnpm smoke:e2e` — passed with search, palette, settings, logs, and the full judge loop.
+  - Visual CDP check: light theme rendered correctly for the command palette and Settings; no main-process errors.
+- Files/PRs:
+  - Key paths: `renderer/src/design/tailwind.css`, `renderer/src/ui/*`, `renderer/src/components/CommandPalette.tsx`, `renderer/src/App.tsx`, `renderer/src/main.tsx`, `renderer/src/views/SettingsView.tsx`.
+- Next:
+  - Continue migrating Settings/Coding to the primitives, then onboarding and pack install/uninstall; finish with Playwright coverage.
+- Notes/decisions:
+  - Preflight is intentionally skip-imported. Primitives must reset browser defaults explicitly (`border-0`, transparent backgrounds) rather than relying on Tailwind's base layer.
+  - Legacy view CSS remains until each surface is migrated; new UI should use `ui/` primitives and `bc-*` utilities.
 
 ### 2026-10-23 — Phase 2 — Command palette, shortcuts, and content search
 

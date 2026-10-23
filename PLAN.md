@@ -2446,11 +2446,11 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [x] Typed IPC contract with Zod validation and error envelopes.
 - [x] Structured logging + log rotation.
 - [ ] Design system:
-  - [ ] Tailwind + Radix primitives.
-  - [ ] Light/dark tokens.
+  - [x] Tailwind + Radix primitives.
+  - [x] Light/dark tokens.
   - [ ] App layout: sidebar, top bar, content area, inspector.
-  - [ ] Buttons, inputs, dialogs, tabs, toasts, tooltips, badges, progress.
-  - [ ] Empty/error/loading states.
+  - [x] Buttons, inputs, dialogs, tabs, toasts, tooltips, badges, progress.
+  - [x] Empty/error/loading states.
 - [x] Command palette skeleton.
 - [x] Keyboard shortcut registry.
 - [ ] SQLite:

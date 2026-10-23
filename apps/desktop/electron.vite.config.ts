@@ -1,4 +1,5 @@
 import { resolve } from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import type { Plugin } from 'vite'
@@ -35,6 +36,6 @@ export default defineConfig({
         '@renderer': resolve('src/renderer/src'),
       },
     },
-    plugins: [react(), cspPlugin()],
+    plugins: [tailwindcss(), react(), cspPlugin()],
   },
 })

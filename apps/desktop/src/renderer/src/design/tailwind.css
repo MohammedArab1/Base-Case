@@ -1,0 +1,29 @@
+/*
+ * Tailwind is layered onto the existing CSS-variable theme. Preflight is
+ * intentionally not imported so Excalidraw and CodeMirror keep their own
+ * resets while new UI primitives use utilities.
+ */
+@import 'tailwindcss/theme.css';
+@import 'tailwindcss/utilities.css';
+
+@theme {
+  --color-bc-bg: var(--bg);
+  --color-bc-surface: var(--surface);
+  --color-bc-surface-muted: var(--surface-muted);
+  --color-bc-sidebar: var(--sidebar-bg);
+  --color-bc-text: var(--text);
+  --color-bc-muted: var(--muted);
+  --color-bc-border: var(--border);
+  --color-bc-border-strong: var(--border-strong);
+  --color-bc-accent: var(--accent);
+  --color-bc-accent-soft: var(--accent-soft);
+  --color-bc-success: var(--success);
+  --color-bc-success-soft: var(--success-soft);
+  --color-bc-danger: var(--danger);
+  --color-bc-danger-soft: var(--danger-soft);
+
+  --radius-bc: 12px;
+  --shadow-bc: var(--shadow);
+}
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));

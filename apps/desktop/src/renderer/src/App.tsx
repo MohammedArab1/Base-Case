@@ -5,6 +5,9 @@ import { CommandPalette } from './components/CommandPalette'
 import type { Command } from './components/CommandPalette'
 import { matchesShortcut, shortcutLabel, shortcuts } from './lib/shortcuts'
 import { useSettings } from './settings'
+import { Badge } from './ui/Badge'
+import { Button } from './ui/Button'
+import { Tooltip } from './ui/Tooltip'
 
 const CodingView = lazy(() =>
   import('./views/CodingView').then((module) => ({ default: module.CodingView })),
@@ -309,15 +312,19 @@ function App(): JSX.Element {
             <h1>{active.title}</h1>
           </div>
           <div className="topbar-actions">
-            <span className="badge">Offline-first</span>
-            <button
-              type="button"
-              className="badge badge-muted badge-action"
-              onClick={() => setPaletteOpen(true)}
-              aria-haspopup="dialog"
+            <Badge tone="success">Offline-first</Badge>
+            <Tooltip
+              content={`Open the command palette (${shortcutLabel(shortcuts.commandPalette)})`}
             >
-              {shortcutLabel(shortcuts.commandPalette)} commands
-            </button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setPaletteOpen(true)}
+                aria-haspopup="dialog"
+              >
+                {shortcutLabel(shortcuts.commandPalette)} commands
+              </Button>
+            </Tooltip>
           </div>
         </header>
 
