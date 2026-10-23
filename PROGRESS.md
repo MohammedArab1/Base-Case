@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-23
-> Current phase: Phase 1 — Technical spike (macOS verified; Windows CI green; clean-VM pending)
-> Overall status: On track — macOS end-to-end verified and packaged; Windows CI green and installers built; clean-VM installs pending
-> Next milestone: clean-VM verification, then Phase 2
+> Current phase: Phase 1 — Technical spike (macOS verified; Windows report triaged, fixes awaiting rebuild)
+> Overall status: On track — macOS verified; Windows CI green; the first Windows artifact exposed runtime-selection, orphan-process, and timeout issues that are fixed in the working tree
+> Next milestone: rebuild the Windows artifacts, re-run the affected checks, then clean-VM verification and Phase 2
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -13,7 +13,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
-| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS end to end verified and packaged; Windows CI green (Node, Go, judge conformance, installers); clean-VM installs pending |
+| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS verified and packaged; Windows report found runtime-selection, orphan-process, and timeout defects; fixes are in the working tree and need a rebuilt artifact + retest |
 | Phase 2 — App foundation | Not started | — | Shell, SQLite, content loader, design system |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
@@ -26,19 +26,49 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Download the Windows installers from the Build installers run and install them on a clean Windows VM. Record the result.
-2. Install the macOS DMG on a clean macOS VM (or fresh user account) and record the result.
+1. Commit the Windows-report fixes, rebuild the Windows artifacts from `main`, and re-run `docs/spikes/windows-verification.md` on the new build (focus: judge runtimes, orphan processes, submit TLE, canvas save state, narrow window).
+2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
 4. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 5. Start Phase 2: typed IPC envelopes, structured logging, design system, repository layer, FTS5, settings, and Playwright smoke tests.
 
 ## Blockers
 
+- **Windows retest:** the first artifact predates the Python runtime fix and does not contain the orphan-process/timeout/canvas fixes. A rebuilt installer must be tested before Phase 1 can close.
 - **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. Both packages build successfully in CI.
 - **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 2 engineering.
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 1 — Windows verification report triage
+
+- Status: in progress (fixes written; rebuilt artifact and retest pending)
+- Done:
+  - Reviewed `windows-verification-report.md` (artifact `b18153e`, source smoke at `c1a4c83`). The report confirms the core loop and the TypeScript path work on Windows.
+  - Fixed runtime discovery: the judge now probes `python`/`python3` (and `node`) with `--version` and selects the first candidate that actually runs, so the Microsoft Store alias stub cannot win by PATH order alone.
+  - Fixed `judge doctor`: `available` is set only after a successful version probe; a failed probe is reported with `available: false` and the error.
+  - Fixed orphaned runtime children on Windows: each run child is placed in a kill-on-close Job Object via `golang.org/x/sys/windows`, so the process tree dies even if the judge sidecar is killed.
+  - Fixed submit/sample time-limit storms: the runner stops at the first non-compile failure, so a 39-test submit no longer spends 39 × 6 s behind a 120 s client timeout.
+  - Fixed the canvas autosave loop: only element/file changes schedule a save, identical snapshots are skipped, and the “Saving…” indicator settles.
+  - Replaced raw Electron IPC judge errors with concise messages for sidecar exit, timeout, and startup failures.
+  - Allowed long runtime paths to wrap in Settings at the minimum window size.
+  - Documented the assisted installer's per-user/all-users choice, the UAC implications, and the empty-folder uninstall leftover.
+- Tests run:
+  - `go test -C services/judge -count=1 ./...` — passed, including new runtime-probe, doctor-availability, and first-failure tests.
+  - `GOOS=windows GOARCH=amd64 go build ./...` and `go vet ./...` — passed.
+  - `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build` — passed.
+  - `pnpm smoke:e2e` — passed: 5/5 sample, 39/39 hidden, wrong answer, draft, scene, mock AI, local SSE, key storage, 3 attempts, 1 backup.
+- Files/PRs:
+  - Pending commit: `services/judge/internal/judge/{runtimes.go,runtimes_test.go,runtimes_unix_test.go,runner.go,runner_test.go,process_windows.go,process_unix.go}`, `services/judge/{go.mod,go.sum}`, `apps/desktop/src/renderer/src/views/{CodingView,DesignView}.tsx`, `apps/desktop/src/renderer/src/workspace.css`, `docs/install.md`, `docs/spikes/windows-verification.md`, `windows-verification-report.md`.
+- Next:
+  - Commit and push, dispatch “Build installers,” and re-run the Windows checklist on the rebuilt artifact.
+  - Verify the Job Object leak fix by killing `judge.exe` during a run and checking for `python.exe -I harness.py` / `node` children.
+  - Verify submit-mode TLE now returns in roughly one limit interval, and that the canvas indicator reaches “Saved locally” without idle database writes.
+- Notes/decisions:
+  - The Windows report's D1 was already fixed at `c1a4c83`; the new runtime probing makes the fix independent of PATH ordering.
+  - The empty install directory and assisted-installer UAC behavior are documented as minor installer issues, not Phase 1 blockers.
+  - Windows-specific Job Object and canvas behavior still need confirmation on the Windows machine; local tests can only cross-compile the judge.
 
 ### 2026-10-23 — Phase 1 — Windows CI green
 

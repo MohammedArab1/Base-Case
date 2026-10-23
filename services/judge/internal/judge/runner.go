@@ -97,6 +97,11 @@ func (r *Runner) Run(ctx context.Context, request RunRequest) (RunResult, error)
 			result.Message = "The code could not be compiled or imported."
 			break
 		}
+
+		// Stop at the first non-compile failure. Running every remaining test
+		// would turn a slow answer into a minute-long timeout storm, especially
+		// in submit mode where 39 hidden tests can each hit the time limit.
+		break
 	}
 
 	if result.Passed == result.Total {
@@ -224,6 +229,11 @@ func (r *Runner) runTest(
 			Message:    fmt.Sprintf("start runtime: %v", err),
 		}
 	}
+
+	// On Windows this places the child in a kill-on-close Job Object so the
+	// runtime tree cannot outlive the judge, even if the judge is killed.
+	releaseGuard := guardProcess(command.Process.Pid)
+	defer releaseGuard()
 
 	waitChannel := make(chan error, 1)
 	go func() {

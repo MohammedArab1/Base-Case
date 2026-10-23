@@ -147,6 +147,9 @@ func TestWrongAnswer(t *testing.T) {
 	if result.FirstFailure == nil || result.FirstFailure.Actual == nil {
 		t.Fatalf("expected first failure with actual value, got %+v", result.FirstFailure)
 	}
+	if len(result.Tests) != 1 {
+		t.Fatalf("expected the run to stop after the first failure, got %d test results", len(result.Tests))
+	}
 }
 
 func TestCompileError(t *testing.T) {
@@ -180,7 +183,6 @@ func TestTimeLimitExceeded(t *testing.T) {
             pass
 `)
 	request.Limits.TimeMs = 100
-	request.Tests = request.Tests[:1]
 
 	result, err := runner.Run(context.Background(), request)
 	if err != nil {
@@ -189,6 +191,9 @@ func TestTimeLimitExceeded(t *testing.T) {
 
 	if result.Status != StatusTimeLimitExceeded {
 		t.Fatalf("expected time_limit_exceeded, got %s", result.Status)
+	}
+	if len(result.Tests) != 1 {
+		t.Fatalf("expected the run to stop after the first timeout, got %d test results", len(result.Tests))
 	}
 }
 

@@ -33,10 +33,23 @@ public alpha.
 2. Run the installer. SmartScreen may show **Windows protected your PC**.
 3. Choose **More info → Run anyway**. Verify the SHA-256 checksum from the
    release notes before running.
-4. Windows 10 21H2+ or Windows 11 x64 is required.
+4. The assisted installer asks whether to install for the current user or all
+   users, and lets you choose the folder. The per-user default is
+   `%LOCALAPPDATA%\Programs\Base Case`; choosing the all-users mode or a custom
+   folder changes the path and makes uninstall request elevation.
+5. Windows 10 21H2+ or Windows 11 x64 is required.
 
 The Phase 1 judge uses the system Python and Node installations. Phase 3 will
-bundle pinned runtimes so a clean machine does not need them.
+bundle pinned runtimes so a clean machine does not need them. Install Python
+from python.org with "Add python.exe to PATH" selected; if `python` or `python3`
+resolves to the Microsoft Store alias stub, disable those App Execution Aliases
+in Windows Settings. The judge now probes candidates and skips a runtime that
+fails to run, but Settings → Judge runtimes should show both runtimes as
+available before you start a problem.
+
+The uninstaller removes the application files, shortcut, and uninstall entry. It
+may leave an empty install folder behind; deleting it manually is safe. User
+data under `%APPDATA%\Base Case` is preserved by design.
 
 ## Verify a download
 

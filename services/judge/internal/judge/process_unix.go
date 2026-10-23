@@ -17,3 +17,9 @@ func killProcessGroup(pid int) {
 	}
 	_ = syscall.Kill(-pid, syscall.SIGKILL)
 }
+
+// guardProcess is a no-op on POSIX: configureProcess already puts the child in
+// its own process group, and killProcessGroup kills the whole group.
+func guardProcess(pid int) func() {
+	return func() {}
+}

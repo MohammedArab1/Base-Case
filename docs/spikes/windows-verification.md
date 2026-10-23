@@ -98,10 +98,12 @@ returns `NotSigned`). SmartScreen is expected on first run.
 
 1. Run `Base-Case-0.0.0-x64.exe`.
 2. Record the exact SmartScreen text, if shown. Choose **More info → Run anyway**.
-3. Use the default install location, or note the custom path.
+3. Use the default install location, or note the custom path. The assisted
+   installer offers per-user and all-users modes; record which one you chose.
 4. Confirm the installer completes without an error dialog.
 
-Expected default location: `%LOCALAPPDATA%\Programs\Base Case`.
+The expected per-user default is `%LOCALAPPDATA%\Programs\Base Case`. All-users
+mode installs elsewhere and makes uninstall request elevation.
 
 Verify the bundled resources:
 
@@ -476,6 +478,10 @@ change the source to make it pass.
   telemetry.
 - AI is optional and BYO-key; the mock provider is the supported offline path.
 - The system design module is a canvas spike, not the final editor.
+- The NSIS uninstaller may leave an empty install folder; all files, shortcuts,
+  and registry entries are removed. This is a known minor installer issue.
+- The runtime path in Settings wraps at narrow window sizes; it may make a row
+  taller but is no longer clipped.
 
 ## 16. Report template
 

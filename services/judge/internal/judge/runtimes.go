@@ -31,17 +31,17 @@ func NewRunner() *Runner {
 	pythonPath := os.Getenv("BASE_CASE_PYTHON")
 	if pythonPath == "" {
 		if runtime.GOOS == "windows" {
-			// The Windows Store "python3" alias can be a stub that never runs
-			// Python. Prefer the real "python" command used by setup-python.
-			pythonPath = firstLookPath("python", "python3")
+			// The Windows Store "python3" alias is often a stub that never runs
+			// Python. Probe candidates and keep the first one that executes.
+			pythonPath = firstWorkingRuntime("python", "python3")
 		} else {
-			pythonPath = firstLookPath("python3", "python")
+			pythonPath = firstWorkingRuntime("python3", "python")
 		}
 	}
 
 	nodePath := os.Getenv("BASE_CASE_NODE")
 	if nodePath == "" {
-		nodePath = firstLookPath("node")
+		nodePath = firstWorkingRuntime("node")
 	}
 
 	return &Runner{
@@ -52,13 +52,35 @@ func NewRunner() *Runner {
 	}
 }
 
-func firstLookPath(names ...string) string {
+// firstWorkingRuntime returns the first candidate that both resolves on PATH
+// and runs. If none run, it returns the first resolved path so Doctor can show
+// why the runtime is unusable instead of reporting it as missing.
+func firstWorkingRuntime(names ...string) string {
+	fallback := ""
+
 	for _, name := range names {
-		if path, err := exec.LookPath(name); err == nil {
+		path, err := exec.LookPath(name)
+		if err != nil {
+			continue
+		}
+
+		if fallback == "" {
+			fallback = path
+		}
+
+		if runtimeRuns(path) {
 			return path
 		}
 	}
-	return ""
+
+	return fallback
+}
+
+func runtimeRuns(path string) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	return exec.CommandContext(ctx, path, "--version").Run() == nil
 }
 
 func (r *Runner) runtimeFor(language string) (string, error) {
@@ -103,7 +125,6 @@ func (r *Runner) runtimeInfo(ctx context.Context, name, path string, args ...str
 		return info
 	}
 
-	info.Available = true
 	versionCtx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
@@ -113,6 +134,7 @@ func (r *Runner) runtimeInfo(ctx context.Context, name, path string, args ...str
 		return info
 	}
 
+	info.Available = true
 	info.Version = strings.TrimSpace(string(output))
 	return info
 }

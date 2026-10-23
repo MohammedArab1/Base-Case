@@ -25,6 +25,8 @@ export function DesignView(): JSX.Element {
   const [exporting, setExporting] = useState(false)
   const apiRef = useRef<ExcalidrawImperativeAPI | null>(null)
   const saveTimer = useRef<number | null>(null)
+  const lastInput = useRef<{ elements: unknown; files: unknown } | null>(null)
+  const lastSavedScene = useRef<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -39,6 +41,7 @@ export function DesignView(): JSX.Element {
         if (payload.sceneJson) {
           try {
             setInitialScene(JSON.parse(payload.sceneJson) as ExcalidrawInitialDataState)
+            lastSavedScene.current = payload.sceneJson
           } catch {
             setLoadError('The saved canvas could not be parsed. Starting a fresh scene.')
           }
@@ -143,6 +146,19 @@ export function DesignView(): JSX.Element {
                 return
               }
 
+              // Excalidraw also emits onChange for cursor and UI state. Only a
+              // new elements or files reference represents scene content, so
+              // pointer movement must not reset the debounce or write the DB.
+              const contentChanged =
+                lastInput.current === null ||
+                elements !== lastInput.current.elements ||
+                files !== lastInput.current.files
+              lastInput.current = { elements, files }
+
+              if (!contentChanged) {
+                return
+              }
+
               setSaveState('saving')
 
               if (saveTimer.current !== null) {
@@ -151,9 +167,18 @@ export function DesignView(): JSX.Element {
 
               saveTimer.current = window.setTimeout(() => {
                 const sceneJson = serializeAsJSON(elements, appState, files, 'local')
+
+                if (sceneJson === lastSavedScene.current) {
+                  setSaveState('saved')
+                  return
+                }
+
                 void window.baseCase.design
                   .saveScene(sceneJson)
-                  .then(() => setSaveState('saved'))
+                  .then(() => {
+                    lastSavedScene.current = sceneJson
+                    setSaveState('saved')
+                  })
                   .catch(() => setSaveState('error'))
               }, 800)
             }}

@@ -23,6 +23,25 @@ function difficultyClass(difficulty: ProblemSummary['difficulty']): string {
   return `difficulty difficulty-${difficulty}`
 }
 
+function describeJudgeError(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error)
+  const unwrapped = message.replace(/^Error invoking remote method '[^']+': Error: /, '')
+
+  if (/Judge sidecar exited/i.test(unwrapped)) {
+    return 'The judge stopped unexpectedly. Run again to restart it.'
+  }
+
+  if (/Judge request timed out/i.test(unwrapped)) {
+    return 'The judge did not respond in time. Try again, or restart the app if it repeats.'
+  }
+
+  if (/Judge sidecar (failed to start|is not running)/i.test(unwrapped)) {
+    return 'The judge could not start. Check that Python and Node are installed, then restart the app.'
+  }
+
+  return unwrapped
+}
+
 export function CodingView({
   problems,
   selectedProblemId,
@@ -274,7 +293,8 @@ function ProblemWorkspace({
         setResult(nextResult)
         onStatsChanged()
       } catch (runError: unknown) {
-        setError(runError instanceof Error ? runError.message : String(runError))
+        console.error('Judge run failed:', runError)
+        setError(describeJudgeError(runError))
       } finally {
         setRunning(false)
       }

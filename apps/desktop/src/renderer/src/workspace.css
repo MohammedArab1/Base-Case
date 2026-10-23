@@ -761,11 +761,11 @@ pre {
 }
 
 .runtime-row code {
-  overflow: hidden;
+  overflow-wrap: anywhere;
   color: var(--muted);
   font-size: 11.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
+  white-space: normal;
 }
 
 .status-dot-error {
