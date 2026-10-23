@@ -53,6 +53,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
   - Fixed a main-process crash on quit: the judge client now handles asynchronous EPIPE on `stdin`/`stdout`/`stderr`, checks stream state before shutdown writes, and guards `kill()`.
   - Added main-process `uncaughtException` and `unhandledRejection` handlers that write to the structured log and show an actionable “Quit / Open logs folder” dialog instead of an opaque crash modal.
   - Hardened `scripts/smoke-electron.mjs`: it now aborts immediately if Electron writes an uncaught-exception line to stderr or exits mid-test, and it covers FTS search, settings/logs, and the command palette.
+  - Verified graceful shutdown separately through CDP `Browser.close`: the app exited with code 0 and produced no EPIPE or uncaught-exception output.
 - Tests run:
   - `pnpm typecheck`, `pnpm lint`, `pnpm test` — passed (24 TypeScript tests plus the Go suites).
   - `pnpm build && pnpm smoke:e2e` — passed with `search: true`, `palette: true`, 5/5 sample, 39/39 hidden, drafts, scene, AI, key storage, attempts, and backup.
