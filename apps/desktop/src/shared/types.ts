@@ -14,6 +14,7 @@ export interface AppSettings {
   readonly editor: EditorSettings
   readonly dailyGoalMinutes: number
   readonly reviewReminders: boolean
+  readonly onboardingCompleted: boolean
 }
 
 export interface SettingsPatch {
@@ -22,6 +23,7 @@ export interface SettingsPatch {
   readonly editor?: Partial<EditorSettings>
   readonly dailyGoalMinutes?: number
   readonly reviewReminders?: boolean
+  readonly onboardingCompleted?: boolean
 }
 
 export const defaultAppSettings: AppSettings = {
@@ -34,6 +36,7 @@ export const defaultAppSettings: AppSettings = {
   },
   dailyGoalMinutes: 30,
   reviewReminders: true,
+  onboardingCompleted: false,
 }
 
 export type SectionId = 'today' | 'coding' | 'design' | 'review' | 'progress' | 'settings'

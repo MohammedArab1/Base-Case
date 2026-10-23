@@ -8,6 +8,7 @@ import { useSettings } from './settings'
 import { Badge } from './ui/Badge'
 import { Button } from './ui/Button'
 import { Tooltip } from './ui/Tooltip'
+import { OnboardingView } from './views/OnboardingView'
 
 const CodingView = lazy(() =>
   import('./views/CodingView').then((module) => ({ default: module.CodingView })),
@@ -66,7 +67,7 @@ const sections: readonly Section[] = [
 ]
 
 function App(): JSX.Element {
-  const { settings, update } = useSettings()
+  const { settings, ready: settingsReady, update } = useSettings()
   const [section, setSection] = useState<SectionId>('today')
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [problems, setProblems] = useState<readonly ProblemSummary[]>([])
@@ -127,6 +128,13 @@ function App(): JSX.Element {
     setSection('coding')
   }
 
+  const finishOnboarding = useCallback((options?: { readonly openProblemId?: string }): void => {
+    if (options?.openProblemId) {
+      setSelectedProblemId(options.openProblemId)
+      setSection('coding')
+    }
+  }, [])
+
   const resolvedTheme = useMemo<'light' | 'dark'>(() => {
     if (settings.theme !== 'system') {
       return settings.theme
@@ -174,6 +182,10 @@ function App(): JSX.Element {
   }, [resolvedTheme, update])
 
   useEffect(() => {
+    if (!settings.onboardingCompleted) {
+      return
+    }
+
     const handler = (event: KeyboardEvent): void => {
       if (matchesShortcut(event, shortcuts.commandPalette)) {
         event.preventDefault()
@@ -201,7 +213,19 @@ function App(): JSX.Element {
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [paletteOpen])
+  }, [paletteOpen, settings.onboardingCompleted])
+
+  if (!settingsReady) {
+    return (
+      <div className="onboarding-shell flex min-h-screen items-center justify-center bg-bc-bg text-bc-muted">
+        <p className="text-sm">Loading Base Case…</p>
+      </div>
+    )
+  }
+
+  if (!settings.onboardingCompleted) {
+    return <OnboardingView onFinish={finishOnboarding} />
+  }
 
   const renderContent = (): JSX.Element => {
     if (loading) {

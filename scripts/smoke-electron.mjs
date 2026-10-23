@@ -180,6 +180,19 @@ async function waitForValue(expression, predicate, label, timeout = 20_000) {
   throw new Error(`Timed out waiting for ${label}. Last value: ${JSON.stringify(lastValue)}`)
 }
 
+async function clickTestId(testId) {
+  const clicked = await evaluate(
+    `(() => {
+      const element = document.querySelector('[data-testid="${testId}"]')
+      element?.click()
+      return Boolean(element)
+    })()`,
+  )
+
+  assert(clicked, `The ${testId} control is missing`)
+  await sleep(150)
+}
+
 async function main() {
   if (!existsSync(judgePath)) {
     execFileSync(process.execPath, [join(root, 'scripts/build-judge.mjs')], {
@@ -246,6 +259,47 @@ async function main() {
     'the app shell',
   )
 
+  await waitForValue(
+    "Boolean(document.querySelector('.onboarding-shell'))",
+    (value) => value === true,
+    'the onboarding shell',
+  )
+
+  await clickTestId('onboarding-start')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="onboarding-language-next"]\'))',
+    (value) => value === true,
+    'the language step',
+  )
+
+  await clickTestId('onboarding-language-next')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="onboarding-goal-next"]\'))',
+    (value) => value === true,
+    'the daily-goal step',
+  )
+
+  await clickTestId('onboarding-goal-next')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="onboarding-finish"]\'))',
+    (value) => value === true,
+    'the AI step',
+  )
+
+  await clickTestId('onboarding-finish')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="onboarding-go-today"]\'))',
+    (value) => value === true,
+    'the onboarding summary',
+  )
+
+  await clickTestId('onboarding-go-today')
+  await waitForValue(
+    "Boolean(document.querySelector('.app-shell'))",
+    (value) => value === true,
+    'the app shell after onboarding',
+  )
+
   const problems = await evaluate('window.baseCase.content.list()')
   assert(Array.isArray(problems) && problems.length >= 1, 'Content list is empty')
   assert(
@@ -255,6 +309,7 @@ async function main() {
 
   const initialSettings = await evaluate('window.baseCase.settings.get()')
   assert(initialSettings.theme === 'system', 'Default theme is not system')
+  assert(initialSettings.onboardingCompleted === true, 'Onboarding did not persist completion')
 
   const searchResults = await evaluate("window.baseCase.content.search('hash')")
   assert(
@@ -618,6 +673,7 @@ export { Solution }
 
   const summary = {
     problems: problems.length,
+    onboarding: initialSettings.onboardingCompleted === true,
     settings: persistedSettings.theme === 'dark' && persistedSettings.editor.fontSize === 15,
     logs: logText.includes('app.start'),
     search: searchResults.length > 0 && emptySearch.length === 0,

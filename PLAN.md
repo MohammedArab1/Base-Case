@@ -2469,7 +2469,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Theme, language, editor preferences.
   - [x] Data directories.
   - [x] AI provider placeholder.
-- [ ] Onboarding shell and a sample problem stub.
+- [x] Onboarding shell and a sample problem stub.
 - [x] Window state persistence (size/position).
 - [x] App menu and About/licenses screen.
 - [x] Unit tests for migrations, repositories, validation.

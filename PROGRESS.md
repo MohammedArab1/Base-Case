@@ -14,7 +14,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, and the Radix/Tailwind primitive layer done; onboarding and pack management next |
+| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, radix/tailwind primitives, and onboarding done; pack management and Playwright next |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Continue Phase 2: pack install/uninstall UI, design-system migration, onboarding shell, repository split, and Playwright smoke coverage.
+1. Continue Phase 2: pack install/uninstall UI, Playwright coverage, and the remaining Settings/Coding migration to the design-system primitives.
 2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Re-run the uninstall row of the full Windows checklist on a fresh install.
 4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -39,6 +39,29 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 2 — First-run onboarding
+
+- Status: in progress
+- Done:
+  - Added a three-step first-run flow (language, daily goal, optional AI) plus a welcome and finish screen, styled with the new design-system primitives.
+  - The flow makes the offline/no-account/no-telemetry promise explicit, allows skipping, and offers the bundled Pair Sum problem as the first exercise.
+  - Added `onboardingCompleted` to the persisted settings schema. Existing settings without the field fall back to defaults and show onboarding once; later saves preserve completion.
+  - Completing onboarding writes the preferred language, daily goal, review-reminder choice, and optional mock AI provider, then marks onboarding complete.
+  - Gated the main shell and global shortcuts until onboarding finishes; returning users skip the flow entirely.
+  - Extended `pnpm smoke:e2e` to drive all onboarding steps on a fresh profile and assert completion persisted.
+  - Visually checked the welcome and language steps via CDP; fixed the ghost-button UA background exposed by the no-preflight Tailwind setup.
+- Tests run:
+  - `pnpm typecheck`, `pnpm lint`, `pnpm test` — passed.
+  - `pnpm build && pnpm smoke:e2e` — passed with `onboarding: true`, plus the full judge/settings/search/palette loop.
+  - Visual CDP check: welcome and language screens render correctly in the light theme; no main-process errors.
+- Files/PRs:
+  - Key paths: `renderer/src/views/OnboardingView.tsx`, `renderer/src/App.tsx`, `shared/types.ts`, `main/ipc-schemas.ts`, `scripts/smoke-electron.mjs`.
+- Next:
+  - Pack install/uninstall UI, Playwright coverage, and the remaining Settings/Coding migration to the primitive layer.
+- Notes/decisions:
+  - Onboarding AI setup only offers None or Mock. Real providers and key entry stay in Settings so onboarding never collects a secret.
+  - Completion is a single boolean for now; add an onboarding version bump if the flow changes materially.
 
 ### 2026-10-23 — Phase 2 — Design-system foundation
 

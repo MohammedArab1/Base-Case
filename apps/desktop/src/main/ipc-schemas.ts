@@ -90,6 +90,7 @@ export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
   editor: editorSettingsSchema,
   dailyGoalMinutes: z.number().int().min(5).max(480),
   reviewReminders: z.boolean(),
+  onboardingCompleted: z.boolean(),
 }) as z.ZodType<AppSettings>
 
 export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
@@ -104,4 +105,5 @@ export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
     .optional(),
   dailyGoalMinutes: z.number().int().min(5).max(480).optional(),
   reviewReminders: z.boolean().optional(),
+  onboardingCompleted: z.boolean().optional(),
 }) as z.ZodType<SettingsPatch>
