@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-23
-> Current phase: Phase 1 — Technical spike (macOS verified; Windows/clean-VM pending)
-> Overall status: On track — macOS end-to-end verified; Windows packaging and clean-VM installs pending
-> Next milestone: Windows artifacts + clean-VM verification, then Phase 2
+> Current phase: Phase 1 — Technical spike (macOS verified; Windows CI green; clean-VM pending)
+> Overall status: On track — macOS end-to-end verified and packaged; Windows CI green and installers built; clean-VM installs pending
+> Next milestone: clean-VM verification, then Phase 2
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -13,7 +13,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete. Pending: final name/trademark check; GitHub milestones/labels/board |
-| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS end to end verified and packaged; Windows packaging configured but not run; clean-VM installs pending |
+| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS end to end verified and packaged; Windows CI green (Node, Go, judge conformance, installers); clean-VM installs pending |
 | Phase 2 — App foundation | Not started | — | Shell, SQLite, content loader, design system |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
@@ -26,20 +26,43 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Create the GitHub remote and run `ci.yml` and `build.yml` on macOS + Windows. Record the Windows artifact result.
-2. Install the macOS DMG and the Windows build on clean VMs and record the result.
+1. Download the Windows installers from the Build installers run and install them on a clean Windows VM. Record the result.
+2. Install the macOS DMG on a clean macOS VM (or fresh user account) and record the result.
 3. Decide the final name/domain and complete a basic trademark search. The code currently uses the provisional name “Base Case.”
 4. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 5. Start Phase 2: typed IPC envelopes, structured logging, design system, repository layer, FTS5, settings, and Playwright smoke tests.
 
 ## Blockers
 
-- **Windows verification:** no Windows host or CI remote is available in this environment. The packaging workflow is written but has not run.
-- **Clean-VM installs:** the macOS package was verified on the development machine, not a clean VM.
+- **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. Both packages build successfully in CI.
 - **Name/trademark decision:** required before public branding or a domain purchase. Does not block Phase 2 engineering.
-- **GitHub setup:** `gh` is not installed and this directory is not yet a GitHub remote. Milestones, labels, project board, and remote CI cannot be configured until the repository exists.
+- **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 1 — Windows CI green
+
+- Status: in progress (Windows CI verified; clean-VM installs pending)
+- Done:
+  - Pushed the repository to `origin` (`https://github.com/MohammedArab1/Base-Case.git`) and fixed the red Windows CI.
+  - Node job: replaced POSIX path assertions in `packages/schema/src/validate.test.ts` with `node:path` `resolve`/`join`.
+  - Go jobs: added `actions/setup-python` and `actions/setup-node` so the Python and TypeScript adapters have real runtimes; prefer `python` over the Windows Store `python3` stub on Windows.
+  - Added `scripts/annotate-go-tests.mjs`, which consumes `go test -json` and emits GitHub check annotations, so Windows Go failures name the test and message instead of only “exit code 1”.
+  - Raised the slow-output test budget and mirrored the content pack's 3× language multipliers in the judge test fixture, fixing a Windows TypeScript cold-start timeout.
+- Tests run:
+  - GitHub Actions `CI` run `40003640419` — success on `macos-latest` and `windows-latest` (format, lint, typecheck, unit tests, content validation, app bundles).
+  - GitHub Actions `Judge conformance` run `40003640429` — success on `macos-latest` and `windows-latest` (doctor, vet, protocol/unit tests).
+  - GitHub Actions `Build installers` run `40002549825` — success on both platforms; artifacts `base-case-macOS` (397.9 MB) and `base-case-Windows` (409.6 MB).
+  - Local re-verification: `pnpm --filter @base-case/schema test`, `go test -C services/judge -count=1 ./...`, and Prettier on changed files — passed.
+- Files/PRs:
+  - `b18153e` initial commit (Phases 0–1); `1a7a617` Windows CI fixes; `9e14439` judge fixture limits.
+  - Key paths: `.github/workflows/ci.yml`, `.github/workflows/judge.yml`, `packages/schema/src/validate.test.ts`, `services/judge/internal/judge/runtimes.go`, `services/judge/internal/judge/runner_test.go`, `scripts/annotate-go-tests.mjs`.
+- Next:
+  - Install the Windows and macOS artifacts on clean VMs and record the result.
+  - Confirm the final name/trademark, then start Phase 2.
+- Notes/decisions:
+  - CI now installs Python and Node for judge tests. Production still must bundle or transpile runtimes before alpha (ADR-0010 remains Proposed).
+  - The Windows TypeScript timeout was a fixture mismatch, not a judge defect: real problems apply language multipliers, so TypeScript gets 6 s for pair-sum.
 
 ### 2026-10-23 — Phase 1 — Technical spike (macOS verified)
 
