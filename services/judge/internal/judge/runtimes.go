@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -29,7 +30,13 @@ type RuntimeInfo struct {
 func NewRunner() *Runner {
 	pythonPath := os.Getenv("BASE_CASE_PYTHON")
 	if pythonPath == "" {
-		pythonPath = firstLookPath("python3", "python")
+		if runtime.GOOS == "windows" {
+			// The Windows Store "python3" alias can be a stub that never runs
+			// Python. Prefer the real "python" command used by setup-python.
+			pythonPath = firstLookPath("python", "python3")
+		} else {
+			pythonPath = firstLookPath("python3", "python")
+		}
 	}
 
 	nodePath := os.Getenv("BASE_CASE_NODE")

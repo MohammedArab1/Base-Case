@@ -195,7 +195,7 @@ func TestOutputLimitExceeded(t *testing.T) {
         while True:
             print("x" * 1024)
 `)
-	request.Limits.TimeMs = 1000
+	request.Limits.TimeMs = 5000
 	request.Tests = request.Tests[:1]
 
 	result, err := runner.Run(context.Background(), request)

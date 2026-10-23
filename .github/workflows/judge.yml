@@ -37,11 +37,20 @@ jobs:
           go-version: '1.27.x'
           cache: false
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Doctor
+        run: go run ./cmd/judge doctor
+
       - name: Vet
         run: go vet ./...
 
       - name: Unit and protocol tests
-        run: go test ./...
-
-      - name: Doctor
-        run: go run ./cmd/judge doctor
+        shell: bash
+        run: go test -json ./... | node ../../scripts/annotate-go-tests.mjs
