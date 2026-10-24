@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "smoke-fixture/echo",
+  "slug": "echo",
+  "title": "Echo the Quasar",
+  "difficulty": "easy",
+  "patterns": ["smoke-test"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "echo",
+    "params": [{ "name": "value", "type": "int" }],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 128,
+    "languageMultipliers": { "python": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1)",
+      "space": "O(1)",
+      "isCanonical": true
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": ["Returning a string instead of an integer"],
+  "followUps": ["What changes if the value is nullable?"],
+  "license": "MIT",
+  "attribution": "Test fixture by the Base Case contributors.",
+  "version": 1
+}

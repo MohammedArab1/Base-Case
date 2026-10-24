@@ -17,6 +17,16 @@ export const problemIdSchema = z.string().min(1).max(200)
 
 export const searchQuerySchema = z.string().max(200)
 
+export const packTokenSchema = z.string().uuid()
+
+export const packImportKindSchema = z.enum(['archive', 'folder'])
+
+export const packIdSchema = z
+  .string()
+  .min(1)
+  .max(100)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+
 export const noInputSchema = z.undefined()
 
 const failureSchema: z.ZodType<Failure> = z.object({

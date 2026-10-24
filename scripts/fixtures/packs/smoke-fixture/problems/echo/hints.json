@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Read the requirement",
+      "body": "The method receives one value and must return the same value."
+    },
+    {
+      "level": 2,
+      "title": "No transformation",
+      "body": "There is no arithmetic or formatting step. Return the parameter."
+    },
+    {
+      "level": 3,
+      "title": "The body is one line",
+      "body": "Use a return statement with the parameter name. Do not print it."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nreturn value\n```\n\nTranslate that into the method body."
+    }
+  ]
+}

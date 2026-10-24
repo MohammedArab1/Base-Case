@@ -2464,7 +2464,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Bundled core pack loading.
   - [x] User pack directory.
   - [x] FTS5 index and rebuild.
-  - [ ] Pack install/uninstall.
+  - [x] Pack install/uninstall.
 - [x] Settings store:
   - [x] Theme, language, editor preferences.
   - [x] Data directories.

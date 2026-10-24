@@ -3,7 +3,7 @@
 > Last updated: 2026-10-23
 > Current phase: Phase 2 — App foundation (started; Phase 1 clean-VM installs still pending)
 > Overall status: On track — Windows/ macOS functional verification is complete; Phase 2 foundation landed with typed IPC, logging, settings, window state, and the app menu
-> Next milestone: finish the Phase 2 shell (command palette, shortcuts, content search, repositories), then clean-VM installs
+> Next milestone: finish the Phase 2 shell (app layout, repositories, Playwright), then clean-VM installs
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -14,7 +14,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, radix/tailwind primitives, and onboarding done; pack management and Playwright next |
+| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, radix/tailwind primitives, onboarding, and pack install/uninstall done; Playwright next |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Continue Phase 2: pack install/uninstall UI, Playwright coverage, and the remaining Settings/Coding migration to the design-system primitives.
+1. Continue Phase 2: Playwright coverage and the remaining Settings/Coding migration to the design-system primitives, then the app-layout inspector.
 2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Re-run the uninstall row of the full Windows checklist on a fresh install.
 4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -39,6 +39,33 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 2 — Content pack import and removal
+
+- Status: in progress (pack management landed; Playwright still pending)
+- Done:
+  - Added a pack manager that imports a folder or `.zip`, validates the manifest and referenced files before installing, and rejects duplicates, bundled IDs, symlinks, unsafe paths, encrypted archives, and oversized archives (100 MB archive / 200 MB expanded / 10k entries).
+  - Preview returns a one-time 15-minute token bound to the validated files. Install copies through a staging directory and atomically renames into `<userData>/packs/<id>`, then reloads content and rebuilds the FTS index. A failed reload removes the new pack and restores the previous catalog.
+  - Removal refuses bundled packs and paths outside `<userData>/packs`, deletes only the pack directory, and keeps attempts and drafts. Stale import/staging directories are cleaned at startup after an hour.
+  - Added `packs:list`, `packs:preview`, `packs:install`, and `packs:uninstall` to the IPC contract, with Zod schemas and the preload bridge.
+  - Added a Content packs card to Settings: bundled/imported badges, version, counts, license, attribution, ZIP and folder import buttons, a preview confirmation with warnings and the responsibility disclaimer, structured validation errors, and a removal confirmation. The library refreshes through a renderer event after either operation.
+  - Added a portable smoke fixture pack (`smoke-fixture/echo`, Python-only, 3 sample + 15 hidden tests, unique “quasar” term), built as a stored ZIP at smoke runtime. The smoke covers preview, install, list, FTS search, rejection of bundled removal, uninstall, and attempt preservation, and then drives the same flow through the Settings UI. Optional `BASE_CASE_SMOKE_SCREENSHOTS` captures the card and dialogs.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — passed (27 TypeScript tests, including 6 new ZIP safety tests).
+  - `pnpm content:validate` and the fixture pack validation — passed.
+  - `pnpm build && pnpm smoke:e2e` — passed with `packInstall`, `packSearch`, `packUninstall`, `packAttemptsPreserved`, and `packUi` all true.
+  - `pnpm package:mac` — DMG/ZIP built; confirmed `yauzl` and `pend` are present in `app.asar`.
+  - Visual CDP check of the content-pack card, import confirmation, and removal confirmation.
+- Files/PRs:
+  - Key paths: `main/pack-manager.ts`, `main/zip.ts`, `main/content-sync.ts`, `main/index.ts`, `main/ipc.ts`, `main/ipc-schemas.ts`, `shared/types.ts`, `shared/ipc.ts`, `preload/index.ts`, `renderer/src/views/SettingsView.tsx`, `renderer/src/App.tsx`, `scripts/smoke-electron.mjs`, `scripts/fixtures/packs/smoke-fixture/`.
+- Next:
+  - Playwright smoke coverage, the remaining Settings/Coding primitive migration, and the repository split.
+- Notes/decisions:
+  - ZIP and folder imports have separate buttons because Windows cannot combine file and folder pickers in one native dialog.
+  - `yauzl` is the only new runtime dependency; it is externalized and packaged, and extraction still applies its own limits and path checks.
+  - Imported packs are marked “Unverified”; the confirmation carries the responsibility disclaimer.
+  - Pack upgrades are explicit: remove the old pack first. This avoids partially replacing a pack that is in use.
 
 ### 2026-10-23 — Phase 2 — First-run onboarding
 

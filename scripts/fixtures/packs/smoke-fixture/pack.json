@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "smoke-fixture",
+  "name": "Smoke Fixture Pack",
+  "version": "0.0.1",
+  "license": "MIT",
+  "attribution": "Test fixture by the Base Case contributors.",
+  "problems": ["echo"],
+  "designs": []
+}

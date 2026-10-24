@@ -21,6 +21,10 @@ export const channels = {
   aiExplain: 'ai:explain',
   settingsGet: 'settings:get',
   settingsUpdate: 'settings:update',
+  packsList: 'packs:list',
+  packsPreview: 'packs:preview',
+  packsInstall: 'packs:install',
+  packsUninstall: 'packs:uninstall',
 } as const
 
 export type Channel = (typeof channels)[keyof typeof channels]

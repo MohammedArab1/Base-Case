@@ -7,9 +7,12 @@ import type {
   AppInfo,
   AppSettings,
   BaseCaseApi,
+  ContentPackSummary,
   DesignScenePayload,
   DraftInput,
   JudgeStatus,
+  PackImportKind,
+  PackPreviewResult,
   ProblemDetail,
   ProblemSummary,
   RunInput,
@@ -66,6 +69,13 @@ const api: BaseCaseApi = {
   settings: {
     get: () => invoke<AppSettings>(channels.settingsGet),
     update: (patch: SettingsPatch) => invoke<AppSettings>(channels.settingsUpdate, patch),
+  },
+  packs: {
+    list: () => invoke<ContentPackSummary[]>(channels.packsList),
+    preview: (kind: PackImportKind) =>
+      invoke<PackPreviewResult | null>(channels.packsPreview, kind),
+    install: (token: string) => invoke<ContentPackSummary>(channels.packsInstall, token),
+    uninstall: (packId: string) => invoke<void>(channels.packsUninstall, packId),
   },
   design: {
     getScene: () => invoke<DesignScenePayload>(channels.designGetScene),

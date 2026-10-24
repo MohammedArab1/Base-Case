@@ -2,11 +2,13 @@ import { join } from 'node:path'
 import { app, BrowserWindow, dialog, screen, shell } from 'electron'
 import { AiService } from './ai'
 import { ContentRepository } from './content'
+import { rebuildContentIndex } from './content-sync'
 import { AppDatabase } from './database'
 import { registerIpc } from './ipc'
 import { JudgeClient } from './judge'
 import { configureLogger, getLogger } from './logger'
 import { installApplicationMenu } from './menu'
+import { PackManager } from './pack-manager'
 import { SettingsStore } from './settings'
 import { clampWindowState, loadWindowState, saveWindowState } from './window-state'
 
@@ -164,24 +166,27 @@ app
     })
 
     const content = new ContentRepository()
+    const database = new AppDatabase(userDataPath)
 
     try {
-      await content.initialize(userDataPath)
+      await rebuildContentIndex(content, database, userDataPath)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       logger.error('content.load.failed', { message })
+      database.close()
       dialog.showErrorBox('Base Case could not load content', message)
       app.quit()
       return
     }
 
-    const database = new AppDatabase(userDataPath)
-    database.replaceProblemIndex(content.searchDocuments())
     const settings = new SettingsStore(database)
     const judge = new JudgeClient()
     const ai = new AiService(database, content)
+    const packs = new PackManager(userDataPath, content, database)
 
-    registerIpc({ content, database, judge, ai, settings })
+    await packs.cleanupStaleImports()
+
+    registerIpc({ content, database, judge, ai, settings, packs })
     installApplicationMenu()
 
     app.on('before-quit', () => {

@@ -16,6 +16,9 @@ import {
   aiContextSchema,
   draftInputSchema,
   noInputSchema,
+  packIdSchema,
+  packImportKindSchema,
+  packTokenSchema,
   pngDataUrlSchema,
   problemIdSchema,
   runInputSchema,
@@ -26,6 +29,7 @@ import {
 } from './ipc-schemas'
 import type { JudgeClient } from './judge'
 import { getLogger } from './logger'
+import type { PackManager } from './pack-manager'
 import type { SettingsStore } from './settings'
 
 interface Services {
@@ -34,6 +38,7 @@ interface Services {
   readonly judge: JudgeClient
   readonly ai: AiService
   readonly settings: SettingsStore
+  readonly packs: PackManager
 }
 
 function register<I, O>(
@@ -83,7 +88,7 @@ function sendAiEvent(
   }
 }
 
-export function registerIpc({ content, database, judge, ai, settings }: Services): void {
+export function registerIpc({ content, database, judge, ai, settings, packs }: Services): void {
   register(channels.appInfo, noInputSchema, () => ({
     appVersion: app.getVersion(),
     platform: process.platform,
@@ -186,4 +191,9 @@ export function registerIpc({ content, database, judge, ai, settings }: Services
 
   register(channels.settingsGet, noInputSchema, () => settings.get())
   register(channels.settingsUpdate, settingsPatchSchema, (patch) => settings.update(patch))
+
+  register(channels.packsList, noInputSchema, () => content.listPacks())
+  register(channels.packsPreview, packImportKindSchema, (kind) => packs.preview(kind))
+  register(channels.packsInstall, packTokenSchema, (token) => packs.install(token))
+  register(channels.packsUninstall, packIdSchema, (packId) => packs.uninstall(packId))
 }

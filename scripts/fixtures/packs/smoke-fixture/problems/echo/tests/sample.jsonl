@@ -1,0 +1,3 @@
+{"input":{"value":1},"expected":1}
+{"input":{"value":42},"expected":42}
+{"input":{"value":-7},"expected":-7}

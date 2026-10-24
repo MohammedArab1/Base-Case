@@ -123,6 +123,29 @@ function App(): JSX.Element {
     }
   }, [api])
 
+  useEffect(() => {
+    if (!api) {
+      return
+    }
+
+    const reload = (): void => {
+      void api.content
+        .list()
+        .then((nextProblems) => {
+          setProblems(nextProblems)
+          setSelectedProblemId((current) =>
+            current && nextProblems.some((problem) => problem.id === current) ? current : null,
+          )
+        })
+        .catch((loadError: unknown) => {
+          setError(loadError instanceof Error ? loadError.message : String(loadError))
+        })
+    }
+
+    window.addEventListener('base-case:content-changed', reload)
+    return () => window.removeEventListener('base-case:content-changed', reload)
+  }, [api])
+
   const openProblem = (problemId: string): void => {
     setSelectedProblemId(problemId)
     setSection('coding')

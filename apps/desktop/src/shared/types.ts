@@ -52,6 +52,35 @@ export interface ProblemSummary {
   readonly source: 'bundled' | 'user'
 }
 
+export interface ContentPackSummary {
+  readonly id: string
+  readonly name: string
+  readonly version: string
+  readonly license: string
+  readonly attribution: string
+  readonly source: 'bundled' | 'user'
+  readonly problemCount: number
+  readonly designCount: number
+  readonly path: string
+}
+
+export type PackImportKind = 'archive' | 'folder'
+
+export interface PackIssue {
+  readonly path: string
+  readonly message: string
+}
+
+export interface PackPreviewResult {
+  readonly ok: boolean
+  readonly preview?: ContentPackSummary & {
+    readonly token: string
+    readonly warnings: readonly string[]
+  }
+  readonly issues?: readonly PackIssue[]
+  readonly warnings?: readonly string[]
+}
+
 export interface Hint {
   readonly level: number
   readonly title: string
@@ -249,6 +278,12 @@ export interface BaseCaseApi {
   readonly settings: {
     get(): Promise<AppSettings>
     update(patch: SettingsPatch): Promise<AppSettings>
+  }
+  readonly packs: {
+    list(): Promise<ContentPackSummary[]>
+    preview(kind: PackImportKind): Promise<PackPreviewResult | null>
+    install(token: string): Promise<ContentPackSummary>
+    uninstall(packId: string): Promise<void>
   }
   readonly design: {
     getScene(): Promise<DesignScenePayload>

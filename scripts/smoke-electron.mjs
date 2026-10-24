@@ -1,5 +1,14 @@
 import { execFileSync, spawn } from 'node:child_process'
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs'
 import { createRequire } from 'node:module'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
@@ -23,6 +32,7 @@ let aiServer = null
 let fatalError = null
 let childExit = null
 let stopping = false
+let screenshotDirectory = null
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -32,6 +42,82 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message)
   }
+}
+
+/** Build a stored (uncompressed) ZIP so the archive path is covered portably. */
+function writeStoredZip(directory, archivePath) {
+  const entries = []
+
+  const walk = (current, prefix) => {
+    for (const name of readdirSync(current).sort()) {
+      const path = join(current, name)
+      const info = statSync(path)
+
+      if (info.isDirectory()) {
+        walk(path, `${prefix}${name}/`)
+      } else {
+        entries.push({ name: `${prefix}${name}`, data: readFileSync(path) })
+      }
+    }
+  }
+
+  walk(directory, '')
+
+  const localParts = []
+  const centralParts = []
+  let offset = 0
+
+  for (const entry of entries) {
+    const name = Buffer.from(entry.name, 'utf8')
+    const local = Buffer.alloc(30)
+    local.writeUInt32LE(0x04034b50, 0)
+    local.writeUInt16LE(20, 4)
+    local.writeUInt16LE(0x0800, 6)
+    local.writeUInt16LE(0, 8)
+    local.writeUInt16LE(0, 10)
+    local.writeUInt16LE(0, 12)
+    local.writeUInt32LE(0, 14)
+    local.writeUInt32LE(entry.data.length, 18)
+    local.writeUInt32LE(entry.data.length, 22)
+    local.writeUInt16LE(name.length, 26)
+    local.writeUInt16LE(0, 28)
+    localParts.push(local, name, entry.data)
+
+    const central = Buffer.alloc(46)
+    central.writeUInt32LE(0x02014b50, 0)
+    central.writeUInt16LE(0x0314, 4)
+    central.writeUInt16LE(20, 6)
+    central.writeUInt16LE(0x0800, 8)
+    central.writeUInt16LE(0, 10)
+    central.writeUInt16LE(0, 12)
+    central.writeUInt16LE(0, 14)
+    central.writeUInt32LE(0, 16)
+    central.writeUInt32LE(entry.data.length, 20)
+    central.writeUInt32LE(entry.data.length, 24)
+    central.writeUInt16LE(name.length, 28)
+    central.writeUInt16LE(0, 30)
+    central.writeUInt16LE(0, 32)
+    central.writeUInt16LE(0, 34)
+    central.writeUInt16LE(0, 36)
+    central.writeUInt32LE((0o100644 << 16) >>> 0, 38)
+    central.writeUInt32LE(offset, 42)
+    centralParts.push(central, name)
+
+    offset += local.length + name.length + entry.data.length
+  }
+
+  const central = Buffer.concat(centralParts)
+  const end = Buffer.alloc(22)
+  end.writeUInt32LE(0x06054b50, 0)
+  end.writeUInt16LE(0, 4)
+  end.writeUInt16LE(0, 6)
+  end.writeUInt16LE(entries.length, 8)
+  end.writeUInt16LE(entries.length, 10)
+  end.writeUInt32LE(central.length, 12)
+  end.writeUInt32LE(offset, 16)
+  end.writeUInt16LE(0, 20)
+
+  writeFileSync(archivePath, Buffer.concat([...localParts, central, end]))
 }
 
 function stopElectron() {
@@ -193,6 +279,15 @@ async function clickTestId(testId) {
   await sleep(150)
 }
 
+async function captureScreenshot(name) {
+  if (!screenshotDirectory) {
+    return
+  }
+
+  const result = await cdp.send('Page.captureScreenshot', { format: 'png' })
+  writeFileSync(join(screenshotDirectory, `${name}.png`), Buffer.from(result.data, 'base64'))
+}
+
 async function main() {
   if (!existsSync(judgePath)) {
     execFileSync(process.execPath, [join(root, 'scripts/build-judge.mjs')], {
@@ -209,6 +304,14 @@ async function main() {
     })
   }
 
+  const packArchivePath = join(userDataDirectory, 'fixture-pack.zip')
+  writeStoredZip(join(root, 'scripts/fixtures/packs/smoke-fixture'), packArchivePath)
+
+  if (process.env.BASE_CASE_SMOKE_SCREENSHOTS) {
+    screenshotDirectory = process.env.BASE_CASE_SMOKE_SCREENSHOTS
+    mkdirSync(screenshotDirectory, { recursive: true })
+  }
+
   child = spawn(
     electronPath,
     [
@@ -223,6 +326,7 @@ async function main() {
         ...process.env,
         BASE_CASE_JUDGE_PATH: judgePath,
         BASE_CASE_LOG_LEVEL: 'debug',
+        BASE_CASE_TEST_PACK_PATH: packArchivePath,
       },
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -392,6 +496,79 @@ export { Solution }
 
   const stats = await evaluate('window.baseCase.attempts.stats()')
   assert(stats.attempts >= 3, 'Attempts were not persisted')
+
+  const packListBefore = await evaluate('window.baseCase.packs.list()')
+  assert(
+    packListBefore.length === 1 && packListBefore[0]?.id === 'core',
+    'The bundled catalog should contain exactly the core pack',
+  )
+
+  const packPreview = await evaluate("window.baseCase.packs.preview('archive')")
+  assert(
+    packPreview?.ok === true && packPreview.preview?.id === 'smoke-fixture',
+    `Pack preview failed: ${JSON.stringify(packPreview)}`,
+  )
+
+  const installedPack = await evaluate(
+    `window.baseCase.packs.install(${JSON.stringify(packPreview.preview.token)})`,
+  )
+  assert(
+    installedPack.id === 'smoke-fixture' && installedPack.source === 'user',
+    'The fixture pack was not installed',
+  )
+
+  const packListAfter = await evaluate('window.baseCase.packs.list()')
+  assert(
+    packListAfter.some((pack) => pack.id === 'smoke-fixture' && pack.source === 'user'),
+    'The installed pack is missing from the pack list',
+  )
+
+  const contentAfterPack = await evaluate('window.baseCase.content.list()')
+  assert(
+    contentAfterPack.some((problem) => problem.id === 'smoke-fixture/echo'),
+    'The installed pack did not add its problem',
+  )
+
+  const fixtureSearch = await evaluate("window.baseCase.content.search('quasar')")
+  assert(
+    fixtureSearch.some((problem) => problem.id === 'smoke-fixture/echo'),
+    'FTS search did not index the installed pack',
+  )
+
+  const bundledUninstall = await evaluate(
+    `window.baseCase.packs.uninstall('core').then(() => 'allowed').catch((error) => error.message)`,
+  )
+  assert(
+    String(bundledUninstall).toLowerCase().includes('bundled'),
+    'Uninstalling a bundled pack should be rejected',
+  )
+
+  const statsBeforePackRemoval = await evaluate('window.baseCase.attempts.stats()')
+  await evaluate("window.baseCase.packs.uninstall('smoke-fixture')")
+
+  const packListRemoved = await evaluate('window.baseCase.packs.list()')
+  assert(
+    !packListRemoved.some((pack) => pack.id === 'smoke-fixture'),
+    'The pack was not removed from the pack list',
+  )
+
+  const contentAfterRemoval = await evaluate('window.baseCase.content.list()')
+  assert(
+    !contentAfterRemoval.some((problem) => problem.id === 'smoke-fixture/echo'),
+    'The removed pack is still in the content list',
+  )
+
+  const searchAfterRemoval = await evaluate("window.baseCase.content.search('hash')")
+  assert(
+    searchAfterRemoval.some((problem) => problem.id === 'core/pair-sum'),
+    'The search index was not rebuilt after removing the pack',
+  )
+
+  const statsAfterPackRemoval = await evaluate('window.baseCase.attempts.stats()')
+  assert(
+    statsAfterPackRemoval.attempts === statsBeforePackRemoval.attempts,
+    'Removing a pack deleted attempts',
+  )
 
   const appInfo = await evaluate('window.baseCase.app.getInfo()')
   assert(existsSync(appInfo.databasePath), 'The SQLite database file was not created')
@@ -643,6 +820,52 @@ export { Solution }
     (value) => typeof value === 'string' && value.includes('AI provider'),
     'the settings view',
   )
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="pack-row-core"]\'))',
+    (value) => value === true,
+    'the bundled pack row',
+  )
+  await captureScreenshot('pack-list')
+
+  await clickTestId('pack-import-archive')
+  await waitForValue(
+    "document.querySelector('[data-testid=\"pack-import-dialog\"]')?.innerText ?? ''",
+    (value) => typeof value === 'string' && value.includes('Smoke Fixture Pack'),
+    'the pack import confirmation',
+  )
+  await captureScreenshot('pack-import-confirm')
+
+  await clickTestId('pack-import-confirm')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="pack-row-smoke-fixture"]\'))',
+    (value) => value === true,
+    'the imported pack row',
+    20_000,
+  )
+  const importedRowText = await evaluate(
+    "document.querySelector('[data-testid=\"pack-row-smoke-fixture\"]')?.innerText ?? ''",
+  )
+  assert(
+    typeof importedRowText === 'string' && importedRowText.includes('Unverified'),
+    'Imported packs are not marked Unverified',
+  )
+  await captureScreenshot('pack-list-imported')
+
+  await clickTestId('pack-remove-smoke-fixture')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="pack-remove-confirm"]\'))',
+    (value) => value === true,
+    'the pack removal confirmation',
+  )
+  await captureScreenshot('pack-remove-confirm')
+
+  await clickTestId('pack-remove-confirm')
+  await waitForValue(
+    'Boolean(document.querySelector(\'[data-testid="pack-row-smoke-fixture"]\'))',
+    (value) => value === false,
+    'the pack row to disappear',
+    20_000,
+  )
 
   const platform = await evaluate('window.baseCase.platform')
   const primaryModifier = platform === 'darwin' ? 'metaKey' : 'ctrlKey'
@@ -688,6 +911,11 @@ export { Solution }
     compatibleStreamChars: compatibleText.length,
     keyStorage,
     attempts: stats.attempts,
+    packInstall: installedPack.id === 'smoke-fixture',
+    packSearch: fixtureSearch.length > 0,
+    packUninstall: !packListRemoved.some((pack) => pack.id === 'smoke-fixture'),
+    packAttemptsPreserved: statsAfterPackRemoval.attempts === statsBeforePackRemoval.attempts,
+    packUi: true,
     backups: backups.length,
     judge: `${judgeStatus.name} ${judgeStatus.version}`,
   }

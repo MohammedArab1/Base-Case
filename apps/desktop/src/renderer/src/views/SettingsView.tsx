@@ -4,12 +4,18 @@ import type {
   AiProviderStatus,
   AiProviderType,
   AppInfo,
+  ContentPackSummary,
   JudgeStatus,
+  PackImportKind,
+  PackPreviewResult,
   SaveAiConfigInput,
   SettingsPatch,
   ThemePreference,
 } from '../../../shared/types'
 import { useSettings } from '../settings'
+import { Badge } from '../ui/Badge'
+import { Button } from '../ui/Button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '../ui/Dialog'
 import { Toast } from '../ui/Toast'
 
 interface AiForm {
@@ -58,6 +64,12 @@ export function SettingsView(): JSX.Element {
   const [error, setError] = useState<string | null>(null)
   const [savingSettings, setSavingSettings] = useState(false)
   const [toast, setToast] = useState<SettingsToast | null>(null)
+  const [packs, setPacks] = useState<readonly ContentPackSummary[]>([])
+  const [importResult, setImportResult] = useState<PackPreviewResult | null>(null)
+  const [importing, setImporting] = useState(false)
+  const [installing, setInstalling] = useState(false)
+  const [removeTarget, setRemoveTarget] = useState<ContentPackSummary | null>(null)
+  const [removing, setRemoving] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -66,8 +78,9 @@ export function SettingsView(): JSX.Element {
       window.baseCase.ai.getStatus(),
       window.baseCase.judge.status(),
       window.baseCase.app.getInfo(),
+      window.baseCase.packs.list(),
     ])
-      .then(([aiStatus, nextJudgeStatus, info]) => {
+      .then(([aiStatus, nextJudgeStatus, info, nextPacks]) => {
         if (cancelled) {
           return
         }
@@ -75,6 +88,7 @@ export function SettingsView(): JSX.Element {
         setProvider(aiStatus)
         setJudgeStatus(nextJudgeStatus)
         setAppInfo(info)
+        setPacks(nextPacks)
         setForm({
           type: aiStatus.type,
           baseUrl: aiStatus.baseUrl || defaultBaseUrl,
@@ -156,6 +170,89 @@ export function SettingsView(): JSX.Element {
   }
 
   const isCompatible = form.type === 'openai-compatible'
+  const pendingPreview = importResult?.ok ? importResult.preview : undefined
+  const importIssues = importResult && !importResult.ok ? (importResult.issues ?? []) : []
+
+  const loadPacks = async (): Promise<void> => {
+    setPacks(await window.baseCase.packs.list())
+  }
+
+  const startImport = async (kind: PackImportKind): Promise<void> => {
+    setImporting(true)
+    setError(null)
+
+    try {
+      const result = await window.baseCase.packs.preview(kind)
+
+      if (result) {
+        setImportResult(result)
+      }
+    } catch (importError: unknown) {
+      setToast({
+        title: 'Could not open the pack',
+        description: importError instanceof Error ? importError.message : String(importError),
+        tone: 'danger',
+      })
+    } finally {
+      setImporting(false)
+    }
+  }
+
+  const confirmInstall = async (): Promise<void> => {
+    if (!pendingPreview) {
+      return
+    }
+
+    setInstalling(true)
+
+    try {
+      const installed = await window.baseCase.packs.install(pendingPreview.token)
+      await loadPacks()
+      setImportResult(null)
+      window.dispatchEvent(new Event('base-case:content-changed'))
+      setToast({
+        title: `${installed.name} installed`,
+        description: `${installed.problemCount} ${
+          installed.problemCount === 1 ? 'problem' : 'problems'
+        } added to your library.`,
+      })
+    } catch (installError: unknown) {
+      setToast({
+        title: 'Could not install the pack',
+        description: installError instanceof Error ? installError.message : String(installError),
+        tone: 'danger',
+      })
+    } finally {
+      setInstalling(false)
+    }
+  }
+
+  const confirmRemove = async (): Promise<void> => {
+    if (!removeTarget) {
+      return
+    }
+
+    setRemoving(true)
+
+    try {
+      await window.baseCase.packs.uninstall(removeTarget.id)
+      await loadPacks()
+      setRemoveTarget(null)
+      window.dispatchEvent(new Event('base-case:content-changed'))
+      setToast({
+        title: `${removeTarget.name} removed`,
+        description: 'Attempts and drafts are kept.',
+      })
+    } catch (removeError: unknown) {
+      setToast({
+        title: 'Could not remove the pack',
+        description: removeError instanceof Error ? removeError.message : String(removeError),
+        tone: 'danger',
+      })
+    } finally {
+      setRemoving(false)
+    }
+  }
 
   return (
     <div className="settings-stack">
@@ -170,6 +267,135 @@ export function SettingsView(): JSX.Element {
         description={toast?.description}
         tone={toast?.tone}
       />
+
+      <Dialog
+        open={importResult !== null}
+        onOpenChange={(open) => {
+          if (!open && !installing) {
+            setImportResult(null)
+          }
+        }}
+      >
+        <DialogContent className="p-5" data-testid="pack-import-dialog">
+          {importResult?.ok ? (
+            <>
+              <DialogTitle>Import “{pendingPreview?.name}”?</DialogTitle>
+              <DialogDescription>
+                Review this pack before adding it to your library.
+              </DialogDescription>
+
+              <dl className="mt-4 grid grid-cols-[110px_1fr] gap-x-4 gap-y-2 text-sm">
+                <dt className="m-0 text-bc-muted">Id</dt>
+                <dd className="m-0 font-mono text-xs text-bc-text">{pendingPreview?.id}</dd>
+                <dt className="m-0 text-bc-muted">Version</dt>
+                <dd className="m-0 text-bc-text">{pendingPreview?.version}</dd>
+                <dt className="m-0 text-bc-muted">Contents</dt>
+                <dd className="m-0 text-bc-text">
+                  {pendingPreview?.problemCount ?? 0}{' '}
+                  {pendingPreview?.problemCount === 1 ? 'problem' : 'problems'} ·{' '}
+                  {pendingPreview?.designCount ?? 0}{' '}
+                  {pendingPreview?.designCount === 1 ? 'design' : 'designs'}
+                </dd>
+                <dt className="m-0 text-bc-muted">License</dt>
+                <dd className="m-0 text-bc-text">{pendingPreview?.license}</dd>
+                <dt className="m-0 text-bc-muted">Attribution</dt>
+                <dd className="m-0 text-bc-text">{pendingPreview?.attribution}</dd>
+              </dl>
+
+              {pendingPreview && pendingPreview.warnings.length > 0 ? (
+                <div className="mt-4 rounded-lg border border-bc-border bg-bc-surface-muted p-3">
+                  <p className="m-0 text-xs font-semibold text-bc-text">
+                    Warnings ({pendingPreview.warnings.length})
+                  </p>
+                  <ul className="mb-0 mt-1 list-disc space-y-1 pl-4 text-xs text-bc-muted">
+                    {pendingPreview.warnings.slice(0, 6).map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                    {pendingPreview.warnings.length > 6 ? (
+                      <li>{pendingPreview.warnings.length - 6} more</li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+
+              <p className="mb-0 mt-4 text-xs text-bc-muted">
+                You are responsible for content you import. Packs are plain data; Base Case checks
+                their structure but does not review their claims, solutions, or licensing.
+              </p>
+
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => setImportResult(null)} disabled={installing}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => void confirmInstall()}
+                  disabled={installing}
+                  data-testid="pack-import-confirm"
+                >
+                  {installing ? 'Installing…' : 'Import pack'}
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              <DialogTitle>This pack could not be imported</DialogTitle>
+              <DialogDescription>
+                Nothing was installed. Fix these issues and try again.
+              </DialogDescription>
+
+              <ul className="mb-0 mt-4 max-h-72 list-disc space-y-2 overflow-auto pl-5 text-sm text-bc-text">
+                {importIssues.slice(0, 8).map((issue, index) => (
+                  <li key={`${issue.path}-${index}`}>
+                    <code className="text-xs text-bc-muted">{issue.path}</code>
+                    <span className="text-bc-text"> — {issue.message}</span>
+                  </li>
+                ))}
+                {importIssues.length > 8 ? (
+                  <li className="text-bc-muted">and {importIssues.length - 8} more…</li>
+                ) : null}
+              </ul>
+
+              <DialogFooter>
+                <Button variant="secondary" onClick={() => setImportResult(null)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={removeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open && !removing) {
+            setRemoveTarget(null)
+          }
+        }}
+      >
+        <DialogContent className="p-5" data-testid="pack-remove-dialog">
+          <DialogTitle>Remove “{removeTarget?.name}”?</DialogTitle>
+          <DialogDescription>
+            The pack's problems will disappear from the library and search. Your attempts, drafts,
+            and review history are kept.
+          </DialogDescription>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setRemoveTarget(null)} disabled={removing}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => void confirmRemove()}
+              disabled={removing}
+              data-testid="pack-remove-confirm"
+            >
+              {removing ? 'Removing…' : 'Remove pack'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {error ? (
         <div className="callout callout-error">
@@ -289,6 +515,83 @@ export function SettingsView(): JSX.Element {
             />
             Review reminders
           </label>
+        </div>
+      </section>
+
+      <section className="settings-card">
+        <div className="settings-card-heading">
+          <div>
+            <h2>Content packs</h2>
+            <p className="muted">
+              Problem sets stored locally. Imports are validated before installation, and removing a
+              pack keeps your attempts and drafts.
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => void startImport('archive')}
+              disabled={importing}
+              data-testid="pack-import-archive"
+            >
+              {importing ? 'Opening…' : 'Import ZIP…'}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => void startImport('folder')}
+              disabled={importing}
+              data-testid="pack-import-folder"
+            >
+              Import folder…
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2" data-testid="pack-list">
+          {packs.map((pack) => (
+            <div
+              key={pack.id}
+              className="flex items-start justify-between gap-4 rounded-lg border border-bc-border bg-bc-surface px-3 py-2.5"
+              data-testid={`pack-row-${pack.id}`}
+            >
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <strong className="text-sm text-bc-text">{pack.name}</strong>
+                  <Badge
+                    tone={pack.source === 'bundled' ? 'neutral' : 'accent'}
+                    title={
+                      pack.source === 'bundled'
+                        ? 'Included with Base Case'
+                        : 'Imported packs are not reviewed by Base Case'
+                    }
+                  >
+                    {pack.source === 'bundled' ? 'Bundled' : 'Unverified'}
+                  </Badge>
+                  <span className="text-xs text-bc-muted">v{pack.version}</span>
+                </div>
+                <p className="m-0 mt-1 text-xs text-bc-muted">
+                  {pack.problemCount} {pack.problemCount === 1 ? 'problem' : 'problems'} ·{' '}
+                  {pack.designCount} {pack.designCount === 1 ? 'design' : 'designs'} ·{' '}
+                  {pack.license}
+                </p>
+                <p className="m-0 mt-0.5 text-xs text-bc-muted">{pack.attribution}</p>
+              </div>
+
+              {pack.source === 'user' ? (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="shrink-0 text-bc-danger"
+                  onClick={() => setRemoveTarget(pack)}
+                  data-testid={`pack-remove-${pack.id}`}
+                >
+                  Remove
+                </Button>
+              ) : null}
+            </div>
+          ))}
         </div>
       </section>
 

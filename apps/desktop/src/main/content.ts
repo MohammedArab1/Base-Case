@@ -5,7 +5,14 @@ import { app } from 'electron'
 import { validatePack } from '@base-case/schema'
 import type { HintFile, PackManifest, Problem, Signature, TestCase } from '@base-case/schema'
 import type { Language, ProblemDetail, ProblemSummary } from '../shared/types'
+import type { ContentPackSummary } from '../shared/types'
 import { getLogger } from './logger'
+
+interface LoadedPack {
+  readonly manifest: PackManifest
+  readonly source: ContentPackSummary['source']
+  readonly directory: string
+}
 
 interface LoadedProblem {
   readonly manifest: Problem
@@ -238,9 +245,11 @@ function languageTemplates(signature: Signature): Record<Language, string> {
 
 export class ContentRepository {
   private readonly problems = new Map<string, LoadedProblem>()
+  private readonly packs = new Map<string, LoadedPack>()
 
   async initialize(userDataPath?: string): Promise<void> {
     this.problems.clear()
+    this.packs.clear()
 
     const bundledRoot = join(contentRoot(), 'packs')
     const bundledPacks = await packDirectories(bundledRoot)
@@ -262,6 +271,30 @@ export class ContentRepository {
 
   listProblems(): ProblemSummary[] {
     return [...this.problems.values()].map((problem) => this.summary(problem))
+  }
+
+  listPacks(): ContentPackSummary[] {
+    return [...this.packs.values()].map((pack) => ({
+      id: pack.manifest.id,
+      name: pack.manifest.name,
+      version: pack.manifest.version,
+      license: pack.manifest.license,
+      attribution: pack.manifest.attribution,
+      source: pack.source,
+      problemCount: pack.manifest.problems.length,
+      designCount: pack.manifest.designs.length,
+      path: pack.directory,
+    }))
+  }
+
+  bundledPackIds(): string[] {
+    return [...this.packs.values()]
+      .filter((pack) => pack.source === 'bundled')
+      .map((pack) => pack.manifest.id)
+  }
+
+  hasPack(packId: string): boolean {
+    return this.packs.has(packId)
   }
 
   getSummaries(ids: readonly string[]): ProblemSummary[] {
@@ -362,6 +395,27 @@ export class ContentRepository {
       })
       return
     }
+
+    if (this.packs.has(validation.pack.id)) {
+      const message = `Duplicate content pack id "${validation.pack.id}" from ${directory}`
+
+      if (required) {
+        throw new Error(message)
+      }
+
+      getLogger('content').warn('pack.skipped', {
+        directory,
+        reason: 'duplicate-pack-id',
+        pack: validation.pack.id,
+      })
+      return
+    }
+
+    this.packs.set(validation.pack.id, {
+      manifest: validation.pack,
+      source,
+      directory,
+    })
 
     for (const slug of validation.pack.problems) {
       try {
