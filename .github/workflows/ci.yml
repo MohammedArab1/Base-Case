@@ -53,6 +53,9 @@ jobs:
       - name: Build app bundles
         run: pnpm build
 
+      - name: Playwright smoke
+        run: pnpm --filter @base-case/desktop test:e2e
+
   go:
     name: Go (${{ matrix.os }})
     runs-on: ${{ matrix.os }}

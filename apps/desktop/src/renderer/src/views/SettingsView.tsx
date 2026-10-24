@@ -418,6 +418,7 @@ export function SettingsView(): JSX.Element {
             <span>Theme</span>
             <select
               className="input"
+              aria-label="Theme"
               value={settings.theme}
               onChange={(event) =>
                 void changeSettings({ theme: event.target.value as ThemePreference })
@@ -433,6 +434,7 @@ export function SettingsView(): JSX.Element {
             <span>Preferred language</span>
             <select
               className="input"
+              aria-label="Preferred language"
               value={settings.language}
               onChange={(event) =>
                 void changeSettings({
@@ -449,6 +451,7 @@ export function SettingsView(): JSX.Element {
             <span>Editor font size</span>
             <select
               className="input"
+              aria-label="Editor font size"
               value={settings.editor.fontSize}
               onChange={(event) =>
                 void changeSettings({ editor: { fontSize: Number(event.target.value) } })
@@ -466,6 +469,7 @@ export function SettingsView(): JSX.Element {
             <span>Tab size</span>
             <select
               className="input"
+              aria-label="Tab size"
               value={settings.editor.tabSize}
               onChange={(event) =>
                 void changeSettings({ editor: { tabSize: Number(event.target.value) } })
@@ -483,6 +487,7 @@ export function SettingsView(): JSX.Element {
             <span>Daily goal</span>
             <select
               className="input"
+              aria-label="Daily goal"
               value={settings.dailyGoalMinutes}
               onChange={(event) =>
                 void changeSettings({ dailyGoalMinutes: Number(event.target.value) })
@@ -613,6 +618,7 @@ export function SettingsView(): JSX.Element {
             <span>Provider</span>
             <select
               className="input"
+              aria-label="AI provider"
               value={form.type}
               onChange={(event) =>
                 setForm((current) => ({ ...current, type: event.target.value as AiProviderType }))

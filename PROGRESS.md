@@ -3,7 +3,7 @@
 > Last updated: 2026-10-23
 > Current phase: Phase 2 — App foundation (started; Phase 1 clean-VM installs still pending)
 > Overall status: On track — Windows/ macOS functional verification is complete; Phase 2 foundation landed with typed IPC, logging, settings, window state, and the app menu
-> Next milestone: finish the Phase 2 shell (app layout, repositories, Playwright), then clean-VM installs
+> Next milestone: finish the Phase 2 shell (app layout, repositories), then clean-VM installs
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -14,7 +14,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, radix/tailwind primitives, onboarding, and pack install/uninstall done; Playwright next |
+| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, radix/tailwind primitives, onboarding, pack install/uninstall, and Playwright smoke done; remaining shell work next |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Continue Phase 2: Playwright coverage and the remaining Settings/Coding migration to the design-system primitives, then the app-layout inspector.
+1. Continue Phase 2: the remaining Settings/Coding migration to the design-system primitives, the app-layout inspector, and the repository split.
 2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Re-run the uninstall row of the full Windows checklist on a fresh install.
 4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -39,6 +39,26 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-23 — Phase 2 — Playwright smoke
+
+- Status: in progress (Playwright suite landed and wired into CI)
+- Done:
+  - Added `@playwright/test` and an Electron suite in `apps/desktop/e2e/app.spec.ts`.
+  - The test drives a fresh-profile onboarding (TypeScript, 45-minute goal, no AI), lands on Today, changes the theme in Settings, verifies FTS search with a term that only exists in the problem statement, checks the empty-result state, then relaunches with the same profile and asserts onboarding stays completed and the theme/language/goal persist.
+  - Added `playwright.config.ts`, `tsconfig.e2e.json`, `test:e2e`, and the root `smoke:playwright` script (`build` + `playwright test`). The CI Node job is wired to run the suite on macOS and Windows after the build; the first remote run will confirm it on GitHub-hosted runners.
+  - Added explicit `aria-label`s to the Settings selects. Their wrapping labels include the option text, which made `getByLabel(..., { exact: true })` unreliable and gave assistive tech noisy names.
+- Tests run:
+  - `pnpm smoke:playwright` — passed (1 test, 5.4s) on macOS.
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm content:validate` — passed.
+  - `pnpm smoke:e2e` — passed with the existing pack, judge, AI, and search coverage.
+- Files/PRs:
+  - Key paths: `apps/desktop/e2e/app.spec.ts`, `apps/desktop/playwright.config.ts`, `apps/desktop/tsconfig.e2e.json`, `apps/desktop/package.json`, `package.json`, `.github/workflows/ci.yml`, `renderer/src/views/SettingsView.tsx`.
+- Next:
+  - Finish the Settings/Coding primitive migration, add the app-layout inspector, and split the database into repositories.
+- Notes/decisions:
+  - The Playwright suite complements the CDP smoke instead of replacing it: Playwright covers real user interaction, relaunch, and persistence; the CDP harness keeps the judge, AI, pack, and log coverage that needs privileged setup.
+  - Each launch uses a fresh `--user-data-dir`; the relaunch reuses it and asserts the profile survived.
 
 ### 2026-10-23 — Phase 2 — Content pack import and removal
 

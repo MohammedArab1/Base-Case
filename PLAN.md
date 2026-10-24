@@ -2473,7 +2473,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [x] Window state persistence (size/position).
 - [x] App menu and About/licenses screen.
 - [x] Unit tests for migrations, repositories, validation.
-- [ ] Playwright smoke test: launch, navigate, change theme, reopen.
+- [x] Playwright smoke test: launch, navigate, change theme, reopen.
 
 **Deliverables**
 

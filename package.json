@@ -23,7 +23,8 @@
     "content:validate": "tsx packages/content-cli/src/cli.ts validate content/packs/core",
     "package:mac": "node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:mac",
     "package:win": "node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:win",
-    "smoke:e2e": "node scripts/smoke-electron.mjs"
+    "smoke:e2e": "node scripts/smoke-electron.mjs",
+    "smoke:playwright": "pnpm --filter @base-case/desktop build && pnpm --filter @base-case/desktop test:e2e"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
