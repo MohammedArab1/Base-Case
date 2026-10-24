@@ -46,10 +46,11 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - Done:
   - Added `@playwright/test` and an Electron suite in `apps/desktop/e2e/app.spec.ts`.
   - The test drives a fresh-profile onboarding (TypeScript, 45-minute goal, no AI), lands on Today, changes the theme in Settings, verifies FTS search with a term that only exists in the problem statement, checks the empty-result state, then relaunches with the same profile and asserts onboarding stays completed and the theme/language/goal persist.
-  - Added `playwright.config.ts`, `tsconfig.e2e.json`, `test:e2e`, and the root `smoke:playwright` script (`build` + `playwright test`). The CI Node job is wired to run the suite on macOS and Windows after the build; the first remote run will confirm it on GitHub-hosted runners.
+  - Added `playwright.config.ts`, `tsconfig.e2e.json`, `test:e2e`, and the root `smoke:playwright` script (`build` + `playwright test`). The CI Node job runs the suite on macOS and Windows after the build; GitHub Actions run 40059546594 passed both.
   - Added explicit `aria-label`s to the Settings selects. Their wrapping labels include the option text, which made `getByLabel(..., { exact: true })` unreliable and gave assistive tech noisy names.
 - Tests run:
   - `pnpm smoke:playwright` — passed (1 test, 5.4s) on macOS.
+  - GitHub Actions CI run 40059546594 — all jobs passed, including the Playwright smoke step on macOS and Windows.
   - `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm content:validate` — passed.
   - `pnpm smoke:e2e` — passed with the existing pack, judge, AI, and search coverage.
 - Files/PRs:
