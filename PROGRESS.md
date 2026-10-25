@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (P3-A, P3-B, and P3-C done; P3-D harness coverage next)
-> Overall status: On track — the judge now cancels runs, streams events, enforces memory, and compiles TypeScript once per run
-> Next milestone: P3-D harness coverage (in-place mutation and ListNode/TreeNode codecs), then sandbox hardening
+> Current phase: Phase 3 — Judge engine (P3-A through P3-D done; P3-E sandbox hardening next)
+> Overall status: On track — the judge now supports cancellation, streaming, memory limits, compile-once, in-place mutations, and ListNode/TreeNode codecs
+> Next milestone: P3-E sandbox hardening (macOS Seatbelt, Windows job limits, security fixtures), then the runtime decision
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, and P3-C compile-once done. Sandbox, runtime bundles, and harness coverage remain |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, P3-C compile-once, and P3-D harness coverage done. Sandbox, runtime bundles, and conformance remain |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start P3-D (in-place mutation capture and ListNode/TreeNode codecs), then P3-E sandbox hardening.
+1. Start P3-E sandbox hardening (macOS Seatbelt, Windows memory/CPU job limits, security fixtures).
 2. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
@@ -41,6 +41,27 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-D harness coverage
+
+- Status: Phase 3 in progress (P3-D complete; design harness deferred to Phase 5)
+- Done:
+  - Added shared Python and TypeScript codecs for `ListNode` and `TreeNode`. Lists cross as arrays; trees use level-order arrays with `null` placeholders and trailing-null trimming.
+  - Injected `ListNode`/`TreeNode` into the Python solution module so annotations resolve, and installed them on `globalThis` before the TypeScript import.
+  - Implemented in-place mutation capture: the harness now records every parameter listed in `mutates` after the call instead of emitting `mutated: {}`.
+  - Added judge-side signature validation for supported parameter/return types, duplicate parameters, and unknown or duplicate `mutates` entries.
+  - Added Python and TypeScript tests for linked lists, trees (including empty trees), in-place arrays, in-place node mutation, Unicode/empty strings, and a 20,000-element input.
+  - Updated the authoring guide and protocol document with node encoding and in-place result shapes.
+- Tests run:
+  - `go test -C services/judge -race ./...` — passed.
+  - `GOOS=windows GOARCH=amd64 go build -C services/judge ./...` — passed.
+- Files/PRs:
+  - Key paths: `services/judge/internal/judge/harness.go`, `runner.go`, `runner_test.go`, `docs/authoring/problem-authoring.md`, `docs/architecture/judge-protocol.md`.
+- Next:
+  - P3-E: macOS Seatbelt profile, Windows job memory/CPU limits, and automated network/home-write/fork-bomb fixtures.
+- Notes/decisions:
+  - The design harness stays with Phase 5; the coding alpha only needs function and in-place signatures.
+  - Node values are duck-typed across the harness boundary (`.val`/`.next`/`.left`/`.right`), so authors should not use `instanceof`.
 
 ### 2026-10-24 — Phase 3 — P3-C compile/transpile once
 

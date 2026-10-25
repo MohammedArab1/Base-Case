@@ -2515,11 +2515,12 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [ ] Platform/arch paths and checksums.
   - [x] Version reporting and `doctor` command.
   - [ ] Repair flow for missing/corrupt runtimes.
-- [ ] Signature schema and harness generator:
+- [x] Signature schema and harness generator:
   - [x] Function signatures.
-  - [ ] In-place and design signatures.
+  - [x] In-place signatures (function kind with `mutates`).
+  - [ ] Design signatures (deferred to Phase 5).
   - [x] Primitives, arrays, matrices, strings, and void (JSON passthrough).
-  - [ ] ListNode and TreeNode codecs.
+  - [x] ListNode and TreeNode codecs.
   - [x] Python codec + harness (function subset).
   - [x] TypeScript/JS harness (function subset).
   - [x] Explicit TypeScript transpilation and compile-once (esbuild Go API).
@@ -2542,9 +2543,10 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Cancellation (runner kill and server protocol tests).
   - [x] Memory limit (sampled and post-exit paths).
   - [ ] Runtime error.
-  - [ ] Design, linked list, tree, and in-place.
+  - [x] Linked list, tree, and in-place mutations in Python and TypeScript.
+  - [ ] Design (deferred to Phase 5).
   - [x] Float, unordered, and set-of-sets checkers (unit coverage).
-  - [ ] Unicode, empty, and large inputs.
+  - [x] Unicode, empty, and large inputs.
 - [x] CI matrix on macOS and Windows (Go suites).
 - [ ] Security tests and limitations doc:
   - [x] Threat model, ADR-0009, and Windows limitations documented.

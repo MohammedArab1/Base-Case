@@ -43,11 +43,32 @@ Quality bar:
 - Set `timeMs` and `memoryMb`; use language multipliers for slower runtimes.
 - Pick a checker: `exact`, `unordered`, `float`, or `set-of-sets`.
 
-For in-place problems, the expected value is:
+For in-place problems, list the changed parameters in `mutates` and use this
+expected shape:
 
 ```json
 { "returnValue": 5, "mutated": { "nums": [0, 1, 2, 3, 4] } }
 ```
+
+When the method returns `void`, set `returnValue` to `null`:
+
+```json
+{ "returnValue": null, "mutated": { "nums": [1, 2, 3] } }
+```
+
+### Node types
+
+`ListNode` and `TreeNode` values cross the boundary as JSON arrays:
+
+- `ListNode`: `[1, 2, 3]` is `1 -> 2 -> 3`.
+- `TreeNode`: level-order with `null` for missing children, e.g.
+  `[4, 2, 7, 1, 3, 6, 9]`. Trailing `null` entries are trimmed on output.
+- `[]` or `null` is an empty list/tree.
+
+The judge provides `ListNode` and `TreeNode` classes to both harnesses and
+injects them into the Python solution module, so annotations such as
+`head: ListNode` work without an import. Do not rely on `instanceof` across
+the harness boundary; access `.val`, `.next`, `.left`, and `.right` instead.
 
 ## Tests
 

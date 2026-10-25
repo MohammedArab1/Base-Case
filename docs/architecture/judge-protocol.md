@@ -145,6 +145,12 @@ Statuses: `accepted`, `wrong_answer`, `compile_error`, `runtime_error`,
 
 Rules:
 
+- `ListNode` values are JSON arrays. `TreeNode` values are level-order arrays
+  with `null` placeholders; trailing nulls are trimmed. Both are encoded before
+  they reach the host.
+- In-place runs return `{ "returnValue": ..., "mutated": { ... } }`. The
+  harness captures the listed parameters after the call; a `void` method
+  returns `null`.
 - Memory limits are enforced by sampling the runtime process tree every
   100 ms and by the kernel/job high-water mark after exit. Crossing the limit
   kills the process group and reports `memory_limit_exceeded`.

@@ -175,6 +175,18 @@ func (r *Runner) run(
 	return result, nil
 }
 
+var supportedParamTypes = map[string]struct{}{
+	"int": {}, "long": {}, "double": {}, "boolean": {}, "string": {}, "char": {},
+	"int[]": {}, "long[]": {}, "double[]": {}, "boolean[]": {}, "string[]": {},
+	"int[][]": {}, "string[][]": {}, "ListNode": {}, "TreeNode": {},
+}
+
+var supportedReturnTypes = map[string]struct{}{
+	"int": {}, "long": {}, "double": {}, "boolean": {}, "string": {}, "char": {},
+	"int[]": {}, "long[]": {}, "double[]": {}, "boolean[]": {}, "string[]": {},
+	"int[][]": {}, "string[][]": {}, "ListNode": {}, "TreeNode": {}, "void": {},
+}
+
 func validateRequest(request RunRequest) error {
 	language := normalizeLanguage(request.Language)
 	if language != "python" && language != "typescript" && language != "javascript" {
@@ -191,6 +203,35 @@ func validateRequest(request RunRequest) error {
 
 	if strings.TrimSpace(request.Signature.Method) == "" {
 		return fmt.Errorf("%w: signature.method is required", ErrInvalidRequest)
+	}
+
+	params := make(map[string]bool, len(request.Signature.Params))
+	for _, param := range request.Signature.Params {
+		if strings.TrimSpace(param.Name) == "" {
+			return fmt.Errorf("%w: signature params must have a name", ErrInvalidRequest)
+		}
+		if _, ok := supportedParamTypes[param.Type]; !ok {
+			return fmt.Errorf("%w: unsupported parameter type %q", ErrInvalidRequest, param.Type)
+		}
+		if params[param.Name] {
+			return fmt.Errorf("%w: duplicate parameter %q", ErrInvalidRequest, param.Name)
+		}
+		params[param.Name] = true
+	}
+
+	if _, ok := supportedReturnTypes[request.Signature.Returns]; !ok {
+		return fmt.Errorf("%w: unsupported return type %q", ErrInvalidRequest, request.Signature.Returns)
+	}
+
+	mutates := make(map[string]bool, len(request.Signature.Mutates))
+	for _, name := range request.Signature.Mutates {
+		if !params[name] {
+			return fmt.Errorf("%w: mutates references unknown parameter %q", ErrInvalidRequest, name)
+		}
+		if mutates[name] {
+			return fmt.Errorf("%w: duplicate mutates entry %q", ErrInvalidRequest, name)
+		}
+		mutates[name] = true
 	}
 
 	if len(request.Tests) == 0 {
