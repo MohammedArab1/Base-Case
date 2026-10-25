@@ -349,20 +349,53 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
     await page.getByTestId('design-scenario').first().click()
     await expect(page.getByRole('heading', { name: 'URL Shortener', level: 2 })).toBeVisible()
 
+    await launched.app.evaluate(({ BrowserWindow }) => {
+      BrowserWindow.getAllWindows()[0]?.setSize(1024, 700)
+    })
+    await page.waitForTimeout(500)
+
     // Draw a rectangle on the interactive Excalidraw canvas.
     const canvas = page.locator('.excalidraw__canvas.interactive').first()
     await expect(canvas).toBeVisible()
     await page.waitForTimeout(1500)
     const box = await canvas.boundingBox()
     expect(box).not.toBeNull()
-    // Select the tool through its label. The radio input itself is covered by
-    // the icon, and the keyboard shortcut depends on canvas focus.
+    // Select the rectangle tool through its label. The radio input itself is
+    // covered by the icon, and the keyboard shortcut depends on canvas focus.
     await page.locator('label:has([data-testid="toolbar-rectangle"])').click()
     await page.waitForTimeout(300)
-    await page.mouse.move(box!.x + 120, box!.y + 120)
-    await page.mouse.down()
-    await page.mouse.move(box!.x + 280, box!.y + 230, { steps: 8 })
-    await page.mouse.up()
+    // Dispatch pointer events directly: Playwright's mouse API does not reach
+    // Excalidraw's pointer handlers reliably at this window size.
+    await canvas.dispatchEvent('pointerdown', {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      button: 0,
+      buttons: 1,
+      clientX: box!.x + 120,
+      clientY: box!.y + 120,
+      bubbles: true,
+    })
+    await canvas.dispatchEvent('pointermove', {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      button: 0,
+      buttons: 1,
+      clientX: box!.x + 280,
+      clientY: box!.y + 230,
+      bubbles: true,
+    })
+    await canvas.dispatchEvent('pointerup', {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      button: 0,
+      buttons: 0,
+      clientX: box!.x + 280,
+      clientY: box!.y + 230,
+      bubbles: true,
+    })
     await page.waitForTimeout(400)
 
     // Wait for the debounced scene autosave instead of guessing a fixed delay.
