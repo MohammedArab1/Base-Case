@@ -355,13 +355,10 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
     await page.waitForTimeout(1500)
     const box = await canvas.boundingBox()
     expect(box).not.toBeNull()
-    // Excalidraw's top-left UI overlay can intercept a corner click on smaller
-    // viewports, so focus the canvas at its center before choosing a tool.
-    await canvas.click({
-      position: { x: Math.round(box!.width / 2), y: Math.round(box!.height / 2) },
-    })
-    await page.keyboard.press('r')
-    await page.waitForTimeout(400)
+    // Select the tool through its label. The radio input itself is covered by
+    // the icon, and the keyboard shortcut depends on canvas focus.
+    await page.locator('label:has([data-testid="toolbar-rectangle"])').click()
+    await page.waitForTimeout(300)
     await page.mouse.move(box!.x + 120, box!.y + 120)
     await page.mouse.down()
     await page.mouse.move(box!.x + 280, box!.y + 230, { steps: 8 })
