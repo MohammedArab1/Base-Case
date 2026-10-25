@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "core/rate-limiter",
+  "slug": "rate-limiter",
+  "title": "Rate Limiter",
+  "difficulty": "medium",
+  "tags": ["algorithms", "distributed-systems", "redis", "api-design"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Limit requests per client, API key, or IP according to configurable rules.",
+      "Return HTTP 429 with Retry-After and remaining-quota headers when a limit is exceeded.",
+      "Support allowlists, per-plan limits, and short-lived overrides.",
+      "Expose per-key usage metrics for operators and customers."
+    ],
+    "nonFunctional": [
+      "Add only a few milliseconds to the request path.",
+      "Be accurate enough that a small burst above the limit is acceptable, but sustained abuse is not.",
+      "Stay available when the counter store is degraded.",
+      "Apply consistent limits across regions and gateway instances."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 200000000,
+    "readsPerDay": 5000000000,
+    "retentionYears": 1
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "Limit key and rule configuration",
+    "Algorithm choice and why it fits the traffic shape",
+    "Atomic counter updates and expiry",
+    "Placement in the request path (gateway vs service)",
+    "Local versus distributed enforcement",
+    "Fail-open/fail-closed behavior and degraded mode",
+    "Metrics, overrides, and rollout of new rules"
+  ],
+  "followUps": [
+    "How would you implement a global limit across many data centers?",
+    "What changes for a per-user concurrency limit instead of a request rate?",
+    "How would you prevent one hot key from overwhelming Redis?",
+    "How would you test that the limiter never blocks legitimate traffic after a deploy?"
+  ],
+  "commonMistakes": [
+    "Using a fixed window that allows a double burst at the window boundary.",
+    "Reading and writing the counter in separate round trips, which loses atomicity under concurrency.",
+    "Putting a synchronous remote call on every request without a local fast path.",
+    "Failing closed during a Redis outage and taking down the whole API.",
+    "Forgetting that Retry-After and remaining-quota headers are part of the contract."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

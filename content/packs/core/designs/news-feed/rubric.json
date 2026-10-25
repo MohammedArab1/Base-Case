@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements and scope",
+      "description": "Clarifies the feed product, consistency expectations, ranking goals, and what is out of scope.",
+      "levels": {
+        "1": "Repeats the prompt without defining the feed or consistency expectations.",
+        "2": "Lists features but ignores ranking, pagination, or eventual consistency.",
+        "3": "Separates functional and non-functional requirements and states freshness and latency assumptions.",
+        "4": "Also distinguishes Following vs For You behavior, quantifies acceptable staleness, and names the ranking objective."
+      }
+    },
+    {
+      "id": "api",
+      "name": "API and pagination",
+      "description": "Defines feed, post, follow, and counter interfaces with stable pagination.",
+      "levels": {
+        "1": "No clear feed or post API.",
+        "2": "Defines a feed endpoint but uses offset pagination or omits errors.",
+        "3": "Defines cursor pagination, post creation, follow/unfollow, and error cases.",
+        "4": "Also covers idempotent post creation, new-posts indicators, blocking, and how clients merge paginated pages."
+      }
+    },
+    {
+      "id": "data-model",
+      "name": "Post and feed storage",
+      "description": "Chooses post, follow, and feed-entry schemas, keys, and storage engines.",
+      "levels": {
+        "1": "No concrete schema or storage choice.",
+        "2": "Has a posts table but no feed or follow model.",
+        "3": "Defines posts, follows, and precomputed feed entries with keys and a storage engine.",
+        "4": "Also discusses sharding, retention, media references, counter storage, and how deletes propagate."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "Fan-out architecture",
+      "description": "Separates post creation, fan-out, feed reads, ranking, and counters.",
+      "levels": {
+        "1": "Generates the feed by scanning all follows on every read.",
+        "2": "Names a fan-out worker but does not show the write or read path.",
+        "3": "Shows post creation, asynchronous fan-out, feed storage, read path, and ranking.",
+        "4": "Also explains the hybrid push/pull split for celebrities, cache layers, and how degraded ranking falls back."
+      }
+    },
+    {
+      "id": "scale",
+      "name": "Scale and performance",
+      "description": "Sizes feed reads, fan-out amplification, cache hit rate, and storage.",
+      "levels": {
+        "1": "Ignores the read volume or fan-out cost.",
+        "2": "Repeats the numbers without estimating QPS, cache size, or storage amplification.",
+        "3": "Estimates feed QPS, fan-out write amplification, cache size, and storage.",
+        "4": "Also quantifies tail latency, hot-account behavior, ranking cost per candidate, and the cost of retention."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares push vs pull, precomputed vs on-demand ranking, and consistency choices.",
+      "levels": {
+        "1": "No alternatives considered.",
+        "2": "Names fan-out on write or read without connecting it to the design.",
+        "3": "Compares at least two meaningful choices, such as push vs pull or precomputed vs ranked-at-read.",
+        "4": "Also explains when the chosen model is wrong, how freshness is traded for latency, and what would trigger a redesign."
+      }
+    },
+    {
+      "id": "failure-modes",
+      "name": "Failure modes and operations",
+      "description": "Covers fan-out backlog, hot accounts, cache failures, stale feeds, and monitoring.",
+      "levels": {
+        "1": "Assumes fan-out and caches never fail.",
+        "2": "Mentions retries or a queue without a recovery path.",
+        "3": "Identifies the main failure modes and the metrics or alerts that detect them.",
+        "4": "Also covers degraded feed modes, celebrity posts, cache stampedes, delete propagation, and runbook-level recovery."
+      }
+    }
+  ]
+}

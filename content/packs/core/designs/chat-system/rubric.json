@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements and scope",
+      "description": "Clarifies conversation types, delivery guarantees, multi-device behavior, and what is out of scope.",
+      "levels": {
+        "1": "Repeats the prompt without defining delivery guarantees or device behavior.",
+        "2": "Lists the features but ignores ordering, offline delivery, or multi-device sync.",
+        "3": "Separates functional and non-functional requirements and states latency, durability, and ordering assumptions.",
+        "4": "Also quantifies acceptable duplicate delivery, explains the push fallback, and names the assumptions about media and encryption."
+      }
+    },
+    {
+      "id": "api",
+      "name": "Protocol and message envelope",
+      "description": "Defines the realtime protocol, message fields, acknowledgements, and history APIs.",
+      "levels": {
+        "1": "No clear protocol or message shape.",
+        "2": "Defines a send call but omits acknowledgements, idempotency, or history.",
+        "3": "Defines a message envelope with a client id, acknowledgements, and history pagination.",
+        "4": "Also covers reconnect cursors, receipt events, typing/presence events, and versioning of the protocol."
+      }
+    },
+    {
+      "id": "data-model",
+      "name": "Ordering and storage",
+      "description": "Chooses a per-conversation sequence, message schema, partitioning, and storage engine.",
+      "levels": {
+        "1": "No concrete message schema or ordering model.",
+        "2": "Stores messages but orders by timestamp or has no partitioning plan.",
+        "3": "Defines a per-conversation sequence and a schema partitioned by conversation and time.",
+        "4": "Also discusses hot conversations, retention, receipts storage, and how a conversation moves between shards."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "Delivery architecture",
+      "description": "Separates connection management, persistence, fan-out, push, and sync.",
+      "levels": {
+        "1": "A single server that both stores and delivers messages.",
+        "2": "Names a chat service and a socket layer but does not show the send or delivery flow.",
+        "3": "Shows the send path, connection registry, fan-out, offline push, and reconnect sync.",
+        "4": "Also explains why each component scales independently and how the online and offline paths converge."
+      }
+    },
+    {
+      "id": "scale",
+      "name": "Scale and performance",
+      "description": "Sizes connections, message throughput, fan-out, and history reads.",
+      "levels": {
+        "1": "Ignores the stated message volume or connection count.",
+        "2": "Repeats the numbers without estimating QPS, fan-out, or storage.",
+        "3": "Estimates message QPS, connection counts, storage, and group fan-out.",
+        "4": "Also quantifies delivery latency, fan-out lag, hot-group mitigation, and the cost of retaining history."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares ordering, delivery, and fan-out choices and defends the selected guarantees.",
+      "levels": {
+        "1": "No alternatives considered.",
+        "2": "Names at-least-once or push delivery without connecting it to the design.",
+        "3": "Compares at least two meaningful choices, such as single-writer sequencing vs distributed ids or fan-out on write vs read.",
+        "4": "Also explains when the chosen guarantee is insufficient and what would trigger a redesign."
+      }
+    },
+    {
+      "id": "failure-modes",
+      "name": "Failure modes and operations",
+      "description": "Covers disconnects, duplicate delivery, storage outages, and the metrics that reveal them.",
+      "levels": {
+        "1": "Assumes connections and storage never fail.",
+        "2": "Mentions reconnect or retries without a recovery path.",
+        "3": "Identifies the main failure modes and the metrics or alerts that detect them.",
+        "4": "Also covers resume cursors, duplicate suppression, sequencer hot spots, push outages, and runbook-level recovery."
+      }
+    }
+  ]
+}

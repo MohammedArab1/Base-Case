@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements and scope",
+      "description": "Clarifies what is limited, per what key, and what accuracy and availability mean for the business.",
+      "levels": {
+        "1": "Repeats the prompt without defining the limit key or rule shape.",
+        "2": "Defines request limits but ignores bursts, overrides, or multi-region consistency.",
+        "3": "Separates functional and non-functional requirements and states the key, window, and consistency assumptions.",
+        "4": "Also quantifies acceptable over-admission, explains fail-open versus fail-closed per endpoint, and names the customer-facing contract."
+      }
+    },
+    {
+      "id": "api",
+      "name": "API and contract",
+      "description": "Defines the rejection response, quota headers, rule configuration, and override interfaces.",
+      "levels": {
+        "1": "Returns an error but no status code or headers.",
+        "2": "Uses 429 but omits Retry-After, remaining quota, or reset time.",
+        "3": "Defines 429 with Retry-After and quota headers, plus a way to configure rules and overrides.",
+        "4": "Also covers idempotent rule changes, per-plan defaults, allowlists, and how clients should back off."
+      }
+    },
+    {
+      "id": "data-model",
+      "name": "Counters and storage",
+      "description": "Chooses keys, counter representations, expiry, and a store that matches the access pattern.",
+      "levels": {
+        "1": "No concrete counter or key model.",
+        "2": "Stores a simple count without atomicity, TTL, or a plan for hot keys.",
+        "3": "Defines keys, atomic updates, expiry, and a store such as Redis with a clear eviction policy.",
+        "4": "Also explains sharding, hot-key mitigation, clock assumptions, and how counters survive a store restart."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "Placement and architecture",
+      "description": "Places the limiter in the request path and balances local enforcement with a shared store.",
+      "levels": {
+        "1": "Adds a remote limiter call to every request with no local path.",
+        "2": "Describes a limiter service but not how gateways and services share state.",
+        "3": "Shows gateway middleware, a local fast path, a shared counter store, and a config distribution path.",
+        "4": "Also explains how the two tiers reconcile, how rules roll out safely, and why the boundaries sit where they do."
+      }
+    },
+    {
+      "id": "scale",
+      "name": "Scale and performance",
+      "description": "Sizes the check path and shows how it stays fast under peak traffic.",
+      "levels": {
+        "1": "Ignores the stated check volume.",
+        "2": "Repeats the numbers without estimating QPS, latency, or store load.",
+        "3": "Estimates per-tier QPS and describes pipelining, local caching, and horizontal scaling.",
+        "4": "Also quantifies p99 overhead, hot-key behavior, Redis cluster sizing, and the cost of the chosen accuracy."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares algorithms and enforcement models and defends the chosen balance.",
+      "levels": {
+        "1": "No alternatives considered.",
+        "2": "Names an algorithm without connecting it to the traffic shape.",
+        "3": "Compares at least two algorithms or enforcement models, such as fixed window vs token bucket or local vs distributed.",
+        "4": "Also explains when the chosen option is wrong, how over-admission is bounded, and what would trigger a redesign."
+      }
+    },
+    {
+      "id": "failure-modes",
+      "name": "Failure modes and operations",
+      "description": "Covers store outages, clock issues, bad rules, and the metrics that reveal them.",
+      "levels": {
+        "1": "Assumes the counter store never fails.",
+        "2": "Mentions fail-open or fail-closed without a recovery path.",
+        "3": "Identifies the main failure modes and the metrics or alerts that detect them.",
+        "4": "Also covers degraded-mode limits, hot-key overload, bad-rule rollback, and a runbook for disabling the limiter safely."
+      }
+    }
+  ]
+}

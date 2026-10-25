@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "core/chat-system",
+  "slug": "chat-system",
+  "title": "Chat System",
+  "difficulty": "hard",
+  "tags": ["realtime", "messaging", "storage", "fan-out", "presence"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Support one-to-one and group conversations.",
+      "Deliver messages in real time and persist them for history.",
+      "Show delivery and read receipts.",
+      "Deliver messages to offline users and sync across multiple devices.",
+      "Expose presence and typing indicators."
+    ],
+    "nonFunctional": [
+      "Deliver messages with low latency within a region.",
+      "Preserve per-conversation order and never silently lose a message.",
+      "Tolerate reconnects and duplicate delivery without showing duplicates.",
+      "Scale to tens of millions of daily users and hundreds of millions of messages.",
+      "Degrade gracefully to push notifications when a device is offline."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 500000000,
+    "readsPerDay": 5000000000,
+    "retentionYears": 5
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "WebSocket session lifecycle and reconnect/resume",
+    "Message envelope and idempotency key",
+    "Per-conversation ordering and sequencing",
+    "Message storage schema and partitioning",
+    "Fan-out for groups and push notifications",
+    "Presence, typing, and receipts",
+    "Multi-region behavior, failure modes, and monitoring"
+  ],
+  "followUps": [
+    "How would you support end-to-end encryption without breaking search?",
+    "What changes if a group can have 100,000 members?",
+    "How would you migrate a conversation between storage shards without downtime?",
+    "How would you detect and handle a message that is stuck in the delivery pipeline?"
+  ],
+  "commonMistakes": [
+    "Ordering messages by server timestamp instead of a per-conversation sequence.",
+    "Acknowledging a send before the message is durably stored.",
+    "Fanning out a large group message synchronously inside the send request.",
+    "Treating presence as strongly consistent instead of a best-effort heartbeat.",
+    "Forgetting that a user can have several devices with independent cursors."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

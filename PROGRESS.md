@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 5 — System design (core loop complete; three more scenarios remain)
+> Current phase: Phase 5 — System design (complete; four playable scenarios)
 > Overall status: On track — coding and design practice both run end to end with local persistence, FSRS review, and Markdown/PNG export
-> Next milestone: Add the remaining Phase 5 scenarios, then Phase 6 AI tutor
+> Next milestone: Phase 6 AI tutor
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -17,7 +17,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
-| Phase 5 — System design | In progress | 2026-10-25 | Scenario loader, themed canvas, structured notes, seven-dimension rubric, reference reveal, attempt history, design FSRS cards, and Markdown+PNG export are complete; three more scenarios and a native-dialog export test remain |
+| Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
 | Phase 8 — Alpha release | Not started | — | Installers, docs, beta |
@@ -26,8 +26,8 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Add the three remaining Phase 5 design scenarios and reference scenes.
-2. Add an automated check for the native export dialog, then start Phase 6 AI tutor work.
+1. Start Phase 6: AI context builder, structured outputs, guardrails, and design-note review.
+2. Add optional reference Excalidraw scenes and an automated native export-dialog check.
 3. Confirm the Windows Playwright run in CI.
 4. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
@@ -42,6 +42,26 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 5 — Design scenario content
+
+- Status: Phase 5 complete (four playable scenarios)
+- Done:
+  - Added `core/rate-limiter` with token-bucket and sliding-window trade-offs, local-plus-shared enforcement, and degraded-mode guidance.
+  - Added `core/chat-system` with WebSocket delivery, per-conversation sequencing, multi-device sync, receipts, presence, and push fallback.
+  - Added `core/news-feed` with hybrid push/pull fan-out, cursor pagination, bounded ranking, asynchronous counters, and delete/block propagation.
+  - Each scenario includes a prompt, seven-dimension rubric with descriptors, reference design, expected-topics checklist, follow-ups, and common mistakes.
+  - Updated the pack manifest and smoke test to load and validate all four scenarios.
+- Tests run:
+  - `pnpm content:validate` — valid, 4 designs (warnings only for optional reference scenes).
+  - `pnpm smoke:e2e` — passed with `designScenarios: 4`.
+  - `pnpm --filter @base-case/desktop test:e2e` — 3 passed.
+- Files/PRs:
+  - Key paths: `content/packs/core/designs/rate-limiter/`, `chat-system/`, `news-feed/`, `content/packs/core/pack.json`.
+- Next:
+  - Phase 6 AI tutor; optional reference scenes; native export-dialog automation.
+- Notes/decisions:
+  - Reference designs are Markdown with ASCII architecture sketches. `referenceScene` remains optional, so the validator emits warnings rather than errors.
 
 ### 2026-10-25 — Phase 5 — Design practice loop
 

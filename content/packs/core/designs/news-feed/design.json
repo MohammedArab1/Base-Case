@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "core/news-feed",
+  "slug": "news-feed",
+  "title": "News Feed",
+  "difficulty": "hard",
+  "tags": ["fan-out", "caching", "ranking", "social-graph", "storage"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Let users follow and unfollow other users.",
+      "Show a ranked feed of posts from followed users.",
+      "Create posts with text and optional media references.",
+      "Show like and comment counts on posts.",
+      "Support cursor pagination and a new-posts indicator.",
+      "Let users hide or block accounts."
+    ],
+    "nonFunctional": [
+      "Keep feed reads fast at very high volume.",
+      "Accept a few seconds of eventual consistency for new posts and counts.",
+      "Persist posts durably and keep them available for years.",
+      "Keep the feed useful when ranking or fan-out services are degraded.",
+      "Scale to a large daily audience without per-read fan-out for most users."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 20000000,
+    "readsPerDay": 50000000000,
+    "retentionYears": 2
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "Follow graph and feed membership model",
+    "Post schema and media handling",
+    "Fan-out on write versus fan-out on read",
+    "Feed storage, caching, and pagination",
+    "Ranking and freshness",
+    "Counters and eventual consistency",
+    "Failure modes, hot accounts, and monitoring"
+  ],
+  "followUps": [
+    "How would you support a 'Following' and a 'For You' feed with different ranking?",
+    "What changes if a user follows 10,000 accounts?",
+    "How would you delete a post everywhere within a minute?",
+    "How would you A/B test a ranking change without double-counting reads?"
+  ],
+  "commonMistakes": [
+    "Fanning out every post to every follower, including celebrity accounts.",
+    "Ranking the entire feed on every read instead of precomputing or bounding the candidate set.",
+    "Using offset pagination, which duplicates or skips posts as new ones arrive.",
+    "Updating like counts synchronously on the post row.",
+    "Forgetting that a deleted or blocked post must disappear from precomputed feeds."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

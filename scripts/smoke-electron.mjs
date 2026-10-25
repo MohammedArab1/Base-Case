@@ -706,6 +706,16 @@ export { Solution }
     designScenarios.some((item) => item.id === 'core/url-shortener'),
     'The bundled design scenario was not loaded',
   )
+  assert(designScenarios.length === 4, 'Expected four bundled design scenarios')
+
+  for (const summary of designScenarios) {
+    const detail = await evaluate(
+      `window.baseCase.design.getScenario(${JSON.stringify(summary.id)})`,
+    )
+    assert(detail.rubric.length === 7, `${summary.id} rubric should have seven dimensions`)
+    assert(detail.checklist.length > 0, `${summary.id} checklist is missing`)
+    assert(detail.reference.markdown.length > 0, `${summary.id} reference design is missing`)
+  }
 
   const designScenario = await evaluate(`window.baseCase.design.getScenario('core/url-shortener')`)
   assert(designScenario.rubric.length === 7, 'The design rubric should have seven dimensions')
