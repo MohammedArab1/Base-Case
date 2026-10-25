@@ -1,0 +1,5 @@
+{"input":{"source":"horse","target":"ros"},"expected":3}
+{"input":{"source":"intention","target":"execution"},"expected":5}
+{"input":{"source":"","target":""},"expected":0}
+{"input":{"source":"abc","target":""},"expected":3}
+{"input":{"source":"kitten","target":"sitting"},"expected":3}

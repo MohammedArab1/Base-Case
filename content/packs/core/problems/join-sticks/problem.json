@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "core/join-sticks",
+  "slug": "join-sticks",
+  "title": "Join Sticks",
+  "difficulty": "medium",
+  "patterns": ["heaps", "greedy", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "connectCost",
+    "params": [{ "name": "sticks", "type": "int[]" }],
+    "returns": "long",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n log n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Always joining the first two sticks instead of the two shortest",
+    "Forgetting to push the combined stick back into the collection",
+    "Returning the final stick length instead of the total cost",
+    "Trying to connect all sticks in one step"
+  ],
+  "followUps": [
+    "How would you prove that always joining the two shortest sticks is optimal?",
+    "How would you solve it if at most two sticks could be joined per step?",
+    "What changes if joining sticks has a fixed setup cost plus the length cost?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

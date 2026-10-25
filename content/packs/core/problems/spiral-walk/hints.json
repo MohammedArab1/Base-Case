@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think in boundaries",
+      "body": "Rather than tracking headings and turning at corners, can you describe the unvisited part of the grid with four moving edges?"
+    },
+    {
+      "level": 2,
+      "title": "Four shrinking sides",
+      "body": "Keep `top`, `bottom`, `left`, and `right`. Visit the top row, then the right column, then the bottom row, then the left column, shrinking the corresponding boundary after each step."
+    },
+    {
+      "level": 3,
+      "title": "Guard the short cases",
+      "body": "After the top and bottom rows, only continue down the right column if `top <= bottom`. After left and right, only continue up the left column if `left <= right`. These guards prevent duplicate visits when a row or column is already exhausted."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntop = 0, bottom = rows - 1\nleft = 0, right = columns - 1\nresult = []\nwhile top <= bottom and left <= right:\n    for column from left to right: add grid[top][column]\n    top += 1\n    for row from top to bottom: add grid[row][right]\n    right -= 1\n    if top <= bottom:\n        for column from right down to left: add grid[bottom][column]\n        bottom -= 1\n    if left <= right:\n        for row from bottom down to top: add grid[row][left]\n        left += 1\nreturn result\n```\n\nThis is pseudocode, not a complete solution. Return early for an empty grid."
+    }
+  ]
+}

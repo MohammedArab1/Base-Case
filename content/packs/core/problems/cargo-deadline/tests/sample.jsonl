@@ -1,0 +1,5 @@
+{"input":{"weights":[1,2,3,4,5,6,7,8,9,10],"days":5},"expected":15}
+{"input":{"weights":[3,2,2,4,1,4],"days":3},"expected":6}
+{"input":{"weights":[1,2,3,1,1],"days":4},"expected":3}
+{"input":{"weights":[10],"days":1},"expected":10}
+{"input":{"weights":[1,1,1,1,1],"days":5},"expected":1}

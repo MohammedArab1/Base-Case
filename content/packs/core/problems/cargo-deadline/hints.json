@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Is a capacity feasible?",
+      "body": "Forget finding the minimum for a moment. Given a capacity, how would you check whether the packages fit in the allowed number of days?"
+    },
+    {
+      "level": 2,
+      "title": "Feasibility is monotone",
+      "body": "If a capacity works, every larger capacity also works. The set of feasible capacities is a suffix of the possible range, which makes it searchable by binary search."
+    },
+    {
+      "level": 3,
+      "title": "Choose the bounds",
+      "body": "The capacity can never be smaller than the heaviest package, and never needs to exceed the total weight. For a candidate capacity, greedily fill each day until the next package would overflow, then start a new day."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlow = max(weights)\nhigh = sum(weights)\nwhile low < high:\n    middle = low + (high - low) // 2\n    if shipsNeeded(middle) <= days:\n        high = middle\n    else:\n        low = middle + 1\nreturn low\n\nshipsNeeded(capacity):\n    ships = 1\n    load = 0\n    for weight in weights:\n        if load + weight > capacity:\n            ships += 1\n            load = weight\n        else:\n            load += weight\n    return ships\n```\n\nThis is pseudocode, not a complete solution. Handle a package heavier than the capacity if your bounds allow it, though the lower bound here prevents it."
+    }
+  ]
+}

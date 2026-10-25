@@ -25,7 +25,12 @@
     "search-tree-check",
     "build-order",
     "network-clusters",
-    "keypad-words"
+    "keypad-words",
+    "cargo-deadline",
+    "spiral-walk",
+    "fuel-circuit",
+    "join-sticks",
+    "edit-ledger"
   ],
   "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
 }

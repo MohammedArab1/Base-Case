@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What must be true overall?",
+      "body": "If the total fuel available is less than the total cost of the whole loop, can any starting station possibly finish? What does the opposite tell you?"
+    },
+    {
+      "level": 2,
+      "title": "A failed run eliminates many starts",
+      "body": "Suppose you start at station `s` and run out of fuel before reaching station `k`. Can any station between `s` and `k` be a valid start?"
+    },
+    {
+      "level": 3,
+      "title": "Jump past failures",
+      "body": "If you run out at station `k`, every station from the current start through `k - 1` also fails, because each had even less fuel entering that stretch. Restart the candidate at `k` and keep going. Track the total balance separately."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntotal = 0\nbalance = 0\ncandidate = 0\nfor index from 0 to length(gas) - 1:\n    difference = gas[index] - cost[index]\n    total += difference\n    balance += difference\n    if balance < 0:\n        candidate = index + 1\n        balance = 0\nreturn candidate if total >= 0 else -1\n```\n\nThis is pseudocode, not a complete solution. Check the total before trusting the candidate."
+    }
+  ]
+}

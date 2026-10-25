@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which sticks should be joined first?",
+      "body": "A stick that is joined early contributes its length to every later join. Should a long stick or a short stick be involved in more joins?"
+    },
+    {
+      "level": 2,
+      "title": "Always take the two shortest",
+      "body": "The optimal strategy is a Huffman-style merge: repeatedly join the two shortest sticks and put the combined stick back into the collection."
+    },
+    {
+      "level": 3,
+      "title": "Use a min-heap",
+      "body": "A sorted array makes finding the two shortest easy, but inserting the combined stick is expensive. A min-heap gives both operations in logarithmic time."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nheap = min-heap of sticks\ntotal = 0\nwhile heap has more than one element:\n    first = heap.pop()\n    second = heap.pop()\n    combined = first + second\n    total += combined\n    heap.push(combined)\nreturn total\n```\n\nThis is pseudocode, not a complete solution. A single stick returns zero without entering the loop."
+    }
+  ]
+}

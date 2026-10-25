@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Decide from the end",
+      "body": "Compare the last characters of the two strings. If they match, nothing needs to happen to them. If they differ, what operations could fix the last character of `source`?"
+    },
+    {
+      "level": 2,
+      "title": "Three subproblems",
+      "body": "After choosing an operation, the remaining work is the same problem on shorter prefixes. Define `distance[i][j]` as the minimum edits to turn the first `i` characters of `source` into the first `j` characters of `target`."
+    },
+    {
+      "level": 3,
+      "title": "The recurrence",
+      "body": "If the current characters match, `distance[i][j] = distance[i-1][j-1]`. Otherwise it is one plus the minimum of deleting (`distance[i-1][j]`), inserting (`distance[i][j-1]`), and replacing (`distance[i-1][j-1]`). The first row and column are 0, 1, 2, … because edits against an empty prefix are pure insertions or deletions."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nprevious = [0, 1, 2, ..., length(target)]\nfor i from 1 to length(source):\n    current = [i] followed by zeros\n    for j from 1 to length(target):\n        if source[i-1] == target[j-1]:\n            current[j] = previous[j-1]\n        else:\n            current[j] = 1 + min(previous[j], current[j-1], previous[j-1])\n    previous = current\nreturn previous[length(target)]\n```\n\nThis is pseudocode, not a complete solution. Only the previous row is needed."
+    }
+  ]
+}
