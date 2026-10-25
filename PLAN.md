@@ -2522,9 +2522,9 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [ ] ListNode and TreeNode codecs.
   - [x] Python codec + harness (function subset).
   - [x] TypeScript/JS harness (function subset).
-  - [ ] Explicit TypeScript transpilation and compile-once.
+  - [x] Explicit TypeScript transpilation and compile-once (esbuild Go API).
 - [ ] Execution pipeline:
-  - [ ] Compile/transpile once per run.
+  - [x] Compile/transpile once per run (Python syntax check, esbuild TS, Node `--check` for JS).
   - [x] Fresh process per test.
   - [x] Sample vs. hidden mode (host supplies the test set).
   - [x] Time and output limits.
@@ -3066,6 +3066,7 @@ Review this table monthly. Add a "trigger" action for each high risk.
 | D021 | macOS and Windows only for v1 | Accepted | Linux deferred to reduce packaging/sandbox scope |
 | D022 | Maintain `PROGRESS.md` as living status | Accepted | Returning developer needs a reliable "what is done / what is next" record |
 | D023 | Phase 1 may use system runtimes and Node type stripping | Accepted | Spike-only; production must bundle/transpile in Phase 3 |
+| D024 | Use esbuild's Go API for TypeScript transpilation | Accepted | In-process, pinned, no extra runtime dependency; emits ESM plus an inline source map |
 
 ### 16.2 Open questions
 
@@ -3074,7 +3075,7 @@ Review this table monthly. Add a "trigger" action for each high risk.
 - Resolved: macOS 13+, Windows 10 21H2+ / 11 (D021).
 - Bundle runtimes or download language packs on first use? (Phase 3; the 190 MB spike installer leaves ~160 MB under budget.)
 - Resolved provisionally: `node:sqlite` (ADR-0004); revisit if the API changes.
-- TypeScript transpilation: esbuild or sucrase? (Phase 3; do not rely on Node type stripping in production.)
+- Resolved: esbuild's Go API transpiles TypeScript once per run (D024); Node type stripping is no longer used.
 - How much Windows sandboxing is acceptable for MVP? (Phase 3; document.)
 - Apple FM sidecar in Phase 9 or post-MVP? (Decide after Phase 6.)
 - Importer custom checkers: reject or sandbox? (MVP: reject.)

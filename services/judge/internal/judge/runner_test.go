@@ -180,6 +180,92 @@ func TestCompileError(t *testing.T) {
 	if result.Compile.OK {
 		t.Fatal("expected compile.ok=false")
 	}
+	if len(result.Tests) != 0 {
+		t.Fatalf("expected no tests to run, got %d", len(result.Tests))
+	}
+	if result.FirstFailure == nil || result.FirstFailure.UserStderr == "" {
+		t.Fatalf("expected the compiler output on the first failure, got %+v", result.FirstFailure)
+	}
+}
+
+func TestTypeScriptCompileError(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "typescript")
+
+	request := pairSumRequest("typescript", `class Solution {
+  pairSum(nums: number[], target: number): number[] {
+    const value: = 1
+    return [0, 1]
+  }
+}
+
+export { Solution }
+`)
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusCompileError {
+		t.Fatalf("expected compile_error, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+	if result.Compile.OK || result.Compile.Stderr == "" {
+		t.Fatalf("expected esbuild output, got %+v", result.Compile)
+	}
+	if len(result.Tests) != 0 {
+		t.Fatalf("expected no tests to run, got %d", len(result.Tests))
+	}
+}
+
+func TestTypeScriptTranspilesEnums(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "typescript")
+
+	request := pairSumRequest("typescript", `enum Direction {
+  Up = 1,
+}
+
+class Solution {
+  pairSum(nums: number[], target: number): number[] {
+    return Direction.Up === 1 ? [0, 1] : []
+  }
+}
+
+export { Solution }
+`)
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusAccepted {
+		t.Fatalf("expected accepted, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+}
+
+func TestJavaScriptCompileError(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "javascript")
+
+	request := pairSumRequest("javascript", `class Solution {
+  pairSum(nums, target) {
+    return [0, 1
+  }
+}
+
+export { Solution }
+`)
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusCompileError {
+		t.Fatalf("expected compile_error, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+	if result.Compile.OK || result.Compile.Stderr == "" {
+		t.Fatalf("expected node --check output, got %+v", result.Compile)
+	}
 }
 
 func TestTimeLimitExceeded(t *testing.T) {

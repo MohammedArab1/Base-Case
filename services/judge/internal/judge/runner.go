@@ -68,11 +68,40 @@ func (r *Runner) run(
 		return RunResult{}, err
 	}
 
+	compile := compileWorkspace(ctx, workspace, language, runtimePath)
+
 	result := RunResult{
 		Status:  StatusAccepted,
 		Total:   len(request.Tests),
-		Compile: CompileResult{OK: true},
+		Compile: compile,
 		Tests:   make([]TestResult, 0, len(request.Tests)),
+	}
+
+	if ctx.Err() != nil {
+		result.Status = StatusCancelled
+		result.Message = "The run was cancelled."
+		return result, nil
+	}
+
+	if !compile.OK {
+		result.Status = StatusCompileError
+		result.Message = "The code could not be compiled or imported."
+
+		if len(request.Tests) > 0 {
+			first := request.Tests[0]
+			result.FirstFailure = &Failure{
+				Index:      first.Index,
+				IsSample:   first.IsSample,
+				Status:     StatusCompileError,
+				Input:      first.Input,
+				Expected:   first.Expected,
+				UserStdout: compile.Stdout,
+				UserStderr: compile.Stderr,
+				Message:    result.Message,
+			}
+		}
+
+		return result, nil
 	}
 
 	for _, test := range request.Tests {
@@ -205,11 +234,11 @@ func writeWorkspace(workspace, language string, request RunRequest) error {
 	case "typescript":
 		solutionName = "solution.ts"
 		harnessName = "harness.mjs"
-		harness = typescriptHarness(request.Signature, "./solution.ts")
+		harness = typescriptHarness(request.Signature, "./solution.mjs")
 	case "javascript":
-		solutionName = "solution.js"
+		solutionName = "solution.mjs"
 		harnessName = "harness.mjs"
-		harness = typescriptHarness(request.Signature, "./solution.js")
+		harness = typescriptHarness(request.Signature, "./solution.mjs")
 	default:
 		return fmt.Errorf("%w: unsupported language %q", ErrInvalidRequest, language)
 	}
@@ -467,12 +496,10 @@ func commandFor(language, runtimePath string, request RunRequest) *exec.Cmd {
 
 	args := []string{
 		"--no-warnings",
+		"--enable-source-maps",
 		fmt.Sprintf("--max-old-space-size=%d", effectiveMemoryMb(request)),
+		"harness.mjs",
 	}
-	if language == "typescript" {
-		args = append(args, "--experimental-strip-types")
-	}
-	args = append(args, "harness.mjs")
 
 	return exec.Command(runtimePath, args...)
 }

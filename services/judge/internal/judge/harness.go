@@ -118,9 +118,8 @@ func pythonHarness(signature Signature) string {
 	)
 }
 
-// typescriptHarness uses Node's type-stripping support in the Phase 1 spike.
-// Phase 3 will transpile explicitly with esbuild or sucrase instead of relying
-// on the host Node version.
+// typescriptHarness runs plain ESM. TypeScript is transpiled once per run by
+// compileWorkspace, so Node never needs type stripping here.
 const typescriptHarnessTemplate = `import { readFileSync } from 'node:fs'
 import { performance } from 'node:perf_hooks'
 
@@ -174,7 +173,7 @@ try {
     .split('\n')
     .filter((line) => !line.includes('harness.mjs'))
     .join('\n')
-  const location = rawStack.match(/solution\.(?:ts|js):(\d+):(\d+)/)
+  const location = rawStack.match(/solution\.(?:ts|mjs|js):(\d+):(\d+)/)
   protocolWrite(JSON.stringify({
     ok: false,
     error: {
