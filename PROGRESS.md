@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 2 complete — Phase 3 (judge hardening) is next; Phase 1 clean-VM installs still pending
-> Overall status: On track — the Phase 2 shell now includes the coding inspector, per-problem notes, and attempt history; both smoke suites are green on macOS and Windows CI
-> Next milestone: Phase 3 gap analysis and judge hardening, plus clean-VM installs
+> Current phase: Phase 3 — Judge engine (gap analysis complete; implementation starts with protocol and memory)
+> Overall status: On track — Phase 2 is complete; the Phase 1 spike left a working judge foundation, and the Phase 3 gaps are now scoped and ordered
+> Next milestone: P3-A protocol completion (cancel, events, version guard) and P3-B memory enforcement
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Core judge landed during the Phase 1 spike; remaining: gap analysis, bundled runtimes, full signature coverage, macOS Seatbelt, conformance matrix |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`). Function judge, limits, process control, and CI work; memory, cancellation, streaming, sandbox, runtime bundles, and harness coverage remain |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -26,19 +26,41 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Run a Phase 3 gap analysis against the existing judge, resolve ADR-0010 (bundle runtimes vs. system runtimes), and implement the remaining protocol, signature, sandbox, and conformance work.
-2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
-3. Re-run the uninstall row of the full Windows checklist on a fresh install.
-4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
-5. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
+1. Start Phase 3 with P3-A (concurrent cancel, `test_result` events, host protocol-version guard) and P3-B (process-tree memory sampling, `memory_limit_exceeded`, peak memory).
+2. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging.
+3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+4. Re-run the uninstall row of the full Windows checklist on a fresh install.
+5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
+6. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 
 ## Blockers
 
 - **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
-- **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 2 engineering.
+- **Runtime strategy:** ADR-0010 is still Proposed. It blocks runtime packaging (P3-F), not protocol, memory, or harness work. A measurement spike is the next decision input.
+- **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 3 engineering.
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — Judge gap analysis
+
+- Status: Phase 3 in progress (analysis complete; implementation not started)
+- Done:
+  - Audited the protocol, server, runner, harnesses, runtime discovery, process control, tests, and Electron client against the Phase 3 checklist.
+  - Confirmed working: protocol v1 with request IDs and shutdown, `doctor`/system runtime discovery, Python and TypeScript function harnesses, four checkers, time/output limits, process-group kill, Windows kill-on-close Job Objects, environment sanitization, the macOS/Windows Go CI matrix, and the end-to-end app loop.
+  - Found the blocking gaps: no memory enforcement or `memory_limit_exceeded`, no in-flight cancellation or streaming events, no host protocol-version guard, no compile/transpile-once path, function-only harnesses (`mutates` is plumbed but unused; no ListNode/TreeNode/design), no macOS Seatbelt, no Windows memory/CPU job limits, no runtime bundling/checksums/repair, thin conformance fixtures, and no automated sandbox security tests.
+  - Wrote `docs/spikes/phase-3-gap-analysis.md` with a task scorecard, exit-criteria assessment, decisions needed, evidence index, and seven ordered work packages.
+  - Restructured the Phase 3 checklist in `PLAN.md` to record partial progress accurately instead of treating the phase as unstarted.
+- Tests run:
+  - `go test -C services/judge ./...` — passed (28 test functions; 26 cross-platform). No code changed in this step.
+- Files/PRs:
+  - Key paths: `docs/spikes/phase-3-gap-analysis.md`, `PLAN.md`, `PROGRESS.md`.
+- Next:
+  - P3-A protocol completion and P3-B memory enforcement; then P3-C transpile-once. Measure runtime packs for ADR-0010 in parallel.
+- Notes/decisions:
+  - Protocol v1 can be extended additively with events and cancellation; avoid a version bump unless a breaking change appears.
+  - Recommendation: implement function, in-place, ListNode, and TreeNode harness coverage now, and move the design harness to Phase 5 so it does not block the coding alpha.
+  - Runtime bundling remains the one decision that needs maintainer input before packaging work begins.
 
 ### 2026-10-24 — Phase 2 — Coding inspector, notes, and attempt history
 

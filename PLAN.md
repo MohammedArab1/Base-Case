@@ -2504,36 +2504,52 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Define the JSONL protocol and version it.
+- [x] Define the JSONL protocol and version it.
 - [ ] Implement request IDs, streaming events, cancellation, shutdown.
+  - [x] Request IDs and shutdown.
+  - [ ] Streaming `test_result` events.
+  - [ ] Concurrent `cancel` while a run is in flight.
+  - [ ] Host rejects unknown protocol versions.
 - [ ] Runtime manager:
   - [ ] Bundle Python standalone and Node.
   - [ ] Platform/arch paths and checksums.
-  - [ ] Version reporting and `doctor` command.
+  - [x] Version reporting and `doctor` command.
   - [ ] Repair flow for missing/corrupt runtimes.
 - [ ] Signature schema and harness generator:
-  - [ ] Function, in-place, design.
-  - [ ] Primitives, arrays, matrices, strings, ListNode, TreeNode, void.
-  - [ ] Python codec + harness.
-  - [ ] TypeScript/JS transpile + harness.
+  - [x] Function signatures.
+  - [ ] In-place and design signatures.
+  - [x] Primitives, arrays, matrices, strings, and void (JSON passthrough).
+  - [ ] ListNode and TreeNode codecs.
+  - [x] Python codec + harness (function subset).
+  - [x] TypeScript/JS harness (function subset).
+  - [ ] Explicit TypeScript transpilation and compile-once.
 - [ ] Execution pipeline:
-  - [ ] Compile once; fresh process per test.
-  - [ ] Sample vs. hidden mode.
-  - [ ] Time/memory/output limits.
-  - [ ] Process group kill and cleanup.
-  - [ ] Environment sanitization.
-- [ ] Checkers: exact, unordered, float.
-- [ ] Result model and error mapping (Section 5.7/5.11).
+  - [ ] Compile/transpile once per run.
+  - [x] Fresh process per test.
+  - [x] Sample vs. hidden mode (host supplies the test set).
+  - [x] Time and output limits.
+  - [ ] Memory limits and `memory_limit_exceeded`.
+  - [x] Process group kill and cleanup.
+  - [x] Environment sanitization.
+- [x] Checkers: exact, unordered, float, set-of-sets.
+- [x] Result model and error mapping (Section 5.7/5.11).
 - [ ] Sandbox per OS:
   - [ ] macOS Seatbelt profile.
-  - [ ] Windows Job Objects.
+  - [x] Windows Job Objects (kill-on-close process tree).
+  - [ ] Windows memory/CPU job limits.
 - [ ] Conformance fixtures:
-  - [ ] Accepted/wrong/TLE/MLE/RE/CE.
-  - [ ] Design, linked list, tree, in-place.
-  - [ ] Float/unordered.
-  - [ ] Unicode, empty, large inputs.
-- [ ] CI matrix on macOS and Windows.
-- [ ] Security tests and limitations doc.
+  - [x] Accepted, wrong answer, compile error, time limit, output limit, and missing runtime.
+  - [ ] Memory limit, runtime error, and cancellation.
+  - [ ] Design, linked list, tree, and in-place.
+  - [x] Float, unordered, and set-of-sets checkers (unit coverage).
+  - [ ] Unicode, empty, and large inputs.
+- [x] CI matrix on macOS and Windows (Go suites).
+- [ ] Security tests and limitations doc:
+  - [x] Threat model, ADR-0009, and Windows limitations documented.
+  - [ ] Automated network/home-write/fork-bomb tests.
+
+> Gap analysis: `docs/spikes/phase-3-gap-analysis.md` (2026-10-24). The design
+> harness may move to Phase 5 so it does not block the coding alpha.
 
 **Deliverables**
 
