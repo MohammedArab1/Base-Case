@@ -3,7 +3,11 @@
 package judge
 
 import (
+	"os"
 	"os/exec"
+	"runtime"
+	"strconv"
+	"strings"
 	"syscall"
 )
 
@@ -18,8 +22,115 @@ func killProcessGroup(pid int) {
 	_ = syscall.Kill(-pid, syscall.SIGKILL)
 }
 
-// guardProcess is a no-op on POSIX: configureProcess already puts the child in
+// processGuard is a no-op on POSIX: configureProcess already puts the child in
 // its own process group, and killProcessGroup kills the whole group.
-func guardProcess(pid int) func() {
-	return func() {}
+type processGuard struct{}
+
+func guardProcess(pid int) processGuard {
+	return processGuard{}
+}
+
+func (g processGuard) release() {}
+
+// peak reports the kernel's high-water mark for the child. On macOS Maxrss is
+// already in bytes; on Linux and most BSDs it is in kilobytes.
+func (g processGuard) peak(state *os.ProcessState) int64 {
+	if state == nil {
+		return 0
+	}
+
+	usage, ok := state.SysUsage().(*syscall.Rusage)
+	if !ok || usage == nil {
+		return 0
+	}
+
+	peak := int64(usage.Maxrss)
+	if runtime.GOOS != "darwin" {
+		peak *= 1024
+	}
+	return peak
+}
+
+// processTreeMemory samples the resident set size of the runtime's process
+// group. configureProcess puts the runtime in its own group, so group
+// membership covers the process tree on macOS without parsing parent links.
+func processTreeMemory(rootPID int) int64 {
+	if rootPID <= 0 {
+		return 0
+	}
+
+	if runtime.GOOS == "darwin" {
+		return processGroupMemory(rootPID)
+	}
+
+	return processTreeMemoryFromPS(rootPID)
+}
+
+func processGroupMemory(pid int) int64 {
+	output, err := exec.Command("ps", "-o", "rss=", "-g", strconv.Itoa(pid)).Output()
+	if err != nil {
+		return 0
+	}
+
+	var kilobytes int64
+	for _, line := range strings.Split(string(output), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) == 0 {
+			continue
+		}
+		rss, err := strconv.ParseInt(fields[0], 10, 64)
+		if err == nil {
+			kilobytes += rss
+		}
+	}
+
+	return kilobytes * 1024
+}
+
+// processTreeMemoryFromPS is the portable fallback used on Linux and other
+// Unix systems where ps does not select by process group consistently.
+func processTreeMemoryFromPS(rootPID int) int64 {
+	output, err := exec.Command("ps", "-o", "pid=,ppid=,rss=", "-ax").Output()
+	if err != nil {
+		return 0
+	}
+
+	children := make(map[int][]int)
+	rssByPID := make(map[int]int64)
+
+	for _, line := range strings.Split(string(output), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) != 3 {
+			continue
+		}
+
+		pid, pidErr := strconv.Atoi(fields[0])
+		parent, parentErr := strconv.Atoi(fields[1])
+		rss, rssErr := strconv.ParseInt(fields[2], 10, 64)
+		if pidErr != nil || parentErr != nil || rssErr != nil {
+			continue
+		}
+
+		children[parent] = append(children[parent], pid)
+		rssByPID[pid] = rss
+	}
+
+	var kilobytes int64
+	queue := []int{rootPID}
+	seen := make(map[int]bool)
+
+	for len(queue) > 0 {
+		pid := queue[0]
+		queue = queue[1:]
+
+		if seen[pid] {
+			continue
+		}
+		seen[pid] = true
+
+		kilobytes += rssByPID[pid]
+		queue = append(queue, children[pid]...)
+	}
+
+	return kilobytes * 1024
 }

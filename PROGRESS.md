@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (P3-A protocol completion done; P3-B memory enforcement next)
-> Overall status: On track — Phase 2 is complete; the judge now supports concurrent cancellation, streaming events, and a host version guard
-> Next milestone: P3-B memory enforcement, then P3-C compile/transpile once
+> Current phase: Phase 3 — Judge engine (P3-A and P3-B done; P3-C compile/transpile once next)
+> Overall status: On track — the judge now supports concurrent cancellation, streaming events, a host version guard, and enforced memory limits with peak reporting
+> Next milestone: P3-C compile/transpile once, then P3-D harness coverage
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol completion done (concurrent cancel, `test_result` events, host version guard). Memory, compile-once, sandbox, runtime bundles, and harness coverage remain |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol completion and P3-B memory enforcement done. Compile-once, sandbox, runtime bundles, and harness coverage remain |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start P3-B (process-tree memory sampling, `memory_limit_exceeded`, peak memory), then P3-C (compile/transpile once).
+1. Start P3-C (compile/transpile once), then P3-D (in-place and node/tree harness coverage).
 2. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
@@ -41,6 +41,27 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-B memory enforcement
+
+- Status: Phase 3 in progress (P3-B complete)
+- Done:
+  - Added a process-tree memory sampler that runs every 100 ms while a test executes. On macOS it sums the runtime process group via `ps`; on other Unix systems it walks the process tree; on Windows it walks Toolhelp snapshots and sums `GetProcessMemoryInfo` working sets.
+  - Added a hard kill on limit breach with `memory_limit_exceeded` and a clear message.
+  - Added post-exit enforcement using the kernel high-water mark (`getrusage` on Unix, Job Object peak on Windows), so a fast allocation that finishes between samples is still reported as MLE.
+  - Populated `memoryBytes` on every test result and `peakMemoryBytes` on the run summary.
+  - Added tests for sampled MLE, post-exit MLE, and peak reporting on accepted Python and TypeScript runs.
+- Tests run:
+  - `go test -C services/judge -race ./...` — passed.
+  - `GOOS=windows GOARCH=amd64 go build -C services/judge ./...` — passed.
+  - Targeted memory tests — passed (`TestMemoryLimitExceeded` 0.15s, `TestMemoryLimitExceededAfterExit` 0.07s).
+- Files/PRs:
+  - Key paths: `services/judge/internal/judge/process_unix.go`, `process_windows.go`, `runner.go`, `runner_test.go`, `docs/architecture/judge-protocol.md`.
+- Next:
+  - P3-C compile/transpile once: pin an esbuild or sucrase step, compile Python once, and run plain JavaScript per test.
+- Notes/decisions:
+  - The sampler adds one `ps` call per 100 ms on macOS; fast tests finish before the first tick and rely on the post-exit high-water mark.
+  - Windows Job Object memory/CPU limits remain a P3-E hardening item; P3-B enforcement is sampler-based on both platforms.
 
 ### 2026-10-24 — Phase 3 — P3-A protocol completion
 

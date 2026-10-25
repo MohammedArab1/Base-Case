@@ -11,8 +11,11 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync/atomic"
 	"time"
 )
+
+const memorySampleInterval = 100 * time.Millisecond
 
 type testOutcome struct {
 	Status      string
@@ -95,6 +98,9 @@ func (r *Runner) run(
 		result.Runtime.TotalMs += outcome.DurationMs
 		if outcome.DurationMs > result.Runtime.MaxMs {
 			result.Runtime.MaxMs = outcome.DurationMs
+		}
+		if outcome.MemoryBytes > result.Runtime.PeakMemoryBytes {
+			result.Runtime.PeakMemoryBytes = outcome.MemoryBytes
 		}
 
 		if outcome.Status == StatusAccepted {
@@ -268,12 +274,45 @@ func (r *Runner) runTest(
 
 	// On Windows this places the child in a kill-on-close Job Object so the
 	// runtime tree cannot outlive the judge, even if the judge is killed.
-	releaseGuard := guardProcess(command.Process.Pid)
-	defer releaseGuard()
+	guard := guardProcess(command.Process.Pid)
+	defer guard.release()
 
 	waitChannel := make(chan error, 1)
 	go func() {
 		waitChannel <- command.Wait()
+	}()
+
+	memoryLimitBytes := int64(effectiveMemoryMb(request)) * 1024 * 1024
+	memoryExceeded := make(chan struct{}, 1)
+	samplerStop := make(chan struct{})
+	samplerDone := make(chan struct{})
+	var sampledPeak atomic.Int64
+
+	go func() {
+		defer close(samplerDone)
+
+		ticker := time.NewTicker(memorySampleInterval)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-samplerStop:
+				return
+			case <-ticker.C:
+				current := processTreeMemory(command.Process.Pid)
+				if current > sampledPeak.Load() {
+					sampledPeak.Store(current)
+				}
+
+				if current > memoryLimitBytes {
+					select {
+					case memoryExceeded <- struct{}{}:
+					default:
+					}
+					return
+				}
+			}
+		}
 	}()
 
 	forcedStatus := ""
@@ -297,6 +336,24 @@ func (r *Runner) runTest(
 		killProcessGroup(command.Process.Pid)
 		waitError = <-waitChannel
 		forcedStatus = StatusOutputLimitExceeded
+	case <-memoryExceeded:
+		killProcessGroup(command.Process.Pid)
+		waitError = <-waitChannel
+		forcedStatus = StatusMemoryLimitExceeded
+	}
+
+	close(samplerStop)
+	<-samplerDone
+
+	peakMemory := guard.peak(command.ProcessState)
+	if sampled := sampledPeak.Load(); sampled > peakMemory {
+		peakMemory = sampled
+	}
+
+	// A fast allocation can finish between samples. The kernel high-water mark
+	// still catches it, so report the limit instead of a misleading pass/fail.
+	if forcedStatus == "" && peakMemory > memoryLimitBytes {
+		forcedStatus = StatusMemoryLimitExceeded
 	}
 
 	duration := time.Since(started).Milliseconds()
@@ -310,13 +367,16 @@ func (r *Runner) runTest(
 			message = "Execution produced too much output and was stopped."
 		case StatusCancelled:
 			message = "The run was cancelled."
+		case StatusMemoryLimitExceeded:
+			message = "Execution exceeded its memory limit."
 		}
 		return testOutcome{
-			Status:     forcedStatus,
-			UserStdout: userStdout,
-			UserStderr: userStderr,
-			DurationMs: duration,
-			Message:    message,
+			Status:      forcedStatus,
+			UserStdout:  userStdout,
+			UserStderr:  userStderr,
+			DurationMs:  duration,
+			MemoryBytes: peakMemory,
+			Message:     message,
 		}
 	}
 
@@ -329,11 +389,12 @@ func (r *Runner) runTest(
 			message = "The harness produced no result."
 		}
 		return testOutcome{
-			Status:     status,
-			UserStdout: userStdout,
-			UserStderr: userStderr,
-			DurationMs: duration,
-			Message:    message,
+			Status:      status,
+			UserStdout:  userStdout,
+			UserStderr:  userStderr,
+			DurationMs:  duration,
+			MemoryBytes: peakMemory,
+			Message:     message,
 		}
 	}
 
@@ -343,34 +404,37 @@ func (r *Runner) runTest(
 			status = StatusCompileError
 		}
 		return testOutcome{
-			Status:     status,
-			UserStdout: response.UserStdout,
-			UserStderr: response.UserStderr,
-			DurationMs: duration,
-			Error:      response.Error,
+			Status:      status,
+			UserStdout:  response.UserStdout,
+			UserStderr:  response.UserStderr,
+			DurationMs:  duration,
+			MemoryBytes: peakMemory,
+			Error:       response.Error,
 		}
 	}
 
 	actual, err := buildActual(response, request)
 	if err != nil {
 		return testOutcome{
-			Status:     StatusInternalError,
-			UserStdout: response.UserStdout,
-			UserStderr: response.UserStderr,
-			DurationMs: duration,
-			Message:    fmt.Sprintf("build actual value: %v", err),
+			Status:      StatusInternalError,
+			UserStdout:  response.UserStdout,
+			UserStderr:  response.UserStderr,
+			DurationMs:  duration,
+			MemoryBytes: peakMemory,
+			Message:     fmt.Sprintf("build actual value: %v", err),
 		}
 	}
 
 	passed, err := compareValues(test.Expected, actual, request.Checker)
 	if err != nil {
 		return testOutcome{
-			Status:     StatusInternalError,
-			Actual:     actual,
-			UserStdout: response.UserStdout,
-			UserStderr: response.UserStderr,
-			DurationMs: duration,
-			Message:    fmt.Sprintf("compare result: %v", err),
+			Status:      StatusInternalError,
+			Actual:      actual,
+			UserStdout:  response.UserStdout,
+			UserStderr:  response.UserStderr,
+			DurationMs:  duration,
+			MemoryBytes: peakMemory,
+			Message:     fmt.Sprintf("compare result: %v", err),
 		}
 	}
 
@@ -381,7 +445,7 @@ func (r *Runner) runTest(
 			UserStdout:  response.UserStdout,
 			UserStderr:  response.UserStderr,
 			DurationMs:  duration,
-			MemoryBytes: 0,
+			MemoryBytes: peakMemory,
 		}
 	}
 
@@ -391,7 +455,7 @@ func (r *Runner) runTest(
 		UserStdout:  response.UserStdout,
 		UserStderr:  response.UserStderr,
 		DurationMs:  duration,
-		MemoryBytes: 0,
+		MemoryBytes: peakMemory,
 		Message:     "The result does not match the expected value.",
 	}
 }

@@ -2528,7 +2528,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Fresh process per test.
   - [x] Sample vs. hidden mode (host supplies the test set).
   - [x] Time and output limits.
-  - [ ] Memory limits and `memory_limit_exceeded`.
+  - [x] Memory limits and `memory_limit_exceeded` (process-tree sampling plus the post-exit high-water mark).
   - [x] Process group kill and cleanup.
   - [x] Environment sanitization.
 - [x] Checkers: exact, unordered, float, set-of-sets.
@@ -2540,7 +2540,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [ ] Conformance fixtures:
   - [x] Accepted, wrong answer, compile error, time limit, output limit, and missing runtime.
   - [x] Cancellation (runner kill and server protocol tests).
-  - [ ] Memory limit and runtime error.
+  - [x] Memory limit (sampled and post-exit paths).
+  - [ ] Runtime error.
   - [ ] Design, linked list, tree, and in-place.
   - [x] Float, unordered, and set-of-sets checkers (unit coverage).
   - [ ] Unicode, empty, and large inputs.

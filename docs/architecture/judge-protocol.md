@@ -145,6 +145,11 @@ Statuses: `accepted`, `wrong_answer`, `compile_error`, `runtime_error`,
 
 Rules:
 
+- Memory limits are enforced by sampling the runtime process tree every
+  100 ms and by the kernel/job high-water mark after exit. Crossing the limit
+  kills the process group and reports `memory_limit_exceeded`.
+- `memoryBytes` and `peakMemoryBytes` are populated for completed tests; they
+  are best-effort but always come from the OS rather than the user program.
 - Always include the first failure, including on submit.
 - Show full details for sample failures.
 - After submit, show the smallest failing hidden test.

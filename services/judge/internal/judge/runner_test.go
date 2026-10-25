@@ -119,6 +119,14 @@ func runAcceptedProblem(t *testing.T, language, code string) {
 	if result.Compile.OK != true {
 		t.Fatalf("expected compile ok, got %+v", result.Compile)
 	}
+	if result.Runtime.PeakMemoryBytes <= 0 {
+		t.Fatalf("expected peak memory to be reported, got %+v", result.Runtime)
+	}
+	for _, testResult := range result.Tests {
+		if testResult.MemoryBytes <= 0 {
+			t.Fatalf("expected per-test memory, got %+v", testResult)
+		}
+	}
 }
 
 func TestPythonPairSumAccepted(t *testing.T) {
@@ -195,6 +203,55 @@ func TestTimeLimitExceeded(t *testing.T) {
 	}
 	if len(result.Tests) != 1 {
 		t.Fatalf("expected the run to stop after the first timeout, got %d test results", len(result.Tests))
+	}
+}
+
+func TestMemoryLimitExceeded(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	request := pairSumRequest("python", `class Solution:
+    def pairSum(self, nums, target):
+        chunks = []
+        while True:
+            chunks.append(bytearray(8 * 1024 * 1024))
+`)
+	request.Limits.MemoryMb = 32
+	request.Limits.TimeMs = 5000
+	request.Tests = request.Tests[:1]
+
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusMemoryLimitExceeded {
+		t.Fatalf("expected memory_limit_exceeded, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+	if result.Runtime.PeakMemoryBytes <= 0 {
+		t.Fatalf("expected peak memory, got %+v", result.Runtime)
+	}
+}
+
+func TestMemoryLimitExceededAfterExit(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	request := pairSumRequest("python", `class Solution:
+    def pairSum(self, nums, target):
+        blob = bytearray(200 * 1024 * 1024)
+        return [0, 1] if blob else []
+`)
+	request.Limits.MemoryMb = 32
+	request.Tests = request.Tests[:1]
+
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusMemoryLimitExceeded {
+		t.Fatalf("expected memory_limit_exceeded, got %s peak=%d", result.Status, result.Runtime.PeakMemoryBytes)
 	}
 }
 
