@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 8 — Alpha release (diagnostics, docs, checksums, and release automation in place; beta pending)
-> Overall status: On track — the core loop, judge, design workspace, AI tutor, 10 + 4 content set, diagnostics, and alpha documentation are in place, and CI is green on macOS and Windows. Remaining work is external (manual Windows run, clean-VM installs, private beta, reviews) plus the release tag
-> Next milestone: Private alpha beta and the `v0.1.0-alpha` tag
+> Current phase: Phase 9 — MVP expansion (content set growing to 25 + 8; importer and several polish items already delivered earlier)
+> Overall status: On track — the core loop, judge, design workspace, AI tutor, 10 + 4 content set, diagnostics, and alpha documentation are in place, and CI is green on macOS and Windows. Phase 9 reconciliation found that the importer and several polish items were already delivered; remaining work is content, targeted polish, platform builds, performance, security, and docs. External alpha items (B1, B2, B3, B4, B10) remain open
+> Next milestone: 25 coding + 8 design content set, then the MVP feature-complete build
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -21,21 +21,23 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
 | Phase 7 — Content production | In progress | 2026-10-25 | 10 coding problems (two pointers, stack, binary search, sliding window, linked list, trees, graphs, heap, DP, hash map) and 4 design scenarios authored. All 20 reference solutions pass in Python and TypeScript. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | Not started | — | 25 + 8 content, importer, polish |
+| Phase 9 — MVP expansion | In progress | 2026-10-25 | Reconciled with the codebase: importer (validation/preview/install, disclaimer, Unverified badge, uninstall keeping attempts), command palette, search/filters, reduced motion, window/layout persistence, runtime verification, and design-notes review are already done. Remaining: 15 coding + 4 design, progress charts, accessibility, states audit, arm64/x64 builds, app-size work, mistake suggestions/explain-back, performance, security review, media docs, RC |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
-1. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
-2. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
-3. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
-4. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-5. Get a second-person review of the 10 coding problems and 4 designs (B4) and record the sign-off.
-6. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
-7. Add optional local AI history with a clear delete button (privacy default stays off).
-8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-10. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+1. Expand the core pack to 25 coding problems and 8 design scenarios, validating every problem against the real judge.
+2. Finish Phase 9 polish: progress chart, accessibility pass, error/empty/loading audit, macOS arm64/x64 builds, AI mistake suggestions and explain-back, performance, security review, and media docs.
+3. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
+4. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
+5. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
+6. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
+7. Get a second-person review of the coding problems and design scenarios (B4) and record the sign-off.
+8. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
+9. Add optional local AI history with a clear delete button (privacy default stays off).
+10. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+11. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+12. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
 
 ## Blockers
 
@@ -52,6 +54,24 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the four designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 9 — Plan reconciliation before expansion
+
+- Status: In progress; content expansion is next
+- Done:
+  - Audited every Phase 9 checkbox against the codebase and ticked the items that already shipped in earlier phases.
+  - Confirmed the importer is complete: pack validation/preview/install, responsibility disclaimer, Unverified badge, and uninstall that preserves attempts.
+  - Confirmed the command palette, FTS search plus library filters, reduced-motion CSS, window-state persistence, inspector layout persistence, runtime checksum verification, and the seven-dimension design-notes review already exist.
+  - Recorded the exact remaining scope in `PLAN.md`: 15 coding + 4 design problems, progress chart, accessibility pass, state audit, macOS arm64/x64 builds, app-size work, AI mistake suggestions and explain-back, full performance pass, Electron/dependency security review, media docs, and the release candidate.
+- Tests run:
+  - No code changed; the audit read `PLAN.md`, `PROGRESS.md`, the pack manager, command palette, progress view, window state, builder config, and AI types.
+- Files/PRs:
+  - `PLAN.md`, `PROGRESS.md`.
+- Next:
+  - Author 15 original coding problems and 4 design scenarios, validating each problem with `pnpm content:validate` and `pnpm content:test`.
+- Notes/decisions:
+  - Do not rebuild the importer or other already-delivered items; Phase 9 work starts from the reconciled gaps.
+  - macOS dual-arch packaging is still open because `package:mac` currently builds only the host architecture.
 
 ### 2026-10-25 — Phase 8 — CI green: macOS Playwright fix and CI hardening
 

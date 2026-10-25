@@ -2854,37 +2854,40 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Content to 25 coding + 8 design.
-- [ ] Importer:
-  - [ ] Pack validation/preview/install.
-  - [ ] Disclaimer.
-  - [ ] Unverified badge.
-  - [ ] Uninstall without deleting attempts.
+> Reconciled with the codebase on 2026-10-25. Items checked below were already
+> delivered in Phases 2–8; they are ticked here instead of being rebuilt.
+
+- [ ] Content to 25 coding + 8 design. (10 + 4 done; 15 coding + 4 design remain)
+- [x] Importer (delivered in Phase 2; see `main/pack-manager.ts`):
+  - [x] Pack validation/preview/install.
+  - [x] Disclaimer.
+  - [x] Unverified badge.
+  - [x] Uninstall without deleting attempts.
 - [ ] Polish:
-  - [ ] Command palette.
-  - [ ] Search/filters.
-  - [ ] Progress charts.
+  - [x] Command palette (Phase 2, `components/CommandPalette.tsx`).
+  - [x] Search/filters (Phase 2 FTS search; Phase 4 library filters).
+  - [ ] Progress charts. (Metric cards and pattern bars exist; time-series chart remains)
   - [ ] Accessibility pass.
-  - [ ] Error/empty/loading states.
-  - [ ] Reduced motion.
-  - [ ] Window/layout persistence.
+  - [ ] Error/empty/loading states. (Several views have them; audit remains)
+  - [x] Reduced motion (`prefers-reduced-motion` in `styles.css`).
+  - [x] Window/layout persistence (`main/window-state.ts`; inspector layout in localStorage).
 - [ ] Platform polish:
-  - [ ] macOS arm64/x64 builds.
-  - [ ] Windows arm64 only if contributor-supported.
-  - [ ] Runtime pack verification.
-  - [ ] App size optimization.
+  - [ ] macOS arm64/x64 builds. (Current `package:mac` builds the host arch only)
+  - [x] Windows arm64 only if contributor-supported. (Not built; x64 is the supported target)
+  - [x] Runtime pack verification (`pnpm runtimes:verify`, pinned checksums).
+  - [ ] App size optimization. (Measured 258 MB DMG, under the 350 MB budget; optimization not started)
 - [ ] AI polish:
   - [ ] Mistake tagging suggestions (user confirms).
-  - [ ] Design notes review improvements.
+  - [x] Design notes review improvements. (Structured seven-dimension review in Phase 6)
   - [ ] Optional "explain back" check.
-  - [ ] Apple FM sidecar if time.
+  - [ ] Apple FM sidecar if time. (Tracked as optional blocker B9)
 - [ ] Performance:
-  - [ ] Startup, problem open, judge, editor, canvas, memory.
+  - [ ] Startup, problem open, judge, editor, canvas, memory. (Startup, judge, and memory measured; the rest remain)
 - [ ] Security review:
   - [ ] Electron checklist.
-  - [ ] Judge limitations.
+  - [x] Judge limitations. (Documented in ADR-0009 and `docs/architecture/threat-model.md`)
   - [ ] Dependency audit.
-- [ ] Docs, screenshots, GIF, demo video.
+- [ ] Docs, screenshots, GIF, demo video. (Text docs exist; media assets remain)
 - [ ] Release candidate.
 
 **Deliverables**
