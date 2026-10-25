@@ -17,6 +17,11 @@ export const problemIdSchema = z.string().min(1).max(200)
 
 export const searchQuerySchema = z.string().max(200)
 
+export const problemNoteSchema = z.object({
+  problemId: problemIdSchema,
+  notes: z.string().max(100_000),
+})
+
 export const packTokenSchema = z.string().uuid()
 
 export const packImportKindSchema = z.enum(['archive', 'folder'])

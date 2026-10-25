@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { JSX } from 'react'
+import type { CSSProperties, JSX } from 'react'
 import type {
   AiPreview,
   Language,
@@ -7,11 +7,58 @@ import type {
   ProblemSummary,
   RunResult,
 } from '../../../shared/types'
+import { Inspector } from '../components/Inspector'
 import { CodeEditor } from '../components/CodeEditor'
 import { Markdown } from '../components/Markdown'
 import { ResultsPanel } from '../components/ResultsPanel'
 import { matchesShortcut, shortcuts } from '../lib/shortcuts'
 import { useSettings } from '../settings'
+import { Button } from '../ui/Button'
+
+const inspectorWidthKey = 'base-case.inspector.width'
+const inspectorOpenKey = 'base-case.inspector.open'
+const defaultInspectorWidth = 320
+const minInspectorWidth = 240
+const maxInspectorWidth = 520
+
+function clampInspectorWidth(value: number): number {
+  return Math.min(maxInspectorWidth, Math.max(minInspectorWidth, Math.round(value)))
+}
+
+function initialInspectorWidth(): number {
+  try {
+    const stored = Number(window.localStorage.getItem(inspectorWidthKey))
+    return Number.isFinite(stored) && stored > 0
+      ? clampInspectorWidth(stored)
+      : defaultInspectorWidth
+  } catch {
+    return defaultInspectorWidth
+  }
+}
+
+function initialInspectorOpen(): boolean {
+  try {
+    return window.localStorage.getItem(inspectorOpenKey) !== 'false'
+  } catch {
+    return true
+  }
+}
+
+function persistInspectorWidth(width: number): void {
+  try {
+    window.localStorage.setItem(inspectorWidthKey, String(width))
+  } catch {
+    // A disabled localStorage must not break resizing.
+  }
+}
+
+function persistInspectorOpen(open: boolean): void {
+  try {
+    window.localStorage.setItem(inspectorOpenKey, String(open))
+  } catch {
+    // A disabled localStorage must not break the toggle.
+  }
+}
 
 interface CodingViewProps {
   readonly problems: readonly ProblemSummary[]
@@ -258,6 +305,9 @@ function ProblemWorkspace({
   const [aiText, setAiText] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError] = useState<string | null>(null)
+  const [inspectorOpen, setInspectorOpen] = useState(initialInspectorOpen)
+  const [inspectorWidth, setInspectorWidth] = useState(initialInspectorWidth)
+  const [attemptRefreshKey, setAttemptRefreshKey] = useState(0)
   const unsubscribeRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
@@ -332,6 +382,7 @@ function ProblemWorkspace({
           mode: nextMode,
         })
         setResult(nextResult)
+        setAttemptRefreshKey((current) => current + 1)
         onStatsChanged()
       } catch (runError: unknown) {
         console.error('Judge run failed:', runError)
@@ -384,12 +435,55 @@ function ProblemWorkspace({
     setRevealedHints((current) => new Set(current).add(level))
   }
 
+  const setInspectorVisible = (open: boolean): void => {
+    setInspectorOpen(open)
+    persistInspectorOpen(open)
+  }
+
+  const startInspectorResize = (event: React.PointerEvent<HTMLDivElement>): void => {
+    event.preventDefault()
+    const startX = event.clientX
+    const startWidth = inspectorWidth
+    let latestWidth = startWidth
+
+    const move = (moveEvent: PointerEvent): void => {
+      latestWidth = clampInspectorWidth(startWidth + startX - moveEvent.clientX)
+      setInspectorWidth(latestWidth)
+    }
+
+    const stop = (): void => {
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', stop)
+      persistInspectorWidth(latestWidth)
+    }
+
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', stop)
+  }
+
+  const resizeInspectorBy = (delta: number): void => {
+    const next = clampInspectorWidth(inspectorWidth + delta)
+    setInspectorWidth(next)
+    persistInspectorWidth(next)
+  }
+
+  const handleInspectorResizeKey = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      resizeInspectorBy(16)
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      resizeInspectorBy(-16)
+    }
+  }
+
   const openAiPreview = async (): Promise<void> => {
     const failure = result?.firstFailure
     if (!failure) {
       return
     }
 
+    setInspectorVisible(true)
     setAiError(null)
 
     try {
@@ -415,6 +509,7 @@ function ProblemWorkspace({
     setAiText('')
     setAiError(null)
     setAiLoading(true)
+    setInspectorVisible(true)
 
     const unsubscribe = window.baseCase.ai.onEvent((event) => {
       if (event.type === 'chunk') {
@@ -455,9 +550,21 @@ function ProblemWorkspace({
   return (
     <div className="workspace-stack">
       <div className="workspace-heading">
-        <button type="button" className="text-button" onClick={onBack}>
-          ← Back to problems
-        </button>
+        <div className="workspace-heading-top">
+          <button type="button" className="text-button" onClick={onBack}>
+            ← Back to problems
+          </button>
+          <Button
+            size="sm"
+            variant="secondary"
+            aria-expanded={inspectorOpen}
+            aria-controls="problem-inspector"
+            onClick={() => setInspectorVisible(!inspectorOpen)}
+            data-testid="toggle-inspector"
+          >
+            Inspector
+          </Button>
+        </div>
         <div>
           <h2>{problem.title}</h2>
           <p className="muted">
@@ -470,156 +577,172 @@ function ProblemWorkspace({
         </div>
       </div>
 
-      <div className="coding-grid">
-        <section className="pane statement-pane">
-          <div className="pane-header">
-            <span>Problem</span>
-            <span className="muted">Cmd/Ctrl+Enter to run</span>
-          </div>
-          <div className="pane-scroll">
-            <Markdown>{problem.statement}</Markdown>
-
-            <section className="hints">
-              <h3>Hints</h3>
-              {problem.hints.map((hint) => {
-                const revealed = revealedHints.has(hint.level)
-
-                return (
-                  <div className="hint" key={hint.level}>
-                    <button
-                      type="button"
-                      className="hint-toggle"
-                      aria-expanded={revealed}
-                      onClick={() => revealHint(hint.level)}
-                    >
-                      <span className="hint-level">Level {hint.level}</span>
-                      <span>{hint.title}</span>
-                    </button>
-                    {confirmHint === hint.level ? (
-                      <div className="hint-confirm">
-                        <p>Level 4 may reveal pseudocode. Continue?</p>
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => {
-                            setRevealedHints((current) => new Set(current).add(hint.level))
-                            setConfirmHint(null)
-                          }}
-                        >
-                          Show pseudocode
-                        </button>
-                      </div>
-                    ) : null}
-                    {revealed ? (
-                      <div className="hint-body">
-                        <Markdown>{hint.body}</Markdown>
-                      </div>
-                    ) : null}
-                  </div>
-                )
-              })}
-            </section>
-
-            {problem.commonMistakes.length > 0 ? (
-              <details className="statement-details">
-                <summary>Common mistakes</summary>
-                <ul>
-                  {problem.commonMistakes.map((mistake) => (
-                    <li key={mistake}>{mistake}</li>
-                  ))}
-                </ul>
-              </details>
-            ) : null}
-
-            {problem.followUps.length > 0 ? (
-              <details className="statement-details">
-                <summary>Follow-ups</summary>
-                <ul>
-                  {problem.followUps.map((followUp) => (
-                    <li key={followUp}>{followUp}</li>
-                  ))}
-                </ul>
-              </details>
-            ) : null}
-          </div>
-        </section>
-
-        <section className="pane editor-pane">
-          <div className="pane-header editor-toolbar">
-            <div className="segmented" role="group" aria-label="Language">
-              <button
-                type="button"
-                aria-pressed={language === 'python'}
-                onClick={() => changeLanguage('python')}
-              >
-                Python
-              </button>
-              <button
-                type="button"
-                aria-pressed={language === 'typescript'}
-                onClick={() => changeLanguage('typescript')}
-              >
-                TypeScript
-              </button>
+      <div
+        className="coding-layout"
+        style={{ '--inspector-width': `${inspectorWidth}px` } as CSSProperties}
+      >
+        <div className="coding-grid">
+          <section className="pane statement-pane">
+            <div className="pane-header">
+              <span>Problem</span>
+              <span className="muted">Cmd/Ctrl+Enter to run</span>
             </div>
-            <div className="toolbar-actions">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => void run('sample')}
-                disabled={running}
-              >
-                Run samples
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => void run('submit')}
-                disabled={running}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-          <div className="editor-body">
-            <CodeEditor
-              key={`${problem.id}-${language}`}
-              value={code}
-              language={language}
-              onChange={setCode}
-              ariaLabel={`${problem.title} ${language} code editor`}
-            />
-          </div>
-          <div className="results-scroll">
-            <ResultsPanel
-              result={result}
-              running={running}
-              error={error}
-              mode={mode}
-              onExplain={result?.firstFailure ? () => void openAiPreview() : undefined}
-            />
-          </div>
-        </section>
-      </div>
+            <div className="pane-scroll">
+              <Markdown>{problem.statement}</Markdown>
 
-      {aiLoading || aiText || aiError ? (
-        <section className="pane ai-panel">
-          <div className="pane-header">
-            <span>AI tutor</span>
-            <span className="muted">Optional · context-limited · no full solution</span>
-          </div>
-          <div className="ai-body">
-            {aiError ? (
-              <div className="callout callout-error">
-                <strong>AI request failed.</strong>
-                <p>{aiError}</p>
+              <section className="hints">
+                <h3>Hints</h3>
+                {problem.hints.map((hint) => {
+                  const revealed = revealedHints.has(hint.level)
+
+                  return (
+                    <div className="hint" key={hint.level}>
+                      <button
+                        type="button"
+                        className="hint-toggle"
+                        aria-expanded={revealed}
+                        onClick={() => revealHint(hint.level)}
+                      >
+                        <span className="hint-level">Level {hint.level}</span>
+                        <span>{hint.title}</span>
+                      </button>
+                      {confirmHint === hint.level ? (
+                        <div className="hint-confirm">
+                          <p>Level 4 may reveal pseudocode. Continue?</p>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                              setRevealedHints((current) => new Set(current).add(hint.level))
+                              setConfirmHint(null)
+                            }}
+                          >
+                            Show pseudocode
+                          </button>
+                        </div>
+                      ) : null}
+                      {revealed ? (
+                        <div className="hint-body">
+                          <Markdown>{hint.body}</Markdown>
+                        </div>
+                      ) : null}
+                    </div>
+                  )
+                })}
+              </section>
+
+              {problem.commonMistakes.length > 0 ? (
+                <details className="statement-details">
+                  <summary>Common mistakes</summary>
+                  <ul>
+                    {problem.commonMistakes.map((mistake) => (
+                      <li key={mistake}>{mistake}</li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+
+              {problem.followUps.length > 0 ? (
+                <details className="statement-details">
+                  <summary>Follow-ups</summary>
+                  <ul>
+                    {problem.followUps.map((followUp) => (
+                      <li key={followUp}>{followUp}</li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+            </div>
+          </section>
+
+          <section className="pane editor-pane">
+            <div className="pane-header editor-toolbar">
+              <div className="segmented" role="group" aria-label="Language">
+                <button
+                  type="button"
+                  aria-pressed={language === 'python'}
+                  onClick={() => changeLanguage('python')}
+                >
+                  Python
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={language === 'typescript'}
+                  onClick={() => changeLanguage('typescript')}
+                >
+                  TypeScript
+                </button>
               </div>
-            ) : null}
-            {aiText ? <div className="ai-response">{aiText}</div> : null}
-            {aiLoading && !aiText ? <p className="muted">Waiting for the provider…</p> : null}
-          </div>
-        </section>
-      ) : null}
+              <div className="toolbar-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => void run('sample')}
+                  disabled={running}
+                >
+                  Run samples
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => void run('submit')}
+                  disabled={running}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+            <div className="editor-body">
+              <CodeEditor
+                key={`${problem.id}-${language}`}
+                value={code}
+                language={language}
+                onChange={setCode}
+                ariaLabel={`${problem.title} ${language} code editor`}
+              />
+            </div>
+            <div className="results-scroll">
+              <ResultsPanel
+                result={result}
+                running={running}
+                error={error}
+                mode={mode}
+                onExplain={result?.firstFailure ? () => void openAiPreview() : undefined}
+              />
+            </div>
+          </section>
+        </div>
+
+        {inspectorOpen ? (
+          <>
+            <div
+              className="inspector-resizer"
+              role="separator"
+              aria-label="Resize inspector"
+              aria-orientation="vertical"
+              aria-valuemin={minInspectorWidth}
+              aria-valuemax={maxInspectorWidth}
+              aria-valuenow={inspectorWidth}
+              tabIndex={0}
+              onPointerDown={startInspectorResize}
+              onKeyDown={handleInspectorResizeKey}
+            />
+            <Inspector
+              problemId={problem.id}
+              problemTitle={problem.title}
+              attemptRefreshKey={attemptRefreshKey}
+              ai={{
+                hasFailure: Boolean(result?.firstFailure),
+                text: aiText,
+                loading: aiLoading,
+                error: aiError,
+                onExplain: () => void openAiPreview(),
+              }}
+              onClose={() => setInspectorVisible(false)}
+            />
+          </>
+        ) : null}
+      </div>
 
       {aiPreview ? (
         <div className="modal-backdrop">

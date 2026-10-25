@@ -7,6 +7,7 @@ import type {
   AppInfo,
   AppSettings,
   BaseCaseApi,
+  AttemptSummary,
   ContentPackSummary,
   DesignScenePayload,
   DraftInput,
@@ -14,11 +15,13 @@ import type {
   PackImportKind,
   PackPreviewResult,
   ProblemDetail,
+  ProblemNote,
   ProblemSummary,
   RunInput,
   RunResult,
   SaveAiConfigInput,
   SaveDraftInput,
+  SaveProblemNoteInput,
   SettingsPatch,
   Stats,
 } from '../shared/types'
@@ -65,6 +68,11 @@ const api: BaseCaseApi = {
   },
   attempts: {
     stats: () => invoke<Stats>(channels.attemptsStats),
+    list: (problemId: string) => invoke<AttemptSummary[]>(channels.attemptsList, problemId),
+  },
+  notes: {
+    get: (problemId: string) => invoke<ProblemNote>(channels.notesGet, problemId),
+    save: (input: SaveProblemNoteInput) => invoke<ProblemNote>(channels.notesSave, input),
   },
   settings: {
     get: () => invoke<AppSettings>(channels.settingsGet),

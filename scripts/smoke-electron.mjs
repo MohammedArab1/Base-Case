@@ -497,6 +497,17 @@ export { Solution }
   const stats = await evaluate('window.baseCase.attempts.stats()')
   assert(stats.attempts >= 3, 'Attempts were not persisted')
 
+  const attemptList = await evaluate("window.baseCase.attempts.list('core/pair-sum')")
+  assert(attemptList.length >= 3, 'Attempt history did not return the saved attempts')
+  assert(attemptList[0]?.status === 'wrong_answer', 'Attempt history is not newest-first')
+
+  const savedNote = await evaluate(
+    `window.baseCase.notes.save({ problemId: 'core/pair-sum', notes: 'Remember the complement.' })`,
+  )
+  assert(savedNote.notes === 'Remember the complement.', 'Notes were not saved')
+  const readNote = await evaluate("window.baseCase.notes.get('core/pair-sum')")
+  assert(readNote.notes === 'Remember the complement.', 'Notes were not read back')
+
   const packListBefore = await evaluate('window.baseCase.packs.list()')
   assert(
     packListBefore.length === 1 && packListBefore[0]?.id === 'core',
@@ -911,6 +922,8 @@ export { Solution }
     compatibleStreamChars: compatibleText.length,
     keyStorage,
     attempts: stats.attempts,
+    attemptHistory: attemptList.length >= 3 && attemptList[0]?.status === 'wrong_answer',
+    notes: readNote.notes === 'Remember the complement.',
     packInstall: installedPack.id === 'smoke-fixture',
     packSearch: fixtureSearch.length > 0,
     packUninstall: !packListRemoved.some((pack) => pack.id === 'smoke-fixture'),

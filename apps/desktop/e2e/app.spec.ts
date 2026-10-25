@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { _electron as electron, expect, test } from '@playwright/test'
@@ -40,6 +40,17 @@ async function launchApp(userDataDirectory: string): Promise<LaunchedApp> {
 
   await page.waitForLoadState('domcontentloaded')
   return { app, page }
+}
+
+async function capture(page: Page, name: string): Promise<void> {
+  const directory = process.env.BASE_CASE_PLAYWRIGHT_SCREENSHOTS
+
+  if (!directory) {
+    return
+  }
+
+  mkdirSync(directory, { recursive: true })
+  await page.screenshot({ path: join(directory, `${name}.png`) })
 }
 
 test('onboards, persists the theme, searches, and reopens without onboarding', async () => {
@@ -96,6 +107,36 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
     await search.fill('zzzz-no-match')
     await expect(firstPage.getByRole('heading', { name: 'No matches' })).toBeVisible()
 
+    await search.fill('')
+    await expect(firstPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
+    await firstPage.getByRole('button', { name: /Pair Sum/ }).click()
+    await expect(firstPage.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
+
+    // The inspector hosts the AI panel, notes, and attempt history.
+    await expect(firstPage.getByTestId('inspector')).toBeVisible()
+    await expect(firstPage.getByRole('tab', { name: 'AI' })).toBeVisible()
+    await expect(firstPage.getByText('Run samples or submit first.')).toBeVisible()
+
+    await firstPage.getByTestId('toggle-inspector').click()
+    await expect(firstPage.getByTestId('inspector')).toHaveCount(0)
+    await firstPage.getByTestId('toggle-inspector').click()
+    await expect(firstPage.getByTestId('inspector')).toBeVisible()
+
+    await firstPage.getByRole('tab', { name: 'Notes' }).click()
+    const notes = firstPage.getByTestId('problem-notes')
+    await notes.fill('Remember the complement.')
+    await expect(firstPage.getByTestId('notes-status')).toHaveText('Saved locally')
+    await capture(firstPage, 'inspector-stacked')
+
+    await first.app.evaluate(({ BrowserWindow }) => {
+      BrowserWindow.getAllWindows()[0]?.setSize(1600, 1000)
+    })
+    await firstPage.waitForTimeout(300)
+    await capture(firstPage, 'inspector-inline')
+
+    await firstPage.getByRole('tab', { name: 'History' }).click()
+    await expect(firstPage.getByText('No attempts yet.')).toBeVisible()
+
     // Relaunch with the same profile. Onboarding must not return, and the
     // onboarding choices plus the theme must survive.
     await first.app.close()
@@ -125,6 +166,12 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
       .click()
     await expect(secondPage.getByRole('heading', { name: 'Problem library' })).toBeVisible()
     await expect(secondPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
+
+    await secondPage.getByRole('button', { name: /Pair Sum/ }).click()
+    await expect(secondPage.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
+    await secondPage.getByRole('tab', { name: 'Notes' }).click()
+    await expect(secondPage.getByTestId('problem-notes')).toHaveValue('Remember the complement.')
+    await capture(secondPage, 'inspector-reopened')
   } finally {
     await second?.app.close().catch(() => undefined)
     await first?.app.close().catch(() => undefined)

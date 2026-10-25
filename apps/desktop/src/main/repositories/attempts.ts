@@ -1,6 +1,17 @@
 import { randomUUID } from 'node:crypto'
-import type { RunResult, Stats } from '../../shared/types'
+import type { AttemptSummary, RunResult, Stats } from '../../shared/types'
 import type { AppDatabase } from '../database'
+
+interface AttemptRow {
+  readonly id: string
+  readonly problem_id: string
+  readonly language: string
+  readonly mode: string
+  readonly status: string
+  readonly passed: number
+  readonly total: number
+  readonly created_at: string
+}
 
 export interface SaveAttemptInput {
   readonly problemId: string
@@ -56,5 +67,28 @@ export class AttemptsRepository {
       accepted: Number(row?.accepted ?? 0),
       lastAttemptAt: row?.last_attempt_at ?? null,
     }
+  }
+
+  listForProblem(problemId: string, limit = 20): AttemptSummary[] {
+    const rows = this.database.connection
+      .prepare(
+        `SELECT id, problem_id, language, mode, status, passed, total, created_at
+         FROM attempts
+         WHERE problem_id = ?
+         ORDER BY created_at DESC, rowid DESC
+         LIMIT ?`,
+      )
+      .all(problemId, limit) as unknown as AttemptRow[]
+
+    return rows.map((row) => ({
+      id: row.id,
+      problemId: row.problem_id,
+      language: row.language === 'typescript' ? 'typescript' : 'python',
+      mode: row.mode === 'submit' ? 'submit' : 'sample',
+      status: row.status,
+      passed: Number(row.passed),
+      total: Number(row.total),
+      createdAt: row.created_at,
+    }))
   }
 }

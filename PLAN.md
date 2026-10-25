@@ -550,8 +550,9 @@ This is a shape, not final DDL. Use `TEXT` IDs (stable slugs for content, UUIDs 
 > **Implementation note (2026-10-24):** ADR-0011 narrows this outline. Pack
 > content stays file-backed; SQLite stores user state and the search index.
 > Migration 3 creates `attempt_events`, `mistake_tags`, `attempt_mistake_tags`,
-> `review_cards`, and `design_attempts`. The content tables below are deferred
-> until a concrete query or export need exists.
+> `review_cards`, and `design_attempts`; migration 4 adds `problem_notes`. The
+> content tables below are deferred until a concrete query or export need
+> exists.
 
 **content_packs**
 
@@ -2454,7 +2455,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [ ] Design system:
   - [x] Tailwind + Radix primitives.
   - [x] Light/dark tokens.
-  - [ ] App layout: sidebar, top bar, content area, inspector.
+  - [x] App layout: sidebar, top bar, content area, inspector.
   - [x] Buttons, inputs, dialogs, tabs, toasts, tooltips, badges, progress.
   - [x] Empty/error/loading states.
 - [x] Command palette skeleton.

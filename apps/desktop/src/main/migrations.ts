@@ -135,4 +135,14 @@ export const migrations: readonly Migration[] = [
         ON design_attempts (scenario_id, updated_at);
     `,
   },
+  {
+    version: 4,
+    sql: `
+      CREATE TABLE IF NOT EXISTS problem_notes (
+        problem_id TEXT PRIMARY KEY,
+        notes_md TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
+    `,
+  },
 ]

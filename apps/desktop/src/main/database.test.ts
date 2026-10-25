@@ -15,6 +15,7 @@ const expectedTables = [
   'design_scenes',
   'drafts',
   'mistake_tags',
+  'problem_notes',
   'review_cards',
   'schema_migrations',
   'settings',

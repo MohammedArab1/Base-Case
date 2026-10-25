@@ -20,6 +20,7 @@ import {
   packTokenSchema,
   pngDataUrlSchema,
   problemIdSchema,
+  problemNoteSchema,
   runInputSchema,
   saveDraftSchema,
   sceneJsonSchema,
@@ -33,6 +34,7 @@ import type { AttemptsRepository } from './repositories/attempts'
 import type { ContentIndexRepository } from './repositories/content-index'
 import type { DesignRepository } from './repositories/design'
 import type { DraftsRepository } from './repositories/drafts'
+import type { ProblemNotesRepository } from './repositories/notes'
 import type { SettingsStore } from './settings'
 
 interface Services {
@@ -41,6 +43,7 @@ interface Services {
   readonly attempts: AttemptsRepository
   readonly drafts: DraftsRepository
   readonly design: DesignRepository
+  readonly notes: ProblemNotesRepository
   readonly judge: JudgeClient
   readonly ai: AiService
   readonly settings: SettingsStore
@@ -101,6 +104,7 @@ export function registerIpc({
   attempts,
   drafts,
   design,
+  notes,
   judge,
   ai,
   settings,
@@ -152,6 +156,14 @@ export function registerIpc({
   })
 
   register(channels.attemptsStats, noInputSchema, () => attempts.getStats())
+  register(channels.attemptsList, problemIdSchema, (problemId) =>
+    attempts.listForProblem(problemId),
+  )
+
+  register(channels.notesGet, problemIdSchema, (problemId) => notes.get(problemId))
+  register(channels.notesSave, problemNoteSchema, (input) =>
+    notes.save(input.problemId, input.notes),
+  )
 
   register(channels.designGetScene, noInputSchema, () => design.getScene())
 

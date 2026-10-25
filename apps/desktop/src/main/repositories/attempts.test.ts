@@ -58,4 +58,37 @@ describe('AttemptsRepository', () => {
       })
     })
   })
+
+  it("lists a problem's attempts newest first", () => {
+    withAttempts((attempts) => {
+      attempts.save({
+        problemId: 'core/pair-sum',
+        language: 'python',
+        mode: 'sample',
+        code: 'pass',
+        result: result('wrong_answer', 2, 5),
+      })
+      attempts.save({
+        problemId: 'core/pair-sum',
+        language: 'typescript',
+        mode: 'submit',
+        code: 'return []',
+        result: result('accepted', 39, 39),
+      })
+      attempts.save({
+        problemId: 'core/other',
+        language: 'python',
+        mode: 'sample',
+        code: 'pass',
+        result: result('accepted', 5, 5),
+      })
+
+      const listed = attempts.listForProblem('core/pair-sum')
+      expect(listed).toHaveLength(2)
+      expect(listed[0]?.mode).toBe('submit')
+      expect(listed[0]?.language).toBe('typescript')
+      expect(listed[1]?.mode).toBe('sample')
+      expect(listed[1]?.language).toBe('python')
+    })
+  })
 })

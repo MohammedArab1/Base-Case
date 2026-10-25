@@ -193,6 +193,27 @@ export interface Stats {
   readonly lastAttemptAt: string | null
 }
 
+export interface AttemptSummary {
+  readonly id: string
+  readonly problemId: string
+  readonly language: Language
+  readonly mode: 'sample' | 'submit'
+  readonly status: string
+  readonly passed: number
+  readonly total: number
+  readonly createdAt: string
+}
+
+export interface ProblemNote {
+  readonly notes: string
+  readonly updatedAt: string | null
+}
+
+export interface SaveProblemNoteInput {
+  readonly problemId: string
+  readonly notes: string
+}
+
 export interface DesignScenePayload {
   readonly sceneJson: string | null
   readonly updatedAt: string | null
@@ -274,6 +295,11 @@ export interface BaseCaseApi {
   }
   readonly attempts: {
     stats(): Promise<Stats>
+    list(problemId: string): Promise<AttemptSummary[]>
+  }
+  readonly notes: {
+    get(problemId: string): Promise<ProblemNote>
+    save(input: SaveProblemNoteInput): Promise<ProblemNote>
   }
   readonly settings: {
     get(): Promise<AppSettings>

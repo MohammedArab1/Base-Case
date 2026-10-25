@@ -28,9 +28,10 @@ indexes:
 - Pack directories remain the source of truth for pack metadata, problems,
   tests, hints, solutions, and design scenarios.
 - SQLite stores settings, attempts, drafts, design scenes, AI provider metadata,
-  attempt events, mistake tags, review cards, design attempts, the FTS search
-  index, and migration history.
+  attempt events, mistake tags, review cards, design attempts, per-problem
+  notes, the FTS search index, and migration history.
 - Migration 3 adds `attempt_events`, `mistake_tags`, `attempt_mistake_tags`,
+  `review_cards`, and `design_attempts`. Migration 4 adds `problem_notes`.
   `review_cards`, and `design_attempts` for the coding, review, and design
   phases.
 - Do not add `content_packs`, `problems`, `problem_tests`, `problem_hints`,
@@ -67,6 +68,7 @@ Negative:
 
 ## Follow-up
 
-- Add repositories for attempt events, mistake tags, review cards, and design
-  attempts when those features land.
+- Add repositories for attempt events, mistake tags, review cards, design
+  attempts, and per-problem notes when those features grow beyond the current
+  inspector and repository surface.
 - Document the export/import path for user state and packs in Phase 4.

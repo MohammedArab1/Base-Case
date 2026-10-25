@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 2 — App foundation (Phase 1 clean-VM installs still pending)
-> Overall status: On track — Phase 2 foundation is nearly complete; repositories and the user-state schema are split, and only the app-layout inspector remains
-> Next milestone: finish the Phase 2 shell (app-layout inspector and primitive migration), then clean-VM installs
+> Current phase: Phase 2 complete — Phase 3 (judge hardening) is next; Phase 1 clean-VM installs still pending
+> Overall status: On track — the Phase 2 shell now includes the coding inspector, per-problem notes, and attempt history; both smoke suites are green on macOS and Windows CI
+> Next milestone: Phase 3 gap analysis and judge hardening, plus clean-VM installs
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -14,11 +14,11 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-24 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, pack install/uninstall, Playwright smoke, repository split, and the user-state schema are done; the app-layout inspector and primitive migration remain |
-| Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
-| Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
-| Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
-| Phase 6 — AI tutor | Not started | — | BYO provider, context builder, guardrails |
+| Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Core judge landed during the Phase 1 spike; remaining: gap analysis, bundled runtimes, full signature coverage, macOS Seatbelt, conformance matrix |
+| Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
+| Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
+| Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
 | Phase 8 — Alpha release | Not started | — | Installers, docs, beta |
 | Phase 9 — MVP expansion | Not started | — | 25 + 8 content, importer, polish |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Continue Phase 2: add the app-layout inspector and finish migrating the remaining Settings/Coding surfaces to the design-system primitives.
+1. Run a Phase 3 gap analysis against the existing judge, resolve ADR-0010 (bundle runtimes vs. system runtimes), and implement the remaining protocol, signature, sandbox, and conformance work.
 2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Re-run the uninstall row of the full Windows checklist on a fresh install.
 4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -39,6 +39,29 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 2 — Coding inspector, notes, and attempt history
+
+- Status: Phase 2 complete
+- Done:
+  - Added a responsive inspector to the coding workspace with AI, Notes, and History tabs. It is inline above 1480px and stacks below the panes on narrower windows; the open state and width are remembered in localStorage, with a pointer and keyboard resize handle.
+  - Moved the AI streaming panel into the inspector while keeping the existing context-preview modal. Opening or sending AI automatically reveals the inspector.
+  - Added per-problem notes in migration 4 (`problem_notes`), a `ProblemNotesRepository`, notes IPC/preload methods, debounced autosave, save-on-blur, and a flush when the tab or workspace unmounts.
+  - Added `attempts.list(problemId)` with newest-first attempt history and rendered it in the inspector.
+  - Extended `smoke:e2e` with notes and attempt-history assertions, and the Playwright test with inspector toggling, notes persistence across relaunch, and the empty history state. Added optional `BASE_CASE_PLAYWRIGHT_SCREENSHOTS` capture and checked the stacked (1280px) and inline (1600px) layouts.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 38 desktop TypeScript tests + 4 schema tests + the Go suites passed.
+  - `pnpm build && pnpm smoke:e2e` — passed with `attemptHistory: true` and `notes: true`.
+  - `pnpm smoke:playwright` — passed; notes survive a relaunch.
+- Files/PRs:
+  - Key paths: `renderer/src/components/Inspector.tsx`, `renderer/src/views/CodingView.tsx`, `renderer/src/workspace.css`, `main/repositories/notes.ts`, `main/migrations.ts`, `shared/types.ts`, `shared/ipc.ts`, `main/ipc.ts`, `preload/index.ts`, `e2e/app.spec.ts`, `scripts/smoke-electron.mjs`, `docs/adr/0011-sqlite-scope.md`.
+- Next:
+  - Phase 3 gap analysis and judge hardening; clean-VM installs still need hardware.
+- Notes/decisions:
+  - Notes are SQLite-backed, not localStorage; only cosmetic layout state uses localStorage.
+  - The inspector stacks below 1480px because the statement/editor minimum widths do not fit with a useful right rail at the default 1280px window. The wide layout remains the intended three-column design.
+  - All Phase 2 checklist items are now checked. Phase 3–6 statuses were corrected to “in progress” because the Phase 1 spike already shipped partial functionality; the remaining checklist gaps are listed in the status table.
 
 ### 2026-10-24 — Phase 2 — Repository split and schema scope
 
