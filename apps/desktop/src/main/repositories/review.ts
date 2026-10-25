@@ -157,6 +157,14 @@ export class ReviewRepository {
     return row ? toReviewCard(row) : null
   }
 
+  listCards(itemKind: ReviewItemKind): ReviewCard[] {
+    const rows = this.database.connection
+      .prepare('SELECT * FROM review_cards WHERE item_kind = ? ORDER BY due_at ASC')
+      .all(itemKind) as unknown as ReviewCardRow[]
+
+    return rows.map(toReviewCard)
+  }
+
   /** Creates a card on the first submission and grades later submissions.
    * Sample runs are practice; review runs are graded explicitly. Leaving the
    * first card new puts it in the queue so the learner reviews it soon. */

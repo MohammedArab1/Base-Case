@@ -1,12 +1,12 @@
 import { randomUUID } from 'node:crypto'
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { app, dialog, ipcMain } from 'electron'
 import type { IpcMainInvokeEvent } from 'electron'
 import type { ZodType } from 'zod'
 import { channels } from '../shared/ipc'
 import type { Channel, IpcResult } from '../shared/ipc'
-import type { AiContext, ReviewCard, ReviewQueueItem } from '../shared/types'
+import type { AiContext, JudgeRunEvent, ReviewCard, ReviewQueueItem } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
 import { toIpcError } from './ipc-errors'
@@ -25,6 +25,7 @@ import {
   problemIdSchema,
   problemNoteSchema,
   recentAttemptsSchema,
+  requestIdSchema,
   runInputSchema,
   saveDraftSchema,
   sceneJsonSchema,
@@ -42,6 +43,7 @@ import type { DraftsRepository } from './repositories/drafts'
 import type { MistakesRepository } from './repositories/mistakes'
 import type { ProblemNotesRepository } from './repositories/notes'
 import type { ReviewRepository } from './repositories/review'
+import type { UserDataRepository } from './repositories/user-data'
 import type { SettingsStore } from './settings'
 import { localDayKey, startOfLocalDay, streakLength } from './time'
 
@@ -54,6 +56,7 @@ interface Services {
   readonly notes: ProblemNotesRepository
   readonly review: ReviewRepository
   readonly mistakes: MistakesRepository
+  readonly userData: UserDataRepository
   readonly judge: JudgeClient
   readonly ai: AiService
   readonly settings: SettingsStore
@@ -108,6 +111,12 @@ function sendAiEvent(
   }
 }
 
+function sendJudgeEvent(sender: Electron.WebContents, event: JudgeRunEvent): void {
+  if (!sender.isDestroyed()) {
+    sender.send(channels.judgeEvent, event)
+  }
+}
+
 export function registerIpc({
   content,
   contentIndex,
@@ -117,6 +126,7 @@ export function registerIpc({
   notes,
   review,
   mistakes,
+  userData,
   judge,
   ai,
   settings,
@@ -144,33 +154,80 @@ export function registerIpc({
 
   register(channels.judgeStatus, noInputSchema, () => judge.status())
 
-  register(channels.judgeRun, runInputSchema, async (input) => {
+  register(channels.judgeRun, runInputSchema, async (input, event) => {
+    const requestId = input.requestId ?? randomUUID()
     const params = content.getRunParams(input.problemId, input.language, input.code, input.mode)
-    const result = await judge.run(params)
 
-    attempts.save({
-      problemId: input.problemId,
-      language: input.language,
-      mode: input.mode,
-      code: input.code,
-      result,
-      plan: input.plan,
-      hintsUsed: input.hintsUsed,
-      solutionViewed: input.solutionViewed,
-    })
+    try {
+      const result = await judge.run(params, {
+        requestId,
+        onEvent: (judgeEvent) => {
+          if (judgeEvent.event !== 'test_result') {
+            return
+          }
 
-    // Sample runs never schedule a card; review runs are graded explicitly so a
-    // single review session cannot update the card twice.
-    review.applyAttempt({
-      problemId: input.problemId,
-      mode: input.mode,
-      status: result.status,
-      hintsUsed: input.hintsUsed ?? 0,
-      solutionViewed: input.solutionViewed ?? false,
-    })
+          const payload = judgeEvent.result as
+            | {
+                index?: number
+                isSample?: boolean
+                status?: string
+                runtimeMs?: number
+                memoryBytes?: number
+              }
+            | undefined
 
-    return result
+          if (!payload) {
+            return
+          }
+
+          sendJudgeEvent(event.sender, {
+            requestId,
+            type: 'test',
+            index: Number(payload.index ?? 0),
+            isSample: Boolean(payload.isSample),
+            status: String(payload.status ?? ''),
+            runtimeMs: Number(payload.runtimeMs ?? 0),
+            memoryBytes: Number(payload.memoryBytes ?? 0),
+          })
+        },
+      })
+
+      attempts.save({
+        problemId: input.problemId,
+        language: input.language,
+        mode: input.mode,
+        code: input.code,
+        result,
+        plan: input.plan,
+        hintsUsed: input.hintsUsed,
+        solutionViewed: input.solutionViewed,
+      })
+
+      // Sample runs never schedule a card; review runs are graded explicitly so a
+      // single review session cannot update the card twice.
+      if (result.status !== 'cancelled') {
+        review.applyAttempt({
+          problemId: input.problemId,
+          mode: input.mode,
+          status: result.status,
+          hintsUsed: input.hintsUsed ?? 0,
+          solutionViewed: input.solutionViewed ?? false,
+        })
+      }
+
+      sendJudgeEvent(event.sender, { requestId, type: 'done' })
+      return result
+    } catch (error) {
+      sendJudgeEvent(event.sender, {
+        requestId,
+        type: 'error',
+        message: error instanceof Error ? error.message : String(error),
+      })
+      throw error
+    }
   })
+
+  register(channels.judgeCancel, requestIdSchema, (requestId) => judge.cancel(requestId))
 
   register(channels.draftGet, draftInputSchema, (input) =>
     drafts.get(input.problemId, input.language),
@@ -252,6 +309,26 @@ export function registerIpc({
       continueProblemId: attempts.latestProblemId(),
       dailyGoalMinutes: settings.get().dailyGoalMinutes,
     }
+  })
+
+  register(channels.progressProblems, noInputSchema, () => {
+    const attemptProgress = new Map(
+      attempts.getProblemProgress().map((item) => [item.problemId, item]),
+    )
+    const cards = new Map(review.listCards('problem').map((card) => [card.itemId, card]))
+
+    return content.listProblems().map((problem) => {
+      const item = attemptProgress.get(problem.id)
+      const card = cards.get(problem.id)
+
+      return {
+        problemId: problem.id,
+        attempts: item?.attempts ?? 0,
+        accepted: item?.accepted ?? 0,
+        reviewDueAt: card?.dueAt ?? null,
+        reviewState: card?.state ?? null,
+      }
+    })
   })
 
   register(channels.progressSummary, noInputSchema, () => {
@@ -366,4 +443,38 @@ export function registerIpc({
   register(channels.packsPreview, packImportKindSchema, (kind) => packs.preview(kind))
   register(channels.packsInstall, packTokenSchema, (token) => packs.install(token))
   register(channels.packsUninstall, packIdSchema, (packId) => packs.uninstall(packId))
+
+  register(channels.dataExport, noInputSchema, async () => {
+    const selection = await dialog.showSaveDialog({
+      title: 'Export Base Case data',
+      defaultPath: `base-case-export-${new Date().toISOString().slice(0, 10)}.json`,
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    })
+
+    if (selection.canceled || !selection.filePath) {
+      return { saved: false }
+    }
+
+    const { bundle, counts } = userData.export()
+    await writeFile(selection.filePath, JSON.stringify(bundle, null, 2), 'utf8')
+    return { saved: true, path: selection.filePath, counts }
+  })
+
+  register(channels.dataImport, noInputSchema, async () => {
+    const selection = await dialog.showOpenDialog({
+      title: 'Import Base Case data',
+      properties: ['openFile'],
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    })
+
+    const path = selection.filePaths[0]
+
+    if (selection.canceled || !path) {
+      return { saved: false }
+    }
+
+    const raw = JSON.parse(await readFile(path, 'utf8')) as unknown
+    const counts = userData.import(raw)
+    return { saved: true, path, counts }
+  })
 }

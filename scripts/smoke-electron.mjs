@@ -508,6 +508,33 @@ export { Solution }
   )
   assert(attemptDetail.code.includes('pairSum'), 'Attempt detail did not include the code snapshot')
 
+  // A long-running sample can be cancelled through the same request id.
+  const cancelRequestId = '00000000-0000-4000-8000-000000000001'
+  const slowCode = `class Solution:
+    def pairSum(self, nums, target):
+        while True:
+            pass
+`
+  const running = evaluate(
+    `window.baseCase.judge.run(${JSON.stringify({
+      problemId: 'core/pair-sum',
+      language: 'python',
+      code: slowCode,
+      mode: 'sample',
+      requestId: cancelRequestId,
+    })})`,
+  )
+  await sleep(700)
+  const cancelled = await evaluate(
+    `window.baseCase.judge.cancel(${JSON.stringify(cancelRequestId)})`,
+  )
+  const cancelledResult = await running
+  assert(cancelled === true, 'Cancel did not report a cancelled run')
+  assert(
+    cancelledResult.status === 'cancelled',
+    `Expected cancelled, got ${cancelledResult.status}`,
+  )
+
   // The first submission creates a new card; grading it reschedules the queue.
   const reviewQueue = await evaluate('window.baseCase.review.queue()')
   assert(reviewQueue.totalNew === 1, 'The first submission did not create a review card')

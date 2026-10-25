@@ -70,6 +70,8 @@ export function SettingsView(): JSX.Element {
   const [installing, setInstalling] = useState(false)
   const [removeTarget, setRemoveTarget] = useState<ContentPackSummary | null>(null)
   const [removing, setRemoving] = useState(false)
+  const [transferring, setTransferring] = useState<'export' | 'import' | null>(null)
+  const [transferStatus, setTransferStatus] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -121,6 +123,53 @@ export function SettingsView(): JSX.Element {
       })
     } finally {
       setSavingSettings(false)
+    }
+  }
+
+  const exportData = async (): Promise<void> => {
+    setTransferring('export')
+    setTransferStatus(null)
+
+    try {
+      const result = await window.baseCase.data.export()
+
+      if (!result.saved) {
+        setTransferStatus('Export cancelled.')
+        return
+      }
+
+      const rows = Object.values(result.counts ?? {}).reduce((sum, count) => sum + count, 0)
+      setTransferStatus(`Exported ${rows} rows.`)
+    } catch (transferError: unknown) {
+      setTransferStatus(
+        transferError instanceof Error ? transferError.message : String(transferError),
+      )
+    } finally {
+      setTransferring(null)
+    }
+  }
+
+  const importData = async (): Promise<void> => {
+    setTransferring('import')
+    setTransferStatus(null)
+
+    try {
+      const result = await window.baseCase.data.import()
+
+      if (!result.saved) {
+        setTransferStatus('Import cancelled.')
+        return
+      }
+
+      const rows = Object.values(result.counts ?? {}).reduce((sum, count) => sum + count, 0)
+      setTransferStatus(`Imported ${rows} rows. Reloading…`)
+      window.setTimeout(() => window.location.reload(), 400)
+    } catch (transferError: unknown) {
+      setTransferStatus(
+        transferError instanceof Error ? transferError.message : String(transferError),
+      )
+    } finally {
+      setTransferring(null)
     }
   }
 
@@ -781,6 +830,41 @@ export function SettingsView(): JSX.Element {
             <p>{judgeStatus?.error ?? 'The sidecar is not running.'}</p>
           </div>
         )}
+      </section>
+
+      <section className="settings-card">
+        <div className="settings-card-heading">
+          <div>
+            <h2>Backup and transfer</h2>
+            <p className="muted">
+              Export attempts, drafts, notes, review cards, mistake tags, and settings as JSON. API
+              keys are never included.
+            </p>
+          </div>
+        </div>
+        <div className="settings-actions">
+          <Button
+            variant="secondary"
+            onClick={() => void exportData()}
+            disabled={transferring !== null}
+            data-testid="export-data"
+          >
+            {transferring === 'export' ? 'Exporting…' : 'Export data'}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => void importData()}
+            disabled={transferring !== null}
+            data-testid="import-data"
+          >
+            {transferring === 'import' ? 'Importing…' : 'Import data'}
+          </Button>
+        </div>
+        {transferStatus ? (
+          <p className="muted small" data-testid="transfer-status">
+            {transferStatus}
+          </p>
+        ) : null}
       </section>
 
       <section className="settings-card">

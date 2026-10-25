@@ -5,6 +5,7 @@ import type {
   AttemptMode,
   Language,
   ProblemDetail,
+  ProblemProgressEntry,
   ProblemSummary,
   ReviewGrade,
   ReviewPreview,
@@ -144,17 +145,83 @@ function ProblemList({
 }): JSX.Element {
   const [query, setQuery] = useState('')
   const [remoteResults, setRemoteResults] = useState<readonly ProblemSummary[] | null>(null)
+  const [difficulty, setDifficulty] = useState<'all' | ProblemSummary['difficulty']>('all')
+  const [pattern, setPattern] = useState('all')
+  const [status, setStatus] = useState<'all' | 'attempted' | 'accepted' | 'not-started'>('all')
+  const [dueOnly, setDueOnly] = useState(false)
+  const [progress, setProgress] = useState<readonly ProblemProgressEntry[]>([])
 
-  const filtered = useMemo(() => {
-    const normalized = query.trim().toLowerCase()
-    if (!normalized) {
-      return problems
+  useEffect(() => {
+    let cancelled = false
+
+    void window.baseCase.progress
+      .problems()
+      .then((entries) => {
+        if (!cancelled) {
+          setProgress(entries)
+        }
+      })
+      .catch(() => undefined)
+
+    return () => {
+      cancelled = true
     }
-    return problems.filter((problem) => {
-      const haystack = [problem.title, problem.slug, ...problem.patterns].join(' ').toLowerCase()
-      return haystack.includes(normalized)
+  }, [])
+
+  const progressByProblem = useMemo(
+    () => new Map(progress.map((entry) => [entry.problemId, entry])),
+    [progress],
+  )
+
+  const patterns = useMemo(
+    () => [...new Set(problems.flatMap((problem) => problem.patterns))].sort(),
+    [problems],
+  )
+
+  const visibleProblems = useMemo(() => {
+    const normalized = query.trim().toLowerCase()
+    const base = remoteResults ?? problems
+
+    return base.filter((problem) => {
+      if (difficulty !== 'all' && problem.difficulty !== difficulty) {
+        return false
+      }
+
+      if (pattern !== 'all' && !problem.patterns.includes(pattern)) {
+        return false
+      }
+
+      const entry = progressByProblem.get(problem.id)
+
+      if (status === 'attempted' && !entry?.attempts) {
+        return false
+      }
+
+      if (status === 'accepted' && !entry?.accepted) {
+        return false
+      }
+
+      if (status === 'not-started' && entry?.attempts) {
+        return false
+      }
+
+      if (dueOnly) {
+        const due = entry?.reviewDueAt ? new Date(entry.reviewDueAt).getTime() : Infinity
+
+        if (due > Date.now()) {
+          return false
+        }
+      }
+
+      if (!remoteResults && normalized) {
+        const haystack = [problem.title, problem.slug, ...problem.patterns].join(' ').toLowerCase()
+
+        return haystack.includes(normalized)
+      }
+
+      return true
     })
-  }, [problems, query])
+  }, [difficulty, dueOnly, pattern, problems, progressByProblem, query, remoteResults, status])
 
   useEffect(() => {
     const normalized = query.trim()
@@ -188,7 +255,6 @@ function ProblemList({
     }
   }, [problems, query])
 
-  const visibleProblems = remoteResults ?? filtered
   const packCount = new Set(problems.map((problem) => problem.packId)).size
 
   return (
@@ -211,6 +277,68 @@ function ProblemList({
         />
       </div>
 
+      <div className="list-filters">
+        <label className="filter-field">
+          <span>Difficulty</span>
+          <select
+            className="input"
+            aria-label="Difficulty filter"
+            value={difficulty}
+            onChange={(event) =>
+              setDifficulty(event.target.value as 'all' | ProblemSummary['difficulty'])
+            }
+          >
+            <option value="all">All</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+
+        <label className="filter-field">
+          <span>Pattern</span>
+          <select
+            className="input"
+            aria-label="Pattern filter"
+            value={pattern}
+            onChange={(event) => setPattern(event.target.value)}
+          >
+            <option value="all">All</option>
+            {patterns.map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="filter-field">
+          <span>Status</span>
+          <select
+            className="input"
+            aria-label="Status filter"
+            value={status}
+            onChange={(event) =>
+              setStatus(event.target.value as 'all' | 'attempted' | 'accepted' | 'not-started')
+            }
+          >
+            <option value="all">All</option>
+            <option value="not-started">Not started</option>
+            <option value="attempted">Attempted</option>
+            <option value="accepted">Accepted</option>
+          </select>
+        </label>
+
+        <label className="checkbox filter-check">
+          <input
+            type="checkbox"
+            checked={dueOnly}
+            onChange={(event) => setDueOnly(event.target.checked)}
+          />
+          Review due
+        </label>
+      </div>
+
       {visibleProblems.length === 0 ? (
         <section className="empty-state">
           <h2>No matches</h2>
@@ -218,30 +346,39 @@ function ProblemList({
         </section>
       ) : (
         <div className="problem-list">
-          {visibleProblems.map((problem) => (
-            <button
-              key={problem.id}
-              type="button"
-              className="problem-row"
-              onClick={() => onOpenProblem(problem.id)}
-            >
-              <span className="problem-main">
-                <span className="problem-title">{problem.title}</span>
-                <span className="problem-meta">
-                  {problem.patterns.map((pattern) => (
-                    <span className="tag" key={pattern}>
-                      {pattern}
-                    </span>
-                  ))}
-                  <span className="tag tag-pack">{problem.packName}</span>
+          {visibleProblems.map((problem) => {
+            const entry = progressByProblem.get(problem.id)
+            const due = entry?.reviewDueAt
+              ? new Date(entry.reviewDueAt).getTime() <= Date.now()
+              : false
+
+            return (
+              <button
+                key={problem.id}
+                type="button"
+                className="problem-row"
+                onClick={() => onOpenProblem(problem.id)}
+              >
+                <span className="problem-main">
+                  <span className="problem-title">{problem.title}</span>
+                  <span className="problem-meta">
+                    {problem.patterns.map((value) => (
+                      <span className="tag" key={value}>
+                        {value}
+                      </span>
+                    ))}
+                    <span className="tag tag-pack">{problem.packName}</span>
+                    {entry?.accepted ? <span className="tag tag-accepted">Accepted</span> : null}
+                    {due ? <span className="tag tag-due">Review due</span> : null}
+                  </span>
                 </span>
-              </span>
-              <span className={difficultyClass(problem.difficulty)}>{problem.difficulty}</span>
-              <span className="problem-arrow" aria-hidden="true">
-                →
-              </span>
-            </button>
-          ))}
+                <span className={difficultyClass(problem.difficulty)}>{problem.difficulty}</span>
+                <span className="problem-arrow" aria-hidden="true">
+                  →
+                </span>
+              </button>
+            )
+          })}
         </div>
       )}
     </div>
@@ -342,6 +479,12 @@ function ProblemWorkspace({
   const [reviewPreviews, setReviewPreviews] = useState<readonly ReviewPreview[]>([])
   const [grading, setGrading] = useState<ReviewGrade | null>(null)
   const [gradeError, setGradeError] = useState<string | null>(null)
+  const [runProgress, setRunProgress] = useState<{
+    readonly completed: number
+    readonly total: number
+  } | null>(null)
+  const [cancelling, setCancelling] = useState(false)
+  const activeRequestRef = useRef<string | null>(null)
   const [aiPreview, setAiPreview] = useState<AiPreview | null>(null)
   const [aiText, setAiText] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
@@ -404,14 +547,30 @@ function ProblemWorkspace({
     }
   }, [])
 
+  useEffect(() => {
+    return window.baseCase.judge.onEvent((event) => {
+      if (event.requestId !== activeRequestRef.current || event.type !== 'test') {
+        return
+      }
+
+      setRunProgress((current) => ({
+        completed: (current?.completed ?? 0) + 1,
+        total: event.isSample ? problem.testCounts.sample : problem.testCounts.hidden,
+      }))
+    })
+  }, [problem.testCounts.hidden, problem.testCounts.sample])
+
   const run = useCallback(
     async (nextMode: AttemptMode) => {
       if (running) {
         return
       }
 
+      const requestId = crypto.randomUUID()
+      activeRequestRef.current = requestId
       setMode(nextMode)
       setRunning(true)
+      setRunProgress(null)
       setError(null)
       setGradeError(null)
       setAiPreview(null)
@@ -427,6 +586,7 @@ function ProblemWorkspace({
           plan,
           hintsUsed: revealedHints.size,
           solutionViewed,
+          requestId,
         })
         setResult(nextResult)
         setAttemptRefreshKey((current) => current + 1)
@@ -434,11 +594,31 @@ function ProblemWorkspace({
         console.error('Judge run failed:', runError)
         setError(describeJudgeError(runError))
       } finally {
+        activeRequestRef.current = null
         setRunning(false)
+        setRunProgress(null)
+        setCancelling(false)
       }
     },
     [code, language, plan, problem.id, revealedHints.size, running, solutionViewed],
   )
+
+  const cancelRun = async (): Promise<void> => {
+    const requestId = activeRequestRef.current
+
+    if (!requestId) {
+      return
+    }
+
+    setCancelling(true)
+
+    try {
+      await window.baseCase.judge.cancel(requestId)
+    } catch {
+      // The run promise reports the final state; a failed cancel is harmless.
+      setCancelling(false)
+    }
+  }
 
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
@@ -780,6 +960,17 @@ function ProblemWorkspace({
                 </button>
               </div>
               <div className="toolbar-actions">
+                {running ? (
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => void cancelRun()}
+                    disabled={cancelling}
+                    data-testid="cancel-run"
+                  >
+                    {cancelling ? 'Cancelling…' : 'Cancel'}
+                  </button>
+                ) : null}
                 {isReview ? (
                   <button
                     type="button"
@@ -838,6 +1029,7 @@ function ProblemWorkspace({
                 running={running}
                 error={error}
                 mode={mode}
+                progress={runProgress}
                 onExplain={result?.firstFailure ? () => void openAiPreview() : undefined}
               />
             </div>

@@ -2579,10 +2579,10 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Problem list:
-  - [ ] Search, difficulty, pattern, status, list filters.
+- [x] Problem list:
+  - [x] Search, difficulty, pattern, status, list filters.
   - [x] Progress summary.
-  - [ ] Review-due filter.
+  - [x] Review-due filter.
 - [ ] Problem detail:
   - [ ] Markdown/KaTeX renderer with sanitized HTML.
   - [x] Examples, constraints, follow-ups.
@@ -2592,9 +2592,9 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [ ] Theme, font size, tab size, keymap.
   - [ ] Autosave, reset, copy.
   - [ ] Error line highlighting from judge results.
-- [ ] Run/submit:
+- [x] Run/submit:
   - [x] Run samples; submit all.
-  - [ ] Progress and cancel.
+  - [x] Progress and cancel.
   - [x] Results panel: status, tests, diff, stderr, compile errors, runtime/memory.
   - [x] Smallest failing hidden test after submit.
 - [x] Hints:
@@ -2614,7 +2614,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Review queue and daily limits.
   - [x] Review mode with hints/solutions hidden.
   - [x] Today dashboard and progress stats.
-- [ ] Export/import user data.
+- [x] Export/import user data.
 - [x] Tests: unit, integration, Playwright solve/run/submit/review.
 
 **Deliverables**

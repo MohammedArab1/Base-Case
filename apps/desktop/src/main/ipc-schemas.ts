@@ -70,7 +70,10 @@ export const runInputSchema: z.ZodType<RunInput> = z.object({
   plan: z.string().max(20_000).optional(),
   hintsUsed: z.number().int().min(0).max(50).optional(),
   solutionViewed: z.boolean().optional(),
+  requestId: z.string().uuid().optional(),
 }) as z.ZodType<RunInput>
+
+export const requestIdSchema = z.string().uuid()
 
 export const draftInputSchema: z.ZodType<DraftInput> = z.object({
   problemId: problemIdSchema,

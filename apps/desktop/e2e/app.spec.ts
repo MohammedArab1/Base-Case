@@ -120,6 +120,16 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
 
     await search.fill('')
     await expect(firstPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
+
+    // Filters narrow the library without losing the search box.
+    await firstPage.getByLabel('Difficulty filter').selectOption('hard')
+    await expect(firstPage.getByRole('heading', { name: 'No matches' })).toBeVisible()
+    await firstPage.getByLabel('Difficulty filter').selectOption('easy')
+    await expect(firstPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
+    await firstPage.getByLabel('Status filter').selectOption('accepted')
+    await expect(firstPage.getByRole('heading', { name: 'No matches' })).toBeVisible()
+    await firstPage.getByLabel('Status filter').selectOption('all')
+
     await firstPage.getByRole('button', { name: /Pair Sum/ }).click()
     await expect(firstPage.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
 

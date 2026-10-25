@@ -18,6 +18,7 @@ import { MistakesRepository } from './repositories/mistakes'
 import { ProblemNotesRepository } from './repositories/notes'
 import { ReviewRepository } from './repositories/review'
 import { SettingsRepository } from './repositories/settings'
+import { UserDataRepository } from './repositories/user-data'
 import { SettingsStore } from './settings'
 import { clampWindowState, loadWindowState, saveWindowState } from './window-state'
 
@@ -197,6 +198,7 @@ app
     const notes = new ProblemNotesRepository(database)
     const review = new ReviewRepository(database)
     const mistakes = new MistakesRepository(database)
+    const userData = new UserDataRepository(database)
     const judge = new JudgeClient()
     const ai = new AiService(new AiProviderRepository(database), settingsRepository, content)
     const packs = new PackManager(userDataPath, content, contentIndex)
@@ -212,6 +214,7 @@ app
       notes,
       review,
       mistakes,
+      userData,
       judge,
       ai,
       settings,

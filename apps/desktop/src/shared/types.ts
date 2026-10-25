@@ -167,7 +167,21 @@ export interface RunInput {
   readonly plan?: string
   readonly hintsUsed?: number
   readonly solutionViewed?: boolean
+  readonly requestId?: string
 }
+
+export type JudgeRunEvent =
+  | {
+      readonly requestId: string
+      readonly type: 'test'
+      readonly index: number
+      readonly isSample: boolean
+      readonly status: string
+      readonly runtimeMs: number
+      readonly memoryBytes: number
+    }
+  | { readonly requestId: string; readonly type: 'done' }
+  | { readonly requestId: string; readonly type: 'error'; readonly message: string }
 
 export interface RuntimeInfo {
   readonly name: string
@@ -337,6 +351,22 @@ export interface ProgressSummary {
   readonly recentAttempts: readonly AttemptSummary[]
 }
 
+export interface ProblemProgressEntry {
+  readonly problemId: string
+  readonly attempts: number
+  readonly accepted: number
+  readonly reviewDueAt: string | null
+  readonly reviewState: ReviewState | null
+}
+
+export type DataTransferCounts = Record<string, number>
+
+export interface DataTransferResult {
+  readonly saved: boolean
+  readonly path?: string
+  readonly counts?: DataTransferCounts
+}
+
 export interface ProblemNote {
   readonly notes: string
   readonly updatedAt: string | null
@@ -420,7 +450,9 @@ export interface BaseCaseApi {
   }
   readonly judge: {
     run(input: RunInput): Promise<RunResult>
+    cancel(requestId: string): Promise<boolean>
     status(): Promise<JudgeStatus>
+    onEvent(listener: (event: JudgeRunEvent) => void): () => void
   }
   readonly drafts: {
     get(input: DraftInput): Promise<DraftRecord | null>
@@ -444,6 +476,11 @@ export interface BaseCaseApi {
   readonly progress: {
     summary(): Promise<ProgressSummary>
     today(): Promise<TodaySummary>
+    problems(): Promise<ProblemProgressEntry[]>
+  }
+  readonly data: {
+    export(): Promise<DataTransferResult>
+    import(): Promise<DataTransferResult>
   }
   readonly notes: {
     get(problemId: string): Promise<ProblemNote>

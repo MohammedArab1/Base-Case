@@ -6,6 +6,7 @@ interface ResultsPanelProps {
   readonly running: boolean
   readonly error: string | null
   readonly mode: AttemptMode
+  readonly progress?: { readonly completed: number; readonly total: number } | null
   readonly onExplain?: () => void
 }
 
@@ -52,13 +53,15 @@ export function ResultsPanel({
   running,
   error,
   mode,
+  progress,
   onExplain,
 }: ResultsPanelProps): JSX.Element {
   if (running) {
     return (
       <div className="results-panel" aria-live="polite">
-        <p className="results-placeholder">
+        <p className="results-placeholder" data-testid="run-progress">
           Running {mode === 'sample' ? 'samples' : 'hidden tests'}…
+          {progress ? ` ${progress.completed}/${progress.total} tests` : ''}
         </p>
       </div>
     )

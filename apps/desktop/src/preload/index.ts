@@ -10,17 +10,20 @@ import type {
   AttemptDetail,
   AttemptSummary,
   ContentPackSummary,
+  DataTransferResult,
   DesignScenePayload,
   DraftInput,
   DraftRecord,
   GradeReviewInput,
   GradeReviewResult,
+  JudgeRunEvent,
   JudgeStatus,
   MistakeTag,
   PackImportKind,
   PackPreviewResult,
   ProblemDetail,
   ProblemNote,
+  ProblemProgressEntry,
   ProblemSummary,
   ProgressSummary,
   ReviewPreview,
@@ -70,7 +73,17 @@ const api: BaseCaseApi = {
   },
   judge: {
     run: (input: RunInput) => invoke<RunResult>(channels.judgeRun, input),
+    cancel: (requestId: string) => invoke<boolean>(channels.judgeCancel, requestId),
     status: () => invoke<JudgeStatus>(channels.judgeStatus),
+    onEvent: (listener: (event: JudgeRunEvent) => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, payload: JudgeRunEvent): void => {
+        listener(payload)
+      }
+      ipcRenderer.on(channels.judgeEvent, handler)
+      return () => {
+        ipcRenderer.removeListener(channels.judgeEvent, handler)
+      }
+    },
   },
   drafts: {
     get: (input: DraftInput) => invoke<DraftRecord | null>(channels.draftGet, input),
@@ -94,6 +107,11 @@ const api: BaseCaseApi = {
   progress: {
     summary: () => invoke<ProgressSummary>(channels.progressSummary),
     today: () => invoke<TodaySummary>(channels.progressToday),
+    problems: () => invoke<ProblemProgressEntry[]>(channels.progressProblems),
+  },
+  data: {
+    export: () => invoke<DataTransferResult>(channels.dataExport),
+    import: () => invoke<DataTransferResult>(channels.dataImport),
   },
   notes: {
     get: (problemId: string) => invoke<ProblemNote>(channels.notesGet, problemId),

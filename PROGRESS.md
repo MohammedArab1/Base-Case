@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 4 — Coding practice (review slice complete; filters, cancel UI, and export/import remain)
-> Overall status: On track — FSRS review, mistake tags, plan fields, snapshots, and Today/Progress dashboards are working; all checks are green
-> Next milestone: Finish Phase 4 (problem filters, cancel UI, export/import), then Phase 5 design
+> Current phase: Phase 4 — Coding practice (filters, cancel, and export/import complete; KaTeX and editor polish remain)
+> Overall status: On track — the full attempt → failure → fix → review loop, filters, and local data transfer work; all checks are green
+> Next milestone: Finish the remaining Phase 4 polish, then Phase 5 design
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -16,7 +16,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
-| Phase 4 — Coding practice | In progress | 2026-10-24 | FSRS review, mistake tags, plans, snapshots, and Today/Progress dashboards are complete; problem filters, cancel UI, and export/import remain |
+| Phase 4 — Coding practice | In progress | 2026-10-24 | Review, mistake tags, plans, snapshots, filters, cancel, and export/import are complete; KaTeX and editor error-line polish remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Finish Phase 4: problem-list filters (difficulty, pattern, status, review-due), a cancel button for in-flight judge runs, and user-data export/import.
+1. Finish the remaining Phase 4 polish: KaTeX rendering and editor error-line highlighting, then record the Windows E2E result from CI.
 2. Start Phase 5 design scenarios and rubrics after the review slice.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
@@ -40,6 +40,29 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 4 — filters, cancel, and data transfer
+
+- Status: Phase 4 in progress (exit criteria met; KaTeX and editor polish remain)
+- Done:
+  - Added problem-library filters for difficulty, pattern, status, and review-due, with per-problem Accepted and Review-due badges.
+  - Streamed judge `test_result` events into the results panel and added a Cancel button; cancelled runs are stored as attempts but do not update review cards.
+  - Added JSON user-data export/import covering settings, attempts, attempt events, mistake tags, review cards/logs, drafts, notes, design data, and AI provider configuration. API keys are excluded, and imports validate the bundle format before a transactional merge.
+  - Added Settings controls for backup and transfer.
+  - Extended the judge smoke test with cancellation and the data round-trip, and Playwright with filter coverage.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 56 tests passed across 15 files.
+  - `pnpm content:validate` — passed.
+  - `pnpm build`, `pnpm smoke:e2e` — passed (including cancel).
+  - `pnpm --filter @base-case/desktop test:e2e` — 2 passed.
+- Files/PRs:
+  - Key paths: `apps/desktop/src/main/repositories/user-data.ts`, `apps/desktop/src/main/ipc.ts`, `apps/desktop/src/renderer/src/views/CodingView.tsx`, `SettingsView.tsx`, `scripts/smoke-electron.mjs`.
+- Next:
+  - KaTeX rendering and editor error-line highlighting; confirm Windows Playwright in CI.
+- Notes/decisions:
+  - Export excludes `ai_provider_configs.key_ref` because the keychain entry is machine-local.
+  - Import uses `INSERT OR REPLACE` per table in dependency order, filtered through `PRAGMA table_info`, inside one transaction.
 
 ### 2026-10-24 — Phase 4 — FSRS review slice
 
