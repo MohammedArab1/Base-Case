@@ -1,6 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { source as axeSource } from 'axe-core'
 import { _electron as electron, expect, test } from '@playwright/test'
 import type { ElectronApplication, Page } from '@playwright/test'
 
@@ -583,6 +584,89 @@ test('runs a linked-list problem from the expanded content set', async () => {
       timeout: 60_000,
     })
     await capture(page, 'linked-list')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('has no serious accessibility violations in the main views', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-a11y-'))
+  let launched: LaunchedApp | null = null
+
+  interface AxeViolation {
+    readonly id: string
+    readonly help: string
+    readonly impact: string | null
+    readonly nodes: readonly { readonly target: readonly string[] }[]
+  }
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await page.addInitScript({ content: axeSource })
+    await page.reload()
+    await page.waitForLoadState('domcontentloaded')
+    await completeOnboarding(page, 'python')
+    await page.waitForFunction(() => Boolean((window as unknown as { axe?: unknown }).axe))
+
+    // Keyboard users can reach the workspace without tabbing through the sidebar.
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur())
+    await page.keyboard.press('Tab')
+    await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#main-content')).toBeFocused()
+
+    const views: readonly { nav: string; title: string }[] = [
+      { nav: 'Today', title: 'Today' },
+      { nav: 'Coding', title: 'Coding' },
+      { nav: 'System Design', title: 'System Design' },
+      { nav: 'Review', title: 'Review' },
+      { nav: 'Progress', title: 'Progress' },
+      { nav: 'Settings', title: 'Settings' },
+    ]
+
+    for (const view of views) {
+      await page
+        .getByRole('navigation', { name: 'Primary' })
+        .getByRole('button', { name: view.nav })
+        .click()
+      await expect(page.getByRole('heading', { name: view.title, level: 1 })).toBeVisible()
+
+      const results = await page.evaluate(
+        async (): Promise<{
+          violations: readonly AxeViolation[]
+        }> => {
+          const axe = (
+            window as unknown as {
+              axe: {
+                run: (
+                  context: Document,
+                  options: unknown,
+                ) => Promise<{ violations: readonly AxeViolation[] }>
+              }
+            }
+          ).axe
+
+          return axe.run(document, {
+            runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+          })
+        },
+      )
+      const serious = results.violations.filter(
+        (violation) => violation.impact === 'serious' || violation.impact === 'critical',
+      )
+
+      expect(
+        serious.map((violation) => ({
+          view: view.title,
+          id: violation.id,
+          help: violation.help,
+          nodes: violation.nodes.map((node) => node.target),
+        })),
+      ).toEqual([])
+    }
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

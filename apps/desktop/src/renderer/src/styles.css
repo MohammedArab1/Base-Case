@@ -97,6 +97,25 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  padding: 10px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 248px minmax(0, 1fr);
@@ -224,7 +243,7 @@ a:focus-visible {
 }
 
 .version {
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .workspace {

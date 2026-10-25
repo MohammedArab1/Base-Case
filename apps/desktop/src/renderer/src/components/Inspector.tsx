@@ -240,7 +240,12 @@ function NotesTab({
         onChange={(event) => setNote(event.target.value)}
         onBlur={() => void persist(note)}
       />
-      <p className="m-0 mt-2 text-[11px] text-bc-muted" data-testid="notes-status">
+      <p
+        className="m-0 mt-2 text-[11px] text-bc-muted"
+        data-testid="notes-status"
+        role="status"
+        aria-live="polite"
+      >
         {status === 'loading'
           ? 'Loading notes…'
           : status === 'saving'

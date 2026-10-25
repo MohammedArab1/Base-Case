@@ -320,6 +320,9 @@ function App(): JSX.Element {
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <aside className="sidebar">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
@@ -360,7 +363,7 @@ function App(): JSX.Element {
         <header className="topbar">
           <div>
             <p className="eyebrow">Workspace</p>
-            <h1>{active.title}</h1>
+            <h1 id="workspace-heading">{active.title}</h1>
           </div>
           <div className="topbar-actions">
             <Badge tone="success">Offline-first</Badge>
@@ -379,10 +382,13 @@ function App(): JSX.Element {
           </div>
         </header>
 
-        <main className="content" aria-labelledby="workspace-title">
-          <p className="lede" id="workspace-title">
-            {active.description}
-          </p>
+        <main
+          className="content"
+          id="main-content"
+          tabIndex={-1}
+          aria-labelledby="workspace-heading"
+        >
+          <p className="lede">{active.description}</p>
           <Suspense
             fallback={
               <div className="empty-state">
