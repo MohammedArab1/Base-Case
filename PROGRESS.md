@@ -2,7 +2,7 @@
 
 > Last updated: 2026-10-25
 > Current phase: Phase 8 — Alpha release (diagnostics, docs, checksums, and release automation in place; beta pending)
-> Overall status: On track — the core loop, judge, design workspace, AI tutor, 10 + 4 content set, diagnostics, and alpha documentation are in place. Remaining work is external (manual Windows run, clean-VM installs, private beta, reviews) plus the release tag
+> Overall status: On track — the core loop, judge, design workspace, AI tutor, 10 + 4 content set, diagnostics, and alpha documentation are in place, and CI is green on macOS and Windows. Remaining work is external (manual Windows run, clean-VM installs, private beta, reviews) plus the release tag
 > Next milestone: Private alpha beta and the `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
@@ -20,7 +20,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
 | Phase 7 — Content production | In progress | 2026-10-25 | 10 coding problems (two pointers, stack, binary search, sliding window, linked list, trees, graphs, heap, DP, hash map) and 4 design scenarios authored. All 20 reference solutions pass in Python and TypeScript. Second-person review and optional reference scenes remain |
-| Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
+| Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
 | Phase 9 — MVP expansion | Not started | — | 25 + 8 content, importer, polish |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
@@ -34,9 +34,8 @@ This is the living status document for the project. `PLAN.md` describes the inte
 6. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
 7. Add optional local AI history with a clear delete button (privacy default stays off).
 8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-9. Confirm the Windows Playwright run in CI after the next push.
-10. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-11. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+10. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
 
 ## Blockers
 
@@ -53,6 +52,26 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the four designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 8 — CI green: macOS Playwright fix and CI hardening
+
+- Status: All four CI jobs pass on `main` (Node + Go × macOS + Windows)
+- Done:
+  - Diagnosed a pre-existing macOS Playwright failure that started when the design E2E test landed: the Excalidraw rectangle was never drawn on the 739×518 CI canvas, so the scene autosave stayed empty and the test timed out.
+  - Fixed the test by selecting the rectangle tool through its label (`label:has([data-testid="toolbar-rectangle"])`) and dispatching `pointerdown`/`pointermove`/`pointerup` directly on the canvas. Playwright's `page.mouse` API did not reach Excalidraw's pointer handlers at the constrained window size.
+  - Made the design test run at 1024×700 so local runs exercise the same constrained layout as CI.
+  - Added Playwright retries (1) on CI, failure screenshots and traces, an HTML report, and artifact upload on failure.
+  - Added `scripts/annotate-playwright.mjs` and switched the CI Playwright step to the JSON reporter so failures appear as GitHub check annotations without needing log access.
+- Tests run:
+  - `pnpm smoke:playwright` — 5 passed locally, including the design test repeated 3× for stability.
+  - CI run for `151ee6b` — Node (macOS + Windows) and Go (macOS + Windows) all green; the Windows Playwright run is now confirmed.
+- Files/PRs:
+  - `apps/desktop/e2e/app.spec.ts`, `apps/desktop/playwright.config.ts`, `.github/workflows/ci.yml`, `scripts/annotate-playwright.mjs`.
+- Next:
+  - Manual Windows installer workflow (B2), clean-VM installs (B1), private beta (B10), then tag `v0.1.0-alpha`.
+- Notes/decisions:
+  - The Go (Windows) failure on an earlier run was a one-off flake and passes without changes.
+  - The CI annotation reporter is the durable way to surface Playwright failures for this repo, since job logs need admin access.
 
 ### 2026-10-25 — Phase 8 — Alpha release foundations
 
