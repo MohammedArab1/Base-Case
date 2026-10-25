@@ -215,7 +215,7 @@ function ReviewSection({
                 </Button>
               ) : (
                 <span className="muted review-design-note">
-                  Design review workspace arrives in Phase 5.
+                  Re-sketch in System Design, then grade here.
                 </span>
               )}
 

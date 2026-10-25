@@ -387,7 +387,7 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
       .getByRole('navigation', { name: 'Primary' })
       .getByRole('button', { name: 'Review' })
       .click()
-    await expect(page.getByTestId('review-item').first()).toContainText('Design scenario')
+    await expect(page.getByTestId('review-item').first()).toContainText('URL Shortener')
     await page.getByTestId('grade-good').first().click()
     await expect(page.getByTestId('review-message')).toBeVisible()
 

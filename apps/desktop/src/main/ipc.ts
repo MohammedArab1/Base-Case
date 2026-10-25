@@ -265,15 +265,22 @@ export function registerIpc({
       newLimit: preferences.newCardsPerDay,
     })
     const summaries = new Map(content.listProblems().map((problem) => [problem.id, problem]))
+    const designs = new Map(content.listDesigns().map((design) => [design.id, design]))
     const toItem = (card: ReviewCard): ReviewQueueItem => {
       const summary = card.itemKind === 'problem' ? summaries.get(card.itemId) : undefined
+      const design = card.itemKind === 'design' ? designs.get(card.itemId) : undefined
 
       return {
         ...card,
-        title: summary?.title ?? (card.itemKind === 'design' ? 'Design scenario' : card.itemId),
+        title:
+          summary?.title ??
+          design?.title ??
+          (card.itemKind === 'design' ? 'Design scenario' : card.itemId),
         subtitle: summary
           ? `${summary.difficulty} · ${summary.patterns.join(', ')}`
-          : 'System design',
+          : design
+            ? `${design.difficulty} · ${design.tags.join(', ')}`
+            : 'System design',
         previews: review.preview(card.id),
       }
     }
