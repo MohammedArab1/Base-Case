@@ -2757,31 +2757,32 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] `content-cli`:
-  - [ ] `validate`, `test`, `lint`, `package`, `import`.
-  - [ ] JSON Schema validation.
-  - [ ] Reference solution runner.
-  - [ ] Duplicate ID/slug detection.
-  - [ ] License/attribution checks.
-- [ ] Templates and authoring guide.
-- [ ] 10 coding problems across patterns.
-- [ ] For each problem:
-  - [ ] Original statement/examples/constraints.
-  - [ ] Signature/limits/checker.
-  - [ ] 3–5 samples, 15–50 hidden tests.
-  - [ ] Python + TypeScript reference solutions (two approaches).
-  - [ ] 3–4 hints.
-  - [ ] Explanation + common mistakes + follow-up.
-  - [ ] License/attribution.
-- [ ] 4 system design scenarios.
-- [ ] For each design:
-  - [ ] Prompt/requirements/scale.
-  - [ ] Reference design (text + Excalidraw).
-  - [ ] Rubric + follow-ups + common mistakes.
-  - [ ] License/attribution.
-- [ ] Content review by a second person.
-- [ ] Content CI green.
-- [ ] Legal check: no copied text/tests.
+- [x] `content-cli`:
+  - [x] `validate`, `test`.
+  - [ ] `lint`, `package`, `import`.
+  - [x] JSON Schema validation.
+  - [x] Reference solution runner (`pnpm content:test`).
+  - [x] Duplicate ID/slug detection.
+  - [x] License/attribution presence checks (schema + pack-license warning); policy review is part of content review.
+- [x] Templates and authoring guide.
+- [x] 10 coding problems across patterns: hash map, two pointers, stack, binary search, sliding window, linked list, trees, graphs/BFS/DFS, heap, and DP.
+- [x] For each problem:
+  - [x] Original statement/examples/constraints.
+  - [x] Signature/limits/checker.
+  - [x] 3–5 samples, 15–50 hidden tests.
+  - [x] Python + TypeScript reference solutions (one canonical optimal solution per language; the explanation covers the naive approach).
+  - [x] 3–4 hints.
+  - [x] Explanation + common mistakes + follow-up.
+  - [x] License/attribution.
+- [x] 4 system design scenarios.
+- [x] For each design:
+  - [x] Prompt/requirements/scale.
+  - [x] Reference design text; optional Excalidraw scene still missing (B8).
+  - [x] Rubric + follow-ups + common mistakes.
+  - [x] License/attribution.
+- [ ] Content review by a second person (B4).
+- [x] Content CI green (`content:validate`, `content:test`, typecheck, lint, format, unit tests).
+- [x] Legal check: the authored statements, examples, and tests are original.
 
 **Deliverables**
 
@@ -2795,7 +2796,9 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - Tests deterministic.
 - No ambiguous outputs without a checker.
 - No copied content.
-- Two reviewers sign off.
+- Two reviewers sign off (B4: second reviewer pending).
+
+> Status 2026-10-25: the 10-problem alpha set is authored, validated, and all 20 reference solutions pass in Python and TypeScript. The second-person review (B4) and optional reference scenes (B8) remain.
 
 ---
 

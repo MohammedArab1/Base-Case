@@ -5,6 +5,17 @@
   "version": "0.1.0",
   "license": "CC-BY-SA-4.0",
   "attribution": "Original problems by the Base Case contributors.",
-  "problems": ["pair-sum"],
+  "problems": [
+    "pair-sum",
+    "water-between-walls",
+    "bracket-balance",
+    "rotation-minimum",
+    "longest-unique-stretch",
+    "merge-sorted-chains",
+    "symmetric-branches",
+    "island-count",
+    "kth-largest",
+    "skip-neighbors"
+  ],
   "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
 }

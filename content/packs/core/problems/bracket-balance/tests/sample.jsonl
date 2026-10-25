@@ -1,0 +1,5 @@
+{"input":{"text":"()"},"expected":true}
+{"input":{"text":"([{}])"},"expected":true}
+{"input":{"text":"(]"},"expected":false}
+{"input":{"text":"([)]"},"expected":false}
+{"input":{"text":""},"expected":true}

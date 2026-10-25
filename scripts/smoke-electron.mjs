@@ -475,6 +475,32 @@ async function main() {
   assert(submitResult.status === 'accepted', `Submit failed: ${submitResult.status}`)
   assert(submitResult.total >= 15, 'Hidden test count is too low')
 
+  const bracketCode = `class Solution:
+    def isBalanced(self, text):
+        pairs = {")": "(", "]": "[", "}": "{"}
+        stack = []
+        for char in text:
+            if char in "([{":
+                stack.append(char)
+            elif char in pairs:
+                if not stack or stack.pop() != pairs[char]:
+                    return False
+        return not stack
+`
+
+  const newProblemResult = await evaluate(
+    `window.baseCase.judge.run(${JSON.stringify({
+      problemId: 'core/bracket-balance',
+      language: 'python',
+      code: bracketCode,
+      mode: 'sample',
+    })})`,
+  )
+  assert(
+    newProblemResult.status === 'accepted' && newProblemResult.total === 5,
+    'The new content set did not run in the app',
+  )
+
   const wrongCode = `class Solution {
   pairSum(nums: number[], target: number): number[] {
     return []

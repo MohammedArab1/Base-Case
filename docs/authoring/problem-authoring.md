@@ -139,6 +139,7 @@ Never put full code before level 4. Use the same terminology as the statement.
 
 ```sh
 pnpm content:validate
+pnpm content:test
 pnpm typecheck
 pnpm test
 ```

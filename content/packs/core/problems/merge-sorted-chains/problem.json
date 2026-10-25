@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "core/merge-sorted-chains",
+  "slug": "merge-sorted-chains",
+  "title": "Merge Sorted Chains",
+  "difficulty": "easy",
+  "patterns": ["linked-list", "two-pointers"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "mergeChains",
+    "params": [
+      { "name": "first", "type": "ListNode" },
+      { "name": "second", "type": "ListNode" }
+    ],
+    "returns": "ListNode",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n + m)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n + m)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Losing the head of the merged list when the first node comes from the second chain",
+    "Forgetting to append the remaining chain after one list is exhausted",
+    "Creating copies instead of reusing the existing nodes"
+  ],
+  "followUps": [
+    "How would you merge k sorted chains?",
+    "What if the chains are sorted in descending order?",
+    "Can you merge them without a dummy node?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

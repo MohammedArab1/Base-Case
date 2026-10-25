@@ -3,11 +3,11 @@
 > Working name. Base Case is a local-first practice app for coding interviews
 > and system design. It is not affiliated with LeetCode or any other judge.
 
-**Status:** Phase 1 technical spike. The macOS app is verified end to end:
-secure Electron shell, real Python/TypeScript judge, SQLite persistence,
-CodeMirror, Excalidraw, optional AI, and an unsigned DMG/ZIP. Windows packaging
-is configured in CI but has not been run, and clean-VM installs are pending.
-See `docs/spikes/phase-1-report.md`.
+**Status:** Phase 7 alpha content. The app has 10 original coding problems, 4
+system design scenarios, a real Python/TypeScript judge, FSRS review, an optional
+guarded AI tutor, and local persistence. Phase 8 (alpha release) is next. Windows
+packaging is configured in CI; clean-VM installs, a second-person content review,
+and a real-model AI eval run are pending. See `docs/project/open-blockers.md`.
 
 ## Why
 
@@ -61,7 +61,9 @@ corepack pnpm lint
 corepack pnpm typecheck
 corepack pnpm test
 corepack pnpm content:validate
+corepack pnpm content:test
 corepack pnpm smoke:e2e
+corepack pnpm smoke:playwright
 ```
 
 Packaging:
@@ -79,24 +81,36 @@ runtimes. See ADR-0010.
 ## What works now
 
 - Secure Electron + React + TypeScript shell with a narrow typed preload API.
-- Original `core/pair-sum` problem with 5 sample tests, 39 hidden tests, four
-  hints, an explanation, and Python/TypeScript reference solutions.
+- Ten original coding problems across the alpha patterns: hash map, two pointers,
+  stack, binary search, sliding window, linked list, trees, graphs/BFS/DFS, heap,
+  and DP. Each has 5 sample tests, 20 hidden tests, four hints, an explanation,
+  common mistakes, follow-ups, and Python/TypeScript reference solutions.
+- Four system design scenarios (URL Shortener, Rate Limiter, Chat System, News
+  Feed) with prompts, requirements, scale targets, seven-dimension rubrics,
+  reference designs, expected-topic checklists, and Markdown/PNG export.
 - Real Go judge execution with function, in-place, linked-list, and tree
   signatures; structured statuses; time/memory/output limits; cancellation;
   compile-once TypeScript; and exact/unordered/float/set-of-sets checkers.
 - Bundled pinned Python 3.12 and Node 24 runtimes, a macOS Seatbelt sandbox,
   and Windows Job Object limits.
-- CodeMirror editors with autosave to SQLite and language switching.
-- Structured failure panel and AI context preview.
+- CodeMirror editors with autosave to SQLite, language switching, failing-line
+  highlighting, and Copy/Reset controls.
+- Structured failure panel, FSRS review queue, mistake tags, Today and Progress
+  dashboards, and JSON data export/import.
+- Content pack import (ZIP or folder) with schema validation, preview, an
+  Unverified badge, and removal that preserves attempts.
 - Excalidraw canvas with local scene persistence and PNG export.
-- SQLite (WAL) migrations, attempts, drafts, design scenes, settings, and
-  verified startup backups.
-- Optional AI: mock provider and OpenAI-compatible streaming, with keys kept in
-  the main process and encrypted with `safeStorage`.
+- SQLite (WAL) migrations, attempts, drafts, design scenes, notes, settings,
+  AI feedback, and verified startup backups.
+- Optional AI: mock and OpenAI-compatible providers, token-budgeted context,
+  structured outputs, guardrails, per-feature toggles, design-note review, and a
+  local bug-zoo eval harness. AI is off by default.
 
-Not built yet: FSRS review, design scenarios/rubrics, content importer, full
-design system, structured IPC error envelopes, and the 10+4 alpha content set.
-Windows filesystem and network isolation remain best-effort.
+Still open: the second-person content review, optional reference Excalidraw
+scenes, local AI history, the Apple Foundation Models sidecar, clean-VM installs,
+the manual Windows installer run, trademark/domain, and GitHub milestones. See
+`docs/project/open-blockers.md`. Windows filesystem and network isolation remain
+best-effort.
 
 ## Repository layout
 
@@ -104,8 +118,9 @@ Windows filesystem and network isolation remain best-effort.
 apps/desktop/          Electron main, preload, React renderer
 services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
-packages/content-cli/  validate command for content packs
-content/packs/core/    Bundled core pack (one original problem)
+packages/content-cli/  validate and test commands for content packs
+content/packs/core/    Bundled core pack (10 coding + 4 design)
+docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates
 scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement
 docs/                  ADRs, architecture, authoring, spikes, project docs
@@ -122,6 +137,9 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `docs/architecture/judge-protocol.md`
 - `docs/architecture/threat-model.md`
 - `docs/authoring/content-policy.md`
+- `docs/authoring/problem-authoring.md`
+- `docs/evals/README.md`
+- `docs/project/open-blockers.md`
 - `docs/project/definition-of-done.md`
 
 ## Security and privacy

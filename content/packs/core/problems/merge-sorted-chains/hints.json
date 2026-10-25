@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which node comes next?",
+      "body": "At any point, the next node in the merged list is the smaller of the two current heads. What do you need to do after choosing it?"
+    },
+    {
+      "level": 2,
+      "title": "Build with a tail",
+      "body": "Keep a pointer to the last node in the merged list. Compare the two current heads, attach the smaller one to the tail, and advance that list. A dummy head avoids special cases for the first node."
+    },
+    {
+      "level": 3,
+      "title": "Dummy head, then append the rest",
+      "body": "Create a dummy node and let `tail` point to it. While both heads exist, attach the smaller head and advance that list. When one list ends, attach the other list directly to `tail.next`. Return `dummy.next`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndummy = new ListNode(0)\ntail = dummy\nwhile first is not empty and second is not empty:\n    if first.val <= second.val:\n        tail.next = first\n        first = first.next\n    else:\n        tail.next = second\n        second = second.next\n    tail = tail.next\ntail.next = first if first is not empty else second\nreturn dummy.next\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

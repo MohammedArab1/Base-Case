@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "How do you know an island is finished?",
+      "body": "When you find a land cell, every land cell reachable by moving up, down, left, or right belongs to the same island. How can you visit all of them exactly once?"
+    },
+    {
+      "level": 2,
+      "title": "Flood the island",
+      "body": "Scan the grid. When you find an unvisited `1`, increase the count and flood that island: visit every connected land cell and mark it so it is not counted again."
+    },
+    {
+      "level": 3,
+      "title": "Use an explicit stack",
+      "body": "A stack or queue avoids recursion limits. Push the starting cell. While the stack is not empty, pop a cell, skip it if it is out of bounds or already water, mark it as water, and push its four orthogonal neighbors."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncount = 0\nfor each row:\n    for each col:\n        if grid[row][col] == 1:\n            count += 1\n            stack = [(row, col)]\n            while stack is not empty:\n                r, c = pop(stack)\n                if r, c is outside the grid or grid[r][c] != 1:\n                    continue\n                grid[r][c] = 0\n                push (r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)\nreturn count\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

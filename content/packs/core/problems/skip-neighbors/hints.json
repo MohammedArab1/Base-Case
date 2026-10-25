@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What are the choices at each index?",
+      "body": "At each value, you can either take it or skip it. If you take it, what does that force you to do with the previous index?"
+    },
+    {
+      "level": 2,
+      "title": "Track two best sums",
+      "body": "Keep the best sum when the previous index was taken, and the best sum when it was skipped. Taking the current value can only extend the skipped state."
+    },
+    {
+      "level": 3,
+      "title": "Two-variable recurrence",
+      "body": "Let `take` be the best sum ending with the current value taken, and `skip` the best sum ending with it skipped. For each value: `nextTake = skip + value`, `nextSkip = max(skip, take)`. Return `max(take, skip)` at the end."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntake = 0\nskip = 0\nfor value in values:\n    next_take = skip + value\n    next_skip = max(skip, take)\n    take = next_take\n    skip = next_skip\nreturn max(take, skip)\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

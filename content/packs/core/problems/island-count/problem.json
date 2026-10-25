@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "core/island-count",
+  "slug": "island-count",
+  "title": "Island Count",
+  "difficulty": "medium",
+  "patterns": ["graphs", "depth-first-search", "breadth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "countIslands",
+    "params": [{ "name": "grid", "type": "int[][]" }],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting diagonal neighbors as connected",
+    "Visiting the same land cell repeatedly without marking it",
+    "Using recursion that overflows on a large all-land grid"
+  ],
+  "followUps": [
+    "How would you count islands of a specific size?",
+    "What changes if diagonal connections count?",
+    "How would you handle a grid that does not fit in memory?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

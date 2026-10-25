@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Can you keep a window?",
+      "body": "Suppose you have a window of characters that are all distinct. When you add the next character, what should happen if it is already inside the window?"
+    },
+    {
+      "level": 2,
+      "title": "Remember the last position",
+      "body": "Store the most recent index of each character. When a repeat appears, the left edge of the window must move to one position after that previous index, but only if the previous index is still inside the window."
+    },
+    {
+      "level": 3,
+      "title": "One pass with two pointers",
+      "body": "Use a left pointer and a right pointer. For each right position, check the last-seen index of the character. If it is at or after the left pointer, move the left pointer past it. Update the character's last-seen index and the best length."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlast_seen = empty map\nleft = 0\nbest = 0\nfor right from 0 to length(text) - 1:\n    char = text[right]\n    if char is in last_seen and last_seen[char] >= left:\n        left = last_seen[char] + 1\n    last_seen[char] = right\n    best = max(best, right - left + 1)\nreturn best\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

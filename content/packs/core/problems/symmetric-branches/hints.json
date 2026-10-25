@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Mirror, not identity",
+      "body": "The left subtree and the right subtree should not be identical; they should be mirror images. Which child of the left subtree pairs with which child of the right subtree?"
+    },
+    {
+      "level": 2,
+      "title": "Pair the outside and the inside",
+      "body": "For two nodes `left` and `right`, compare their values, then compare `left.left` with `right.right` and `left.right` with `right.left`. If either pair fails, the tree is not symmetric."
+    },
+    {
+      "level": 3,
+      "title": "Use a queue of pairs",
+      "body": "Start with the pair `(root.left, root.right)`. Repeatedly take a pair. If both are null, continue. If exactly one is null, return false. If their values differ, return false. Otherwise add the two mirrored child pairs to the queue."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif root is null:\n    return true\nqueue = [(root.left, root.right)]\nwhile queue is not empty:\n    left, right = remove front\n    if left is null and right is null:\n        continue\n    if left is null or right is null:\n        return false\n    if left.val != right.val:\n        return false\n    queue.append((left.left, right.right))\n    queue.append((left.right, right.left))\nreturn true\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

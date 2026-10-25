@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What makes an area large?",
+      "body": "The area depends on two things: how far apart the walls are, and how tall the shorter wall is. Which of those can you control as you move inward?"
+    },
+    {
+      "level": 2,
+      "title": "Start with the widest pair",
+      "body": "The two end walls give the maximum possible width. Any other pair is narrower, so it can only beat the ends by being taller. Use two pointers, one at each end."
+    },
+    {
+      "level": 3,
+      "title": "Move the shorter wall",
+      "body": "When you move a wall inward, the width always shrinks. If you move the taller wall, the shorter wall is unchanged, so the area cannot grow. Move the shorter wall instead and keep the best area seen so far."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nleft = 0\nright = length(heights) - 1\nbest = 0\nwhile left < right:\n    area = (right - left) * min(heights[left], heights[right])\n    best = max(best, area)\n    if heights[left] <= heights[right]:\n        left = left + 1\n    else:\n        right = right - 1\nreturn best\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

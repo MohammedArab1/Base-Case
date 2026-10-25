@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Do you need every value?",
+      "body": "You only care about the largest `k` values. What is the smallest amount of information you can keep while scanning the list once?"
+    },
+    {
+      "level": 2,
+      "title": "Keep the best k",
+      "body": "A min-heap of size `k` keeps the `k` largest values seen so far. The smallest value in that heap is the current `k`-th largest."
+    },
+    {
+      "level": 3,
+      "title": "Push, then trim",
+      "body": "For each value, push it into the min-heap. If the heap grows beyond `k`, pop the smallest value. After the scan, the heap contains exactly the `k` largest values, and its root is the answer."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nheap = empty min-heap\nfor value in nums:\n    push value onto heap\n    if size(heap) > k:\n        pop the smallest value from heap\nreturn the smallest value in heap\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

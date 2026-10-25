@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which bracket must close first?",
+      "body": "When you see a closing bracket, which opening bracket is it allowed to match? Think about the most recent bracket that has not been closed yet."
+    },
+    {
+      "level": 2,
+      "title": "Last in, first out",
+      "body": "Keep a stack of opening brackets. A closing bracket must match the top of the stack. If the stack is empty or the top is the wrong type, the string is unbalanced."
+    },
+    {
+      "level": 3,
+      "title": "Push openers, pop closers",
+      "body": "Walk through the string once. Push every opening bracket. For every closing bracket, pop the stack and compare types. At the end, the stack must be empty; otherwise an opener was never closed."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\npairs = {')': '(', ']': '[', '}': '{'}\nstack = empty list\nfor char in text:\n    if char is an opening bracket:\n        push char\n    else if char is a closing bracket:\n        if stack is empty or pop(stack) != pairs[char]:\n            return false\nreturn stack is empty\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}

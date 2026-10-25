@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 6 — AI tutor (core complete)
-> Overall status: On track — coding and design practice both run end to end with local persistence, FSRS review, Markdown/PNG export, and an optional guarded AI tutor
-> Next milestone: Phase 7 content production
+> Current phase: Phase 7 — Content production (10 coding + 4 design authored; second-person review pending)
+> Overall status: On track — coding and design practice run end to end, the optional guarded AI tutor is in place, and the alpha content set now has 10 coding problems across the target patterns
+> Next milestone: Phase 8 alpha release (after the second-person content review)
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -19,29 +19,62 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
-| Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
+| Phase 7 — Content production | In progress | 2026-10-25 | 10 coding problems (two pointers, stack, binary search, sliding window, linked list, trees, graphs, heap, DP, hash map) and 4 design scenarios authored. All 20 reference solutions pass in Python and TypeScript. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | Not started | — | Installers, docs, beta |
 | Phase 9 — MVP expansion | Not started | — | 25 + 8 content, importer, polish |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
-1. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/`.
-2. Add optional local AI history with a clear delete button (privacy default stays off).
-3. Add optional reference Excalidraw scenes and an automated native export-dialog check.
-4. Confirm the Windows Playwright run in CI.
-5. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
-6. Re-run the uninstall row of the full Windows checklist on a fresh install.
-7. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
-8. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
+1. Get a second-person review of the 10 coding problems and 4 designs (Phase 7 exit criteria) and record the sign-off.
+2. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/`.
+3. Add optional local AI history with a clear delete button (privacy default stays off).
+4. Add optional reference Excalidraw scenes and an automated native export-dialog check.
+5. Confirm the Windows Playwright run in CI.
+6. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+7. Re-run the uninstall row of the full Windows checklist on a fresh install.
+8. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
+9. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 
 ## Blockers
 
-- **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
-- **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks engineering.
-- **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
+See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current items:
+
+- **B1 — Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
+- **B2 — Manual Windows installer workflow:** trigger the `Build installers` GitHub Actions workflow and record the bundled-runtime `.exe` size and first-launch result.
+- **B3 — Real-model AI eval run:** the bug zoo is recorded against the mock provider; a real endpoint plus human ratings is needed for the Phase 6 exit criteria.
+- **B4 — Second-person content review:** the 10 coding + 4 design alpha set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
+- **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
+- **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
+- **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
+- **Optional:** reference Excalidraw scenes for the four designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 7 — Alpha coding content
+
+- Status: Phase 7 content complete (10 coding + 4 design); second-person review pending
+- Done:
+  - Added nine coding problems, bringing the core pack to ten: `water-between-walls` (two pointers), `bracket-balance` (stack), `rotation-minimum` (binary search), `longest-unique-stretch` (sliding window), `merge-sorted-chains` (linked list), `symmetric-branches` (trees), `island-count` (graphs/BFS/DFS), `kth-largest` (heap), and `skip-neighbors` (DP).
+  - Each problem has an original statement, four hints, an explanation with correctness and complexity, Python and TypeScript canonical solutions, five sample tests, twenty hidden tests, common mistakes, follow-ups, and license/attribution metadata.
+  - Added the planned `content test` command and `pnpm content:test`; it starts the judge sidecar, runs every reference solution against the sample and hidden tests, and reports per-language results.
+  - Updated the pack manifest and extended the Electron smoke test to run a new problem (`core/bracket-balance`) in the app.
+  - Consolidated all external blockers into `docs/project/open-blockers.md` and linked it from the progress log.
+- Tests run:
+  - `pnpm typecheck`, `pnpm lint`, `pnpm format:check` — passed.
+  - `pnpm test` — 107 tests across 25 files.
+  - `pnpm content:validate` — valid; 10 problems, 4 designs; warnings only for optional reference scenes.
+  - `pnpm content:test` — 20/20 reference solutions accepted (Python + TypeScript).
+  - `pnpm build`, `pnpm smoke:e2e` — passed; content list reports 10 problems and the new bracket-balance sample run is accepted.
+  - `pnpm --filter @base-case/desktop test:e2e` — 4 passed.
+- Files/PRs:
+  - Key paths: `content/packs/core/problems/`, `content/packs/core/pack.json`, `packages/content-cli/src/cli.ts`, `scripts/smoke-electron.mjs`, `docs/project/open-blockers.md`.
+- Next:
+  - Second-person content review (B4); optional reference Excalidraw scenes (B8); then Phase 8 alpha release.
+- Notes/decisions:
+  - Each language ships one canonical optimal solution; the explanation describes the naive approach, and the schema allows only one solution per language.
+  - Tests are fixed JSONL with deterministic inputs and are validated by the real judge, not by the authoring CLI alone.
+  - All statements, examples, and tests are original; the content policy checklist still needs a second reviewer and a legal review before commercial launch.
 
 ### 2026-10-25 — Phase 6 — AI tutor core
 

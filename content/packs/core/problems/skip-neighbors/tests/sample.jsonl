@@ -1,0 +1,5 @@
+{"input":{"values":[1,2,3,1]},"expected":4}
+{"input":{"values":[2,7,9,3,1]},"expected":12}
+{"input":{"values":[5]},"expected":5}
+{"input":{"values":[2,1,1,2]},"expected":4}
+{"input":{"values":[0,0,0]},"expected":0}

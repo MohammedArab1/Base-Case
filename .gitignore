@@ -38,6 +38,10 @@ Thumbs.db
 windows-verification-report.md
 windows-verification-delta-*.md
 
+# Python bytecode (the judge imports reference solutions in place)
+__pycache__/
+*.pyc
+
 # Go
 services/judge/judge
 services/judge/judge.exe

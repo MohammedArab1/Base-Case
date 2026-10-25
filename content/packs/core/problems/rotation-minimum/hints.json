@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Where is the drop?",
+      "body": "In a rotated sorted list, the minimum is the only element that is smaller than the value before it. How can you find the drop without scanning every element?"
+    },
+    {
+      "level": 2,
+      "title": "One half is still sorted",
+      "body": "Compare the middle element with the rightmost element. If the middle is larger, the minimum must be to the right of the middle. Otherwise it is at the middle or to its left."
+    },
+    {
+      "level": 3,
+      "title": "Binary search on the unsorted half",
+      "body": "Keep `left` and `right`. While `left < right`, compute `mid`. If `nums[mid] > nums[right]`, the rotation point is to the right, so set `left = mid + 1`. Otherwise set `right = mid`. When the pointers meet, `nums[left]` is the minimum."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nleft = 0\nright = length(nums) - 1\nwhile left < right:\n    mid = (left + right) // 2\n    if nums[mid] > nums[right]:\n        left = mid + 1\n    else:\n        right = mid\nreturn nums[left]\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and check it against the examples."
+    }
+  ]
+}
