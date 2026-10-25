@@ -2857,7 +2857,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 > Reconciled with the codebase on 2026-10-25. Items checked below were already
 > delivered in Phases 2–8; they are ticked here instead of being rebuilt.
 
-- [ ] Content to 25 coding + 8 design. (10 + 4 done; 15 coding + 4 design remain)
+- [x] Content to 25 coding + 8 design. (All 50 reference solutions pass; 15 coding and 4 designs added in Phase 9)
 - [x] Importer (delivered in Phase 2; see `main/pack-manager.ts`):
   - [x] Pack validation/preview/install.
   - [x] Disclaimer.

@@ -19,9 +19,9 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
-| Phase 7 — Content production | In progress | 2026-10-25 | 10 coding problems (two pointers, stack, binary search, sliding window, linked list, trees, graphs, heap, DP, hash map) and 4 design scenarios authored. All 20 reference solutions pass in Python and TypeScript. Second-person review and optional reference scenes remain |
+| Phase 7 — Content production | In progress | 2026-10-25 | Alpha set of 10 coding problems and 4 design scenarios completed in Phase 7; Phase 9 expanded the pack to 25 coding + 8 design. All 50 reference solutions pass. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-25 | Reconciled with the codebase: importer (validation/preview/install, disclaimer, Unverified badge, uninstall keeping attempts), command palette, search/filters, reduced motion, window/layout persistence, runtime verification, and design-notes review are already done. Remaining: 15 coding + 4 design, progress charts, accessibility, states audit, arm64/x64 builds, app-size work, mistake suggestions/explain-back, performance, security review, media docs, RC |
+| Phase 9 — MVP expansion | In progress | 2026-10-25 | Content target reached: 25 coding problems (50/50 reference solutions pass) and 8 design scenarios. Also reconciled as already done: importer, command palette, search/filters, reduced motion, window/layout persistence, runtime verification, and design-notes review. Remaining: progress chart, accessibility, states audit, arm64/x64 builds, app-size work, mistake suggestions/explain-back, performance, security review, media docs, RC |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
@@ -46,14 +46,37 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
 - **B2 — Manual Windows installer workflow:** trigger the `Build installers` GitHub Actions workflow and record the bundled-runtime `.exe` size and first-launch result.
 - **B3 — Real-model AI eval run:** the bug zoo is recorded against the mock provider; a real endpoint plus human ratings is needed for the Phase 6 exit criteria.
-- **B4 — Second-person content review:** the 10 coding + 4 design alpha set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
+- **B4 — Second-person content review:** the 25 coding + 8 design MVP set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
 - **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
-- **Optional:** reference Excalidraw scenes for the four designs (B8) and the Apple Foundation Models sidecar (B9).
+- **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 9 — MVP content set: 25 coding + 8 design
+
+- Status: Content target complete; polish and platform work remain
+- Done:
+  - Added 15 original coding problems, bringing the core pack to 25: `target-totals`, `shift-merge`, `lone-beacon`, `compact-signals`, `warmer-days`, `reverse-chain`, `search-tree-check`, `build-order`, `network-clusters`, `keypad-words`, `cargo-deadline`, `spiral-walk`, `fuel-circuit`, `join-sticks`, and `edit-ledger`.
+  - Covered prefix sums, interval merging, bit manipulation, in-place mutation, monotonic stacks, linked-list reversal, BST bounds, topological sort, union-find/DFS, backtracking, binary search on the answer, matrix traversal, greedy circuits, heaps, and 2D DP.
+  - Added 4 original design scenarios, bringing the pack to 8: Seat Reservation, Search Autocomplete, File Sync, and Payment Ledger. Each has a prompt, functional/non-functional requirements, scale, a seven-dimension rubric, a reference design, a checklist, follow-ups, and common mistakes.
+  - Registered all 25 problems and 8 designs in `content/packs/core/pack.json`.
+- Tests run:
+  - `pnpm content:validate` — valid; 25 problems and 8 designs; only the expected optional reference-scene warnings.
+  - `pnpm content:test` — 50/50 reference solutions accepted (25 problems × Python + TypeScript); all sample and hidden tests run through the real judge.
+  - `pnpm format:check` — passed.
+- Files/PRs:
+  - `content/packs/core/pack.json`, `content/packs/core/problems/*`, `content/packs/core/designs/{seat-reservation,search-autocomplete,file-sync,payment-ledger}/`.
+  - `PLAN.md`, `PROGRESS.md`, `docs/project/open-blockers.md` updated for the expanded review scope.
+- Next:
+  - Extend the smoke test to run new problems in-app, then add Playwright coverage for a new pattern.
+  - Continue Phase 9 polish, platform, performance, security, and docs work.
+- Notes/decisions:
+  - Coding problems deliberately add in-place mutation (`compact-signals`), `ListNode`, `TreeNode`, `string[]`, `int[][]`, and `long` signatures so the judge paths are exercised by real content.
+  - Design rubrics use the documented seven dimensions consistently and stay scenario-specific; reference scenes remain optional and are still tracked as B8.
+  - The second-person review blocker now covers the full 25 + 8 set (B4).
 
 ### 2026-10-25 — Phase 9 — Plan reconciliation before expansion
 
