@@ -24,7 +24,7 @@
     "runtimes:verify": "node scripts/fetch-runtimes.mjs --verify",
     "content:validate": "tsx packages/content-cli/src/cli.ts validate content/packs/core",
     "content:test": "tsx packages/content-cli/src/cli.ts test content/packs/core",
-    "package:mac": "node scripts/fetch-runtimes.mjs && node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:mac",
+    "package:mac": "node scripts/package-mac.mjs",
     "package:win": "node scripts/fetch-runtimes.mjs && node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:win",
     "release:checksums": "node scripts/checksums.mjs apps/desktop/dist",
     "smoke:e2e": "node scripts/smoke-electron.mjs",
