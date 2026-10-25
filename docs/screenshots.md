@@ -17,10 +17,14 @@ below them on narrower ones.
 ## AI assistance
 
 The AI panel previews the exact context before sending anything. The
-explain-back check and user-confirmed mistake tags are shown after a failed
-run.
+explain-back check evaluates the learner's own explanation, and mistake tags
+stay unchecked until the learner confirms them.
 
-![AI hint and mistake tag suggestions](assets/screenshots/ai-hint.png)
+![Explain-back verdict in the AI panel](assets/screenshots/ai-explain-back.png)
+
+![Suggested mistake tags with confirmation checkboxes](assets/screenshots/ai-mistake-tags.png)
+
+![Applied mistake tags in the attempt history](assets/screenshots/ai-hint.png)
 
 ## Expanded content
 

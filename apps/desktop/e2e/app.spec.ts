@@ -542,6 +542,7 @@ test('previews AI assistance, checks an explanation, and applies suggested tags'
     await page.getByTestId('ai-send').click()
     await expect(page.getByTestId('ai-result-explain-back')).toBeVisible({ timeout: 15_000 })
     await expect(page.getByTestId('ai-result-explain-back')).toContainText('partial')
+    await capture(page, 'ai-explain-back')
 
     // A failed run enables tag suggestions. Suggestions stay user-confirmed.
     const editor = page.locator('.cm-content')
@@ -567,6 +568,7 @@ test('previews AI assistance, checks an explanation, and applies suggested tags'
     await page.getByTestId('ai-send').click()
     await expect(page.getByTestId('ai-mistake-suggestions')).toBeVisible({ timeout: 15_000 })
     await expect(page.getByTestId('ai-mistake-tag-off-by-one')).toBeChecked()
+    await capture(page, 'ai-mistake-tags')
     await page.getByTestId('ai-apply-mistake-tags').click()
     await expect(page.getByTestId('ai-mistake-suggestions')).toContainText('Applied to the latest')
 
