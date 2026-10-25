@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "core/shift-merge",
+  "slug": "shift-merge",
+  "title": "Shift Merge",
+  "difficulty": "easy",
+  "patterns": ["intervals", "sorting", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "mergeShifts",
+    "params": [{ "name": "shifts", "type": "int[][]" }],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n log n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Comparing each shift only with the shift immediately before it instead of the current merged block",
+    "Treating touching shifts such as [1, 4] and [4, 5] as separate",
+    "Forgetting to sort the input before merging",
+    "Emitting the last merged block twice"
+  ],
+  "followUps": [
+    "How would you count the maximum number of shifts that overlap at once?",
+    "What changes if shifts are half-open intervals, [start, end)?",
+    "How would you merge shifts as they arrive in a stream?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

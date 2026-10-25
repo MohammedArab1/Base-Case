@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Where should the next unique value go?",
+      "body": "The array is already sorted, so duplicates are adjacent. You need to remember where the next distinct value belongs while scanning."
+    },
+    {
+      "level": 2,
+      "title": "Two positions",
+      "body": "Use a read position to inspect each value and a write position to place the next distinct value. Everything before the write position is already compacted."
+    },
+    {
+      "level": 3,
+      "title": "Compare with the last written value",
+      "body": "When `signals[read]` differs from `signals[write - 1]`, copy it to `signals[write]` and advance the write position. At the end, shorten the array to the write position and return it."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif signals is empty: return 0\nwrite = 1\nfor read from 1 to length(signals) - 1:\n    if signals[read] != signals[write - 1]:\n        signals[write] = signals[read]\n        write = write + 1\ntruncate signals to write elements\nreturn write\n```\n\nThis is pseudocode, not a complete solution. The truncation is part of the required mutation."
+    }
+  ]
+}

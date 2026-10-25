@@ -1,0 +1,5 @@
+{"input":{"signals":[1,1,2]},"expected":{"returnValue":2,"mutated":{"signals":[1,2]}}}
+{"input":{"signals":[0,0,0,0]},"expected":{"returnValue":1,"mutated":{"signals":[0]}}}
+{"input":{"signals":[-2,-1,-1,0,2,2]},"expected":{"returnValue":4,"mutated":{"signals":[-2,-1,0,2]}}}
+{"input":{"signals":[7]},"expected":{"returnValue":1,"mutated":{"signals":[7]}}}
+{"input":{"signals":[1,2,3]},"expected":{"returnValue":3,"mutated":{"signals":[1,2,3]}}}

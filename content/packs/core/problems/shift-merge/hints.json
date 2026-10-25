@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What order makes merging simple?",
+      "body": "If the shifts arrive in no particular order, two overlapping shifts can be separated by an unrelated one. What should you do to the list first?"
+    },
+    {
+      "level": 2,
+      "title": "Keep the current block",
+      "body": "After sorting by start, scan once while remembering the block you are currently building. A new shift either extends that block or starts a new one."
+    },
+    {
+      "level": 3,
+      "title": "Compare with the block end",
+      "body": "If the next shift starts at or before the current block's end, they touch or overlap. Extend the end to the larger of the two ends. Otherwise, finish the block and start a new one with the next shift."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort shifts by start\nresult = []\nfor each shift in shifts:\n    if result is empty or shift.start > result.last.end:\n        append a copy of shift to result\n    else:\n        result.last.end = max(result.last.end, shift.end)\nreturn result\n```\n\nThis is pseudocode, not a complete solution. Be careful to copy intervals rather than mutating the caller's input."
+    }
+  ]
+}

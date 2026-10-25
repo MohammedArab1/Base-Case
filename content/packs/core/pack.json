@@ -16,7 +16,10 @@
     "island-count",
     "kth-largest",
     "skip-neighbors",
-    "target-totals"
+    "target-totals",
+    "shift-merge",
+    "lone-beacon",
+    "compact-signals"
   ],
   "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
 }

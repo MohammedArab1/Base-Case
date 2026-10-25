@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pairs should disappear",
+      "body": "You need an operation that cancels two equal values but preserves the one value that has no partner. Which arithmetic or logical operation has that property?"
+    },
+    {
+      "level": 2,
+      "title": "Bitwise XOR",
+      "body": "For integers, `a XOR a = 0` and `a XOR 0 = a`. XOR is also associative and commutative, so the order of the signals does not matter."
+    },
+    {
+      "level": 3,
+      "title": "Fold the list",
+      "body": "Start with zero and XOR every signal into one running value. Every pair contributes zero, so the final result is exactly the value that appears once."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = 0\nfor value in signals:\n    result = result XOR value\nreturn result\n```\n\nThis is pseudocode, not a complete solution. In TypeScript, use `^=` for the XOR update."
+    }
+  ]
+}
