@@ -32,5 +32,14 @@
     "join-sticks",
     "edit-ledger"
   ],
-  "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
+  "designs": [
+    "url-shortener",
+    "rate-limiter",
+    "chat-system",
+    "news-feed",
+    "seat-reservation",
+    "search-autocomplete",
+    "file-sync",
+    "payment-ledger"
+  ]
 }

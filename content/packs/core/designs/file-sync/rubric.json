@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements clarification",
+      "description": "Clarifies sync semantics, offline behavior, versions, conflict policy, and durability expectations.",
+      "levels": {
+        "1": "Restates the prompt without defining what counts as a synced file.",
+        "2": "Lists upload and download but omits offline edits, versions, or conflicts.",
+        "3": "Separates functional and non-functional requirements and states assumptions about sharing, devices, and file sizes.",
+        "4": "Also prioritizes requirements, defines the durability boundary, and explains how conflict and retention policies affect user trust."
+      }
+    },
+    {
+      "id": "estimation",
+      "name": "Back-of-envelope estimation",
+      "description": "Derives metadata QPS, block traffic, storage growth, and peak load from the stated scale.",
+      "levels": {
+        "1": "Repeats the numbers without deriving anything.",
+        "2": "Computes average commit or read rates but ignores block traffic, storage, or peaks.",
+        "3": "Estimates average and peak metadata QPS, block throughput, and storage growth.",
+        "4": "Also estimates dedupe savings, cache working sets, large-file upload time, and the capacity needed for version retention."
+      }
+    },
+    {
+      "id": "api-data-model",
+      "name": "API and data model",
+      "description": "Defines metadata and block APIs plus file, version, block, and cursor models.",
+      "levels": {
+        "1": "No clear API or data model.",
+        "2": "Has upload/download endpoints but omits versions, blocks, or change cursors.",
+        "3": "Defines metadata and block operations, immutable versions, content hashes, and a per-namespace change log.",
+        "4": "Also explains parent-version checks, idempotent commit, snapshot fallback, and how block references stay consistent."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "High-level architecture",
+      "description": "Separates metadata, block storage, notification, and garbage collection.",
+      "levels": {
+        "1": "A single service with no separation of metadata and content.",
+        "2": "Names components but does not show an upload or delta-sync flow.",
+        "3": "Shows metadata storage, object storage, notification fan-out, and garbage collection with clear responsibilities.",
+        "4": "Also explains why the boundary exists, how components scale, and how notifications stay advisory while the cursor remains authoritative."
+      }
+    },
+    {
+      "id": "deep-dives",
+      "name": "Deep dives",
+      "description": "Explains commit durability, delta sync, and conflict resolution with retries and edge cases.",
+      "levels": {
+        "1": "No deep dive beyond the API.",
+        "2": "Covers upload or sync but leaves conflicts and crash recovery vague.",
+        "3": "Covers upload commit, cursor-based catch-up, and a conflict policy with enough detail to implement.",
+        "4": "Also handles lost responses, idempotent retries, cursor reset, orphan cleanup, and why the chosen conflict policy never loses data."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares chunking, dedupe placement, consistency, push vs poll, and retention.",
+      "levels": {
+        "1": "No alternatives are considered.",
+        "2": "Names one trade-off without connecting it to the design.",
+        "3": "Compares meaningful options such as fixed vs content-defined chunks, client vs server dedupe, or push vs poll.",
+        "4": "Also explains when each option would be wrong and how measurements would drive a revisit."
+      }
+    },
+    {
+      "id": "communication",
+      "name": "Communication and failure handling",
+      "description": "Presents a clear design with failure modes, garbage collection, and monitoring.",
+      "levels": {
+        "1": "Disorganized and assumes no failures.",
+        "2": "Understandable but omits several failure or cleanup paths.",
+        "3": "Explains the flow clearly and covers partial uploads, notification outages, cursor resets, and monitoring.",
+        "4": "Also covers storage corruption, ref-count reconciliation, snapshot recovery, and a concise summary of the key invariants."
+      }
+    }
+  ]
+}

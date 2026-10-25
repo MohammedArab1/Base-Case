@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "core/seat-reservation",
+  "slug": "seat-reservation",
+  "title": "Seat Reservation",
+  "difficulty": "hard",
+  "tags": ["transactions", "concurrency", "inventory", "payments", "api-design"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Browse events and a live seat map with availability.",
+      "Hold one or more seats for a short, visible expiry window.",
+      "Confirm a reservation with payment and issue a booking.",
+      "Support cancellation and refunds according to the event policy.",
+      "Release expired holds automatically and publish every state change."
+    ],
+    "nonFunctional": [
+      "Never sell the same seat twice, even during a traffic spike.",
+      "Seat-map reads should stay fast under heavy read traffic.",
+      "A hold must expire reliably within a few seconds of its deadline.",
+      "A payment-provider outage must not corrupt seat state or lose a paid booking.",
+      "Every hold, sale, release, and refund must be auditable."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 5000000,
+    "readsPerDay": 200000000,
+    "retentionYears": 3
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "Seat inventory model and uniqueness constraint",
+    "Hold lifecycle, expiry, and automatic release",
+    "Atomic claim under concurrent buyers",
+    "Idempotent confirmation and payment integration",
+    "Read path, caching, and hot-event handling",
+    "Failure modes for payment, cache, worker, and database outages",
+    "Trade-offs: consistency, latency, and operational complexity"
+  ],
+  "followUps": [
+    "How would you support general-admission events without individual seats?",
+    "How would you handle a queue or waiting room for a very popular on-sale?",
+    "What changes if seats can be transferred between users after purchase?",
+    "How would you migrate seat inventory between database shards during an on-sale?"
+  ],
+  "commonMistakes": [
+    "Checking availability and writing the sale in two separate transactions.",
+    "Relying on a cache as the source of truth for seat ownership.",
+    "Charging the card before the seat is durably reserved.",
+    "Expiring holds with a periodic scan that has no lease or idempotency.",
+    "Ignoring duplicate confirm requests caused by client retries."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

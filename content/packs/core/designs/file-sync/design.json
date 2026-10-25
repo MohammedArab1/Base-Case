@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "core/file-sync",
+  "slug": "file-sync",
+  "title": "File Sync",
+  "difficulty": "hard",
+  "tags": ["storage", "sync", "deduplication", "conflict-resolution", "distributed-systems"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Upload and download files and folders across devices.",
+      "Propagate changes to other online devices within seconds.",
+      "Support offline edits and reconnect without data loss.",
+      "Keep file versions and allow restoring an earlier version.",
+      "Resolve concurrent edits with a predictable conflict policy."
+    ],
+    "nonFunctional": [
+      "Acknowledged uploads must be durable and never silently lost.",
+      "Metadata operations should stay fast even for large folders.",
+      "Deduplicate identical content to control storage growth.",
+      "Reconnect and catch up efficiently after a long offline period.",
+      "The system must tolerate partial uploads, retries, and device crashes."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 20000000,
+    "readsPerDay": 500000000,
+    "retentionYears": 5
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "Metadata API and change-feed contract",
+    "Chunking, hashing, and content-addressed storage",
+    "Upload commit protocol and durability boundary",
+    "Delta sync, cursors, and offline catch-up",
+    "Conflict detection and resolution policy",
+    "Sharding, caching, and hot-file handling",
+    "Failure modes and garbage collection"
+  ],
+  "followUps": [
+    "How would you support shared folders with per-user permissions?",
+    "How would you sync a 100 GB file without blocking the UI?",
+    "How would you detect and repair a corrupted block?",
+    "What changes if devices can be offline for months?"
+  ],
+  "commonMistakes": [
+    "Treating a successful block upload as a committed file.",
+    "Letting two devices overwrite the same version without detecting the conflict.",
+    "Pushing every change to every device instead of using a cursor.",
+    "Deduplicating only by file name or path.",
+    "Forgetting garbage collection for orphaned blocks and old versions."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

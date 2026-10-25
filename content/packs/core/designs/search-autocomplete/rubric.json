@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements clarification",
+      "description": "Clarifies suggestion behavior, ranking inputs, freshness, locales, and privacy constraints.",
+      "levels": {
+        "1": "Restates the prompt without separating retrieval, ranking, or freshness.",
+        "2": "Lists basic prefix suggestions but omits ranking signals, locales, or privacy.",
+        "3": "Separates functional and non-functional requirements and states assumptions about personalization and freshness.",
+        "4": "Also prioritizes features, defines acceptable staleness, and connects privacy or abuse concerns to concrete product constraints."
+      }
+    },
+    {
+      "id": "estimation",
+      "name": "Back-of-envelope estimation",
+      "description": "Derives QPS, peak load, index size, and update volume from the stated traffic.",
+      "levels": {
+        "1": "Repeats the numbers without deriving any capacity requirement.",
+        "2": "Computes average QPS but ignores peak traffic, index memory, or update rates.",
+        "3": "Estimates average and peak QPS, top-K index size, and the rate of index updates.",
+        "4": "Also estimates cache hit share, hot-prefix concentration, rebuild duration, and the headroom needed for live events."
+      }
+    },
+    {
+      "id": "api-data-model",
+      "name": "API and data model",
+      "description": "Defines the suggestion contract and a prefix index or equivalent retrieval structure.",
+      "levels": {
+        "1": "No clear API or index structure.",
+        "2": "Shows a prefix endpoint but omits ranking fields, locale, or top-K storage.",
+        "3": "Defines request/response shapes and a trie or index that stores ranked candidates per prefix.",
+        "4": "Also covers caching headers, versioning, overlay data, blocklists, and how display text differs from normalized query text."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "High-level architecture",
+      "description": "Separates ingestion, aggregation, index building, serving, and caching.",
+      "levels": {
+        "1": "A single box with no update pipeline.",
+        "2": "Names services but does not explain how observations become suggestions.",
+        "3": "Shows ingestion, aggregation, index build/publish, serving, and caching with clear responsibilities.",
+        "4": "Also explains immutable index versions, warm-up, rollback, and how trending or personalization layers attach to the base index."
+      }
+    },
+    {
+      "id": "deep-dives",
+      "name": "Deep dives",
+      "description": "Explains ranking, index refresh, and hot-prefix serving in implementable detail.",
+      "levels": {
+        "1": "No deep dive beyond the API.",
+        "2": "Covers ranking or refresh but leaves hot-prefix behavior and failure handling vague.",
+        "3": "Covers ranking signals, index rebuild and publish, and hot-prefix caching or replication.",
+        "4": "Also explains score decay, abuse resistance, versioned rollout, and the exact behavior when a shard or index is unavailable."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares freshness, latency, cost, cacheability, and privacy choices.",
+      "levels": {
+        "1": "No alternatives are considered.",
+        "2": "Names one trade-off without linking it to the design.",
+        "3": "Compares meaningful options such as precomputed top-K vs query-time ranking, or batch vs streaming updates.",
+        "4": "Also explains when the chosen option would be wrong and how the team would detect and revisit it."
+      }
+    },
+    {
+      "id": "communication",
+      "name": "Communication and failure handling",
+      "description": "Presents a clear design with monitoring, privacy, and degraded modes.",
+      "levels": {
+        "1": "Disorganized and assumes no failures.",
+        "2": "Understandable but omits several failure modes or privacy safeguards.",
+        "3": "Explains the flow clearly and covers stale indexes, shard loss, hot prefixes, and monitoring.",
+        "4": "Also covers fallback suggestions, abuse controls, privacy-preserving telemetry, and a concise summary of the key decisions."
+      }
+    }
+  ]
+}

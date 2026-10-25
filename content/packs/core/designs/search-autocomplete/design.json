@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "core/search-autocomplete",
+  "slug": "search-autocomplete",
+  "title": "Search Autocomplete",
+  "difficulty": "medium",
+  "tags": ["search", "ranking", "caching", "distributed-systems", "api-design"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Return up to ten suggestions for a typed prefix.",
+      "Rank suggestions by popularity, recency, locale, and optional personalization.",
+      "Refresh trending suggestions as new queries arrive.",
+      "Support blocklists and editorial overrides.",
+      "Serve suggestions for multiple locales and device types."
+    ],
+    "nonFunctional": [
+      "Suggestion latency should stay under 100 ms at p99.",
+      "The service must remain available during index rebuilds.",
+      "Slightly stale suggestions are acceptable, but results must never be empty because of a deployment.",
+      "Query text is sensitive and should not be retained longer than needed.",
+      "Traffic can spike sharply during live events."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 5000000,
+    "readsPerDay": 1200000000,
+    "retentionYears": 1
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "Suggestion API and response shape",
+    "Prefix index and top-K storage",
+    "Ranking signals and update pipeline",
+    "Sharding, replication, and cache strategy",
+    "Locale, personalization, and editorial overrides",
+    "Failure handling for stale or missing shards",
+    "Trade-offs: freshness, latency, cost, and privacy"
+  ],
+  "followUps": [
+    "How would you support typo tolerance without making every query expensive?",
+    "How would you personalize suggestions without exposing one user's queries to another?",
+    "How would you roll out a new ranking model safely?",
+    "What changes if the service must work across multiple regions with local privacy rules?"
+  ],
+  "commonMistakes": [
+    "Scanning the full suggestion corpus on every keystroke.",
+    "Treating trending updates as strongly consistent with the serving index.",
+    "Caching personalized results in a shared cache keyed only by prefix.",
+    "Ignoring hot-prefix skew during a live event.",
+    "Storing raw query text indefinitely for analytics."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

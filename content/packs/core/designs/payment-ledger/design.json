@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "core/payment-ledger",
+  "slug": "payment-ledger",
+  "title": "Payment Ledger",
+  "difficulty": "hard",
+  "tags": ["transactions", "consistency", "double-entry", "idempotency", "reconciliation"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Record payments, refunds, and transfers as double-entry journal entries.",
+      "Expose account balances and an immutable transaction history.",
+      "Accept retried requests without moving money twice.",
+      "Settle with external payment providers and banks.",
+      "Reconcile provider statements and handle unmatched entries."
+    ],
+    "nonFunctional": [
+      "A committed journal entry must never lose or duplicate money.",
+      "Every transaction must balance: total debits equal total credits.",
+      "Writes for one account should be strongly consistent.",
+      "The ledger must remain auditable for seven years.",
+      "External provider outages must not block internal bookkeeping."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 50000000,
+    "readsPerDay": 200000000,
+    "retentionYears": 7
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "Transfer and refund API with idempotency",
+    "Double-entry data model and balance invariant",
+    "Commit protocol and settlement flow",
+    "Account-level consistency and hot-account handling",
+    "Reconciliation and compensating entries",
+    "Audit, retention, and access controls",
+    "Failure modes and trade-offs"
+  ],
+  "followUps": [
+    "How would you support multiple currencies and exchange rates?",
+    "How would you prove that no money was created or destroyed over a period?",
+    "How would you handle a provider that settles a payment twice?",
+    "What changes if the ledger must span multiple regions with local writes?"
+  ],
+  "commonMistakes": [
+    "Storing a mutable balance as the source of truth instead of postings.",
+    "Using a client-generated request id without a server-side idempotency record.",
+    "Updating or deleting journal entries to fix a mistake.",
+    "Calling the payment provider inside the database transaction.",
+    "Assuming at-least-once delivery is the same as exactly-once execution."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}

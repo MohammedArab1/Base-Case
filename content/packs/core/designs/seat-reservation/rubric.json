@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements clarification",
+      "description": "Separates browsing, holding, confirming, cancelling, and expiry, and states the assumptions that matter for correctness.",
+      "levels": {
+        "1": "Restates the prompt without identifying the hold or payment lifecycle.",
+        "2": "Lists the main actions but omits expiry, cancellation, or the no-oversell requirement.",
+        "3": "Separates functional and non-functional requirements and states clear assumptions about payments and event scope.",
+        "4": "Also prioritizes requirements, defines what is out of scope, and connects ambiguity such as seat transfer or waiting rooms to design consequences."
+      }
+    },
+    {
+      "id": "estimation",
+      "name": "Back-of-envelope estimation",
+      "description": "Turns the traffic and retention numbers into write QPS, read QPS, peak burst, and storage estimates.",
+      "levels": {
+        "1": "Repeats the given numbers without deriving anything.",
+        "2": "Computes average QPS but ignores peak bursts, seat-map reads, or storage.",
+        "3": "Estimates average and peak write/read rates and the storage needed for bookings and audit data.",
+        "4": "Also sizes cache working sets, per-event hot-spot load, and the capacity headroom needed for an on-sale."
+      }
+    },
+    {
+      "id": "api-data-model",
+      "name": "API and data model",
+      "description": "Defines hold, confirm, and cancel APIs with idempotency, and models seats and holds so double sale is impossible.",
+      "levels": {
+        "1": "Provides vague endpoints and no ownership model.",
+        "2": "Has endpoints for seats and bookings but omits idempotency or the hold entity.",
+        "3": "Defines request/response shapes, idempotency keys, and seat/hold/reservation tables with a uniqueness rule.",
+        "4": "Also explains the exact constraint or transaction that prevents double sale and how release, sold state, and audit records stay consistent."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "High-level architecture",
+      "description": "Places the reservation service, database, cache, payment worker, and expiry workers so responsibilities are clear.",
+      "levels": {
+        "1": "Shows a single service with no separation of reads, writes, or payments.",
+        "2": "Names components but does not show how a hold or confirmation flows through them.",
+        "3": "Shows the read path, the transactional write path, payment isolation, and expiry workers.",
+        "4": "Also explains why each boundary exists, how each component scales, and how events propagate to caches and workers."
+      }
+    },
+    {
+      "id": "deep-dives",
+      "name": "Deep dives",
+      "description": "Explains the atomic claim, hold expiry, and payment confirmation in enough detail to implement and test.",
+      "levels": {
+        "1": "No deep dive or only a restatement of the API.",
+        "2": "Covers one of claim, expiry, or payment and leaves the others vague.",
+        "3": "Covers all three with concrete transactions, locking, leases, or idempotency behavior.",
+        "4": "Also handles retries, races, and partial failures, and states the invariants each mechanism preserves."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares the major choices and explains when an alternative would be preferable.",
+      "levels": {
+        "1": "No alternatives are considered.",
+        "2": "Names one trade-off without connecting it to the design.",
+        "3": "Compares meaningful alternatives such as database constraints vs distributed locks, or synchronous vs asynchronous payment.",
+        "4": "Also explains the conditions under which the chosen option fails and how the team would revisit the decision."
+      }
+    },
+    {
+      "id": "communication",
+      "name": "Communication and failure handling",
+      "description": "Presents the design clearly and covers failure modes, monitoring, and recovery.",
+      "levels": {
+        "1": "Disorganized and assumes nothing fails.",
+        "2": "Understandable but omits several failure modes or recovery steps.",
+        "3": "Explains the flow clearly and covers payment, expiry, cache, and database failures with monitoring signals.",
+        "4": "Also presents degraded modes, invariant checks, alert thresholds, and a concise summary a reviewer can follow."
+      }
+    }
+  ]
+}

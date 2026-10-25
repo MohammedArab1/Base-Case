@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements clarification",
+      "description": "Clarifies ledger scope, money movement types, settlement, audit, and consistency expectations.",
+      "levels": {
+        "1": "Restates the prompt without defining double-entry bookkeeping or idempotency.",
+        "2": "Lists payments and refunds but omits settlement, reconciliation, or audit retention.",
+        "3": "Separates functional and non-functional requirements and states assumptions about providers, currencies, and corrections.",
+        "4": "Also prioritizes requirements, defines the durability and audit boundaries, and connects regulatory or reconciliation needs to design constraints."
+      }
+    },
+    {
+      "id": "estimation",
+      "name": "Back-of-envelope estimation",
+      "description": "Derives write/read QPS, storage for postings and audit data, and reconciliation burst load.",
+      "levels": {
+        "1": "Repeats the numbers without deriving capacity.",
+        "2": "Computes average QPS but ignores postings per transfer, storage, or month-end bursts.",
+        "3": "Estimates average and peak write/read rates and the storage needed for postings and retained audit data.",
+        "4": "Also estimates index size, replica lag tolerance, reconciliation throughput, and headroom for payout windows."
+      }
+    },
+    {
+      "id": "api-data-model",
+      "name": "API and data model",
+      "description": "Defines transfer/refund APIs with idempotency and a double-entry posting model.",
+      "levels": {
+        "1": "No clear API or accounting model.",
+        "2": "Has payment endpoints but no balanced postings or idempotency contract.",
+        "3": "Defines request/response shapes, idempotency keys, accounts, entries, and postings with a balance invariant.",
+        "4": "Also explains append-only corrections, deferred constraints, request-hash mismatch handling, and how balances are derived or verified."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "High-level architecture",
+      "description": "Separates the ledger transaction, settlement, outbox, and reconciliation.",
+      "levels": {
+        "1": "A single service that writes balances directly.",
+        "2": "Names components but does not show how a transfer reaches settlement.",
+        "3": "Shows the transactional ledger path, outbox, settlement workers, and reconciliation jobs.",
+        "4": "Also explains why provider calls stay outside the transaction, how retries traverse each boundary, and how read replicas are used safely."
+      }
+    },
+    {
+      "id": "deep-dives",
+      "name": "Deep dives",
+      "description": "Explains commit, settlement, and reconciliation with concrete failure handling.",
+      "levels": {
+        "1": "No deep dive beyond the API.",
+        "2": "Covers commit or settlement but leaves reconciliation and retries vague.",
+        "3": "Covers the atomic commit, idempotent settlement, and statement reconciliation with implementable detail.",
+        "4": "Also handles ambiguous timeouts, duplicate provider charges, compensating entries, invariant checks, and audit preservation."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Compares consistency, sharding, settlement timing, and correction strategies.",
+      "levels": {
+        "1": "No alternatives are considered.",
+        "2": "Names one trade-off without connecting it to the ledger design.",
+        "3": "Compares meaningful choices such as append-only vs mutable balances, or synchronous vs asynchronous settlement.",
+        "4": "Also explains when the chosen approach breaks down and how the team would detect and revisit it."
+      }
+    },
+    {
+      "id": "communication",
+      "name": "Communication and failure handling",
+      "description": "Presents the design and invariants clearly, with audit, monitoring, and recovery.",
+      "levels": {
+        "1": "Disorganized and assumes money movement cannot fail.",
+        "2": "Understandable but omits several failure or audit paths.",
+        "3": "Explains the flow clearly and covers duplicate requests, provider outages, reconciliation, and monitoring.",
+        "4": "Also covers balance-check failures, locked periods, regulatory audit access, and a concise summary of the invariants that must never break."
+      }
+    }
+  ]
+}
