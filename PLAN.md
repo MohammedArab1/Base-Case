@@ -2583,15 +2583,15 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Search, difficulty, pattern, status, list filters.
   - [x] Progress summary.
   - [x] Review-due filter.
-- [ ] Problem detail:
-  - [ ] Markdown/KaTeX renderer with sanitized HTML.
+- [x] Problem detail:
+  - [x] Markdown/KaTeX renderer with sanitized HTML.
   - [x] Examples, constraints, follow-ups.
   - [x] Language selector and starter code.
-- [ ] Editor:
-  - [ ] CodeMirror 6 with Python/TS/JS modes.
-  - [ ] Theme, font size, tab size, keymap.
-  - [ ] Autosave, reset, copy.
-  - [ ] Error line highlighting from judge results.
+- [x] Editor:
+  - [x] CodeMirror 6 with Python/TS/JS modes.
+  - [x] Theme, font size, tab size, keymap.
+  - [x] Autosave, reset, copy.
+  - [x] Error line highlighting from judge results.
 - [x] Run/submit:
   - [x] Run samples; submit all.
   - [x] Progress and cancel.

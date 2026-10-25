@@ -484,6 +484,7 @@ function ProblemWorkspace({
     readonly total: number
   } | null>(null)
   const [cancelling, setCancelling] = useState(false)
+  const [copied, setCopied] = useState(false)
   const activeRequestRef = useRef<string | null>(null)
   const [aiPreview, setAiPreview] = useState<AiPreview | null>(null)
   const [aiText, setAiText] = useState('')
@@ -602,6 +603,26 @@ function ProblemWorkspace({
     },
     [code, language, plan, problem.id, revealedHints.size, running, solutionViewed],
   )
+
+  const copyCode = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1500)
+    } catch {
+      setError('Could not copy the code to the clipboard.')
+    }
+  }
+
+  const resetCode = (): void => {
+    if (!window.confirm('Reset the editor to the starter template? Your draft will be replaced.')) {
+      return
+    }
+
+    setCode(problem.languageTemplates[language])
+    setResult(null)
+    setError(null)
+  }
 
   const cancelRun = async (): Promise<void> => {
     const requestId = activeRequestRef.current
@@ -960,6 +981,22 @@ function ProblemWorkspace({
                 </button>
               </div>
               <div className="toolbar-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => void copyCode()}
+                  disabled={!draftReady}
+                >
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={resetCode}
+                  disabled={!draftReady}
+                >
+                  Reset
+                </button>
                 {running ? (
                   <button
                     type="button"
@@ -1021,6 +1058,7 @@ function ProblemWorkspace({
                 language={language}
                 onChange={setCode}
                 ariaLabel={`${problem.title} ${language} code editor`}
+                errorLine={result?.firstFailure?.error?.userLine ?? null}
               />
             </div>
             <div className="results-scroll">

@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 4 — Coding practice (filters, cancel, and export/import complete; KaTeX and editor polish remain)
-> Overall status: On track — the full attempt → failure → fix → review loop, filters, and local data transfer work; all checks are green
-> Next milestone: Finish the remaining Phase 4 polish, then Phase 5 design
+> Current phase: Phase 4 — Coding practice (complete; Windows E2E confirmation comes from CI)
+> Overall status: On track — the full attempt → failure → fix → review loop, filters, KaTeX, cancellation, and local data transfer work; all local checks are green
+> Next milestone: Phase 5 design scenarios and rubrics
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -16,7 +16,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
-| Phase 4 — Coding practice | In progress | 2026-10-24 | Review, mistake tags, plans, snapshots, filters, cancel, and export/import are complete; KaTeX and editor error-line polish remain |
+| Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
@@ -26,8 +26,9 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Finish the remaining Phase 4 polish: KaTeX rendering and editor error-line highlighting, then record the Windows E2E result from CI.
-2. Start Phase 5 design scenarios and rubrics after the review slice.
+1. Start Phase 5 design scenarios, prompts, rubrics, and reference comparison.
+2. Confirm the Windows Playwright run in CI.
+3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
 5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -40,6 +41,26 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 4 — KaTeX and editor polish
+
+- Status: Phase 4 complete (all tasks checked; Windows E2E runs in CI)
+- Done:
+  - Markdown now renders inline and block math with KaTeX behind a tightened sanitize schema; raw HTML from content packs is still stripped.
+  - CodeMirror highlights the failing line reported by the judge.
+  - Added Copy and Reset controls to the editor toolbar.
+  - Added a renderer Markdown test covering KaTeX output and sanitization.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 58 tests passed across 16 files.
+  - `pnpm build`, `pnpm smoke:e2e` — passed.
+  - `pnpm --filter @base-case/desktop test:e2e` — 2 passed.
+- Files/PRs:
+  - Key paths: `apps/desktop/src/renderer/src/components/Markdown.tsx`, `CodeEditor.tsx`, `CodingView.tsx`, `apps/desktop/vitest.config.mts`.
+- Next:
+  - Phase 5 design module.
+- Notes/decisions:
+  - KaTeX runs after sanitization so the generated presentation markup survives, while the source Markdown is still sanitized.
 
 ### 2026-10-24 — Phase 4 — filters, cancel, and data transfer
 

@@ -6,6 +6,7 @@ import { ToastProvider } from './ui/Toast'
 import { TooltipProvider } from './ui/Tooltip'
 import './styles.css'
 import './workspace.css'
+import 'katex/dist/katex.min.css'
 import './design/tailwind.css'
 
 const container = document.getElementById('root')

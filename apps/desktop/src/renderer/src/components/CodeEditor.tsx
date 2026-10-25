@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import type { JSX } from 'react'
 import { basicSetup } from 'codemirror'
-import { Compartment, EditorState } from '@codemirror/state'
-import { EditorView } from '@codemirror/view'
+import { Compartment, EditorState, StateEffect, StateField } from '@codemirror/state'
+import { Decoration, EditorView } from '@codemirror/view'
+import type { DecorationSet } from '@codemirror/view'
 import { javascript } from '@codemirror/lang-javascript'
 import { python } from '@codemirror/lang-python'
 import { oneDark } from '@codemirror/theme-one-dark'
@@ -17,11 +18,39 @@ function fontSizeTheme(size: number): ReturnType<typeof EditorView.theme> {
   })
 }
 
+const setErrorLine = StateEffect.define<number | null>()
+
+const errorLineField = StateField.define<DecorationSet>({
+  create: () => Decoration.none,
+  update(decorations, transaction) {
+    let next = decorations.map(transaction.changes)
+
+    for (const effect of transaction.effects) {
+      if (!effect.is(setErrorLine)) {
+        continue
+      }
+
+      if (effect.value === null) {
+        next = Decoration.none
+        continue
+      }
+
+      const lineNumber = Math.min(Math.max(1, effect.value), transaction.state.doc.lines)
+      const line = transaction.state.doc.line(lineNumber)
+      next = Decoration.set([Decoration.line({ class: 'cm-error-line' }).range(line.from)])
+    }
+
+    return next
+  },
+  provide: (field) => EditorView.decorations.from(field),
+})
+
 interface CodeEditorProps {
   readonly value: string
   readonly language: Language
   readonly onChange: (value: string) => void
   readonly ariaLabel?: string
+  readonly errorLine?: number | null
 }
 
 export function CodeEditor({
@@ -29,6 +58,7 @@ export function CodeEditor({
   language,
   onChange,
   ariaLabel = 'Code editor',
+  errorLine = null,
 }: CodeEditorProps): JSX.Element {
   const host = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
@@ -60,6 +90,7 @@ export function CodeEditor({
           basicSetup,
           languageExtension,
           oneDark,
+          errorLineField,
           tabSizeCompartment.of(EditorState.tabSize.of(settingsRef.current.tabSize)),
           fontSizeCompartment.of(fontSizeTheme(settingsRef.current.fontSize)),
           wrapCompartment.of(settingsRef.current.wordWrap ? EditorView.lineWrapping : []),
@@ -84,6 +115,9 @@ export function CodeEditor({
             '.cm-gutters': {
               backgroundColor: 'transparent',
               borderRight: '1px solid var(--border)',
+            },
+            '.cm-error-line': {
+              backgroundColor: 'color-mix(in srgb, var(--danger) 18%, transparent)',
             },
           }),
         ],
@@ -139,6 +173,16 @@ export function CodeEditor({
       })
     }
   }, [value])
+
+  useEffect(() => {
+    const view = viewRef.current
+
+    if (!view) {
+      return
+    }
+
+    view.dispatch({ effects: setErrorLine.of(errorLine) })
+  }, [errorLine])
 
   return <div className="code-editor" ref={host} />
 }
