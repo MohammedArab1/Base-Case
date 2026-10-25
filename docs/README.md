@@ -13,6 +13,7 @@ Start here:
 - `faq.md` — common questions about install, judge, AI, data, and review.
 - `privacy.md` — what stays local, what AI sends, and how to remove data.
 - `known-limitations.md` — intentional alpha limits and pending blockers.
+- `screenshots.md` — generated screenshots of the main workflows.
 
 ## Architecture
 
@@ -36,7 +37,11 @@ Start here:
 ## Project
 
 - `project/alpha-release.md` — release checklist, beta plan, triage, metrics.
-- `project/open-blockers.md` — canonical external blockers B1–B9.
+- `project/security-review.md` — Electron checklist, judge limits, dependency audit.
+- `project/accessibility.md` — automated gate and manual assistive-tech checklist.
+- `project/states-audit.md` — loading, empty, and error behavior per view.
+- `project/performance.md` — packaged startup, editor, canvas, judge, and memory numbers.
+- `project/open-blockers.md` — canonical external blockers B1–B11.
 - `project/definition-of-done.md`
 - `project/code-review-checklist.md`
 - `project/wireframes.md`

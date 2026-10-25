@@ -70,7 +70,7 @@ corepack pnpm smoke:playwright
 Packaging:
 
 ```sh
-corepack pnpm package:mac   # unsigned DMG + ZIP
+corepack pnpm package:mac   # unsigned arm64 + x64 DMG and ZIP
 corepack pnpm package:win   # NSIS + ZIP
 ```
 
@@ -143,7 +143,12 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `docs/faq.md` — common questions.
 - `docs/privacy.md` — local data and AI data flow.
 - `docs/known-limitations.md` — alpha limits.
+- `docs/screenshots.md` — generated screenshots of the main workflows.
 - `docs/project/alpha-release.md` — release checklist, beta plan, triage, metrics.
+- `docs/project/security-review.md` — Electron checklist, judge limits, dependency audit.
+- `docs/project/accessibility.md` — automated gate and manual assistive-tech checklist.
+- `docs/project/states-audit.md` — loading, empty, and error states per view.
+- `docs/project/performance.md` — packaged performance numbers and budgets.
 - `docs/architecture/overview.md`
 - `docs/architecture/judge-protocol.md`
 - `docs/architecture/threat-model.md`

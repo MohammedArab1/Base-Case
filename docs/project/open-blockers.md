@@ -18,6 +18,7 @@ here from its Blockers section.
 | B8  | Optional reference Excalidraw scenes  | The eight design scenarios have Markdown reference designs but no optional `referenceScene` files. The validator emits warnings, not errors.                                                      | Author and attach eight Excalidraw scenes, or accept the warnings for the alpha.                                                                                                                                 | Open (optional) |
 | B9  | Apple Foundation Models sidecar       | The Phase 6 stretch goal for an on-device `apple-fm` provider is not implemented. It is not required for the MVP.                                                                                 | Build the Swift sidecar and availability checks in a macOS-only follow-up, or keep it post-MVP.                                                                                                                  | Open (optional) |
 | B10 | Private alpha beta (10–30 users)      | Phase 8 exit criteria include 70% onboarding completion, no data loss, and fixing P0/P1 bugs from real users. This requires recruited testers and their feedback.                                 | Recruit 10–30 testers, run the onboarding script in `docs/project/alpha-release.md`, and record the weekly triage and alpha summary.                                                                             | Open            |
+| B11 | Manual accessibility verification     | The automated axe gate passes, but VoiceOver/NVDA, 200% zoom, forced colors, and canvas keyboard fallback need a human at a real desktop.                                                         | Run the checklist in `docs/project/accessibility.md` on macOS and Windows and record the reviewer, date, and exceptions.                                                                                         | Open            |
 
 ## Verification commands for resolved blockers
 
@@ -28,3 +29,4 @@ here from its Blockers section.
 - Trademark/domain: record the search result and registrar.
 - GitHub setup: link the project board.
 - Private beta: link the alpha summary with activation, retention, and the P0/P1 list.
+- Manual accessibility: record the reviewer, OS, date, and exceptions in `docs/project/accessibility.md`.

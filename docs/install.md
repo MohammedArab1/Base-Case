@@ -30,8 +30,10 @@ clean machine does not need either language installed.
    Only do this for a build you trust. The release includes a
    `SHA256SUMS.txt` file with the SHA-256 checksums.
 
-The macOS build is arm64 for Apple Silicon. Intel builds are added before the
-public alpha.
+Release builds are produced for both Apple Silicon (`arm64`) and Intel (`x64`).
+Download the DMG that matches the machine. The judge and bundled runtimes are
+built for the same architecture as the app; do not mix an x64 app with arm64
+runtime files.
 
 ## Windows
 
