@@ -176,6 +176,12 @@ class Tee:
 
 
 def main():
+    # -I ignores PYTHONIOENCODING, so force UTF-8 explicitly. Windows would
+    # otherwise decode the JSON request with the console code page.
+    sys.stdin.reconfigure(encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+
     protocol_out = sys.stdout
     original_stderr = sys.stderr
     raw = sys.stdin.read()
