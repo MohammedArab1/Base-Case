@@ -90,8 +90,9 @@ whether to bundle pinned runtimes (see ADR-0010).
   the main process and encrypted with `safeStorage`.
 
 Not built yet: FSRS review, design scenarios/rubrics, content importer, full
-design system, structured IPC error envelopes, bundled runtimes, Seatbelt/Job
-Objects sandboxing, and the 10+4 alpha content set.
+design system, structured IPC error envelopes, bundled runtimes, and the 10+4
+alpha content set. The judge now uses macOS Seatbelt and Windows Job Objects;
+Windows filesystem and network isolation remain best-effort.
 
 ## Repository layout
 

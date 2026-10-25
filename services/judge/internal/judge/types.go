@@ -3,6 +3,7 @@ package judge
 import (
 	"encoding/json"
 	"errors"
+	"time"
 )
 
 var (
@@ -34,6 +35,15 @@ type Signature struct {
 	Params    []Param  `json:"params"`
 	Returns   string   `json:"returns"`
 	Mutates   []string `json:"mutates"`
+}
+
+// processLimits are applied to the OS process container. Windows maps them to
+// Job Object limits; other platforms enforce them through sampling and the
+// wall-clock watchdog.
+type processLimits struct {
+	MemoryBytes  int64
+	CPUTime      time.Duration
+	MaxProcesses uint32
 }
 
 type Limits struct {

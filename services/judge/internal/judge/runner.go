@@ -15,7 +15,10 @@ import (
 	"time"
 )
 
-const memorySampleInterval = 100 * time.Millisecond
+const (
+	memorySampleInterval = 100 * time.Millisecond
+	maxProcessCount      = 64
+)
 
 type testOutcome struct {
 	Status      string
@@ -331,6 +334,10 @@ func (r *Runner) runTest(
 	stderr, stderrOverflow := newCappedBuffer(r.outputLimit())
 	command.Stdout = stdout
 	command.Stderr = stderr
+
+	if r.Sandbox {
+		command = sandboxCommand(command, workspace, runtimePath)
+	}
 	configureProcess(command)
 
 	started := time.Now()
@@ -342,9 +349,16 @@ func (r *Runner) runTest(
 		}
 	}
 
+	memoryLimitBytes := int64(effectiveMemoryMb(request)) * 1024 * 1024
+
 	// On Windows this places the child in a kill-on-close Job Object so the
-	// runtime tree cannot outlive the judge, even if the judge is killed.
-	guard := guardProcess(command.Process.Pid)
+	// runtime tree cannot outlive the judge, even if the judge is killed. The
+	// job also carries memory, CPU, and process-count limits as a backstop.
+	guard := guardProcess(command.Process.Pid, processLimits{
+		MemoryBytes:  memoryLimitBytes,
+		CPUTime:      timeout * 2,
+		MaxProcesses: maxProcessCount,
+	})
 	defer guard.release()
 
 	waitChannel := make(chan error, 1)
@@ -352,8 +366,8 @@ func (r *Runner) runTest(
 		waitChannel <- command.Wait()
 	}()
 
-	memoryLimitBytes := int64(effectiveMemoryMb(request)) * 1024 * 1024
 	memoryExceeded := make(chan struct{}, 1)
+	processExceeded := make(chan struct{}, 1)
 	samplerStop := make(chan struct{})
 	samplerDone := make(chan struct{})
 	var sampledPeak atomic.Int64
@@ -369,9 +383,17 @@ func (r *Runner) runTest(
 			case <-samplerStop:
 				return
 			case <-ticker.C:
-				current := processTreeMemory(command.Process.Pid)
+				current, count := processTreeStats(command.Process.Pid)
 				if current > sampledPeak.Load() {
 					sampledPeak.Store(current)
+				}
+
+				if count > maxProcessCount {
+					select {
+					case processExceeded <- struct{}{}:
+					default:
+					}
+					return
 				}
 
 				if current > memoryLimitBytes {
@@ -386,6 +408,7 @@ func (r *Runner) runTest(
 	}()
 
 	forcedStatus := ""
+	forcedMessage := ""
 	var waitError error
 
 	select {
@@ -410,6 +433,11 @@ func (r *Runner) runTest(
 		killProcessGroup(command.Process.Pid)
 		waitError = <-waitChannel
 		forcedStatus = StatusMemoryLimitExceeded
+	case <-processExceeded:
+		killProcessGroup(command.Process.Pid)
+		waitError = <-waitChannel
+		forcedStatus = StatusRuntimeError
+		forcedMessage = fmt.Sprintf("Execution exceeded its process limit (%d).", maxProcessCount)
 	}
 
 	close(samplerStop)
@@ -431,14 +459,17 @@ func (r *Runner) runTest(
 	userStderr := stderr.String()
 
 	if forcedStatus != "" {
-		message := "Execution exceeded its time limit."
-		switch forcedStatus {
-		case StatusOutputLimitExceeded:
-			message = "Execution produced too much output and was stopped."
-		case StatusCancelled:
-			message = "The run was cancelled."
-		case StatusMemoryLimitExceeded:
-			message = "Execution exceeded its memory limit."
+		message := forcedMessage
+		if message == "" {
+			message = "Execution exceeded its time limit."
+			switch forcedStatus {
+			case StatusOutputLimitExceeded:
+				message = "Execution produced too much output and was stopped."
+			case StatusCancelled:
+				message = "The run was cancelled."
+			case StatusMemoryLimitExceeded:
+				message = "Execution exceeded its memory limit."
+			}
 		}
 		return testOutcome{
 			Status:      forcedStatus,

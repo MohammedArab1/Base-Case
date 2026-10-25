@@ -32,6 +32,20 @@ macOS: `sandbox-exec` Seatbelt profile plus resource limits and a watchdog.
 Windows: Job Objects for process-tree, memory, and CPU limits, plus a temp
 directory. Filesystem isolation is best-effort in the MVP.
 
+## Implementation note (2026-10-24)
+
+- macOS: the Seatbelt profile denies network and home-directory access, allows
+  reads of the system and the resolved runtime prefix, and allows writes only to
+  the per-run workspace and temp directories. Process execution is limited to
+  the runtime prefix. If `sandbox-exec` is unavailable, the judge logs a
+  warning and runs without it.
+- Windows: the Job Object carries kill-on-close, a job memory limit with 25%
+  headroom over the sampler threshold, a total user-time limit at twice the
+  wall-clock limit, and a 64-process active limit. Network and filesystem
+  isolation remain best-effort.
+- Both platforms: the 100 ms sampler enforces the memory limit and a 64-process
+  limit; crossing either kills the process group.
+
 ## Consequences
 
 Positive:
@@ -44,6 +58,8 @@ Negative:
 
 - `sandbox-exec` is deprecated and may be removed.
 - Windows isolation is weaker than macOS; imported code is not safely isolated.
+- Windows does not block network access; treat imported content packs as
+  trusted on Windows.
 - Node/V8 needs JIT; hardened-runtime distribution may need JIT entitlements.
 - Absolute time limits vary by machine.
 

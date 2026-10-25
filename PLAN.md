@@ -2534,10 +2534,10 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Environment sanitization.
 - [x] Checkers: exact, unordered, float, set-of-sets.
 - [x] Result model and error mapping (Section 5.7/5.11).
-- [ ] Sandbox per OS:
-  - [ ] macOS Seatbelt profile.
+- [x] Sandbox per OS:
+  - [x] macOS Seatbelt profile (deny network and home, allow runtime/system reads and workspace writes).
   - [x] Windows Job Objects (kill-on-close process tree).
-  - [ ] Windows memory/CPU job limits.
+  - [x] Windows memory, CPU, and active-process job limits.
 - [ ] Conformance fixtures:
   - [x] Accepted, wrong answer, compile error, time limit, output limit, and missing runtime.
   - [x] Cancellation (runner kill and server protocol tests).
@@ -2548,9 +2548,9 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Float, unordered, and set-of-sets checkers (unit coverage).
   - [x] Unicode, empty, and large inputs.
 - [x] CI matrix on macOS and Windows (Go suites).
-- [ ] Security tests and limitations doc:
+- [x] Security tests and limitations doc:
   - [x] Threat model, ADR-0009, and Windows limitations documented.
-  - [ ] Automated network/home-write/fork-bomb tests.
+  - [x] Automated network, home-read, home-write, process-exec, and process-limit tests (macOS Seatbelt).
 
 > Gap analysis: `docs/spikes/phase-3-gap-analysis.md` (2026-10-24). The design
 > harness may move to Phase 5 so it does not block the coding alpha.

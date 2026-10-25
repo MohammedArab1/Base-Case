@@ -43,7 +43,7 @@ type processGuard struct {
 // process tree when the job handle closes. Windows closes the handle when the
 // judge exits for any reason, including being killed, so a runtime child cannot
 // outlive the sidecar.
-func guardProcess(pid int) processGuard {
+func guardProcess(pid int, limits processLimits) processGuard {
 	if pid <= 0 {
 		return processGuard{}
 	}
@@ -54,7 +54,24 @@ func guardProcess(pid int) processGuard {
 	}
 
 	info := windows.JOBOBJECT_EXTENDED_LIMIT_INFORMATION{}
-	info.BasicLimitInformation.LimitFlags = windows.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+	flags := uint32(windows.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE)
+
+	if limits.MemoryBytes > 0 {
+		// Keep headroom above the sampler threshold so a fast allocation that
+		// trips the job limit still has a peak above the reported limit.
+		flags |= windows.JOB_OBJECT_LIMIT_JOB_MEMORY
+		info.JobMemoryLimit = uintptr(limits.MemoryBytes + limits.MemoryBytes/4)
+	}
+	if limits.CPUTime > 0 {
+		flags |= windows.JOB_OBJECT_LIMIT_JOB_TIME
+		info.BasicLimitInformation.PerJobUserTimeLimit = limits.CPUTime.Nanoseconds() / 100
+	}
+	if limits.MaxProcesses > 0 {
+		flags |= windows.JOB_OBJECT_LIMIT_ACTIVE_PROCESS
+		info.BasicLimitInformation.ActiveProcessLimit = limits.MaxProcesses
+	}
+
+	info.BasicLimitInformation.LimitFlags = flags
 
 	if _, err := windows.SetInformationJobObject(
 		job,
@@ -114,15 +131,16 @@ func (g processGuard) peak(*os.ProcessState) int64 {
 	return int64(info.PeakJobMemoryUsed)
 }
 
-// processTreeMemory sums the working sets of the runtime and its descendants.
-func processTreeMemory(rootPID int) int64 {
+// processTreeStats sums the working sets of the runtime and its descendants
+// and counts the processes in the tree.
+func processTreeStats(rootPID int) (int64, int) {
 	if rootPID <= 0 {
-		return 0
+		return 0, 0
 	}
 
 	snapshot, err := windows.CreateToolhelp32Snapshot(windows.TH32CS_SNAPPROCESS, 0)
 	if err != nil {
-		return 0
+		return 0, 0
 	}
 	defer windows.CloseHandle(snapshot)
 
@@ -130,7 +148,7 @@ func processTreeMemory(rootPID int) int64 {
 	entry := windows.ProcessEntry32{Size: uint32(unsafe.Sizeof(windows.ProcessEntry32{}))}
 
 	if err := windows.Process32First(snapshot, &entry); err != nil {
-		return 0
+		return 0, 0
 	}
 
 	for {
@@ -142,6 +160,7 @@ func processTreeMemory(rootPID int) int64 {
 	}
 
 	var total int64
+	count := 0
 	queue := []uint32{uint32(rootPID)}
 	seen := make(map[uint32]bool)
 
@@ -155,10 +174,11 @@ func processTreeMemory(rootPID int) int64 {
 		seen[pid] = true
 
 		total += processWorkingSet(pid)
+		count++
 		queue = append(queue, children[pid]...)
 	}
 
-	return total
+	return total, count
 }
 
 func processWorkingSet(pid uint32) int64 {

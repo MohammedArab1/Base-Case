@@ -26,7 +26,7 @@ func killProcessGroup(pid int) {
 // its own process group, and killProcessGroup kills the whole group.
 type processGuard struct{}
 
-func guardProcess(pid int) processGuard {
+func guardProcess(pid int, limits processLimits) processGuard {
 	return processGuard{}
 }
 
@@ -51,28 +51,30 @@ func (g processGuard) peak(state *os.ProcessState) int64 {
 	return peak
 }
 
-// processTreeMemory samples the resident set size of the runtime's process
-// group. configureProcess puts the runtime in its own group, so group
-// membership covers the process tree on macOS without parsing parent links.
-func processTreeMemory(rootPID int) int64 {
+// processTreeStats samples the resident set size and process count of the
+// runtime's process group. configureProcess puts the runtime in its own group,
+// so group membership covers the process tree on macOS without parsing parent
+// links.
+func processTreeStats(rootPID int) (int64, int) {
 	if rootPID <= 0 {
-		return 0
+		return 0, 0
 	}
 
 	if runtime.GOOS == "darwin" {
-		return processGroupMemory(rootPID)
+		return processGroupStats(rootPID)
 	}
 
-	return processTreeMemoryFromPS(rootPID)
+	return processTreeStatsFromPS(rootPID)
 }
 
-func processGroupMemory(pid int) int64 {
+func processGroupStats(pid int) (int64, int) {
 	output, err := exec.Command("ps", "-o", "rss=", "-g", strconv.Itoa(pid)).Output()
 	if err != nil {
-		return 0
+		return 0, 0
 	}
 
 	var kilobytes int64
+	count := 0
 	for _, line := range strings.Split(string(output), "\n") {
 		fields := strings.Fields(line)
 		if len(fields) == 0 {
@@ -81,18 +83,19 @@ func processGroupMemory(pid int) int64 {
 		rss, err := strconv.ParseInt(fields[0], 10, 64)
 		if err == nil {
 			kilobytes += rss
+			count++
 		}
 	}
 
-	return kilobytes * 1024
+	return kilobytes * 1024, count
 }
 
 // processTreeMemoryFromPS is the portable fallback used on Linux and other
 // Unix systems where ps does not select by process group consistently.
-func processTreeMemoryFromPS(rootPID int) int64 {
+func processTreeStatsFromPS(rootPID int) (int64, int) {
 	output, err := exec.Command("ps", "-o", "pid=,ppid=,rss=", "-ax").Output()
 	if err != nil {
-		return 0
+		return 0, 0
 	}
 
 	children := make(map[int][]int)
@@ -116,6 +119,7 @@ func processTreeMemoryFromPS(rootPID int) int64 {
 	}
 
 	var kilobytes int64
+	count := 0
 	queue := []int{rootPID}
 	seen := make(map[int]bool)
 
@@ -129,8 +133,9 @@ func processTreeMemoryFromPS(rootPID int) int64 {
 		seen[pid] = true
 
 		kilobytes += rssByPID[pid]
+		count++
 		queue = append(queue, children[pid]...)
 	}
 
-	return kilobytes * 1024
+	return kilobytes * 1024, count
 }

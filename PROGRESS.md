@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (P3-A through P3-D done; P3-E sandbox hardening next)
-> Overall status: On track — the judge now supports cancellation, streaming, memory limits, compile-once, in-place mutations, and ListNode/TreeNode codecs
-> Next milestone: P3-E sandbox hardening (macOS Seatbelt, Windows job limits, security fixtures), then the runtime decision
+> Current phase: Phase 3 — Judge engine (P3-A through P3-E done; runtime decision and conformance matrix next)
+> Overall status: On track — the judge now has a macOS Seatbelt sandbox, Windows job limits, security fixtures, and the full coding harness
+> Next milestone: Measure pinned runtimes for ADR-0010, then P3-F packaging and P3-G conformance
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, P3-C compile-once, and P3-D harness coverage done. Sandbox, runtime bundles, and conformance remain |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, P3-C compile-once, P3-D harness, and P3-E sandbox done. Runtime bundles and the conformance matrix remain |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -26,8 +26,8 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start P3-E sandbox hardening (macOS Seatbelt, Windows memory/CPU job limits, security fixtures).
-2. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging.
+1. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging (P3-F).
+2. Build the 20+ fixture conformance matrix and app-level judge E2E in CI (P3-G).
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
 5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -41,6 +41,27 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-E sandbox hardening
+
+- Status: Phase 3 in progress (P3-E complete)
+- Done:
+  - Wrapped macOS runtime invocations in a Seatbelt profile that denies network and home access, limits process execution to the resolved runtime prefix, allows system/runtime reads, and restricts writes to the workspace and temp directories.
+  - Added a warning fallback when `sandbox-exec` is unavailable.
+  - Extended the Windows Job Object with job memory (25% headroom over the sampler threshold), total user-time (2× wall clock), and 64-process active limits, alongside kill-on-close.
+  - Refactored the sampler to collect process count as well as memory and to kill the group at 64 processes.
+  - Added macOS security tests for network denial, home read denial, home write denial, process-exec denial, and the process-count limit. The home-write test also verifies no file was created.
+  - Documented the implementation in ADR-0009, the threat model, the README, and the protocol/authoring docs.
+- Tests run:
+  - `go test -C services/judge -race ./...` — passed (including 5 macOS sandbox security tests).
+  - `GOOS=windows GOARCH=amd64 go build -C services/judge ./...` — passed.
+- Files/PRs:
+  - Key paths: `services/judge/internal/judge/sandbox_darwin.go`, `sandbox_other.go`, `sandbox_test.go`, `process_unix.go`, `process_windows.go`, `runner.go`, `docs/adr/0009-sandbox.md`, `docs/architecture/threat-model.md`.
+- Next:
+  - P3-F: measure pinned Python/Node runtime packs, accept or supersede ADR-0010, then add checksums, licenses, and repair.
+- Notes/decisions:
+  - `sandbox-exec` remains the practical non-App-Store macOS control; the profile is re-tested by the Go suite on macOS.
+  - Windows filesystem and network isolation remain best-effort; imported content is not safely isolated on Windows.
 
 ### 2026-10-24 — Phase 3 — P3-D harness coverage
 

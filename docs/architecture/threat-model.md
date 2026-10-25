@@ -38,20 +38,20 @@ use, and data exfiltration, not to resist a determined kernel exploit.
 
 ## Threats and mitigations
 
-| Threat                                      | Mitigation                                                             |
-| ------------------------------------------- | ---------------------------------------------------------------------- |
-| User code reads/writes personal files       | Seatbelt/Job Objects, temp directory, deny home reads/writes           |
-| User code exfiltrates data                  | Deny network in the judge; no secrets in the environment               |
-| Fork bomb / runaway process                 | Process-group kill, process-count limits, watchdog                     |
-| Infinite output                             | Byte caps on stdout/stderr; kill on overflow                           |
-| Memory exhaustion                           | Memory sampling, language multipliers, hard kill                       |
-| Malicious content pack executes native code | Content is data only; no plugins; built-in checkers                    |
-| Prompt injection in code/comments           | Delimit data, system guardrails, no tools, output schema               |
-| API key theft                               | `safeStorage`, main-process only, never in logs or renderer            |
-| AI provider sees sensitive data             | Explicit preview/consent, minimal context, optional redaction          |
-| Supply-chain attack                         | Lockfiles, Dependabot, `pnpm audit`, minimal dependencies              |
-| Unsigned app tampering                      | Checksums, release notes, signing later                                |
-| Hidden-test extraction                      | Accept as a known limitation; hidden tests are not a security boundary |
+| Threat                                      | Mitigation                                                                          |
+| ------------------------------------------- | ----------------------------------------------------------------------------------- |
+| User code reads/writes personal files       | Seatbelt/Job Objects, temp directory, deny home reads/writes                        |
+| User code exfiltrates data                  | Deny network in the judge; no secrets in the environment                            |
+| Fork bomb / runaway process                 | Process-group kill, 64-process sampling limit, Windows ActiveProcessLimit, watchdog |
+| Infinite output                             | Byte caps on stdout/stderr; kill on overflow                                        |
+| Memory exhaustion                           | Memory sampling, language multipliers, hard kill                                    |
+| Malicious content pack executes native code | Content is data only; no plugins; built-in checkers                                 |
+| Prompt injection in code/comments           | Delimit data, system guardrails, no tools, output schema                            |
+| API key theft                               | `safeStorage`, main-process only, never in logs or renderer                         |
+| AI provider sees sensitive data             | Explicit preview/consent, minimal context, optional redaction                       |
+| Supply-chain attack                         | Lockfiles, Dependabot, `pnpm audit`, minimal dependencies                           |
+| Unsigned app tampering                      | Checksums, release notes, signing later                                             |
+| Hidden-test extraction                      | Accept as a known limitation; hidden tests are not a security boundary              |
 
 ## Electron hardening
 
@@ -100,7 +100,8 @@ use, and data exfiltration, not to resist a determined kernel exploit.
 ## Residual risks
 
 - `sandbox-exec` is deprecated and may be removed by Apple.
-- Windows filesystem isolation is best-effort in the MVP.
+- Windows filesystem isolation is best-effort in the MVP, and Windows does not
+  block network access. Imported content is not safely isolated on Windows.
 - Hidden tests can be extracted from the app bundle.
 - Imported content may include malicious inputs; users import at their own risk.
 - The app is not suitable for hostile code execution or formal assessment.

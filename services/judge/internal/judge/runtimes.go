@@ -17,6 +17,7 @@ type Runner struct {
 	NodePath         string
 	TempRoot         string
 	OutputLimitBytes int
+	Sandbox          bool
 }
 
 type RuntimeInfo struct {
@@ -49,6 +50,7 @@ func NewRunner() *Runner {
 		NodePath:         nodePath,
 		TempRoot:         os.Getenv("BASE_CASE_JUDGE_TMP"),
 		OutputLimitBytes: 1024 * 1024,
+		Sandbox:          true,
 	}
 }
 
