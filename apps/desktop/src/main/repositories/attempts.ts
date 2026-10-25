@@ -122,6 +122,16 @@ export class AttemptsRepository {
     return rows.map((row) => row.created_at)
   }
 
+  recentActivity(sinceIso: string): { readonly createdAt: string; readonly status: string }[] {
+    const rows = this.database.connection
+      .prepare(
+        'SELECT created_at, status FROM attempts WHERE created_at >= ? ORDER BY created_at ASC',
+      )
+      .all(sinceIso) as unknown as { created_at: string; status: string }[]
+
+    return rows.map((row) => ({ createdAt: row.created_at, status: row.status }))
+  }
+
   latestProblemId(): string | null {
     const row = this.database.connection
       .prepare('SELECT problem_id FROM attempts ORDER BY created_at DESC, rowid DESC LIMIT 1')

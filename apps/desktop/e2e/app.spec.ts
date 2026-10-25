@@ -324,6 +324,12 @@ test('solves, submits, reviews, grades, and tags a mistake', async () => {
       .getByRole('button', { name: 'Progress' })
       .click()
     await expect(page.getByTestId('mistake-progress')).toContainText('Off-by-one')
+    const activityChart = page.getByRole('group', {
+      name: 'Attempts per day for the last 14 days',
+    })
+    await expect(activityChart).toBeVisible()
+    await expect(activityChart.locator('.activity-column')).toHaveCount(14)
+    await expect(page.getByTestId('pattern-progress')).toBeVisible()
     await capture(page, 'review-progress')
   } finally {
     await launched?.app.close().catch(() => undefined)

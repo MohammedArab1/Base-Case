@@ -362,6 +362,12 @@ export interface PatternProgress {
   readonly accepted: number
 }
 
+export interface DailyActivity {
+  readonly day: string
+  readonly attempts: number
+  readonly accepted: number
+}
+
 export interface ProgressSummary {
   readonly attempts: number
   readonly accepted: number
@@ -370,6 +376,7 @@ export interface ProgressSummary {
   readonly reviewsDue: number
   readonly reviewsCompleted: number
   readonly reviewsCompletedToday: number
+  readonly dailyActivity: readonly DailyActivity[]
   readonly patterns: readonly PatternProgress[]
   readonly mistakes: readonly MistakeTagCount[]
   readonly recentAttempts: readonly AttemptSummary[]

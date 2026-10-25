@@ -364,6 +364,30 @@ export function registerIpc({
     const active = new Set(attempts.activeDays().map((value) => localDayKey(new Date(value))))
     const progress = new Map(attempts.getProblemProgress().map((item) => [item.problemId, item]))
     const patterns = new Map<string, { problems: number; attempted: number; accepted: number }>()
+    const activityStart = new Date(now)
+    activityStart.setDate(now.getDate() - 13)
+    const activity = new Map<string, { attempts: number; accepted: number }>()
+
+    for (const entry of attempts.recentActivity(startOfLocalDay(activityStart).toISOString())) {
+      const key = localDayKey(new Date(entry.createdAt))
+      const day = activity.get(key) ?? { attempts: 0, accepted: 0 }
+      day.attempts += 1
+
+      if (entry.status === 'accepted') {
+        day.accepted += 1
+      }
+
+      activity.set(key, day)
+    }
+
+    const dailyActivity = Array.from({ length: 14 }, (_value, index) => {
+      const cursor = new Date(now)
+      cursor.setDate(now.getDate() - (13 - index))
+      const day = localDayKey(cursor)
+      const countsForDay = activity.get(day) ?? { attempts: 0, accepted: 0 }
+
+      return { day, attempts: countsForDay.attempts, accepted: countsForDay.accepted }
+    })
 
     for (const problem of content.listProblems()) {
       const item = progress.get(problem.id)
@@ -392,6 +416,7 @@ export function registerIpc({
       reviewsDue: counts.dueCount + counts.newCount,
       reviewsCompleted: counts.reviewsCompleted,
       reviewsCompletedToday: counts.reviewsCompletedToday,
+      dailyActivity,
       patterns: [...patterns.entries()]
         .map(([pattern, value]) => ({ pattern, ...value }))
         .sort(

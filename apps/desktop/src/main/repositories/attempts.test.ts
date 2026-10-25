@@ -59,6 +59,33 @@ describe('AttemptsRepository', () => {
     })
   })
 
+  it('reports recent activity with status for the progress chart', () => {
+    withAttempts((attempts) => {
+      attempts.save({
+        problemId: 'core/pair-sum',
+        language: 'python',
+        mode: 'sample',
+        code: 'pass',
+        result: result('wrong_answer', 2, 5),
+      })
+      attempts.save({
+        problemId: 'core/pair-sum',
+        language: 'python',
+        mode: 'submit',
+        code: 'return []',
+        result: result('accepted', 39, 39),
+      })
+
+      const since = new Date(Date.now() - 60_000).toISOString()
+      const activity = attempts.recentActivity(since)
+
+      expect(activity).toHaveLength(2)
+      expect(activity[0]?.status).toBe('wrong_answer')
+      expect(activity[1]?.status).toBe('accepted')
+      expect(activity[0]?.createdAt).toEqual(expect.any(String))
+    })
+  })
+
   it("lists a problem's attempts newest first", () => {
     withAttempts((attempts) => {
       attempts.save({

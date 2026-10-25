@@ -45,6 +45,9 @@ export function ProgressView({ onOpenProblem }: ProgressViewProps): JSX.Element 
     return <p className="muted">Reading local progress…</p>
   }
 
+  const activityMax = Math.max(1, ...summary.dailyActivity.map((day) => day.attempts))
+  const activityTotal = summary.dailyActivity.reduce((total, day) => total + day.attempts, 0)
+
   return (
     <div className="workspace-stack">
       <div className="card-grid">
@@ -74,6 +77,36 @@ export function ProgressView({ onOpenProblem }: ProgressViewProps): JSX.Element 
           </p>
         </section>
       </div>
+
+      <section className="card">
+        <h2>Activity</h2>
+        <p>Attempts per local day over the last 14 days.</p>
+        <div
+          className="activity-chart"
+          role="group"
+          aria-label="Attempts per day for the last 14 days"
+        >
+          {summary.dailyActivity.map((day) => (
+            <div className="activity-column" key={day.day}>
+              <span className="activity-track" aria-hidden="true">
+                <span
+                  className="activity-bar"
+                  style={{
+                    height: `${Math.max(2, Math.round((day.attempts / activityMax) * 100))}%`,
+                  }}
+                />
+              </span>
+              <span className="activity-label" aria-hidden="true">
+                {day.day.slice(5)}
+              </span>
+              <span className="sr-only">
+                {day.day}: {day.attempts} attempts, {day.accepted} accepted
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="muted">{activityTotal} attempts in this window.</p>
+      </section>
 
       <section className="card">
         <h2>Pattern coverage</h2>
