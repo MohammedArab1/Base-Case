@@ -355,7 +355,11 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
     await page.waitForTimeout(1500)
     const box = await canvas.boundingBox()
     expect(box).not.toBeNull()
-    await canvas.click({ position: { x: 40, y: 40 } })
+    // Excalidraw's top-left UI overlay can intercept a corner click on smaller
+    // viewports, so focus the canvas at its center before choosing a tool.
+    await canvas.click({
+      position: { x: Math.round(box!.width / 2), y: Math.round(box!.height / 2) },
+    })
     await page.keyboard.press('r')
     await page.waitForTimeout(400)
     await page.mouse.move(box!.x + 120, box!.y + 120)
