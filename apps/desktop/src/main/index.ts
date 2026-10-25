@@ -9,6 +9,7 @@ import { JudgeClient } from './judge'
 import { configureLogger, getLogger } from './logger'
 import { installApplicationMenu } from './menu'
 import { PackManager } from './pack-manager'
+import { AiFeedbackRepository } from './repositories/ai-feedback'
 import { AiProviderRepository } from './repositories/ai-providers'
 import { AttemptsRepository } from './repositories/attempts'
 import { ContentIndexRepository } from './repositories/content-index'
@@ -200,7 +201,13 @@ app
     const mistakes = new MistakesRepository(database)
     const userData = new UserDataRepository(database)
     const judge = new JudgeClient()
-    const ai = new AiService(new AiProviderRepository(database), settingsRepository, content)
+    const ai = new AiService(
+      new AiProviderRepository(database),
+      settingsRepository,
+      settings,
+      content,
+      new AiFeedbackRepository(database),
+    )
     const packs = new PackManager(userDataPath, content, contentIndex)
 
     await packs.cleanupStaleImports()

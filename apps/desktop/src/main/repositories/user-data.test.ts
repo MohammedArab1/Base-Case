@@ -9,6 +9,7 @@ import { DraftsRepository } from './drafts'
 import { MistakesRepository } from './mistakes'
 import { ProblemNotesRepository } from './notes'
 import { ReviewRepository } from './review'
+import { SettingsRepository } from './settings'
 import { UserDataRepository } from './user-data'
 
 function withDatabase(run: (database: AppDatabase, directory: string) => void): void {
@@ -87,6 +88,19 @@ describe('UserDataRepository', () => {
         'Remember the complement.',
       )
       expect(new ReviewRepository(destination).findCard('problem', 'core/pair-sum')?.reps).toBe(1)
+    })
+  })
+
+  it('excludes the encrypted API key from exports', () => {
+    withDatabase((database) => {
+      const settings = new SettingsRepository(database)
+      settings.set('ai.apiKey', 'encrypted-blob')
+      settings.set('ai.contextWindow', '8192')
+
+      const rows = new UserDataRepository(database).export().bundle.tables.settings ?? []
+
+      expect(rows.some((row) => row.key === 'ai.apiKey')).toBe(false)
+      expect(rows.some((row) => row.key === 'ai.contextWindow')).toBe(true)
     })
   })
 

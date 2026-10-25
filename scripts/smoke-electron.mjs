@@ -786,6 +786,8 @@ export { Solution }
     'The design submission did not create a review card',
   )
 
+  await evaluate('window.baseCase.settings.update({ aiEnabled: true })')
+
   const mockStatus = await evaluate(
     `window.baseCase.ai.saveConfig({ type: 'mock', baseUrl: '', model: 'mock' })`,
   )
@@ -793,13 +795,17 @@ export { Solution }
 
   const preview = await evaluate(
     `window.baseCase.ai.preview(${JSON.stringify({
-      problemId: 'core/pair-sum',
-      language: 'typescript',
-      code: 'class Solution {}',
-      failure: wrongResult.firstFailure,
+      feature: 'explain',
+      context: {
+        problemId: 'core/pair-sum',
+        language: 'typescript',
+        code: 'class Solution {}',
+        failure: wrongResult.firstFailure,
+      },
     })})`,
   )
-  assert(preview.text.includes('Current code'), 'AI preview did not include the code')
+  assert(preview.text.includes('<user_code'), 'AI preview did not include the code')
+  assert(preview.estimatedTokens > 0, 'AI preview did not estimate tokens')
 
   const aiText = await evaluate(`new Promise(async (resolve, reject) => {
     const chunks = []
@@ -814,18 +820,21 @@ export { Solution }
         chunks.push(event.text)
       } else if (event.type === 'done') {
         unsubscribe()
-        finish(chunks.join(''))
+        finish(event.text || chunks.join(''))
       } else {
         unsubscribe()
         reject(new Error(event.message))
       }
     })
     try {
-      await window.baseCase.ai.explain(${JSON.stringify({
-        problemId: 'core/pair-sum',
-        language: 'typescript',
-        code: 'class Solution {}',
-        failure: wrongResult.firstFailure,
+      await window.baseCase.ai.run(${JSON.stringify({
+        feature: 'explain',
+        context: {
+          problemId: 'core/pair-sum',
+          language: 'typescript',
+          code: 'class Solution {}',
+          failure: wrongResult.firstFailure,
+        },
       })})
     } catch (error) {
       unsubscribe()
@@ -836,7 +845,8 @@ export { Solution }
       finish(chunks.join(''))
     }, 5000)
   })`)
-  assert(typeof aiText === 'string' && aiText.length > 0, 'Mock AI stream returned no text')
+  assert(typeof aiText === 'string' && aiText.length > 0, 'Mock AI run returned no text')
+  assert(aiText.includes('off_by_one'), 'Mock AI run did not return the structured explain result')
 
   let keyStorage = 'unavailable'
   let compatibleText = ''
@@ -897,18 +907,21 @@ export { Solution }
           chunks.push(event.text)
         } else if (event.type === 'done') {
           unsubscribe()
-          finish(chunks.join(''))
+          finish(event.text || chunks.join(''))
         } else {
           unsubscribe()
           reject(new Error(event.message))
         }
       })
       try {
-        await window.baseCase.ai.explain(${JSON.stringify({
-          problemId: 'core/pair-sum',
-          language: 'typescript',
-          code: 'class Solution {}',
-          failure: wrongResult.firstFailure,
+        await window.baseCase.ai.run(${JSON.stringify({
+          feature: 'explain',
+          context: {
+            problemId: 'core/pair-sum',
+            language: 'typescript',
+            code: 'class Solution {}',
+            failure: wrongResult.firstFailure,
+          },
         })})
       } catch (error) {
         unsubscribe()

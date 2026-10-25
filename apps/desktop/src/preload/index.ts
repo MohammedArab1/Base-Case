@@ -2,8 +2,9 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { channels } from '../shared/ipc'
 import type { Channel, IpcResult } from '../shared/ipc'
 import type {
-  AiContext,
   AiEvent,
+  AiFeedbackInput,
+  AiRequest,
   AppInfo,
   AppSettings,
   BaseCaseApi,
@@ -160,8 +161,11 @@ const api: BaseCaseApi = {
   ai: {
     getStatus: () => invoke(channels.aiGetStatus),
     saveConfig: (input: SaveAiConfigInput) => invoke(channels.aiSaveConfig, input),
-    preview: (context: AiContext) => invoke(channels.aiPreview, context),
-    explain: (context: AiContext) => invoke(channels.aiExplain, context),
+    testConnection: () => invoke(channels.aiTestConnection),
+    preview: (request: AiRequest) => invoke(channels.aiPreview, request),
+    run: (request: AiRequest) => invoke(channels.aiRun, request),
+    cancel: (requestId: string) => invoke<boolean>(channels.aiCancel, requestId),
+    feedback: (input: AiFeedbackInput) => invoke<void>(channels.aiFeedback, input),
     onEvent: (listener: (event: AiEvent) => void) => {
       const handler = (_event: Electron.IpcRendererEvent, payload: AiEvent): void => {
         listener(payload)

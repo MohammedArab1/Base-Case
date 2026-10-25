@@ -136,7 +136,8 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
     // The inspector hosts the AI panel, notes, and attempt history.
     await expect(firstPage.getByTestId('inspector')).toBeVisible()
     await expect(firstPage.getByRole('tab', { name: 'AI' })).toBeVisible()
-    await expect(firstPage.getByText('Run samples or submit first.')).toBeVisible()
+    await expect(firstPage.getByTestId('ai-panel')).toBeVisible()
+    await expect(firstPage.getByTestId('ai-disabled')).toBeVisible()
 
     await firstPage.getByTestId('toggle-inspector').click()
     await expect(firstPage.getByTestId('inspector')).toHaveCount(0)
@@ -409,6 +410,49 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
       noteValues.Requirements ?? '',
     )
     await capture(reopened, 'design-reference')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('previews and runs a mock AI hint with guardrails', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-ai-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await page.getByTestId('onboarding-start').click()
+    await page.getByTestId('onboarding-language-typescript').click()
+    await page.getByTestId('onboarding-language-next').click()
+    await page.getByTestId('onboarding-goal-30').click()
+    await page.getByTestId('onboarding-goal-next').click()
+    await page.getByTestId('onboarding-ai-mock').click()
+    await page.getByTestId('onboarding-finish').click()
+    await page.getByTestId('onboarding-go-today').click()
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await page.getByRole('button', { name: /Pair Sum/ }).click()
+    await expect(page.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
+
+    // Every request goes through the context preview first.
+    await page.getByTestId('ai-hint').click()
+    await expect(page.getByTestId('ai-preview')).toBeVisible()
+    await expect(page.getByTestId('ai-preview')).toContainText('input tokens')
+    await expect(page.getByTestId('ai-preview')).toContainText('<user_code')
+
+    await page.getByTestId('ai-send').click()
+    await expect(page.getByTestId('ai-result-hint')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByTestId('ai-result-hint')).toContainText('hash-map')
+
+    await page.getByTestId('ai-feedback-unhelpful').click()
+    await expect(page.getByText('Saved locally. Thanks.')).toBeVisible()
+    await capture(page, 'ai-hint')
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, JSX } from 'react'
 import type {
-  AiPreview,
   AttemptMode,
   Language,
   ProblemDetail,
@@ -486,14 +485,10 @@ function ProblemWorkspace({
   const [cancelling, setCancelling] = useState(false)
   const [copied, setCopied] = useState(false)
   const activeRequestRef = useRef<string | null>(null)
-  const [aiPreview, setAiPreview] = useState<AiPreview | null>(null)
-  const [aiText, setAiText] = useState('')
-  const [aiLoading, setAiLoading] = useState(false)
-  const [aiError, setAiError] = useState<string | null>(null)
   const [inspectorOpen, setInspectorOpen] = useState(initialInspectorOpen)
   const [inspectorWidth, setInspectorWidth] = useState(initialInspectorWidth)
   const [attemptRefreshKey, setAttemptRefreshKey] = useState(0)
-  const unsubscribeRef = useRef<(() => void) | null>(null)
+  const [aiTrigger, setAiTrigger] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -501,9 +496,6 @@ function ProblemWorkspace({
     setDraftReady(false)
     setResult(null)
     setError(null)
-    setAiPreview(null)
-    setAiText('')
-    setAiError(null)
 
     void window.baseCase.drafts
       .get({ problemId: problem.id, language })
@@ -543,12 +535,6 @@ function ProblemWorkspace({
   }, [code, draftReady, language, plan, problem.id])
 
   useEffect(() => {
-    return () => {
-      unsubscribeRef.current?.()
-    }
-  }, [])
-
-  useEffect(() => {
     return window.baseCase.judge.onEvent((event) => {
       if (event.requestId !== activeRequestRef.current || event.type !== 'test') {
         return
@@ -574,9 +560,6 @@ function ProblemWorkspace({
       setRunProgress(null)
       setError(null)
       setGradeError(null)
-      setAiPreview(null)
-      setAiText('')
-      setAiError(null)
 
       try {
         const nextResult = await window.baseCase.judge.run({
@@ -731,6 +714,15 @@ function ProblemWorkspace({
     persistInspectorOpen(open)
   }
 
+  const explainFirstFailure = (): void => {
+    if (!result?.firstFailure) {
+      return
+    }
+
+    setInspectorVisible(true)
+    setAiTrigger((current) => current + 1)
+  }
+
   const startInspectorResize = (event: React.PointerEvent<HTMLDivElement>): void => {
     event.preventDefault()
     const startX = event.clientX
@@ -765,76 +757,6 @@ function ProblemWorkspace({
     } else if (event.key === 'ArrowRight') {
       event.preventDefault()
       resizeInspectorBy(-16)
-    }
-  }
-
-  const openAiPreview = async (): Promise<void> => {
-    const failure = result?.firstFailure
-    if (!failure) {
-      return
-    }
-
-    setInspectorVisible(true)
-    setAiError(null)
-
-    try {
-      const preview = await window.baseCase.ai.preview({
-        problemId: problem.id,
-        language,
-        code,
-        failure,
-      })
-      setAiPreview(preview)
-    } catch (previewError: unknown) {
-      setAiError(previewError instanceof Error ? previewError.message : String(previewError))
-    }
-  }
-
-  const sendAi = async (): Promise<void> => {
-    const failure = result?.firstFailure
-    if (!failure) {
-      return
-    }
-
-    setAiPreview(null)
-    setAiText('')
-    setAiError(null)
-    setAiLoading(true)
-    setInspectorVisible(true)
-
-    const unsubscribe = window.baseCase.ai.onEvent((event) => {
-      if (event.type === 'chunk') {
-        setAiText((current) => current + event.text)
-        return
-      }
-
-      if (event.type === 'done') {
-        setAiLoading(false)
-        unsubscribeRef.current = null
-        unsubscribe()
-        return
-      }
-
-      setAiError(event.message)
-      setAiLoading(false)
-      unsubscribeRef.current = null
-      unsubscribe()
-    })
-
-    unsubscribeRef.current = unsubscribe
-
-    try {
-      await window.baseCase.ai.explain({
-        problemId: problem.id,
-        language,
-        code,
-        failure,
-      })
-    } catch (explainError: unknown) {
-      setAiError(explainError instanceof Error ? explainError.message : String(explainError))
-      setAiLoading(false)
-      unsubscribe()
-      unsubscribeRef.current = null
     }
   }
 
@@ -1068,7 +990,7 @@ function ProblemWorkspace({
                 error={error}
                 mode={mode}
                 progress={runProgress}
-                onExplain={result?.firstFailure ? () => void openAiPreview() : undefined}
+                onExplain={result?.firstFailure && !isReview ? explainFirstFailure : undefined}
               />
             </div>
 
@@ -1127,13 +1049,19 @@ function ProblemWorkspace({
               problemId={problem.id}
               problemTitle={problem.title}
               attemptRefreshKey={attemptRefreshKey}
-              ai={{
-                hasFailure: Boolean(result?.firstFailure),
-                text: aiText,
-                loading: aiLoading,
-                error: aiError,
-                onExplain: () => void openAiPreview(),
-              }}
+              language={language}
+              code={code}
+              plan={plan}
+              failure={result?.firstFailure}
+              priorHints={problem.hints
+                .filter((hint) => revealedHints.has(hint.level))
+                .map((hint) => hint.body)}
+              aiTrigger={aiTrigger}
+              aiDisabledReason={
+                isReview
+                  ? 'AI is unavailable in review mode. Re-solve the problem, then grade the review.'
+                  : undefined
+              }
               onRestore={(restoredCode, restoredPlan) => {
                 setCode(restoredCode)
                 setPlan(restoredPlan)
@@ -1143,31 +1071,6 @@ function ProblemWorkspace({
           </>
         ) : null}
       </div>
-
-      {aiPreview ? (
-        <div className="modal-backdrop">
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="ai-preview-title">
-            <h2 id="ai-preview-title">AI context preview</h2>
-            <p className="muted">
-              This is exactly what would be sent to the configured provider. Hidden tests beyond the
-              first failure are not included.
-            </p>
-            <pre className="ai-preview">{aiPreview.text}</pre>
-            <div className="modal-actions">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => setAiPreview(null)}
-              >
-                Cancel
-              </button>
-              <button type="button" className="btn btn-primary" onClick={() => void sendAi()}>
-                Send to provider
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </div>
   )
 }

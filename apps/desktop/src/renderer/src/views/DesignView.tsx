@@ -14,6 +14,7 @@ import type {
   DesignScenarioDetail,
   DesignScenarioSummary,
 } from '../../../shared/types'
+import { AiPanel } from '../components/AiPanel'
 import { Markdown } from '../components/Markdown'
 import { useSettings } from '../settings'
 import { Badge } from '../ui/Badge'
@@ -532,6 +533,7 @@ function DesignWorkspace({
             <TabsList className="mx-3 mt-3 flex-wrap justify-start self-start">
               <TabsTrigger value="prompt">Prompt</TabsTrigger>
               <TabsTrigger value="notes">Notes</TabsTrigger>
+              <TabsTrigger value="ai">AI review</TabsTrigger>
               <TabsTrigger value="rubric">Rubric</TabsTrigger>
               <TabsTrigger value="reference">Reference</TabsTrigger>
               <TabsTrigger value="history">History</TabsTrigger>
@@ -576,6 +578,10 @@ function DesignWorkspace({
                     </label>
                   ))}
                 </div>
+              </TabsContent>
+
+              <TabsContent value="ai" className="pt-0">
+                <AiPanel variant="design" design={{ scenarioId, notes, rubric }} />
               </TabsContent>
 
               <TabsContent value="rubric" className="pt-0">

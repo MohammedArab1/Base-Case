@@ -1,78 +1,71 @@
 import { safeStorage } from 'electron'
 import type {
-  AiContext,
   AiEvent,
+  AiFeature,
+  AiFeedbackInput,
   AiPreview,
   AiProviderStatus,
   AiProviderType,
+  AiRequest,
+  AiRunOutcome,
+  AiStructuredResult,
+  AiTestConnectionResult,
   SaveAiConfigInput,
 } from '../shared/types'
+import { buildContext } from './ai-context'
+import { applyGuardrails } from './ai-guardrails'
+import { createProvider } from './ai-providers'
+import { AiProviderError } from './ai-providers/types'
+import type { AiProvider } from './ai-providers/types'
+import { RateLimiter } from './ai-rate-limit'
+import { aiJsonSchema, parseStructuredOutput } from './ai-schemas'
 import type { ContentRepository } from './content'
+import type { AiFeedbackRepository } from './repositories/ai-feedback'
 import type { AiProviderRepository } from './repositories/ai-providers'
 import type { SettingsRepository } from './repositories/settings'
+import type { SettingsStore } from './settings'
 
 const KEY_SETTING = 'ai.apiKey'
-const SYSTEM_PROMPT = `You are a Socratic coding tutor inside an offline practice app.
+const CONTEXT_WINDOW_SETTING = 'ai.contextWindow'
+const DEFAULT_CONTEXT_WINDOW = 32768
+const MOCK_CONTEXT_WINDOW = 8192
+const MAX_CONTEXT_WINDOW = 2_000_000
+const MIN_CONTEXT_WINDOW = 2048
 
-Rules:
-- Do not give a complete solution or a full code block.
-- Ask one focused question or offer a small, concrete hint.
-- Use only the problem statement, the user's code, and the first failing test.
-- Point to a specific line or value when possible.
-- If the user asks for the answer, refuse briefly and offer the next hint level.
-- Be direct and supportive. Do not use hype or "just" / "obviously".`
-
-interface ChatMessage {
-  readonly role: 'system' | 'user'
-  readonly content: string
-}
-
-function truncate(value: string, limit: number): string {
-  if (value.length <= limit) {
-    return value
-  }
-  return `${value.slice(0, limit)}\n… [truncated]`
-}
-
-function failureSummary(context: AiContext): string {
-  const failure = context.failure
-
-  if (!failure) {
-    return 'No failing test is available yet.'
-  }
-
-  const parts = [
-    `Status: ${failure.status}`,
-    `Test index: ${failure.index} (${failure.isSample ? 'sample' : 'hidden'})`,
-    `Input: ${JSON.stringify(failure.input)}`,
-    `Expected: ${JSON.stringify(failure.expected)}`,
-    `Actual: ${JSON.stringify(failure.actual)}`,
-    `Runtime: ${failure.runtimeMs} ms`,
-  ]
-
-  if (failure.userStderr) {
-    parts.push(`stderr:\n${truncate(failure.userStderr, 4000)}`)
-  }
-
-  if (failure.error) {
-    parts.push(
-      `Error: ${failure.error.type}: ${failure.error.message}`,
-      `Stack:\n${truncate(failure.error.stack, 4000)}`,
-    )
-  }
-
-  return parts.join('\n')
+const featureLabels: Record<AiFeature, string> = {
+  explain: 'Explain failure',
+  hint: 'Hint',
+  approach: 'Approach review',
+  complexity: 'Complexity review',
+  designNotes: 'Design notes review',
+  followUp: 'Follow-up interviewer',
 }
 
 function isProviderType(value: string): value is AiProviderType {
   return value === 'none' || value === 'mock' || value === 'openai-compatible'
 }
 
+function toProviderError(error: unknown): AiProviderError {
+  if (error instanceof AiProviderError) {
+    return error
+  }
+
+  return new AiProviderError(
+    'provider',
+    error instanceof Error ? error.message : 'The AI request failed.',
+  )
+}
+
 export class AiService {
+  private readonly active = new Map<string, AiProvider>()
+  private readonly limiter = new RateLimiter(8, 60_000)
+
   constructor(
     private readonly providers: AiProviderRepository,
     private readonly settings: SettingsRepository,
+    private readonly appSettings: SettingsStore,
     private readonly content: ContentRepository,
+    private readonly feedbackRepository: AiFeedbackRepository,
   ) {}
 
   getStatus(): AiProviderStatus {
@@ -83,15 +76,19 @@ export class AiService {
         type: 'none',
         baseUrl: '',
         model: '',
+        contextWindow: DEFAULT_CONTEXT_WINDOW,
         enabled: false,
         hasKey: false,
       }
     }
 
+    const type = isProviderType(stored.type) ? stored.type : 'none'
+
     return {
-      type: isProviderType(stored.type) ? stored.type : 'none',
+      type,
       baseUrl: stored.base_url,
       model: stored.model,
+      contextWindow: this.getContextWindow(type),
       enabled: stored.enabled === 1,
       hasKey: Boolean(this.settings.get(KEY_SETTING)),
     }
@@ -109,8 +106,20 @@ export class AiService {
       this.settings.set(KEY_SETTING, encrypted.toString('base64'))
     }
 
+    if (input.contextWindow !== undefined) {
+      const clamped = Math.min(
+        MAX_CONTEXT_WINDOW,
+        Math.max(MIN_CONTEXT_WINDOW, Math.round(input.contextWindow)),
+      )
+      this.settings.set(CONTEXT_WINDOW_SETTING, String(clamped))
+    }
+
     const hasKey = Boolean(this.settings.get(KEY_SETTING))
-    const enabled = input.type !== 'none' && (input.type === 'mock' || hasKey)
+    const enabled =
+      input.type === 'mock' ||
+      (input.type === 'openai-compatible' &&
+        input.baseUrl.trim().length > 0 &&
+        input.model.trim().length > 0)
 
     this.providers.saveConfig({
       type: input.type,
@@ -123,149 +132,229 @@ export class AiService {
     return this.getStatus()
   }
 
-  preview(context: AiContext): AiPreview {
-    const messages = this.buildMessages(context)
-    return {
-      messages,
-      text: messages.map((message) => `### ${message.role}\n\n${message.content}`).join('\n\n'),
+  async testConnection(): Promise<AiTestConnectionResult> {
+    const status = this.getStatus()
+
+    if (status.type === 'none' || !status.enabled) {
+      return {
+        ok: false,
+        message: 'Configure and save a provider before testing the connection.',
+        latencyMs: 0,
+        model: status.model,
+      }
+    }
+
+    try {
+      const provider = await this.createProvider(status)
+      return await provider.testConnection()
+    } catch (error) {
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : 'The connection test failed.',
+        latencyMs: 0,
+        model: status.model,
+      }
     }
   }
 
-  async stream(context: AiContext, onChunk: (text: string) => void): Promise<void> {
+  /** Preview is always available so learners can inspect what would be sent. */
+  preview(request: AiRequest): AiPreview {
+    const status = this.getStatus()
+
+    try {
+      return buildContext(request, {
+        content: this.content,
+        contextWindow: status.contextWindow,
+      }).preview
+    } catch (error) {
+      throw new AiProviderError(
+        'invalid_request',
+        error instanceof Error ? error.message : 'The context could not be built.',
+      )
+    }
+  }
+
+  async run(
+    request: AiRequest,
+    requestId: string,
+    onChunk: (text: string) => void,
+  ): Promise<AiRunOutcome> {
+    this.assertEnabled(request.feature)
+
+    if (!this.limiter.acquire()) {
+      throw new AiProviderError(
+        'rate_limited',
+        'Too many AI requests in the last minute. Wait a moment and try again.',
+      )
+    }
+
     const status = this.getStatus()
 
     if (!status.enabled) {
-      throw new Error('AI is disabled. Configure a provider in Settings first.')
+      throw new AiProviderError(
+        'disabled',
+        'AI is not configured. Add a provider in Settings, or use the mock provider.',
+      )
     }
 
-    const messages = this.buildMessages(context)
+    let built: ReturnType<typeof buildContext>
 
-    if (status.type === 'mock') {
-      const response =
-        'Look at the failing input and ask: which value would you need to have seen earlier for the current value to work? That is the complement. Where in your code do you check for it?'
-      for (const chunk of response.match(/.{1,28}/g) ?? [response]) {
-        await new Promise((resolve) => setTimeout(resolve, 25))
-        onChunk(chunk)
-      }
-      return
+    try {
+      built = buildContext(request, {
+        content: this.content,
+        contextWindow: status.contextWindow,
+      })
+    } catch (error) {
+      throw new AiProviderError(
+        'invalid_request',
+        error instanceof Error ? error.message : 'The context could not be built.',
+      )
     }
 
-    if (status.type !== 'openai-compatible') {
-      throw new Error('No supported AI provider is configured.')
+    const provider = await this.createProvider(status)
+    const liveStream = request.feature === 'designNotes'
+    let raw = ''
+
+    this.active.set(requestId, provider)
+
+    try {
+      await provider.stream(
+        {
+          requestId,
+          feature: request.feature,
+          system: built.system,
+          messages: built.messages,
+          maxOutputTokens: built.preview.maxOutputTokens,
+          temperature: 0.2,
+          jsonSchema: aiJsonSchema(request.feature),
+        },
+        (text) => {
+          raw += text
+          if (liveStream) {
+            onChunk(text)
+          }
+        },
+      )
+    } catch (error) {
+      throw toProviderError(error)
+    } finally {
+      this.active.delete(requestId)
     }
 
-    const apiKey = await this.getApiKey()
-    const endpoint = status.baseUrl.endsWith('/chat/completions')
-      ? status.baseUrl
-      : `${status.baseUrl.replace(/\/$/, '')}/chat/completions`
-
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
-      },
-      body: JSON.stringify({
-        model: status.model,
-        messages,
-        stream: true,
-        temperature: 0.2,
-      }),
-      signal: AbortSignal.timeout(120_000),
+    const parsed = parseStructuredOutput(request.feature, raw)
+    const guarded = applyGuardrails(parsed.text, parsed.result, {
+      feature: request.feature,
+      hintLevel: built.hintLevel,
     })
 
-    if (!response.ok) {
-      const body = await response.text()
-      throw new Error(`AI provider returned ${response.status}: ${truncate(body, 800)}`)
+    const warnings = [...guarded.warnings]
+
+    if (parsed.error) {
+      warnings.unshift(parsed.error)
     }
 
-    const contentType = response.headers.get('content-type') ?? ''
+    const sanitized = this.sanitizeLine(request, guarded.result, warnings)
+    const finalText =
+      sanitized !== guarded.result && sanitized ? JSON.stringify(sanitized) : guarded.text
 
-    if (contentType.includes('application/json')) {
-      const data = (await response.json()) as {
-        choices?: { message?: { content?: string } }[]
-      }
-      const text = data.choices?.[0]?.message?.content
-      if (text) {
-        onChunk(text)
-      }
-      return
+    // Short answers are buffered so the guardrails can run before anything is
+    // shown. Design reviews stream live because they are long and low-risk.
+    if (!liveStream) {
+      onChunk(finalText)
     }
 
-    if (!response.body) {
-      throw new Error('AI provider returned an empty response.')
-    }
-
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-    let buffer = ''
-
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) {
-        break
-      }
-
-      buffer += decoder.decode(value, { stream: true }).replaceAll('\r\n', '\n')
-
-      let boundary = buffer.indexOf('\n\n')
-      while (boundary !== -1) {
-        const event = buffer.slice(0, boundary)
-        buffer = buffer.slice(boundary + 2)
-        boundary = buffer.indexOf('\n\n')
-
-        for (const line of event.split('\n')) {
-          if (!line.startsWith('data:')) {
-            continue
-          }
-
-          const data = line.slice(5).trim()
-          if (data === '[DONE]') {
-            return
-          }
-
-          try {
-            const parsed = JSON.parse(data) as {
-              choices?: { delta?: { content?: string } }[]
-            }
-            const text = parsed.choices?.[0]?.delta?.content
-            if (text) {
-              onChunk(text)
-            }
-          } catch {
-            // Ignore keep-alive or provider-specific non-JSON events.
-          }
-        }
-      }
+    return {
+      text: finalText,
+      result: sanitized,
+      warning: warnings.length > 0 ? warnings.join(' ') : undefined,
     }
   }
 
-  private buildMessages(context: AiContext): ChatMessage[] {
-    const statement = truncate(this.content.getStatement(context.problemId), 8000)
-    const code = truncate(context.code, 20_000)
+  cancel(requestId: string): boolean {
+    const provider = this.active.get(requestId)
 
-    const userContent = [
-      `Problem: ${context.problemId}`,
-      `Language: ${context.language}`,
-      '',
-      'Problem statement:',
-      statement,
-      '',
-      'Current code:',
-      '```',
-      code,
-      '```',
-      '',
-      'First failing test:',
-      failureSummary(context),
-      '',
-      'Give one focused next step. Do not provide a complete solution.',
-    ].join('\n')
+    if (!provider) {
+      return false
+    }
 
-    return [
-      { role: 'system', content: SYSTEM_PROMPT },
-      { role: 'user', content: userContent },
-    ]
+    provider.cancel(requestId)
+    return true
+  }
+
+  feedback(input: AiFeedbackInput): void {
+    const status = this.getStatus()
+    this.feedbackRepository.add({
+      feature: input.feature,
+      reason: input.reason,
+      comment: input.comment,
+      providerType: status.type,
+      model: status.model,
+    })
+  }
+
+  private assertEnabled(feature: AiFeature): void {
+    const settings = this.appSettings.get()
+
+    if (!settings.aiEnabled) {
+      throw new AiProviderError('disabled', 'AI is turned off in Settings.')
+    }
+
+    if (!settings.aiFeatures[feature]) {
+      throw new AiProviderError('disabled', `${featureLabels[feature]} is turned off in Settings.`)
+    }
+  }
+
+  private getContextWindow(type: AiProviderType): number {
+    const stored = this.settings.get(CONTEXT_WINDOW_SETTING)
+    const parsed = stored ? Number(stored) : Number.NaN
+
+    if (Number.isFinite(parsed) && parsed >= MIN_CONTEXT_WINDOW) {
+      return Math.min(MAX_CONTEXT_WINDOW, Math.round(parsed))
+    }
+
+    return type === 'mock' ? MOCK_CONTEXT_WINDOW : DEFAULT_CONTEXT_WINDOW
+  }
+
+  private async createProvider(status: AiProviderStatus): Promise<AiProvider> {
+    const provider = createProvider({
+      type: status.type,
+      baseUrl: status.baseUrl,
+      model: status.model,
+      apiKey: await this.getApiKey(),
+      contextWindow: status.contextWindow,
+    })
+
+    if (!provider.available()) {
+      throw new AiProviderError(
+        'disabled',
+        'The provider is missing a base URL or model. Check Settings.',
+      )
+    }
+
+    return provider
+  }
+
+  private sanitizeLine(
+    request: AiRequest,
+    result: AiStructuredResult | undefined,
+    warnings: string[],
+  ): AiStructuredResult | undefined {
+    if (!result || !('line' in result) || result.line === null) {
+      return result
+    }
+
+    if (!('context' in request)) {
+      return result
+    }
+
+    const lineCount = request.context.code.split('\n').length
+
+    if (result.line < 1 || result.line > lineCount) {
+      warnings.push('The cited line was outside the code, so it was cleared.')
+      return { ...result, line: null }
+    }
+
+    return result
   }
 
   private async getApiKey(): Promise<string> {
@@ -276,7 +365,10 @@ export class AiService {
     }
 
     if (!(await safeStorage.isAsyncEncryptionAvailable())) {
-      throw new Error('Encryption is unavailable; the stored API key cannot be read.')
+      throw new AiProviderError(
+        'provider',
+        'Encryption is unavailable; the stored API key cannot be read.',
+      )
     }
 
     return String(await safeStorage.decryptStringAsync(Buffer.from(stored, 'base64')))

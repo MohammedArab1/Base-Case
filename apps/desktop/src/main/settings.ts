@@ -37,6 +37,10 @@ export class SettingsStore {
         ...current.editor,
         ...validatedPatch.editor,
       },
+      aiFeatures: {
+        ...current.aiFeatures,
+        ...validatedPatch.aiFeatures,
+      },
     })
 
     this.repository.set(settingsKey, JSON.stringify(next))

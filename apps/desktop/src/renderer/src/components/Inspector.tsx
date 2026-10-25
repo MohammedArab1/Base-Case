@@ -1,23 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { JSX } from 'react'
-import type { AttemptSummary, MistakeTag } from '../../../shared/types'
+import type { AttemptSummary, Failure, Language, MistakeTag } from '../../../shared/types'
+import { AiPanel } from './AiPanel'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs'
-
-export interface InspectorAiState {
-  readonly hasFailure: boolean
-  readonly text: string
-  readonly loading: boolean
-  readonly error: string | null
-  onExplain(): void
-}
 
 interface InspectorProps {
   readonly problemId: string
   readonly problemTitle: string
   readonly attemptRefreshKey: number
-  readonly ai: InspectorAiState
+  readonly language: Language
+  readonly code: string
+  readonly plan: string
+  readonly failure?: Failure
+  readonly priorHints?: readonly string[]
+  readonly aiTrigger: number
+  readonly aiDisabledReason?: string
   readonly onRestore: (code: string, plan: string) => void
   readonly onClose: () => void
 }
@@ -26,7 +25,13 @@ export function Inspector({
   problemId,
   problemTitle,
   attemptRefreshKey,
-  ai,
+  language,
+  code,
+  plan,
+  failure,
+  priorHints,
+  aiTrigger,
+  aiDisabledReason,
   onRestore,
   onClose,
 }: InspectorProps): JSX.Element {
@@ -59,7 +64,16 @@ export function Inspector({
 
         <div className="inspector-scroll">
           <TabsContent value="ai" className="pt-0">
-            <AiTab ai={ai} />
+            <AiTab
+              problemId={problemId}
+              language={language}
+              code={code}
+              plan={plan}
+              failure={failure}
+              priorHints={priorHints}
+              trigger={aiTrigger}
+              disabledReason={aiDisabledReason}
+            />
           </TabsContent>
           <TabsContent value="notes" className="pt-0">
             <NotesTab problemId={problemId} problemTitle={problemTitle} />
@@ -77,49 +91,35 @@ export function Inspector({
   )
 }
 
-function AiTab({ ai }: { readonly ai: InspectorAiState }): JSX.Element {
+function AiTab({
+  problemId,
+  language,
+  code,
+  plan,
+  failure,
+  priorHints,
+  trigger,
+  disabledReason,
+}: {
+  readonly problemId: string
+  readonly language: Language
+  readonly code: string
+  readonly plan: string
+  readonly failure?: Failure
+  readonly priorHints?: readonly string[]
+  readonly trigger: number
+  readonly disabledReason?: string
+}): JSX.Element {
   return (
-    <div className="p-3">
-      <p className="m-0 text-xs leading-relaxed text-bc-muted">
-        A Socratic nudge based on your code and the first failing test. Hidden tests are never sent.
-      </p>
-
-      {ai.hasFailure ? (
-        <Button
-          className="mt-3"
-          size="sm"
-          variant="secondary"
-          onClick={ai.onExplain}
-          disabled={ai.loading}
-          data-testid="inspector-explain"
-        >
-          {ai.loading ? 'Waiting…' : ai.text ? 'Explain again' : 'Explain the first failure'}
-        </Button>
-      ) : (
-        <p className="m-0 mt-3 text-xs leading-relaxed text-bc-muted">
-          Run samples or submit first. The inspector can then explain the earliest failure.
-        </p>
-      )}
-
-      {ai.error ? (
-        <div className="mt-3 rounded-lg border border-bc-danger bg-bc-danger-soft p-2.5 text-xs text-bc-danger">
-          {ai.error}
-        </div>
-      ) : null}
-
-      {ai.text ? (
-        <div
-          className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-bc-text"
-          data-testid="inspector-ai-response"
-        >
-          {ai.text}
-        </div>
-      ) : null}
-
-      {ai.loading && !ai.text ? (
-        <p className="m-0 mt-3 text-xs text-bc-muted">Waiting for the provider…</p>
-      ) : null}
-    </div>
+    <AiPanel
+      variant="coding"
+      context={{ problemId, language, code, failure }}
+      hasFailure={Boolean(failure)}
+      hasPlan={plan.trim().length > 0}
+      priorHints={priorHints}
+      trigger={trigger}
+      disabledReason={disabledReason}
+    />
   )
 }
 

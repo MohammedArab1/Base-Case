@@ -175,4 +175,21 @@ export const migrations: readonly Migration[] = [
         ON review_logs (reviewed_at);
     `,
   },
+  {
+    version: 6,
+    sql: `
+      -- Local-only feedback on AI responses. Never leaves the machine.
+      CREATE TABLE IF NOT EXISTS ai_feedback (
+        id TEXT PRIMARY KEY,
+        feature TEXT NOT NULL,
+        provider_type TEXT NOT NULL,
+        model TEXT NOT NULL,
+        reason TEXT NOT NULL,
+        comment TEXT,
+        created_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS ai_feedback_created
+        ON ai_feedback (created_at);
+    `,
+  },
 ]

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 import type {
+  AiFeatureSettings,
   AiProviderStatus,
   AiProviderType,
+  AiTestConnectionResult,
   AppInfo,
   ContentPackSummary,
   JudgeStatus,
@@ -22,11 +24,25 @@ interface AiForm {
   readonly type: AiProviderType
   readonly baseUrl: string
   readonly model: string
+  readonly contextWindow: number
   readonly apiKey: string
 }
 
 const defaultBaseUrl = 'https://api.openai.com/v1'
 const defaultModel = 'gpt-4o-mini'
+const defaultContextWindow = 32768
+
+const aiFeatureOptions: readonly {
+  readonly id: keyof AiFeatureSettings
+  readonly label: string
+}[] = [
+  { id: 'explain', label: 'Explain failure' },
+  { id: 'hint', label: 'Hints' },
+  { id: 'approach', label: 'Approach review' },
+  { id: 'complexity', label: 'Complexity review' },
+  { id: 'designNotes', label: 'Design notes review' },
+  { id: 'followUp', label: 'Follow-up interviewer' },
+]
 
 interface SettingsToast {
   readonly title: string
@@ -56,10 +72,13 @@ export function SettingsView(): JSX.Element {
     type: 'none',
     baseUrl: defaultBaseUrl,
     model: defaultModel,
+    contextWindow: defaultContextWindow,
     apiKey: '',
   })
   const [clearKey, setClearKey] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [testing, setTesting] = useState(false)
+  const [testResult, setTestResult] = useState<AiTestConnectionResult | null>(null)
   const [loadingJudge, setLoadingJudge] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [savingSettings, setSavingSettings] = useState(false)
@@ -95,6 +114,7 @@ export function SettingsView(): JSX.Element {
           type: aiStatus.type,
           baseUrl: aiStatus.baseUrl || defaultBaseUrl,
           model: aiStatus.model || defaultModel,
+          contextWindow: aiStatus.contextWindow || defaultContextWindow,
           apiKey: '',
         })
       })
@@ -186,25 +206,26 @@ export function SettingsView(): JSX.Element {
     }
   }
 
+  const buildInput = (): SaveAiConfigInput => ({
+    type: form.type,
+    baseUrl: form.baseUrl,
+    model: form.model,
+    contextWindow: form.contextWindow,
+    ...(form.apiKey.trim() ? { apiKey: form.apiKey.trim() } : {}),
+    ...(clearKey ? { clearKey: true } : {}),
+  })
+
   const save = async (): Promise<void> => {
     setSaving(true)
 
-    const input: SaveAiConfigInput = {
-      type: form.type,
-      baseUrl: form.baseUrl,
-      model: form.model,
-      ...(form.apiKey.trim() ? { apiKey: form.apiKey.trim() } : {}),
-      ...(clearKey ? { clearKey: true } : {}),
-    }
-
     try {
-      const nextProvider = await window.baseCase.ai.saveConfig(input)
+      const nextProvider = await window.baseCase.ai.saveConfig(buildInput())
       setProvider(nextProvider)
       setForm((current) => ({ ...current, apiKey: '' }))
       setClearKey(false)
       setToast({
         title: nextProvider.enabled
-          ? 'AI provider saved and enabled.'
+          ? 'AI provider saved.'
           : 'AI provider saved, but it is not enabled.',
       })
     } catch (saveError: unknown) {
@@ -216,6 +237,32 @@ export function SettingsView(): JSX.Element {
     } finally {
       setSaving(false)
     }
+  }
+
+  const testConnection = async (): Promise<void> => {
+    setTesting(true)
+    setTestResult(null)
+
+    try {
+      const nextProvider = await window.baseCase.ai.saveConfig(buildInput())
+      setProvider(nextProvider)
+      setForm((current) => ({ ...current, apiKey: '' }))
+      setClearKey(false)
+      setTestResult(await window.baseCase.ai.testConnection())
+    } catch (testError: unknown) {
+      setTestResult({
+        ok: false,
+        message: testError instanceof Error ? testError.message : String(testError),
+        latencyMs: 0,
+        model: form.model,
+      })
+    } finally {
+      setTesting(false)
+    }
+  }
+
+  const toggleFeature = (feature: keyof AiFeatureSettings, value: boolean): void => {
+    void changeSettings({ aiFeatures: { [feature]: value } })
   }
 
   const isCompatible = form.type === 'openai-compatible'
@@ -690,11 +737,12 @@ export function SettingsView(): JSX.Element {
           <div>
             <h2>AI provider</h2>
             <p className="muted">
-              Optional. Keys are encrypted with the OS keychain and never exposed to the renderer.
+              Optional and experimental. Keys are encrypted with the OS keychain and never exposed
+              to the renderer. Pre-authored hints remain the primary path.
             </p>
           </div>
-          <span className={`badge ${provider?.enabled ? '' : 'badge-muted'}`}>
-            {provider?.enabled ? 'Enabled' : 'Disabled'}
+          <span className={`badge ${provider?.enabled && settings.aiEnabled ? '' : 'badge-muted'}`}>
+            {!settings.aiEnabled ? 'AI off' : provider?.enabled ? 'Enabled' : 'Disabled'}
           </span>
         </div>
 
@@ -758,6 +806,25 @@ export function SettingsView(): JSX.Element {
                   }
                 />
               </label>
+
+              <label className="field">
+                <span>Context window (tokens)</span>
+                <input
+                  className="input"
+                  type="number"
+                  min={2048}
+                  max={2000000}
+                  step={1024}
+                  aria-label="AI context window"
+                  value={form.contextWindow}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      contextWindow: Number(event.target.value) || defaultContextWindow,
+                    }))
+                  }
+                />
+              </label>
             </>
           ) : null}
         </div>
@@ -777,17 +844,67 @@ export function SettingsView(): JSX.Element {
           )}
           <button
             type="button"
+            className="btn btn-secondary"
+            onClick={() => void testConnection()}
+            disabled={testing || saving}
+            data-testid="ai-test-connection"
+          >
+            {testing ? 'Testing…' : 'Test connection'}
+          </button>
+          <button
+            type="button"
             className="btn btn-primary"
             onClick={() => void save()}
-            disabled={saving}
+            disabled={saving || testing}
           >
             {saving ? 'Saving…' : 'Save provider'}
           </button>
         </div>
 
+        {testResult ? (
+          <div
+            className={`callout ${testResult.ok ? '' : 'callout-error'}`}
+            data-testid="ai-test-result"
+          >
+            <strong>{testResult.ok ? 'Connection OK' : 'Connection failed'}</strong>
+            <p>{testResult.message}</p>
+          </div>
+        ) : null}
+
+        <div className="mt-4 border-t border-bc-border pt-3">
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={settings.aiEnabled}
+              onChange={(event) => void changeSettings({ aiEnabled: event.target.checked })}
+              data-testid="ai-enabled"
+            />
+            Enable AI features
+          </label>
+          <p className="muted small">
+            AI is off by default. The app works fully without it. Each feature can be turned off
+            independently.
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {aiFeatureOptions.map((option) => (
+              <label className="checkbox" key={option.id}>
+                <input
+                  type="checkbox"
+                  checked={settings.aiFeatures[option.id]}
+                  onChange={(event) => toggleFeature(option.id, event.target.checked)}
+                  disabled={!settings.aiEnabled}
+                  data-testid={`ai-feature-${option.id}`}
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
+        </div>
+
         <p className="muted small">
-          The mock provider returns a canned Socratic hint. A real provider is called only after the
-          context preview is confirmed. Local endpoints such as Ollama work without a key.
+          The mock provider returns canned text. A real provider is called only after the context
+          preview is confirmed. Local endpoints such as Ollama work without a key. With a cloud
+          provider, the preview shows exactly what leaves your machine.
         </p>
       </section>
 

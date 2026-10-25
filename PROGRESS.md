@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 5 — System design (complete; four playable scenarios)
-> Overall status: On track — coding and design practice both run end to end with local persistence, FSRS review, and Markdown/PNG export
-> Next milestone: Phase 6 AI tutor
+> Current phase: Phase 6 — AI tutor (core complete)
+> Overall status: On track — coding and design practice both run end to end with local persistence, FSRS review, Markdown/PNG export, and an optional guarded AI tutor
+> Next milestone: Phase 7 content production
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -18,7 +18,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
-| Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
+| Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
 | Phase 8 — Alpha release | Not started | — | Installers, docs, beta |
 | Phase 9 — MVP expansion | Not started | — | 25 + 8 content, importer, polish |
@@ -26,14 +26,14 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start Phase 6: AI context builder, structured outputs, guardrails, and design-note review.
-2. Add optional reference Excalidraw scenes and an automated native export-dialog check.
-3. Confirm the Windows Playwright run in CI.
-4. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
-3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
-4. Re-run the uninstall row of the full Windows checklist on a fresh install.
-5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
-6. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
+1. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/`.
+2. Add optional local AI history with a clear delete button (privacy default stays off).
+3. Add optional reference Excalidraw scenes and an automated native export-dialog check.
+4. Confirm the Windows Playwright run in CI.
+5. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+6. Re-run the uninstall row of the full Windows checklist on a fresh install.
+7. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
+8. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
 
 ## Blockers
 
@@ -42,6 +42,35 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 6 — AI tutor core
+
+- Status: Phase 6 core complete; evals harness and design review shipped
+- Done:
+  - Split the AI layer into provider-agnostic modules: `ai-providers/` (interface, mock, OpenAI-compatible), `ai-context.ts`, `ai-prompts.ts`, `ai-schemas.ts`, `ai-guardrails.ts`, and `ai-rate-limit.ts`.
+  - Added a token-budgeted context builder: priority sections, 75% window cap, drop history → truncate code around the failing line → summarize the brief, secret redaction, and data-tag defusal.
+  - Added structured Zod contracts for explain, hint, approach, complexity, design notes, and follow-up, with raw-text fallback and warnings.
+  - Added guardrails: long code blocks removed below level 4, reveal-level clamping, citation warnings, output caps, 8 requests/minute, cancellation, and review-mode disable.
+  - Added global `aiEnabled` (off by default) and per-feature toggles; onboarding enables the mock provider only when chosen.
+  - Added Test connection, context-window configuration, and a single `ai.preview`/`ai.run`/`ai.cancel`/`ai.feedback` IPC surface.
+  - Built the AI panel for coding (explain, hint levels 1–4, approach, complexity) and design (notes review, follow-up interviewer), with structured rendering, copy-context preview, token estimates, and local feedback.
+  - Added the `ai_feedback` migration and export/import support.
+  - Added the 10×3 bug zoo in `docs/evals/`, a `pnpm evals` runner, and recorded mock results.
+- Tests run:
+  - `pnpm typecheck`, `pnpm lint`, `pnpm format:check` — passed.
+  - `pnpm test` — 107 tests across 25 files.
+  - `pnpm build`, `pnpm smoke:e2e` — passed (encrypted key storage and a local OpenAI-compatible stream).
+  - `pnpm --filter @base-case/desktop test:e2e` — 4 passed (including preview → mock hint → feedback).
+  - `pnpm evals` — 60 cases, 0 raw/guarded leaks, ~152 ms average mock latency.
+  - `pnpm content:validate` — valid, 4 designs (warnings only for optional reference scenes).
+- Files/PRs:
+  - Key paths: `apps/desktop/src/main/ai.ts`, `ai-providers/`, `ai-context.ts`, `ai-schemas.ts`, `ai-guardrails.ts`, `renderer/src/components/AiPanel.tsx`, `AiResult.tsx`, `docs/evals/`.
+- Next:
+  - Run the bug zoo with a real model and record human ratings; optional local AI history; Phase 7 content production.
+- Notes/decisions:
+  - Short responses are buffered before display so guardrails run first; design reviews stream live.
+  - `aiEnabled` defaults to false, and the app remains fully usable with AI off.
+  - The context builder never includes hidden tests beyond the first failure, the reference design, or the checklist.
 
 ### 2026-10-25 — Phase 5 — Design scenario content
 

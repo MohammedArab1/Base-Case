@@ -2692,42 +2692,43 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Provider interface and OpenAI-compatible adapter.
-- [ ] Streaming, cancellation, timeout, error handling.
-- [ ] Settings:
-  - [ ] Provider, base URL, model, key.
-  - [ ] Test connection.
-  - [ ] `safeStorage` key encryption.
-  - [ ] Enable/disable AI globally and per feature.
-- [ ] Context builder:
-  - [ ] Problem brief.
-  - [ ] Code slice.
-  - [ ] Smallest failing test.
-  - [ ] Expected/actual/stderr.
-  - [ ] Plan, hints used, prior conversation.
-  - [ ] Token budget and truncation.
-  - [ ] Secret redaction.
-  - [ ] Preview modal.
-- [ ] Features:
-  - [ ] Explain failure.
-  - [ ] Socratic hint.
-  - [ ] Approach review.
-  - [ ] Complexity review.
-  - [ ] Design notes review.
-  - [ ] Follow-up interviewer questions.
-- [ ] Structured output schemas + Zod validation.
-- [ ] Guardrails:
-  - [ ] No full solution before level 4.
-  - [ ] Code-block detection/redaction.
-  - [ ] Prompt-injection delimiters.
-  - [ ] "I'm not sure" path.
-  - [ ] User feedback buttons.
-- [ ] Evals:
-  - [ ] Bug zoo fixtures.
-  - [ ] Leakage/helpfulness/latency script.
-  - [ ] Results documented.
+- [x] Provider interface and OpenAI-compatible adapter.
+- [x] Streaming, cancellation, timeout, error handling.
+- [x] Settings:
+  - [x] Provider, base URL, model, key.
+  - [x] Test connection.
+  - [x] `safeStorage` key encryption.
+  - [x] Enable/disable AI globally and per feature.
+- [x] Context builder:
+  - [x] Problem brief.
+  - [x] Code slice.
+  - [x] Smallest failing test.
+  - [x] Expected/actual/stderr.
+  - [x] Plan, hints used, prior conversation.
+  - [x] Token budget and truncation.
+  - [x] Secret redaction.
+  - [x] Preview modal.
+- [x] Features:
+  - [x] Explain failure.
+  - [x] Socratic hint.
+  - [x] Approach review.
+  - [x] Complexity review.
+  - [x] Design notes review.
+  - [x] Follow-up interviewer questions.
+- [x] Structured output schemas + Zod validation.
+- [x] Guardrails:
+  - [x] No full solution before level 4.
+  - [x] Code-block detection/redaction.
+  - [x] Prompt-injection delimiters.
+  - [x] "I'm not sure" path.
+  - [x] User feedback buttons.
+- [x] Evals:
+  - [x] Bug zoo fixtures.
+  - [x] Leakage/helpfulness/latency script.
+  - [x] Results documented for the mock baseline (`docs/evals/results-mock.json`); real-model ratings pending.
 - [ ] Optional Apple FM sidecar (stretch; otherwise post-MVP).
-- [ ] Tests with a mock provider; manual test with one real provider.
+- [x] Tests with a mock provider.
+- [ ] Manual test with one real provider (requires a key or local endpoint).
 
 **Deliverables**
 
@@ -2743,6 +2744,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - Mock provider tests pass.
 - Leakage rate < 1% on the bug zoo.
 - At least 70% diagnosis accuracy on the bug zoo, or the feature is labeled "experimental" and pre-authored hints remain primary.
+
+> Status 2026-10-25: all tasks except the real-provider manual test and the optional Apple FM sidecar are implemented. The mock bug-zoo baseline is recorded, but the leakage and diagnosis-accuracy exit criteria require a real-model run and human ratings. Until then, the AI panel is labeled as an optional assistant and pre-authored hints remain primary.
 
 ---
 

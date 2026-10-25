@@ -78,6 +78,7 @@ export function OnboardingView({ onFinish }: OnboardingViewProps): JSX.Element {
               dailyGoalMinutes: dailyGoal,
               reviewReminders,
               onboardingCompleted: true,
+              ...(aiChoice === 'mock' ? { aiEnabled: true } : {}),
             }
           : { onboardingCompleted: true },
       )

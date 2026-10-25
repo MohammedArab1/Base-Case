@@ -8,10 +8,30 @@ export interface EditorSettings {
   readonly wordWrap: boolean
 }
 
+export interface AiFeatureSettings {
+  readonly explain: boolean
+  readonly hint: boolean
+  readonly approach: boolean
+  readonly complexity: boolean
+  readonly designNotes: boolean
+  readonly followUp: boolean
+}
+
+export const defaultAiFeatureSettings: AiFeatureSettings = {
+  explain: true,
+  hint: true,
+  approach: true,
+  complexity: true,
+  designNotes: true,
+  followUp: true,
+}
+
 export interface AppSettings {
   readonly theme: ThemePreference
   readonly language: Language
   readonly editor: EditorSettings
+  readonly aiEnabled: boolean
+  readonly aiFeatures: AiFeatureSettings
   readonly dailyGoalMinutes: number
   readonly reviewDailyLimit: number
   readonly newCardsPerDay: number
@@ -23,6 +43,8 @@ export interface SettingsPatch {
   readonly theme?: ThemePreference
   readonly language?: Language
   readonly editor?: Partial<EditorSettings>
+  readonly aiEnabled?: boolean
+  readonly aiFeatures?: Partial<AiFeatureSettings>
   readonly dailyGoalMinutes?: number
   readonly reviewDailyLimit?: number
   readonly newCardsPerDay?: number
@@ -38,6 +60,8 @@ export const defaultAppSettings: AppSettings = {
     tabSize: 2,
     wordWrap: false,
   },
+  aiEnabled: false,
+  aiFeatures: defaultAiFeatureSettings,
   dailyGoalMinutes: 30,
   reviewDailyLimit: 20,
   newCardsPerDay: 10,
@@ -552,10 +576,29 @@ export interface AppInfo {
 
 export type AiProviderType = 'none' | 'mock' | 'openai-compatible'
 
+export type AiFeature = keyof AiFeatureSettings
+
+export type AiConfidence = 'low' | 'medium' | 'high'
+
+export type AiErrorCode =
+  | 'cancelled'
+  | 'timeout'
+  | 'disabled'
+  | 'rate_limited'
+  | 'provider'
+  | 'invalid_request'
+  | 'internal_error'
+
+export interface AiChatMessage {
+  readonly role: 'system' | 'user' | 'assistant'
+  readonly content: string
+}
+
 export interface AiProviderStatus {
   readonly type: AiProviderType
   readonly baseUrl: string
   readonly model: string
+  readonly contextWindow: number
   readonly enabled: boolean
   readonly hasKey: boolean
 }
@@ -564,29 +607,159 @@ export interface SaveAiConfigInput {
   readonly type: AiProviderType
   readonly baseUrl: string
   readonly model: string
+  readonly contextWindow?: number
   readonly apiKey?: string
   readonly clearKey?: boolean
 }
 
+export interface AiTestConnectionResult {
+  readonly ok: boolean
+  readonly message: string
+  readonly latencyMs: number
+  readonly model: string
+}
+
+/** Coding context. Optional fields are used by the hint and approach features. */
 export interface AiContext {
   readonly problemId: string
   readonly language: Language
   readonly code: string
   readonly failure?: Failure
+  readonly plan?: string
+  readonly question?: string
+  readonly priorHints?: readonly string[]
+  readonly hintLevel?: number
+}
+
+export interface AiConversationTurn {
+  readonly role: 'user' | 'assistant'
+  readonly content: string
+}
+
+/** Design context. The reference design and checklist are never included. */
+export interface AiDesignContext {
+  readonly scenarioId: string
+  readonly notes: DesignNotes
+  readonly rubric?: DesignRubricAnswers
+  readonly question?: string
+  readonly history?: readonly AiConversationTurn[]
+}
+
+export type AiRequest =
+  | {
+      readonly feature: Exclude<AiFeature, 'designNotes' | 'followUp'>
+      readonly context: AiContext
+    }
+  | {
+      readonly feature: 'designNotes' | 'followUp'
+      readonly design: AiDesignContext
+    }
+
+export interface AiContextSection {
+  readonly id: string
+  readonly label: string
+  readonly tokens: number
+  readonly truncated: boolean
 }
 
 export interface AiPreview {
+  readonly feature: AiFeature
   readonly text: string
-  readonly messages: readonly {
-    readonly role: 'system' | 'user'
-    readonly content: string
-  }[]
+  readonly messages: readonly AiChatMessage[]
+  readonly estimatedTokens: number
+  readonly budgetTokens: number
+  readonly maxOutputTokens: number
+  readonly sections: readonly AiContextSection[]
+  readonly droppedSections: readonly string[]
+  readonly redactions: number
+}
+
+export interface AiExplainResult {
+  readonly summary: string
+  readonly bugType: string
+  readonly evidence: string
+  readonly line: number | null
+  readonly nextQuestion: string
+  readonly confidence: AiConfidence
+}
+
+export interface AiHintResult {
+  readonly observation: string
+  readonly insight: string
+  readonly nextStep: string
+  readonly concept: string
+  readonly revealLevel: number
+}
+
+export interface AiApproachResult {
+  readonly matchesIntendedPattern: boolean
+  readonly strengths: readonly string[]
+  readonly risks: readonly string[]
+  readonly suggestedQuestion: string
+}
+
+export interface AiComplexityResult {
+  readonly time: string
+  readonly space: string
+  readonly reasoning: string
+  readonly confidence: AiConfidence
+}
+
+export interface AiDesignDimensionReview {
+  readonly name: string
+  readonly score: number
+  readonly evidence: string
+  readonly nextStep: string
+}
+
+export interface AiDesignNotesResult {
+  readonly dimensions: readonly AiDesignDimensionReview[]
+  readonly strengths: readonly string[]
+  readonly gaps: readonly string[]
+  readonly followUpQuestions: readonly string[]
+}
+
+export interface AiFollowUpResult {
+  readonly question: string
+}
+
+export type AiStructuredResult =
+  | AiExplainResult
+  | AiHintResult
+  | AiApproachResult
+  | AiComplexityResult
+  | AiDesignNotesResult
+  | AiFollowUpResult
+
+export interface AiRunOutcome {
+  readonly text: string
+  readonly result?: AiStructuredResult
+  readonly warning?: string
+}
+
+export type AiFeedbackReason = 'unhelpful' | 'leaky' | 'wrong' | 'other'
+
+export interface AiFeedbackInput {
+  readonly feature: AiFeature
+  readonly reason: AiFeedbackReason
+  readonly comment?: string
 }
 
 export type AiEvent =
   | { readonly requestId: string; readonly type: 'chunk'; readonly text: string }
-  | { readonly requestId: string; readonly type: 'done' }
-  | { readonly requestId: string; readonly type: 'error'; readonly message: string }
+  | {
+      readonly requestId: string
+      readonly type: 'done'
+      readonly text: string
+      readonly result?: AiStructuredResult
+      readonly warning?: string
+    }
+  | {
+      readonly requestId: string
+      readonly type: 'error'
+      readonly message: string
+      readonly code: AiErrorCode
+    }
 
 export interface BaseCaseApi {
   readonly platform: string
@@ -667,8 +840,11 @@ export interface BaseCaseApi {
   readonly ai: {
     getStatus(): Promise<AiProviderStatus>
     saveConfig(input: SaveAiConfigInput): Promise<AiProviderStatus>
-    preview(context: AiContext): Promise<AiPreview>
-    explain(context: AiContext): Promise<{ requestId: string }>
+    testConnection(): Promise<AiTestConnectionResult>
+    preview(request: AiRequest): Promise<AiPreview>
+    run(request: AiRequest): Promise<{ requestId: string }>
+    cancel(requestId: string): Promise<boolean>
+    feedback(input: AiFeedbackInput): Promise<void>
     onEvent(listener: (event: AiEvent) => void): () => void
   }
 }

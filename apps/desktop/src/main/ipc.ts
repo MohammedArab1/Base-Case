@@ -6,14 +6,15 @@ import type { IpcMainInvokeEvent } from 'electron'
 import type { ZodType } from 'zod'
 import { channels } from '../shared/ipc'
 import type { Channel, IpcResult } from '../shared/ipc'
-import type { AiContext, JudgeRunEvent, ReviewCard, ReviewQueueItem } from '../shared/types'
+import type { AiEvent, JudgeRunEvent, ReviewCard, ReviewQueueItem } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
 import { renderDesignAttemptMarkdown } from './design-export'
 import { toIpcError } from './ipc-errors'
 import {
   aiConfigSchema,
-  aiContextSchema,
+  aiFeedbackSchema,
+  aiRequestSchema,
   attemptIdSchema,
   cardIdSchema,
   designAttemptIdSchema,
@@ -41,6 +42,7 @@ import {
 } from './ipc-schemas'
 import type { JudgeClient } from './judge'
 import { getLogger } from './logger'
+import { AiProviderError } from './ai-providers/types'
 import type { PackManager } from './pack-manager'
 import type { AttemptsRepository } from './repositories/attempts'
 import type { ContentIndexRepository } from './repositories/content-index'
@@ -105,13 +107,7 @@ function register<I, O>(
   })
 }
 
-function sendAiEvent(
-  sender: Electron.WebContents,
-  event:
-    | { requestId: string; type: 'chunk'; text: string }
-    | { requestId: string; type: 'done' }
-    | { requestId: string; type: 'error'; message: string },
-): void {
+function sendAiEvent(sender: Electron.WebContents, event: AiEvent): void {
   if (!sender.isDestroyed()) {
     sender.send('ai:event', event)
   }
@@ -482,28 +478,41 @@ export function registerIpc({
 
   register(channels.aiSaveConfig, aiConfigSchema, (input) => ai.saveConfig(input))
 
-  register(channels.aiPreview, aiContextSchema, (input) => ai.preview(input))
+  register(channels.aiTestConnection, noInputSchema, () => ai.testConnection())
 
-  register(channels.aiExplain, aiContextSchema, (context: AiContext, event) => {
+  register(channels.aiPreview, aiRequestSchema, (request) => ai.preview(request))
+
+  register(channels.aiRun, aiRequestSchema, (request, event) => {
     const requestId = randomUUID()
 
     void ai
-      .stream(context, (text) => {
+      .run(request, requestId, (text) => {
         sendAiEvent(event.sender, { requestId, type: 'chunk', text })
       })
-      .then(() => {
-        sendAiEvent(event.sender, { requestId, type: 'done' })
+      .then((outcome) => {
+        sendAiEvent(event.sender, {
+          requestId,
+          type: 'done',
+          text: outcome.text,
+          result: outcome.result,
+          warning: outcome.warning,
+        })
       })
       .catch((error: unknown) => {
         sendAiEvent(event.sender, {
           requestId,
           type: 'error',
           message: error instanceof Error ? error.message : String(error),
+          code: error instanceof AiProviderError ? error.code : 'internal_error',
         })
       })
 
     return { requestId }
   })
+
+  register(channels.aiCancel, requestIdSchema, (requestId) => ai.cancel(requestId))
+
+  register(channels.aiFeedback, aiFeedbackSchema, (input) => ai.feedback(input))
 
   register(channels.settingsGet, noInputSchema, () => settings.get())
   register(channels.settingsUpdate, settingsPatchSchema, (patch) => settings.update(patch))

@@ -1,0 +1,292 @@
+import type { AiTestConnectionResult } from '../../shared/types'
+import { abortError, AiProviderError } from './types'
+import type { AiProvider, AiProviderRequest } from './types'
+
+const defaultTimeoutMs = 120_000
+const testTimeoutMs = 15_000
+
+type JsonMode = 'schema' | 'object' | 'none'
+
+export interface OpenAiCompatibleOptions {
+  readonly baseUrl: string
+  readonly model: string
+  readonly apiKey: string
+  readonly contextWindow: number
+  readonly timeoutMs?: number
+}
+
+interface ChatCompletionPayload {
+  readonly choices?: readonly {
+    readonly delta?: { readonly content?: string }
+    readonly message?: { readonly content?: string }
+  }[]
+}
+
+function truncate(value: string, limit: number): string {
+  return value.length <= limit ? value : `${value.slice(0, limit)}… [truncated]`
+}
+
+function describeStatus(status: number, detail: string): string {
+  if (status === 401 || status === 403) {
+    return `The provider rejected the API key (${status}). Check the key in Settings.`
+  }
+  if (status === 404) {
+    return 'The provider endpoint was not found (404). Check the base URL and model name.'
+  }
+  if (status === 429) {
+    return 'The provider is rate-limiting requests (429). Wait a moment and try again.'
+  }
+  if (status >= 500) {
+    return `The provider returned a server error (${status}). Try again later.`
+  }
+  return `The provider returned ${status}: ${truncate(detail, 500)}`
+}
+
+/**
+ * Adapter for the OpenAI chat-completions shape, which covers OpenAI,
+ * OpenRouter, Groq, Together, Ollama, LM Studio, and vLLM.
+ */
+export class OpenAiCompatibleProvider implements AiProvider {
+  readonly id = 'openai-compatible'
+  readonly name = 'OpenAI-compatible provider'
+  readonly type = 'openai-compatible' as const
+
+  private readonly controllers = new Map<string, AbortController>()
+
+  constructor(private readonly options: OpenAiCompatibleOptions) {}
+
+  get contextWindow(): number {
+    return this.options.contextWindow
+  }
+
+  available(): boolean {
+    return this.options.baseUrl.trim().length > 0 && this.options.model.trim().length > 0
+  }
+
+  async stream(request: AiProviderRequest, onChunk: (text: string) => void): Promise<void> {
+    const controller = new AbortController()
+    this.controllers.set(request.requestId, controller)
+
+    const timeout = setTimeout(() => {
+      controller.abort(abortError('timeout', 'The provider did not respond in time.'))
+    }, this.options.timeoutMs ?? defaultTimeoutMs)
+
+    const onExternalAbort = (): void => controller.abort()
+    request.signal?.addEventListener('abort', onExternalAbort, { once: true })
+
+    try {
+      const response = await this.sendWithFormatFallback(request, controller.signal)
+
+      const contentType = response.headers.get('content-type') ?? ''
+
+      if (contentType.includes('application/json')) {
+        const payload = (await response.json()) as ChatCompletionPayload
+        const text = payload.choices?.[0]?.message?.content
+        if (text) {
+          onChunk(text)
+        }
+        return
+      }
+
+      if (!response.body) {
+        throw new AiProviderError('provider', 'The provider returned an empty response.')
+      }
+
+      await this.readStream(response.body, onChunk)
+    } catch (error) {
+      if (controller.signal.aborted) {
+        const reason = controller.signal.reason
+        throw reason instanceof AiProviderError
+          ? reason
+          : abortError('cancelled', 'The AI request was cancelled.')
+      }
+
+      throw error instanceof AiProviderError
+        ? error
+        : new AiProviderError(
+            'provider',
+            error instanceof Error ? error.message : 'The AI request failed.',
+          )
+    } finally {
+      clearTimeout(timeout)
+      request.signal?.removeEventListener('abort', onExternalAbort)
+      this.controllers.delete(request.requestId)
+    }
+  }
+
+  cancel(requestId: string): void {
+    this.controllers.get(requestId)?.abort()
+  }
+
+  async testConnection(): Promise<AiTestConnectionResult> {
+    const started = Date.now()
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), testTimeoutMs)
+
+    try {
+      const response = await fetch(this.endpoint(), {
+        method: 'POST',
+        headers: this.headers(),
+        body: JSON.stringify({
+          model: this.options.model,
+          messages: [{ role: 'user', content: 'Reply with the single word: ready' }],
+          max_tokens: 5,
+          temperature: 0,
+          stream: false,
+        }),
+        signal: controller.signal,
+      })
+      const latencyMs = Date.now() - started
+
+      if (!response.ok) {
+        return {
+          ok: false,
+          message: describeStatus(response.status, await response.text()),
+          latencyMs,
+          model: this.options.model,
+        }
+      }
+
+      await response.text()
+      return {
+        ok: true,
+        message: `Connected in ${latencyMs} ms.`,
+        latencyMs,
+        model: this.options.model,
+      }
+    } catch (error) {
+      return {
+        ok: false,
+        message: controller.signal.aborted
+          ? 'The provider did not respond within 15 seconds.'
+          : error instanceof Error
+            ? error.message
+            : 'The connection test failed.',
+        latencyMs: Date.now() - started,
+        model: this.options.model,
+      }
+    } finally {
+      clearTimeout(timeout)
+    }
+  }
+
+  private endpoint(): string {
+    const base = this.options.baseUrl.trim().replace(/\/$/, '')
+    return base.endsWith('/chat/completions') ? base : `${base}/chat/completions`
+  }
+
+  private headers(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      ...(this.options.apiKey ? { Authorization: `Bearer ${this.options.apiKey}` } : {}),
+    }
+  }
+
+  private async sendWithFormatFallback(
+    request: AiProviderRequest,
+    signal: AbortSignal,
+  ): Promise<Response> {
+    const modes: readonly JsonMode[] = request.jsonSchema ? ['schema', 'object', 'none'] : ['none']
+    let lastStatus = 0
+    let lastDetail = ''
+
+    for (const mode of modes) {
+      const response = await this.post(request, signal, mode)
+
+      if (response.ok) {
+        return response
+      }
+
+      lastStatus = response.status
+      lastDetail = await response.text()
+
+      // Not every OpenAI-compatible endpoint implements `response_format`.
+      // Fall back from a strict schema to JSON mode to no format at all.
+      if (lastStatus !== 400 || !request.jsonSchema) {
+        throw new AiProviderError('provider', describeStatus(lastStatus, lastDetail))
+      }
+    }
+
+    throw new AiProviderError('provider', describeStatus(lastStatus, lastDetail))
+  }
+
+  private post(
+    request: AiProviderRequest,
+    signal: AbortSignal,
+    jsonMode: JsonMode,
+  ): Promise<Response> {
+    const body: Record<string, unknown> = {
+      model: this.options.model,
+      messages: [{ role: 'system', content: request.system }, ...request.messages],
+      stream: true,
+      temperature: request.temperature,
+      max_tokens: request.maxOutputTokens,
+    }
+
+    if (request.jsonSchema && jsonMode === 'schema') {
+      body.response_format = {
+        type: 'json_schema',
+        json_schema: {
+          name: `base_case_${request.feature}`,
+          schema: request.jsonSchema,
+          strict: false,
+        },
+      }
+    } else if (request.jsonSchema && jsonMode === 'object') {
+      body.response_format = { type: 'json_object' }
+    }
+
+    return fetch(this.endpoint(), {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(body),
+      signal,
+    })
+  }
+
+  private async readStream(
+    body: ReadableStream<Uint8Array>,
+    onChunk: (text: string) => void,
+  ): Promise<void> {
+    const reader = body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) {
+        break
+      }
+
+      buffer += decoder.decode(value, { stream: true }).replaceAll('\r\n', '\n')
+
+      let boundary = buffer.indexOf('\n\n')
+      while (boundary !== -1) {
+        const event = buffer.slice(0, boundary)
+        buffer = buffer.slice(boundary + 2)
+        boundary = buffer.indexOf('\n\n')
+
+        for (const line of event.split('\n')) {
+          if (!line.startsWith('data:')) {
+            continue
+          }
+
+          const data = line.slice(5).trim()
+          if (data === '[DONE]') {
+            return
+          }
+
+          try {
+            const payload = JSON.parse(data) as ChatCompletionPayload
+            const text = payload.choices?.[0]?.delta?.content
+            if (text) {
+              onChunk(text)
+            }
+          } catch {
+            // Ignore keep-alive or provider-specific non-JSON events.
+          }
+        }
+      }
+    }
+  }
+}

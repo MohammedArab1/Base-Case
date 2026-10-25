@@ -1,6 +1,9 @@
 import { z } from 'zod'
 import type {
   AiContext,
+  AiDesignContext,
+  AiFeedbackInput,
+  AiRequest,
   AppSettings,
   DesignNotes,
   DesignRubricAnswers,
@@ -110,12 +113,17 @@ export const aiContextSchema: z.ZodType<AiContext> = z.object({
   language: languageSchema,
   code: z.string().max(200_000),
   failure: failureSchema.optional(),
+  plan: z.string().max(20_000).optional(),
+  question: z.string().max(2_000).optional(),
+  priorHints: z.array(z.string().max(2_000)).max(10).optional(),
+  hintLevel: z.number().int().min(1).max(4).optional(),
 }) as z.ZodType<AiContext>
 
 export const aiConfigSchema: z.ZodType<SaveAiConfigInput> = z.object({
   type: z.enum(['none', 'mock', 'openai-compatible']),
   baseUrl: z.string().max(2000),
   model: z.string().max(200),
+  contextWindow: z.number().int().min(2048).max(2_000_000).optional(),
   apiKey: z.string().max(10_000).optional(),
   clearKey: z.boolean().optional(),
 }) as z.ZodType<SaveAiConfigInput>
@@ -146,6 +154,43 @@ const designRubricAnswersSchema: z.ZodType<DesignRubricAnswers> = z.record(
   }),
 ) as z.ZodType<DesignRubricAnswers>
 
+const aiConversationTurnSchema = z.object({
+  role: z.enum(['user', 'assistant']),
+  content: z.string().max(4_000),
+})
+
+// Self-assessment may be incomplete while the learner is still writing notes,
+// so 0 is allowed here; the context builder only sends scored dimensions.
+const aiRubricAnswersSchema = z.record(
+  z.string().min(1).max(100),
+  z.object({
+    score: z.number().int().min(0).max(4),
+    evidence: z.string().max(20_000),
+  }),
+)
+
+export const aiDesignContextSchema: z.ZodType<AiDesignContext> = z.object({
+  scenarioId: designScenarioIdSchema,
+  notes: designNotesSchema,
+  rubric: aiRubricAnswersSchema.optional(),
+  question: z.string().max(2_000).optional(),
+  history: z.array(aiConversationTurnSchema).max(20).optional(),
+}) as z.ZodType<AiDesignContext>
+
+const codingAiFeatureSchema = z.enum(['explain', 'hint', 'approach', 'complexity'])
+const designAiFeatureSchema = z.enum(['designNotes', 'followUp'])
+
+export const aiRequestSchema: z.ZodType<AiRequest> = z.union([
+  z.object({ feature: codingAiFeatureSchema, context: aiContextSchema }),
+  z.object({ feature: designAiFeatureSchema, design: aiDesignContextSchema }),
+]) as z.ZodType<AiRequest>
+
+export const aiFeedbackSchema: z.ZodType<AiFeedbackInput> = z.object({
+  feature: z.enum(['explain', 'hint', 'approach', 'complexity', 'designNotes', 'followUp']),
+  reason: z.enum(['unhelpful', 'leaky', 'wrong', 'other']),
+  comment: z.string().max(2_000).optional(),
+}) as z.ZodType<AiFeedbackInput>
+
 export const saveDesignDraftSchema: z.ZodType<SaveDesignDraftInput> = z.object({
   scenarioId: designScenarioIdSchema,
   sceneJson: sceneJsonSchema.optional(),
@@ -171,10 +216,28 @@ const editorSettingsSchema: z.ZodType<EditorSettings> = z.object({
   wordWrap: z.boolean(),
 }) as z.ZodType<EditorSettings>
 
+const aiFeatureSettingsSchema = z.object({
+  explain: z.boolean().default(true),
+  hint: z.boolean().default(true),
+  approach: z.boolean().default(true),
+  complexity: z.boolean().default(true),
+  designNotes: z.boolean().default(true),
+  followUp: z.boolean().default(true),
+})
+
 export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
   theme: z.enum(['system', 'light', 'dark']),
   language: languageSchema,
   editor: editorSettingsSchema,
+  aiEnabled: z.boolean().default(false),
+  aiFeatures: aiFeatureSettingsSchema.default({
+    explain: true,
+    hint: true,
+    approach: true,
+    complexity: true,
+    designNotes: true,
+    followUp: true,
+  }),
   dailyGoalMinutes: z.number().int().min(5).max(480),
   reviewDailyLimit: z.number().int().min(1).max(200).default(20),
   newCardsPerDay: z.number().int().min(0).max(100).default(10),
@@ -190,6 +253,17 @@ export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
       fontSize: z.number().int().min(10).max(24).optional(),
       tabSize: z.number().int().min(2).max(8).optional(),
       wordWrap: z.boolean().optional(),
+    })
+    .optional(),
+  aiEnabled: z.boolean().optional(),
+  aiFeatures: z
+    .object({
+      explain: z.boolean().optional(),
+      hint: z.boolean().optional(),
+      approach: z.boolean().optional(),
+      complexity: z.boolean().optional(),
+      designNotes: z.boolean().optional(),
+      followUp: z.boolean().optional(),
     })
     .optional(),
   dailyGoalMinutes: z.number().int().min(5).max(480).optional(),

@@ -7,6 +7,7 @@ import { AppDatabase } from './database'
 import { migrations } from './migrations'
 
 const expectedTables = [
+  'ai_feedback',
   'ai_provider_configs',
   'attempt_events',
   'attempt_mistake_tags',

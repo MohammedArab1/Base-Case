@@ -1,0 +1,478 @@
+{
+  "version": 1,
+  "description": "Bug zoo for the explain-failure and hint prompts. Each problem has three known-bad solutions with a labelled bug and the first failing test.",
+  "problems": [
+    {
+      "id": "pair-sum",
+      "title": "Pair Sum",
+      "statement": "Return the indices of the two numbers in nums that add up to target. Each input has exactly one solution and you may not use the same index twice.",
+      "signature": "def pair_sum(nums: list[int], target: int) -> list[int]: ...",
+      "patterns": ["hash-map", "arrays"],
+      "solutions": [
+        {
+          "id": "pair-sum-off-by-one",
+          "bugLabel": "off_by_one",
+          "code": "def pair_sum(nums, target):\n    seen = {}\n    for i in range(len(nums) - 1):\n        complement = target - nums[i]\n        if complement in seen:\n            return [seen[complement], i]\n        seen[nums[i]] = i\n    return []",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[1, 2, 3], 5],
+            "expected": [1, 2],
+            "actual": []
+          }
+        },
+        {
+          "id": "pair-sum-wrong-output",
+          "bugLabel": "wrong_output",
+          "code": "def pair_sum(nums, target):\n    for i in range(len(nums)):\n        for j in range(len(nums)):\n            if i != j and nums[i] + nums[j] == target:\n                return [nums[i], nums[j]]\n    return []",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[1, 2, 3], 5],
+            "expected": [1, 2],
+            "actual": [2, 3]
+          }
+        },
+        {
+          "id": "pair-sum-duplicate-index",
+          "bugLabel": "boundary",
+          "code": "def pair_sum(nums, target):\n    seen = {}\n    for i, value in enumerate(nums):\n        seen[value] = i\n    for i, value in enumerate(nums):\n        complement = target - value\n        if complement in seen:\n            return [i, seen[complement]]\n    return []",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[3, 2, 4], 6],
+            "expected": [1, 2],
+            "actual": [0, 0]
+          }
+        }
+      ]
+    },
+    {
+      "id": "reverse-string",
+      "title": "Reverse String In Place",
+      "statement": "Reverse the characters of the input list in place and return it. Do not allocate a second list.",
+      "signature": "def reverse_string(chars: list[str]) -> list[str]: ...",
+      "patterns": ["two-pointers"],
+      "solutions": [
+        {
+          "id": "reverse-string-off-by-one",
+          "bugLabel": "off_by_one",
+          "code": "def reverse_string(chars):\n    left, right = 0, len(chars) - 1\n    while left < right - 1:\n        chars[left], chars[right] = chars[right], chars[left]\n        left += 1\n        right -= 1\n    return chars",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [["a", "b", "c", "d"]],
+            "expected": ["d", "c", "b", "a"],
+            "actual": ["d", "b", "c", "a"]
+          }
+        },
+        {
+          "id": "reverse-string-copy",
+          "bugLabel": "mutation",
+          "code": "def reverse_string(chars):\n    return list(reversed(chars))",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [["a", "b", "c"]],
+            "expected": ["c", "b", "a"],
+            "actual": ["a", "b", "c"]
+          }
+        },
+        {
+          "id": "reverse-string-empty",
+          "bugLabel": "boundary",
+          "code": "def reverse_string(chars):\n    left, right = 0, len(chars) - 1\n    while left < right:\n        chars[left], chars[right] = chars[right], chars[left]\n        left += 1\n        right -= 1\n    return chars[0]",
+          "failure": {
+            "status": "runtime_error",
+            "input": [[]],
+            "expected": [],
+            "actual": null,
+            "error": {
+              "type": "IndexError",
+              "message": "list index out of range",
+              "stack": "reverse_string line 7"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "valid-palindrome",
+      "title": "Valid Palindrome",
+      "statement": "Return true when the string reads the same forwards and backwards, ignoring case and non-alphanumeric characters.",
+      "signature": "def is_palindrome(value: str) -> bool: ...",
+      "patterns": ["two-pointers", "strings"],
+      "solutions": [
+        {
+          "id": "valid-palindrome-no-filter",
+          "bugLabel": "wrong_pattern",
+          "code": "def is_palindrome(value):\n    cleaned = value.lower()\n    return cleaned == cleaned[::-1]",
+          "failure": {
+            "status": "wrong_answer",
+            "input": ["A man, a plan, a canal: Panama"],
+            "expected": true,
+            "actual": false
+          }
+        },
+        {
+          "id": "valid-palindrome-case",
+          "bugLabel": "boundary",
+          "code": "def is_palindrome(value):\n    cleaned = ''.join(ch for ch in value if ch.isalnum())\n    return cleaned == cleaned[::-1]",
+          "failure": {
+            "status": "wrong_answer",
+            "input": ["RaceCar"],
+            "expected": true,
+            "actual": false
+          }
+        },
+        {
+          "id": "valid-palindrome-off-by-one",
+          "bugLabel": "off_by_one",
+          "code": "def is_palindrome(value):\n    cleaned = ''.join(ch.lower() for ch in value if ch.isalnum())\n    left, right = 0, len(cleaned) - 1\n    while left < right - 1:\n        if cleaned[left] != cleaned[right]:\n            return False\n        left += 1\n        right -= 1\n    return True",
+          "failure": {
+            "status": "wrong_answer",
+            "input": ["ab"],
+            "expected": false,
+            "actual": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "binary-search",
+      "title": "Binary Search",
+      "statement": "Return the index of target in the sorted list nums, or -1 when it is absent.",
+      "signature": "def search(nums: list[int], target: int) -> int: ...",
+      "patterns": ["binary-search"],
+      "solutions": [
+        {
+          "id": "binary-search-infinite-loop",
+          "bugLabel": "off_by_one",
+          "code": "def search(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid\n    return -1",
+          "failure": {
+            "status": "timeout",
+            "input": [[1, 3, 5, 7], 0],
+            "expected": -1,
+            "actual": null
+          }
+        },
+        {
+          "id": "binary-search-wrong-branch",
+          "bugLabel": "wrong_comparison",
+          "code": "def search(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            right = mid - 1\n        else:\n            left = mid + 1\n    return -1",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[1, 3, 5, 7], 5],
+            "expected": 2,
+            "actual": -1
+          }
+        },
+        {
+          "id": "binary-search-return-left",
+          "bugLabel": "boundary",
+          "code": "def search(nums, target):\n    left, right = 0, len(nums)\n    while left < right:\n        mid = (left + right) // 2\n        if nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid\n    return left",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[1, 3, 5, 7], 4],
+            "expected": -1,
+            "actual": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "max-subarray",
+      "title": "Maximum Subarray",
+      "statement": "Return the largest sum of any non-empty contiguous subarray of nums.",
+      "signature": "def max_subarray(nums: list[int]) -> int: ...",
+      "patterns": ["dynamic-programming", "arrays"],
+      "solutions": [
+        {
+          "id": "max-subarray-max-element",
+          "bugLabel": "wrong_pattern",
+          "code": "def max_subarray(nums):\n    return max(nums)",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[-2, 1, -3, 4, -1, 2, 1, -5, 4]],
+            "expected": 6,
+            "actual": 4
+          }
+        },
+        {
+          "id": "max-subarray-zero-init",
+          "bugLabel": "initialization",
+          "code": "def max_subarray(nums):\n    best = 0\n    current = 0\n    for value in nums:\n        current = max(value, current + value)\n        best = max(best, current)\n    return best",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[-3, -1, -2]],
+            "expected": -1,
+            "actual": 0
+          }
+        },
+        {
+          "id": "max-subarray-skip-first",
+          "bugLabel": "off_by_one",
+          "code": "def max_subarray(nums):\n    best = nums[1]\n    current = nums[1]\n    for value in nums[2:]:\n        current = max(value, current + value)\n        best = max(best, current)\n    return best",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[5, -10, 4]],
+            "expected": 5,
+            "actual": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "merge-intervals",
+      "title": "Merge Intervals",
+      "statement": "Merge all overlapping intervals and return them sorted by start.",
+      "signature": "def merge(intervals: list[list[int]]) -> list[list[int]]: ...",
+      "patterns": ["sorting", "intervals"],
+      "solutions": [
+        {
+          "id": "merge-intervals-descending-sort",
+          "bugLabel": "wrong_pattern",
+          "code": "def merge(intervals):\n    intervals.sort(reverse=True)\n    merged = []\n    for start, end in intervals:\n        if merged and start <= merged[-1][1]:\n            merged[-1][0] = min(merged[-1][0], start)\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [
+              [
+                [1, 4],
+                [6, 8]
+              ]
+            ],
+            "expected": [
+              [1, 4],
+              [6, 8]
+            ],
+            "actual": [
+              [6, 8],
+              [1, 4]
+            ]
+          }
+        },
+        {
+          "id": "merge-intervals-mutation",
+          "bugLabel": "mutation",
+          "code": "def merge(intervals):\n    intervals.sort()\n    for index in range(len(intervals) - 1, 0, -1):\n        if intervals[index][0] <= intervals[index - 1][1]:\n            intervals[index - 1][1] = max(intervals[index - 1][1], intervals[index][1])\n            intervals.pop(index)\n    return intervals",
+          "failure": {
+            "status": "input_mutated",
+            "input": [
+              [
+                [1, 3],
+                [2, 6],
+                [8, 10]
+              ]
+            ],
+            "expected": {
+              "result": [
+                [1, 6],
+                [8, 10]
+              ],
+              "inputUnchanged": true
+            },
+            "actual": {
+              "result": [
+                [1, 6],
+                [8, 10]
+              ],
+              "inputUnchanged": false
+            }
+          }
+        },
+        {
+          "id": "merge-intervals-touching",
+          "bugLabel": "boundary",
+          "code": "def merge(intervals):\n    intervals.sort()\n    merged = []\n    for start, end in intervals:\n        if merged and start < merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [
+              [
+                [1, 3],
+                [3, 5]
+              ]
+            ],
+            "expected": [[1, 5]],
+            "actual": [
+              [1, 3],
+              [3, 5]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "climb-stairs",
+      "title": "Climb Stairs",
+      "statement": "You can climb one or two steps at a time. Return the number of distinct ways to reach step n.",
+      "signature": "def climb_stairs(n: int) -> int: ...",
+      "patterns": ["dynamic-programming"],
+      "solutions": [
+        {
+          "id": "climb-stairs-exponential",
+          "bugLabel": "wrong_pattern",
+          "code": "def climb_stairs(n):\n    if n <= 1:\n        return 1\n    return climb_stairs(n - 1) + climb_stairs(n - 2)",
+          "failure": {
+            "status": "timeout",
+            "input": [40],
+            "expected": 165580141,
+            "actual": null
+          }
+        },
+        {
+          "id": "climb-stairs-base-case",
+          "bugLabel": "base_case",
+          "code": "def climb_stairs(n):\n    if n <= 0:\n        return 0\n    first, second = 1, 2\n    for _ in range(2, n):\n        first, second = second, first + second\n    return second",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [0],
+            "expected": 1,
+            "actual": 0
+          }
+        },
+        {
+          "id": "climb-stairs-off-by-one",
+          "bugLabel": "off_by_one",
+          "code": "def climb_stairs(n):\n    if n <= 2:\n        return n\n    first, second = 1, 2\n    for _ in range(2, n):\n        first, second = second, first + second\n    return first",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [4],
+            "expected": 5,
+            "actual": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "linked-list-cycle",
+      "title": "Linked List Cycle",
+      "statement": "Return true when the linked list contains a cycle.",
+      "signature": "def has_cycle(head: ListNode | None) -> bool: ...",
+      "patterns": ["linked-list", "fast-slow-pointers"],
+      "solutions": [
+        {
+          "id": "linked-list-cycle-set",
+          "bugLabel": "wrong_pattern",
+          "code": "def has_cycle(head):\n    seen = set()\n    node = head\n    while node:\n        if id(node) in seen:\n            return True\n        seen.add(id(node))\n        node = node.next\n    return False",
+          "failure": {
+            "status": "memory_limit",
+            "input": ["list of 100000 nodes with a cycle"],
+            "expected": true,
+            "actual": null
+          }
+        },
+        {
+          "id": "linked-list-cycle-null-deref",
+          "bugLabel": "null_dereference",
+          "code": "def has_cycle(head):\n    slow = head\n    fast = head\n    while fast and fast.next:\n        slow = slow.next.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
+          "failure": {
+            "status": "runtime_error",
+            "input": ["1 -> 2 -> None"],
+            "expected": false,
+            "actual": null,
+            "error": {
+              "type": "AttributeError",
+              "message": "'NoneType' object has no attribute 'next'",
+              "stack": "has_cycle line 6"
+            }
+          }
+        },
+        {
+          "id": "linked-list-cycle-slow-stuck",
+          "bugLabel": "infinite_loop",
+          "code": "def has_cycle(head):\n    slow = head\n    fast = head\n    while fast and fast.next:\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False",
+          "failure": {
+            "status": "timeout",
+            "input": ["1 -> 2 -> 3 -> 2 (cycle at 2)"],
+            "expected": true,
+            "actual": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "level-order-traversal",
+      "title": "Level Order Traversal",
+      "statement": "Return the values of the binary tree grouped by depth, from left to right.",
+      "signature": "def level_order(root: TreeNode | None) -> list[list[int]]: ...",
+      "patterns": ["trees", "bfs"],
+      "solutions": [
+        {
+          "id": "level-order-dfs",
+          "bugLabel": "wrong_pattern",
+          "code": "def level_order(root):\n    result = []\n    def visit(node):\n        if not node:\n            return\n        result.append(node.val)\n        visit(node.left)\n        visit(node.right)\n    visit(root)\n    return result",
+          "failure": {
+            "status": "wrong_answer",
+            "input": ["[3, 9, 20, null, null, 15, 7]"],
+            "expected": [[3], [9, 20], [15, 7]],
+            "actual": [3, 9, 20, 15, 7]
+          }
+        },
+        {
+          "id": "level-order-flat",
+          "bugLabel": "missing_levels",
+          "code": "def level_order(root):\n    if not root:\n        return []\n    queue = [root]\n    values = []\n    while queue:\n        node = queue.pop(0)\n        values.append(node.val)\n        if node.left:\n            queue.append(node.left)\n        if node.right:\n            queue.append(node.right)\n    return values",
+          "failure": {
+            "status": "wrong_answer",
+            "input": ["[3, 9, 20, null, null, 15, 7]"],
+            "expected": [[3], [9, 20], [15, 7]],
+            "actual": [3, 9, 20, 15, 7]
+          }
+        },
+        {
+          "id": "level-order-null-root",
+          "bugLabel": "null_dereference",
+          "code": "def level_order(root):\n    queue = [root]\n    result = []\n    while queue:\n        level = []\n        for _ in range(len(queue)):\n            node = queue.pop(0)\n            level.append(node.val)\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        result.append(level)\n    return result",
+          "failure": {
+            "status": "runtime_error",
+            "input": ["[]"],
+            "expected": [],
+            "actual": null,
+            "error": {
+              "type": "AttributeError",
+              "message": "'NoneType' object has no attribute 'val'",
+              "stack": "level_order line 7"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-k-frequent",
+      "title": "Top K Frequent Elements",
+      "statement": "Return the k most frequent values in nums in any order.",
+      "signature": "def top_k_frequent(nums: list[int], k: int) -> list[int]: ...",
+      "patterns": ["heap", "hash-map"],
+      "solutions": [
+        {
+          "id": "top-k-sort-by-value",
+          "bugLabel": "wrong_pattern",
+          "code": "def top_k_frequent(nums, k):\n    unique = sorted(set(nums), reverse=True)\n    return unique[:k]",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[1, 1, 1, 2, 2, 3], 2],
+            "expected": [1, 2],
+            "actual": [3, 2]
+          }
+        },
+        {
+          "id": "top-k-off-by-one",
+          "bugLabel": "off_by_one",
+          "code": "def top_k_frequent(nums, k):\n    counts = {}\n    for value in nums:\n        counts[value] = counts.get(value, 0) + 1\n    ordered = sorted(counts, key=counts.get, reverse=True)\n    return ordered[: k + 1]",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[1, 1, 1, 2, 2, 3], 2],
+            "expected": [1, 2],
+            "actual": [1, 2, 3]
+          }
+        },
+        {
+          "id": "top-k-loses-counts",
+          "bugLabel": "boundary",
+          "code": "def top_k_frequent(nums, k):\n    unique = list(set(nums))\n    return unique[:k]",
+          "failure": {
+            "status": "wrong_answer",
+            "input": [[3, 3, 3, 1, 1, 2], 1],
+            "expected": [3],
+            "actual": [1]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -17,6 +17,7 @@ export const userDataTables = [
   'problem_notes',
   'design_scenes',
   'design_attempts',
+  'ai_feedback',
   'ai_provider_configs',
 ] as const
 
@@ -40,19 +41,23 @@ export class UserDataRepository {
 
     for (const table of userDataTables) {
       const rows =
-        table === 'ai_provider_configs'
-          ? // key_ref points at an OS keychain entry that cannot travel with the file.
+        table === 'settings'
+          ? // The encrypted API key is machine-local and never travels with an export.
             (this.database.connection
-              .prepare(
-                `SELECT id, name, type, base_url, model, NULL AS key_ref, enabled,
-                        created_at, updated_at
-                 FROM ai_provider_configs`,
-              )
+              .prepare("SELECT * FROM settings WHERE key != 'ai.apiKey'")
               .all() as unknown as Record<string, unknown>[])
-          : (this.database.connection.prepare(`SELECT * FROM ${table}`).all() as unknown as Record<
-              string,
-              unknown
-            >[])
+          : table === 'ai_provider_configs'
+            ? // key_ref points at an OS keychain entry that cannot travel with the file.
+              (this.database.connection
+                .prepare(
+                  `SELECT id, name, type, base_url, model, NULL AS key_ref, enabled,
+                          created_at, updated_at
+                   FROM ai_provider_configs`,
+                )
+                .all() as unknown as Record<string, unknown>[])
+            : (this.database.connection
+                .prepare(`SELECT * FROM ${table}`)
+                .all() as unknown as Record<string, unknown>[])
 
       tables[table] = rows
       counts[table] = rows.length
