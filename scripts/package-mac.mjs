@@ -3,7 +3,6 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
-const desktop = 'apps/desktop'
 
 function run(command, args, env = process.env) {
   console.log(`$ ${command} ${args.join(' ')}`)

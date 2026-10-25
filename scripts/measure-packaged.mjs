@@ -135,10 +135,23 @@ async function waitForValue(expression, predicate, label, timeout = 30_000) {
     if (predicate(lastValue)) {
       return lastValue
     }
-    await sleep(100)
+    await sleep(50)
   }
 
   throw new Error(`Timed out waiting for ${label}: ${JSON.stringify(lastValue)}`)
+}
+
+async function clickButtonWithText(text) {
+  return evaluate(`(() => {
+    const button = [...document.querySelectorAll('button')].find((item) =>
+      item.textContent?.includes(${JSON.stringify(text)}),
+    )
+    if (!button) {
+      return false
+    }
+    button.click()
+    return true
+  })()`)
 }
 
 function directorySizeMb(path) {
@@ -235,6 +248,15 @@ async function main() {
   )
   const coldStartMs = Math.round(performance.now() - started)
 
+  await evaluate('window.baseCase.settings.update({ onboardingCompleted: true })')
+  await cdp.send('Page.reload')
+  await cdp.send('Runtime.enable')
+  await waitForValue(
+    "Boolean(document.querySelector('.app-shell'))",
+    (value) => value === true,
+    'the workspace after onboarding',
+  )
+
   const contentStarted = performance.now()
   const problems = await evaluate('window.baseCase.content.list()')
   const contentLoadMs = Math.round(performance.now() - contentStarted)
@@ -261,13 +283,52 @@ async function main() {
   )
   const judgeRunMs = Math.round(performance.now() - runStarted)
 
+  await sleep(1500)
+  const idleMemory = processTreeMemory(child.pid)
+
+  const codingStart = performance.now()
+  const openedCoding = await clickButtonWithText('Coding')
+  await waitForValue(
+    'document.body.innerText.includes("Problem library")',
+    (value) => value === true,
+    'the coding library',
+  )
+  const codingViewMs = Math.round(performance.now() - codingStart)
+
+  const problemStart = performance.now()
+  const openedProblem = await clickButtonWithText('Pair Sum')
+  await waitForValue(
+    "Boolean(document.querySelector('.cm-content'))",
+    (value) => value === true,
+    'the code editor',
+  )
+  const problemOpenMs = Math.round(performance.now() - problemStart)
+
+  const designStart = performance.now()
+  const openedDesign = await clickButtonWithText('System Design')
+  await waitForValue(
+    'document.querySelectorAll("[data-testid=design-scenario]").length > 0',
+    (value) => value === true,
+    'the design scenario list',
+  )
+  await evaluate('document.querySelector("[data-testid=design-scenario]")?.click()')
+  await waitForValue(
+    "Boolean(document.querySelector('.excalidraw__canvas.interactive'))",
+    (value) => value === true,
+    'the design canvas',
+  )
+  const designOpenMs = Math.round(performance.now() - designStart)
+
   await sleep(4000)
-  const memory = processTreeMemory(child.pid)
+  const workingMemory = processTreeMemory(child.pid)
 
   const results = {
     appBinary,
     coldStartMs,
     contentLoadMs,
+    codingViewMs: openedCoding ? codingViewMs : null,
+    problemOpenMs: openedProblem ? problemOpenMs : null,
+    designOpenMs: openedDesign ? designOpenMs : null,
     problems: Array.isArray(problems) ? problems.length : null,
     judgeOk: judgeStatus.ok,
     judge: `${judgeStatus.name} ${judgeStatus.version}`,
@@ -279,9 +340,11 @@ async function main() {
     ),
     judgeRun: `${runResult.passed}/${runResult.total} ${runResult.status}`,
     judgeRunMs,
-    idleMemoryMb: memory.totalMb,
-    mainProcessMb: memory.mainMb,
-    helperProcesses: memory.processes,
+    idleMemoryMb: idleMemory.totalMb,
+    idleMainProcessMb: idleMemory.mainMb,
+    workingMemoryMb: workingMemory.totalMb,
+    workingMainProcessMb: workingMemory.mainMb,
+    helperProcesses: workingMemory.processes,
     appBundleMb: directorySizeMb(appBundle),
     dmgMb: fileSizeMb(
       join(
