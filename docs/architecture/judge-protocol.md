@@ -97,15 +97,15 @@ names and must not treat an event as a final response.
 
 ## Version 1 methods
 
-| Method     | Params                                                           | Result                                                          |
-| ---------- | ---------------------------------------------------------------- | --------------------------------------------------------------- |
-| `hello`    | none                                                             | `protocolVersion`, `name`, `version`, `os`, `arch`, `goVersion` |
-| `version`  | none                                                             | Same as `hello`                                                 |
-| `ping`     | none                                                             | `{"pong": true}`                                                |
-| `doctor`   | none                                                             | Resolved Python and Node runtime paths/versions                 |
-| `shutdown` | none                                                             | `{"stopping": true}`; the sidecar exits                         |
-| `run`      | problem, language, code, mode, signature, limits, checker, tests | Result model                                                    |
-| `cancel`   | `{"targetId": "run-01"}`                                         | `{"cancelled": true, "targetId": "run-01"}`                     |
+| Method     | Params                                                           | Result                                                                  |
+| ---------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `hello`    | none                                                             | `protocolVersion`, `name`, `version`, `os`, `arch`, `goVersion`         |
+| `version`  | none                                                             | Same as `hello`                                                         |
+| `ping`     | none                                                             | `{"pong": true}`                                                        |
+| `doctor`   | none                                                             | Resolved runtime paths, versions, and source (`env`/`bundled`/`system`) |
+| `shutdown` | none                                                             | `{"stopping": true}`; the sidecar exits                                 |
+| `run`      | problem, language, code, mode, signature, limits, checker, tests | Result model                                                            |
+| `cancel`   | `{"targetId": "run-01"}`                                         | `{"cancelled": true, "targetId": "run-01"}`                             |
 
 `cancel` returns `cancelled: false` when no run with that id is active, so a
 late cancel is not an error. The cancelled run still receives its own final

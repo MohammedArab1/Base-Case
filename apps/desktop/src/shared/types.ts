@@ -163,6 +163,7 @@ export interface RunInput {
 export interface RuntimeInfo {
   readonly name: string
   readonly path: string
+  readonly source?: 'env' | 'bundled' | 'system'
   readonly version: string
   readonly available: boolean
   readonly error?: string

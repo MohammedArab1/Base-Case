@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (P3-A through P3-E and P3-G done; P3-F measurement complete, awaiting the bundling decision)
-> Overall status: On track — the coding judge is feature-complete for the alpha except bundled runtimes; the measured installer projection is ~269 MB, under the 350 MB budget
-> Next milestone: Maintainer decision on ADR-0010, then P3-F packaging or Phase 4 review work
+> Current phase: Phase 3 — Judge engine (complete; design harness deferred to Phase 5)
+> Overall status: On track — the packaged macOS app is 252 MB with bundled Python/Node and a ~2.4 s cold start; all judge checks and CI are green
+> Next milestone: Phase 4 review (FSRS, mistake tags, snapshots, export/import), then Phase 5 design
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, P3-C compile-once, P3-D harness, P3-E sandbox, and P3-G conformance done. P3-F runtime bundling waits on ADR-0010 |
+| Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -26,8 +26,8 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging (P3-F).
-2. Start Phase 4 review work (FSRS scheduling, mistake tags, snapshots, export/import) while P3-F is pending.
+1. Start Phase 4 review work: FSRS scheduling, review queue, mistake tags, snapshots, and export/import.
+2. Start Phase 5 design scenarios and rubrics after the review slice.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
 5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -36,11 +36,35 @@ This is the living status document for the project. `PLAN.md` describes the inte
 ## Blockers
 
 - **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
-- **Runtime strategy:** ADR-0010 is still Proposed. The Phase 3 measurement projects a ~269 MB macOS installer and ~255 MiB Windows installer, under the 350 MB budget; cold start is 2652 ms, under 3 s. Recommendation: accept bundling. P3-F packaging waits on maintainer approval.
-- **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 3 engineering.
+- **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks engineering.
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-F runtime bundling
+
+- Status: Phase 3 complete (ADR-0010 accepted)
+- Done:
+  - Added `runtimes.json` with pinned Python 3.12.15 and Node 24.22.0 URLs, SHA-256 checksums, sizes, license paths, and strip rules for macOS arm64 and Windows x64.
+  - Added `scripts/fetch-runtimes.mjs`: cached download, checksum verification, extraction, Python/Node slimming, license copying, `manifest.json`, `--verify`, and `--force` repair.
+  - Added bundled runtime discovery to the judge (`BASE_CASE_RUNTIME_ROOT`, `Resources/runtimes`, `build/runtime`) and a `source` field (`env`/`bundled`/`system`) in `doctor`.
+  - Included `build/runtime` in `electron-builder` and wired `package:mac`/`package:win` to fetch runtimes first.
+  - Updated Settings to show the runtime source and describe bundled runtimes.
+  - Packaged and measured the macOS app: 252.0 MB DMG, 252.6 MB ZIP, 690.6 MB app bundle, 2374 ms cold start, 246 ms for 5 judge tests, both runtimes reported as `bundled`.
+  - Accepted ADR-0010 and updated the decision log, plan, install docs, and progress log.
+- Tests run:
+  - `pnpm runtimes:fetch` and `pnpm runtimes:verify` — passed.
+  - Judge tests with `BASE_CASE_RUNTIME_ROOT=build/runtime` — passed (Python, TypeScript, sandbox).
+  - `BASE_CASE_RUNTIME_ROOT=build/runtime pnpm smoke:e2e` — passed.
+  - `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac` — passed.
+  - `node scripts/measure-packaged.mjs` — bundled runtimes, 252.0 MB DMG, 2374 ms cold start.
+- Files/PRs:
+  - Key paths: `runtimes.json`, `scripts/fetch-runtimes.mjs`, `services/judge/internal/judge/runtimes.go`, `apps/desktop/electron-builder.yml`, `apps/desktop/src/renderer/src/views/SettingsView.tsx`, `docs/adr/0010-runtime-bundling.md`.
+- Next:
+  - Phase 4 review work.
+- Notes/decisions:
+  - The slim layout ships the Node binary only (no npm/corepack/headers) and strips Python headers, pip, idlelib, tkinter, and test data.
+  - Windows packaging remains in the `Build installers` workflow; the projected installer is ~255 MiB.
 
 ### 2026-10-24 — Phase 3 — P3-F runtime measurement
 

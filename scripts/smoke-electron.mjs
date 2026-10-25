@@ -931,6 +931,12 @@ export { Solution }
     packUi: true,
     backups: backups.length,
     judge: `${judgeStatus.name} ${judgeStatus.version}`,
+    runtimeSources: Object.fromEntries(
+      Object.entries(judgeStatus.runtimes ?? {}).map(([name, info]) => [
+        name,
+        info.source ?? 'unknown',
+      ]),
+    ),
   }
 
   console.log(JSON.stringify(summary, null, 2))

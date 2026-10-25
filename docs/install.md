@@ -6,6 +6,9 @@ the app is not code-signed or notarized yet.
 
 Do not disable Gatekeeper or SmartScreen globally. Use the per-app steps below.
 
+Both installers bundle pinned Python 3.12.15 and Node 24.22.0 runtimes, so a
+clean machine does not need either language installed.
+
 ## macOS
 
 1. Download and open the `.dmg`.
@@ -39,17 +42,30 @@ public alpha.
    folder changes the path and makes uninstall request elevation.
 5. Windows 10 21H2+ or Windows 11 x64 is required.
 
-The Phase 1 judge uses the system Python and Node installations. Phase 3 will
-bundle pinned runtimes so a clean machine does not need them. Install Python
-from python.org with "Add python.exe to PATH" selected; if `python` or `python3`
-resolves to the Microsoft Store alias stub, disable those App Execution Aliases
-in Windows Settings. The judge now probes candidates and skips a runtime that
-fails to run, but Settings → Judge runtimes should show both runtimes as
-available before you start a problem.
+The installer bundles pinned Python and Node runtimes, so a clean machine does
+not need either language installed. Settings → Judge runtimes shows `bundled`
+for both when the packaged runtimes are healthy. Development builds fall back
+to `system` runtimes when the bundled packs are absent; in that case install
+Python from python.org with "Add python.exe to PATH" selected. If `python` or
+`python3` resolves to the Microsoft Store alias stub, disable those App
+Execution Aliases in Windows Settings.
 
 The uninstaller removes the application files, shortcut, and uninstall entry. It
 may leave an empty install folder behind; deleting it manually is safe. User
 data under `%APPDATA%\Base Case` is preserved by design.
+
+## Verify or repair bundled runtimes
+
+Development builds fetch pinned runtimes into `build/runtime`:
+
+```sh
+pnpm runtimes:fetch
+pnpm runtimes:verify
+```
+
+Use `pnpm runtimes:fetch --force` to re-download and replace a missing or
+corrupt pack. The manifest and SHA-256 values live in `runtimes.json`; the
+license files are copied next to each runtime.
 
 ## Verify a download
 

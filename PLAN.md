@@ -2510,11 +2510,11 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Streaming `test_result` events.
   - [x] Concurrent `cancel` while a run is in flight.
   - [x] Host rejects unknown protocol versions.
-- [ ] Runtime manager:
-  - [ ] Bundle Python standalone and Node.
-  - [ ] Platform/arch paths and checksums.
-  - [x] Version reporting and `doctor` command.
-  - [ ] Repair flow for missing/corrupt runtimes.
+- [x] Runtime manager:
+  - [x] Bundle Python standalone and Node (slim packs fetched at build time).
+  - [x] Platform/arch paths and SHA-256 checksums (`runtimes.json`).
+  - [x] Version reporting, `source` field, and `doctor` command.
+  - [x] Repair/verify flow (`runtimes:fetch --force`, `runtimes:verify`; in-app repair UI deferred).
 - [x] Signature schema and harness generator:
   - [x] Function signatures.
   - [x] In-place signatures (function kind with `mutates`).
@@ -3056,7 +3056,7 @@ Review this table monthly. Add a "trigger" action for each high risk.
 | D010 | No accounts/cloud in MVP | Accepted | Local-first, privacy |
 | D011 | SQLite + `node:sqlite` (provisional) | Provisional | Works in Electron 45 without a native rebuild; revisit if the experimental API changes |
 | D012 | CodeMirror 6 | Accepted | Lightweight, offline |
-| D013 | Bundle Python/Node runtimes | Proposed | Spike used system runtimes; 190 MB installer leaves ~160 MB headroom; decide in Phase 3 |
+| D013 | Bundle Python/Node runtimes | Accepted | Measured 252 MB DMG and 2417 ms cold start with pinned Python 3.12.15 and Node 24.22.0 (ADR-0010) |
 | D014 | Manual updates in MVP | Accepted | Auto-update complexity/signing |
 | D015 | 10+4 alpha, 25+8 MVP | Accepted | Quality over quantity |
 | D016 | No telemetry | Accepted | Privacy |

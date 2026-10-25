@@ -71,16 +71,21 @@ corepack pnpm package:mac   # unsigned DMG + ZIP
 corepack pnpm package:win   # NSIS + ZIP
 ```
 
-The judge uses the system Python/Node in the Phase 1 spike. Phase 3 decides
-whether to bundle pinned runtimes (see ADR-0010).
+Packaging fetches pinned Python and Node runtimes into `build/runtime` and
+bundles them in the installer. Development runs can use the same packs with
+`corepack pnpm runtimes:fetch`; otherwise the judge falls back to system
+runtimes. See ADR-0010.
 
 ## What works now
 
 - Secure Electron + React + TypeScript shell with a narrow typed preload API.
 - Original `core/pair-sum` problem with 5 sample tests, 39 hidden tests, four
   hints, an explanation, and Python/TypeScript reference solutions.
-- Real Go judge execution for function signatures, with structured statuses,
-  timeout/output limits, process-group kill, and exact/unordered/float checkers.
+- Real Go judge execution with function, in-place, linked-list, and tree
+  signatures; structured statuses; time/memory/output limits; cancellation;
+  compile-once TypeScript; and exact/unordered/float/set-of-sets checkers.
+- Bundled pinned Python 3.12 and Node 24 runtimes, a macOS Seatbelt sandbox,
+  and Windows Job Object limits.
 - CodeMirror editors with autosave to SQLite and language switching.
 - Structured failure panel and AI context preview.
 - Excalidraw canvas with local scene persistence and PNG export.
@@ -90,8 +95,7 @@ whether to bundle pinned runtimes (see ADR-0010).
   the main process and encrypted with `safeStorage`.
 
 Not built yet: FSRS review, design scenarios/rubrics, content importer, full
-design system, structured IPC error envelopes, bundled runtimes, and the 10+4
-alpha content set. The judge now uses macOS Seatbelt and Windows Job Objects;
+design system, structured IPC error envelopes, and the 10+4 alpha content set.
 Windows filesystem and network isolation remain best-effort.
 
 ## Repository layout
@@ -103,7 +107,7 @@ packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate command for content packs
 content/packs/core/    Bundled core pack (one original problem)
 content/templates/     Problem and design templates
-scripts/               Judge build, CDP smoke test, packaged-app measurement
+scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement
 docs/                  ADRs, architecture, authoring, spikes, project docs
 ```
 

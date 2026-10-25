@@ -20,9 +20,11 @@
     "judge:build": "node scripts/build-judge.mjs",
     "judge:test": "go test -C services/judge ./...",
     "judge:vet": "go vet -C services/judge ./...",
+    "runtimes:fetch": "node scripts/fetch-runtimes.mjs",
+    "runtimes:verify": "node scripts/fetch-runtimes.mjs --verify",
     "content:validate": "tsx packages/content-cli/src/cli.ts validate content/packs/core",
-    "package:mac": "node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:mac",
-    "package:win": "node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:win",
+    "package:mac": "node scripts/fetch-runtimes.mjs && node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:mac",
+    "package:win": "node scripts/fetch-runtimes.mjs && node scripts/build-judge.mjs && pnpm --filter @base-case/desktop package:win",
     "smoke:e2e": "node scripts/smoke-electron.mjs",
     "smoke:playwright": "pnpm --filter @base-case/desktop build && pnpm --filter @base-case/desktop test:e2e"
   },

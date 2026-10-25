@@ -268,6 +268,12 @@ async function main() {
     problems: Array.isArray(problems) ? problems.length : null,
     judgeOk: judgeStatus.ok,
     judge: `${judgeStatus.name} ${judgeStatus.version}`,
+    runtimeSources: Object.fromEntries(
+      Object.entries(judgeStatus.runtimes ?? {}).map(([name, info]) => [
+        name,
+        info.source ?? 'unknown',
+      ]),
+    ),
     judgeRun: `${runResult.passed}/${runResult.total} ${runResult.status}`,
     judgeRunMs,
     idleMemoryMb: memory.totalMb,

@@ -710,7 +710,10 @@ export function SettingsView(): JSX.Element {
         <div className="settings-card-heading">
           <div>
             <h2>Judge runtimes</h2>
-            <p className="muted">System Python and Node are used in the Phase 1 spike.</p>
+            <p className="muted">
+              Release builds bundle pinned Python and Node. Development builds may use an override
+              or the host system.
+            </p>
           </div>
           <button
             type="button"
@@ -728,7 +731,10 @@ export function SettingsView(): JSX.Element {
               <div className="runtime-row" key={runtime.name}>
                 <span className={`status-dot ${runtime.available ? '' : 'status-dot-error'}`} />
                 <strong>{runtime.name}</strong>
-                <span className="muted">{runtime.version || runtime.error || 'Not found'}</span>
+                <span className="muted">
+                  {runtime.source ? `${runtime.source} · ` : ''}
+                  {runtime.version || runtime.error || 'Not found'}
+                </span>
                 <code>{runtime.path ? breakablePath(runtime.path) : '—'}</code>
               </div>
             ))}

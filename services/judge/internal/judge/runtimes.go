@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
@@ -14,7 +15,9 @@ import (
 // at pinned runtimes when they are packaged with the app.
 type Runner struct {
 	PythonPath       string
+	PythonSource     string
 	NodePath         string
+	NodeSource       string
 	TempRoot         string
 	OutputLimitBytes int
 	Sandbox          bool
@@ -23,13 +26,21 @@ type Runner struct {
 type RuntimeInfo struct {
 	Name      string `json:"name"`
 	Path      string `json:"path"`
+	Source    string `json:"source,omitempty"`
 	Version   string `json:"version"`
 	Available bool   `json:"available"`
 	Error     string `json:"error,omitempty"`
 }
 
 func NewRunner() *Runner {
+	runtimeRoot := bundledRuntimeRoot()
+
 	pythonPath := os.Getenv("BASE_CASE_PYTHON")
+	pythonSource := "env"
+	if pythonPath == "" {
+		pythonPath = bundledPython(runtimeRoot)
+		pythonSource = "bundled"
+	}
 	if pythonPath == "" {
 		if runtime.GOOS == "windows" {
 			// The Windows Store "python3" alias is often a stub that never runs
@@ -38,20 +49,92 @@ func NewRunner() *Runner {
 		} else {
 			pythonPath = firstWorkingRuntime("python3", "python")
 		}
+		pythonSource = "system"
 	}
 
 	nodePath := os.Getenv("BASE_CASE_NODE")
+	nodeSource := "env"
+	if nodePath == "" {
+		nodePath = bundledNode(runtimeRoot)
+		nodeSource = "bundled"
+	}
 	if nodePath == "" {
 		nodePath = firstWorkingRuntime("node")
+		nodeSource = "system"
 	}
 
 	return &Runner{
 		PythonPath:       pythonPath,
+		PythonSource:     pythonSource,
 		NodePath:         nodePath,
+		NodeSource:       nodeSource,
 		TempRoot:         os.Getenv("BASE_CASE_JUDGE_TMP"),
 		OutputLimitBytes: 1024 * 1024,
 		Sandbox:          true,
 	}
+}
+
+// bundledRuntimeRoot finds the runtime directory next to the judge binary. In
+// the packaged app the judge lives in Resources/judge and the runtimes in
+// Resources/runtimes; in development they are build/judge and build/runtime.
+func bundledRuntimeRoot() string {
+	if root := os.Getenv("BASE_CASE_RUNTIME_ROOT"); root != "" {
+		return root
+	}
+
+	executable, err := os.Executable()
+	if err != nil {
+		return ""
+	}
+
+	directory := filepath.Dir(executable)
+	candidates := []string{
+		filepath.Join(directory, "runtimes"),
+		filepath.Join(directory, "runtime"),
+		filepath.Join(directory, "..", "runtimes"),
+		filepath.Join(directory, "..", "runtime"),
+	}
+
+	for _, candidate := range candidates {
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			return candidate
+		}
+	}
+
+	return ""
+}
+
+func bundledPython(root string) string {
+	if root == "" {
+		return ""
+	}
+
+	return firstExistingFile(
+		filepath.Join(root, "python", "bin", "python3"),
+		filepath.Join(root, "python", "bin", "python"),
+		filepath.Join(root, "python", "python.exe"),
+	)
+}
+
+func bundledNode(root string) string {
+	if root == "" {
+		return ""
+	}
+
+	return firstExistingFile(
+		filepath.Join(root, "node", "bin", "node"),
+		filepath.Join(root, "node", "node.exe"),
+	)
+}
+
+func firstExistingFile(paths ...string) string {
+	for _, path := range paths {
+		if info, err := os.Stat(path); err == nil && !info.IsDir() {
+			return path
+		}
+	}
+
+	return ""
 }
 
 // firstWorkingRuntime returns the first candidate that both resolves on PATH
@@ -109,18 +192,23 @@ func (r *Runner) outputLimit() int {
 	return r.OutputLimitBytes
 }
 
-// Doctor reports the resolved runtimes. It is intentionally independent of
-// any bundled runtime manifest; Phase 3 replaces this with checksummed runtime
-// packs.
+// Doctor reports the resolved runtimes, including whether each came from an
+// env override, a bundled pack, or the host system.
 func (r *Runner) Doctor(ctx context.Context) map[string]RuntimeInfo {
 	return map[string]RuntimeInfo{
-		"python": r.runtimeInfo(ctx, "python", r.PythonPath, "--version"),
-		"node":   r.runtimeInfo(ctx, "node", r.NodePath, "--version"),
+		"python": r.runtimeInfo(ctx, "python", r.PythonPath, r.PythonSource, "--version"),
+		"node":   r.runtimeInfo(ctx, "node", r.NodePath, r.NodeSource, "--version"),
 	}
 }
 
-func (r *Runner) runtimeInfo(ctx context.Context, name, path string, args ...string) RuntimeInfo {
-	info := RuntimeInfo{Name: name, Path: path}
+func (r *Runner) runtimeInfo(
+	ctx context.Context,
+	name string,
+	path string,
+	source string,
+	args ...string,
+) RuntimeInfo {
+	info := RuntimeInfo{Name: name, Path: path, Source: source}
 
 	if path == "" {
 		info.Error = "not found"

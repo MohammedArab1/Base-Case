@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "runtimes": {
+    "python": {
+      "version": "3.12.15",
+      "license": "PSF-2.0",
+      "archives": {
+        "darwin-arm64": {
+          "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261021/cpython-3.12.15%2B20261021-aarch64-apple-darwin-install_only.tar.gz",
+          "sha256": "a18cc33862b53bd54a148c710def5375c1b47470cccedf817a19c2d211764584",
+          "size": 25158763,
+          "root": "python",
+          "binary": "bin/python3",
+          "licensePath": "lib/python3.12/LICENSE.txt",
+          "strip": [
+            "include",
+            "share",
+            "lib/python3.12/site-packages",
+            "lib/python3.12/idlelib",
+            "lib/python3.12/tkinter",
+            "lib/python3.12/ensurepip",
+            "lib/python3.12/test"
+          ],
+          "stripExtensions": [".a"]
+        },
+        "win32-x64": {
+          "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261021/cpython-3.12.15%2B20261021-x86_64-pc-windows-msvc-install_only.tar.gz",
+          "sha256": "be7f14464d1d66f84429ad27e01f6d1482963afff64a2fb5256b2a51c7b5d398",
+          "size": 46388793,
+          "root": "python",
+          "binary": "python.exe",
+          "licensePath": "LICENSE.txt",
+          "strip": [
+            "include",
+            "Lib/site-packages",
+            "Lib/idlelib",
+            "Lib/tkinter",
+            "Lib/ensurepip",
+            "Lib/test",
+            "Scripts",
+            "libs",
+            "tcl",
+            "pythonw.exe"
+          ],
+          "stripExtensions": [".pdb", ".lib"]
+        }
+      }
+    },
+    "node": {
+      "version": "24.22.0",
+      "license": "MIT",
+      "archives": {
+        "darwin-arm64": {
+          "url": "https://nodejs.org/dist/v24.22.0/node-v24.22.0-darwin-arm64.tar.gz",
+          "sha256": "6a9724d9b50a5f22b4816cded441b5a8d9ddae546191a5e5b7efa5a5e2ee26d5",
+          "size": 53049576,
+          "root": "node-v24.22.0-darwin-arm64",
+          "binary": "bin/node",
+          "licensePath": "LICENSE",
+          "keep": ["bin/node", "LICENSE"]
+        },
+        "win32-x64": {
+          "url": "https://nodejs.org/dist/v24.22.0/node-v24.22.0-win-x64.zip",
+          "sha256": "f9683a19877e12a9b167305c8db71040d812876359de21f0d2e97c3f321f80c3",
+          "size": 37733703,
+          "root": "node-v24.22.0-win-x64",
+          "binary": "node.exe",
+          "licensePath": "LICENSE",
+          "keep": ["node.exe", "LICENSE"]
+        }
+      }
+    }
+  }
+}

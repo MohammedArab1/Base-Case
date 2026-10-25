@@ -20,6 +20,8 @@ extraResources:
     filter:
       - judge
       - judge.exe
+  - from: ../../build/runtime
+    to: runtimes
 
 artifactName: Base-Case-${version}-${arch}.${ext}
 

@@ -1,7 +1,7 @@
 # ADR-0010: Bundle pinned language runtimes and document the size budget
 
-- Status: Proposed
-- Date: 2026-10-23
+- Status: Accepted
+- Date: 2026-10-24
 - Deciders: Maintainer
 - Supersedes: —
 
@@ -13,7 +13,7 @@ interpreters, broken PATHs, and differences between machines. Bundling runtimes
 increases installer size and update complexity. The installer budget is under
 350 MB.
 
-## Decision (proposed)
+## Decision
 
 Bundle pinned, platform/arch-specific Python (`python-build-standalone`) and
 Node runtimes with the app. Record versions and checksums in `runtimes.json`,
@@ -21,10 +21,11 @@ include license files, and expose a `doctor` command plus a repair flow for
 missing or corrupt runtimes. TypeScript is transpiled with `sucrase` or
 `esbuild`; no type checking happens in the judge.
 
-The final decision depends on the Phase 1 measurements: installer size, cold
-start, judge overhead, and packaging complexity on macOS and Windows. If the
-budget cannot be met, fall back to first-use language packs downloaded on
-demand, with a clear offline limitation.
+The decision was gated on the Phase 3 measurements: installer size, cold start,
+judge overhead, and packaging complexity. The measured macOS package is 252 MB
+with a 2417 ms cold start, so bundling is accepted. If a future signed Windows
+installer exceeds the 350 MB budget, drop optional payloads first and fall back
+to first-use packs only as a last resort.
 
 ## Consequences
 
@@ -51,9 +52,10 @@ Negative:
 
 ## Follow-up
 
-- Measure in Phase 1 and change the status to Accepted or Superseded.
+- Measured and accepted in Phase 3 (see the measurement addendum).
 - Keep the runtime layer behind an interface so a download-based pack manager
   can replace bundled runtimes if needed.
+- Re-measure on every signed release and after runtime version bumps.
 
 ## Phase 1 addendum (2026-10-23)
 
@@ -93,5 +95,16 @@ a verify/repair flow. If a signed Windows installer crosses 350 MB, drop the
 Node `lib`/`include` payload first; fall back to first-use packs only if the
 budget still cannot be met.
 
-Status remains **Proposed** until the maintainer approves the ~80 MB installer
-increase and the P3-F packaging work begins.
+### Packaged measurement (2026-10-24)
+
+P3-F is implemented with `scripts/fetch-runtimes.mjs`, `runtimes.json`, and a
+bundled `Resources/runtimes` layout. The macOS arm64 package measures:
+
+- DMG: 252.0 MB; ZIP: 252.6 MB; app bundle: 690.6 MB.
+- Cold start: 2374 ms (budget 3000 ms; runs measured 2286–2417 ms).
+- Judge run: 246 ms for 5 sample tests (~49 ms/test).
+- `doctor` reports `source: "bundled"` for both Python and Node.
+
+Windows packaging is produced by the `Build installers` workflow; the projected
+installer is ~255 MiB. The budget has ~98 MB of macOS headroom, so the decision
+is **Accepted**.
