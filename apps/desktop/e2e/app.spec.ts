@@ -123,7 +123,7 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
 
     // Filters narrow the library without losing the search box.
     await firstPage.getByLabel('Difficulty filter').selectOption('hard')
-    await expect(firstPage.getByRole('heading', { name: 'No matches' })).toBeVisible()
+    await expect(firstPage.getByRole('button', { name: /Cargo Deadline/ })).toBeVisible()
     await firstPage.getByLabel('Difficulty filter').selectOption('easy')
     await expect(firstPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
     await firstPage.getByLabel('Status filter').selectOption('accepted')
@@ -526,6 +526,57 @@ test('previews and runs a mock AI hint with guardrails', async () => {
     await page.getByTestId('ai-feedback-unhelpful').click()
     await expect(page.getByText('Saved locally. Thanks.')).toBeVisible()
     await capture(page, 'ai-hint')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('runs a linked-list problem from the expanded content set', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-list-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'typescript')
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await page.getByRole('searchbox', { name: 'Search problems' }).fill('Reverse Chain')
+    await page.getByRole('button', { name: /Reverse Chain/ }).click()
+    await expect(page.getByRole('heading', { name: 'Reverse Chain', level: 2 })).toBeVisible()
+
+    const editor = page.locator('.cm-content')
+    await editor.click()
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText(
+      [
+        'class Solution {',
+        '  reverseChain(head: ListNode | null): ListNode | null {',
+        '    let previous: ListNode | null = null',
+        '    let current = head',
+        '    while (current) {',
+        '      const following = current.next',
+        '      current.next = previous',
+        '      previous = current',
+        '      current = following',
+        '    }',
+        '    return previous',
+        '  }',
+        '}',
+        'export { Solution }',
+      ].join('\n'),
+    )
+
+    await page.getByRole('button', { name: 'Run samples' }).click()
+    await expect(page.getByText('Accepted', { exact: true }).first()).toBeVisible({
+      timeout: 60_000,
+    })
+    await capture(page, 'linked-list')
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

@@ -501,6 +501,61 @@ async function main() {
     'The new content set did not run in the app',
   )
 
+  const compactCode = `class Solution:
+    def compactSignals(self, signals):
+        if not signals:
+            return 0
+        write = 1
+        for read in range(1, len(signals)):
+            if signals[read] != signals[write - 1]:
+                signals[write] = signals[read]
+                write += 1
+        del signals[write:]
+        return write
+`
+
+  const inPlaceResult = await evaluate(
+    `window.baseCase.judge.run(${JSON.stringify({
+      problemId: 'core/compact-signals',
+      language: 'python',
+      code: compactCode,
+      mode: 'sample',
+    })})`,
+  )
+  assert(
+    inPlaceResult.status === 'accepted' && inPlaceResult.total === 5,
+    'The in-place problem did not run in the app',
+  )
+
+  const reverseCode = `class Solution {
+  reverseChain(head: ListNode | null): ListNode | null {
+    let previous: ListNode | null = null
+    let current = head
+    while (current) {
+      const following = current.next
+      current.next = previous
+      previous = current
+      current = following
+    }
+    return previous
+  }
+}
+export { Solution }
+`
+
+  const listResult = await evaluate(
+    `window.baseCase.judge.run(${JSON.stringify({
+      problemId: 'core/reverse-chain',
+      language: 'typescript',
+      code: reverseCode,
+      mode: 'sample',
+    })})`,
+  )
+  assert(
+    listResult.status === 'accepted' && listResult.total === 5,
+    'The linked-list problem did not run in the app',
+  )
+
   const wrongCode = `class Solution {
   pairSum(nums: number[], target: number): number[] {
     return []
@@ -747,7 +802,11 @@ export { Solution }
     designScenarios.some((item) => item.id === 'core/url-shortener'),
     'The bundled design scenario was not loaded',
   )
-  assert(designScenarios.length === 4, 'Expected four bundled design scenarios')
+  assert(
+    designScenarios.some((item) => item.id === 'core/payment-ledger'),
+    'The expanded design set was not loaded',
+  )
+  assert(designScenarios.length === 8, 'Expected eight bundled design scenarios')
 
   for (const summary of designScenarios) {
     const detail = await evaluate(
@@ -1141,6 +1200,8 @@ export { Solution }
     palette: paletteNavigation,
     sample: `${sampleResult.passed}/${sampleResult.total} ${sampleResult.status}`,
     submit: `${submitResult.passed}/${submitResult.total} ${submitResult.status}`,
+    inPlace: `${inPlaceResult.passed}/${inPlaceResult.total} ${inPlaceResult.status}`,
+    linkedList: `${listResult.passed}/${listResult.total} ${listResult.status}`,
     wrongAnswer: wrongResult.firstFailure?.status,
     draft: draft?.code === 'draft-check' && draft?.plan === 'one pass',
     scene: savedScene.sceneJson === scene,
