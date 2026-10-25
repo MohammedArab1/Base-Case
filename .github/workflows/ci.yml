@@ -70,7 +70,15 @@ jobs:
         run: pnpm smoke:e2e
 
       - name: Playwright smoke
-        run: pnpm --filter @base-case/desktop test:e2e
+        shell: bash
+        run: |
+          set +e
+          PLAYWRIGHT_JSON_OUTPUT_NAME=playwright-results.json pnpm --filter @base-case/desktop exec playwright test --reporter=json,html
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            node scripts/annotate-playwright.mjs apps/desktop/playwright-results.json
+          fi
+          exit "$status"
 
       - name: Upload Playwright results
         if: failure()
