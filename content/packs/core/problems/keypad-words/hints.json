@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "One digit at a time",
+      "body": "For the first digit, you must choose one of its letters. For each choice, the rest of the problem is the same with one fewer digit. What kind of process is that?"
+    },
+    {
+      "level": 2,
+      "title": "Build prefixes",
+      "body": "Carry a prefix through the digits. At each position, append each possible letter and recurse to the next position. When no digits remain, the prefix is a complete word."
+    },
+    {
+      "level": 3,
+      "title": "Recurse over the position",
+      "body": "A helper takes the current digit index and the prefix. If the index equals the digit count, record the prefix. Otherwise loop over the letters for that digit, append one, recurse, and then remove it."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfunction walk(index, prefix):\n    if index == length(digits):\n        add prefix to results\n        return\n    for letter in lettersFor(digits[index]):\n        walk(index + 1, prefix + letter)\n\nwalk(0, \"\")\nreturn results\n```\n\nThis is pseudocode, not a complete solution. The empty input is not part of this problem."
+    }
+  ]
+}

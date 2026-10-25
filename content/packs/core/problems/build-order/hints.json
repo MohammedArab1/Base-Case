@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which module can go first?",
+      "body": "A module with no unmet prerequisites can be built immediately. What happens to the prerequisites of the modules that depend on it after it is built?"
+    },
+    {
+      "level": 2,
+      "title": "Count incoming dependencies",
+      "body": "Store how many prerequisites each module still has. Put every module with a count of zero into a queue as buildable."
+    },
+    {
+      "level": 3,
+      "title": "Remove modules one at a time",
+      "body": "Pop a buildable module, count it, and decrement the count for each module that depends on it. When a dependent's count reaches zero, add it to the queue. If the final count is less than `numModules`, a cycle blocked the rest."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nindegree = array of zeros of length numModules\nnext = adjacency list for each module\nfor [a, b] in prerequisites:\n    next[b].append(a)\n    indegree[a] += 1\nqueue = all modules with indegree 0\nbuilt = 0\nwhile queue is not empty:\n    module = queue.pop()\n    built += 1\n    for dependent in next[module]:\n        indegree[dependent] -= 1\n        if indegree[dependent] == 0: queue.push(dependent)\nreturn built == numModules\n```\n\nThis is pseudocode, not a complete solution. Duplicate pairs still need to be counted consistently."
+    }
+  ]
+}

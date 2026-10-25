@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "This is a component count",
+      "body": "A cluster is exactly a connected component of an undirected graph. What does one traversal discover starting from an unvisited computer?"
+    },
+    {
+      "level": 2,
+      "title": "Explore each unvisited computer",
+      "body": "Keep a visited array. Each time you find an unvisited computer, increment the cluster count and explore every computer reachable from it."
+    },
+    {
+      "level": 3,
+      "title": "Use the matrix as the adjacency list",
+      "body": "From computer `i`, every column `j` with `connected[i][j] == 1` is a neighbor. A stack or a queue works; mark a computer when you add it so it is not explored twice."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nvisited = array of false of length n\nclusters = 0\nfor start from 0 to n - 1:\n    if visited[start]: continue\n    clusters += 1\n    stack = [start]\n    visited[start] = true\n    while stack is not empty:\n        node = stack.pop()\n        for neighbor from 0 to n - 1:\n            if connected[node][neighbor] == 1 and not visited[neighbor]:\n                visited[neighbor] = true\n                stack.push(neighbor)\nreturn clusters\n```\n\nThis is pseudocode, not a complete solution. Marking on push prevents duplicate work."
+    }
+  ]
+}

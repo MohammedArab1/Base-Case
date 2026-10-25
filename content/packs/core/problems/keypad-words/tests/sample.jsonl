@@ -1,0 +1,5 @@
+{"input":{"digits":"23"},"expected":["ad","ae","af","bd","be","bf","cd","ce","cf"]}
+{"input":{"digits":"2"},"expected":["a","b","c"]}
+{"input":{"digits":"79"},"expected":["pw","px","py","pz","qw","qx","qy","qz","rw","rx","ry","rz","sw","sx","sy","sz"]}
+{"input":{"digits":"22"},"expected":["aa","ab","ac","ba","bb","bc","ca","cb","cc"]}
+{"input":{"digits":"9"},"expected":["w","x","y","z"]}

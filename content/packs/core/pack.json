@@ -22,7 +22,10 @@
     "compact-signals",
     "warmer-days",
     "reverse-chain",
-    "search-tree-check"
+    "search-tree-check",
+    "build-order",
+    "network-clusters",
+    "keypad-words"
   ],
   "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
 }
