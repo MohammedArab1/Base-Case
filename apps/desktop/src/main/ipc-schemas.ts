@@ -2,14 +2,18 @@ import { z } from 'zod'
 import type {
   AiContext,
   AppSettings,
+  DesignNotes,
+  DesignRubricAnswers,
   DraftInput,
   EditorSettings,
   Failure,
   GradeReviewInput,
   RunInput,
   SaveAiConfigInput,
+  SaveDesignDraftInput,
   SaveDraftInput,
   SettingsPatch,
+  SubmitDesignInput,
   TagAttemptInput,
 } from '../shared/types'
 
@@ -119,6 +123,47 @@ export const aiConfigSchema: z.ZodType<SaveAiConfigInput> = z.object({
 export const sceneJsonSchema = z.string().max(5_000_000)
 
 export const pngDataUrlSchema = z.string().max(20_000_000)
+
+export const designScenarioIdSchema = z.string().min(1).max(200)
+
+export const designAttemptIdSchema = z.string().uuid()
+
+const designNotesSchema: z.ZodType<DesignNotes> = z.object({
+  requirements: z.string().max(20_000),
+  api: z.string().max(20_000),
+  dataModel: z.string().max(20_000),
+  architecture: z.string().max(20_000),
+  deepDives: z.string().max(20_000),
+  tradeoffs: z.string().max(20_000),
+  failureModes: z.string().max(20_000),
+}) as z.ZodType<DesignNotes>
+
+const designRubricAnswersSchema: z.ZodType<DesignRubricAnswers> = z.record(
+  z.string().min(1).max(100),
+  z.object({
+    score: z.number().int().min(1).max(4),
+    evidence: z.string().max(20_000),
+  }),
+) as z.ZodType<DesignRubricAnswers>
+
+export const saveDesignDraftSchema: z.ZodType<SaveDesignDraftInput> = z.object({
+  scenarioId: designScenarioIdSchema,
+  sceneJson: sceneJsonSchema.optional(),
+  notes: designNotesSchema.optional(),
+  rubric: designRubricAnswersSchema.optional(),
+}) as z.ZodType<SaveDesignDraftInput>
+
+export const submitDesignSchema: z.ZodType<SubmitDesignInput> = z.object({
+  scenarioId: designScenarioIdSchema,
+  sceneJson: sceneJsonSchema,
+  notes: designNotesSchema,
+  rubric: designRubricAnswersSchema,
+}) as z.ZodType<SubmitDesignInput>
+
+export const exportDesignAttemptSchema = z.object({
+  attemptId: designAttemptIdSchema,
+  pngDataUrl: pngDataUrlSchema.optional(),
+})
 
 const editorSettingsSchema: z.ZodType<EditorSettings> = z.object({
   fontSize: z.number().int().min(10).max(24),

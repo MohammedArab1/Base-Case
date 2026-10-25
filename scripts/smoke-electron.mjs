@@ -701,6 +701,81 @@ export { Solution }
   const savedScene = await evaluate('window.baseCase.design.getScene()')
   assert(savedScene.sceneJson === scene, 'Design scene save/get failed')
 
+  const designScenarios = await evaluate('window.baseCase.design.listScenarios()')
+  assert(
+    designScenarios.some((item) => item.id === 'core/url-shortener'),
+    'The bundled design scenario was not loaded',
+  )
+
+  const designScenario = await evaluate(`window.baseCase.design.getScenario('core/url-shortener')`)
+  assert(designScenario.rubric.length === 7, 'The design rubric should have seven dimensions')
+  assert(designScenario.checklist.length > 0, 'The design checklist is missing')
+  assert(designScenario.reference.markdown.length > 0, 'The reference design is missing')
+
+  const designNotes = {
+    requirements: '10M writes/day, 1B reads/day, 5-year retention.',
+    api: 'POST /v1/links and GET /:code.',
+    dataModel: 'Links keyed by code; clicks in an append-only store.',
+    architecture: 'Redirect service, cache, links store, async analytics.',
+    deepDives: 'Key generation and the hot read path.',
+    tradeoffs: 'Random codes vs sequential ids; cache-aside vs write-through.',
+    failureModes: 'Cache outage falls back to the store; monitor p99 and hit rate.',
+  }
+  const designRubric = Object.fromEntries(
+    designScenario.rubric.map((dimension) => [
+      dimension.id,
+      { score: 3, evidence: 'Covered in the notes and on the canvas.' },
+    ]),
+  )
+
+  const savedDesignDraft = await evaluate(
+    `window.baseCase.design.saveDraft(${JSON.stringify({
+      scenarioId: 'core/url-shortener',
+      sceneJson: scene,
+      notes: designNotes,
+      rubric: designRubric,
+    })})`,
+  )
+  assert(
+    savedDesignDraft.notes.requirements === designNotes.requirements,
+    'The design draft did not save notes',
+  )
+
+  const designDraft = await evaluate(`window.baseCase.design.getDraft('core/url-shortener')`)
+  assert(designDraft.sceneJson === scene, 'The design draft did not save the scene')
+  assert(designDraft.notes.api === designNotes.api, 'The design draft did not read notes back')
+
+  const designAttempt = await evaluate(
+    `window.baseCase.design.submit(${JSON.stringify({
+      scenarioId: 'core/url-shortener',
+      sceneJson: designDraft.sceneJson,
+      notes: designDraft.notes,
+      rubric: designDraft.rubric,
+    })})`,
+  )
+  assert(designAttempt.averageScore === 3, 'The design attempt score is wrong')
+
+  const designAttempts = await evaluate(`window.baseCase.design.listAttempts('core/url-shortener')`)
+  assert(designAttempts.length === 1, 'The design attempt history is empty')
+
+  const designAttemptDetail = await evaluate(
+    `window.baseCase.design.getAttempt(${JSON.stringify(designAttempt.id)})`,
+  )
+  assert(
+    designAttemptDetail.notes.requirements === designNotes.requirements,
+    'The design attempt notes did not round-trip',
+  )
+  assert(
+    Object.keys(designAttemptDetail.rubric).length === 7,
+    'The design attempt rubric did not round-trip',
+  )
+
+  const reviewAfterDesign = await evaluate('window.baseCase.review.queue()')
+  assert(
+    reviewAfterDesign.newCards.some((card) => card.itemKind === 'design'),
+    'The design submission did not create a review card',
+  )
+
   const mockStatus = await evaluate(
     `window.baseCase.ai.saveConfig({ type: 'mock', baseUrl: '', model: 'mock' })`,
   )
@@ -891,7 +966,16 @@ export { Solution }
   )
   await waitForValue(
     'document.body.innerText',
-    (value) => typeof value === 'string' && value.includes('Canvas sandbox'),
+    (value) => typeof value === 'string' && value.includes('Design scenarios'),
+    'the design list',
+    20_000,
+  )
+  await evaluate(
+    `(() => { const button = [...document.querySelectorAll('button')].find((item) => item.textContent.includes('URL Shortener')); button?.click(); return Boolean(button) })()`,
+  )
+  await waitForValue(
+    'document.body.innerText',
+    (value) => typeof value === 'string' && value.includes('Submit design'),
     'the design workspace',
     20_000,
   )
@@ -996,6 +1080,9 @@ export { Solution }
     wrongAnswer: wrongResult.firstFailure?.status,
     draft: draft?.code === 'draft-check' && draft?.plan === 'one pass',
     scene: savedScene.sceneJson === scene,
+    designScenarios: designScenarios.length,
+    designAttempt: `${designAttempt.averageScore}/4`,
+    designAttempts: designAttempts.length,
     aiPreview: preview.text.length,
     aiStreamChars: aiText.length,
     compatibleStreamChars: compatibleText.length,

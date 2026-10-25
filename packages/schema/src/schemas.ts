@@ -277,6 +277,7 @@ export const designSchema = {
     rubric: { type: 'string', pattern: relativeFilePathPattern },
     reference: { type: 'string', pattern: relativeFilePathPattern },
     referenceScene: { type: 'string', pattern: relativeFilePathPattern },
+    checklist: { type: 'array', items: { type: 'string', minLength: 1 } },
     followUps: { type: 'array', items: { type: 'string', minLength: 1 } },
     commonMistakes: { type: 'array', items: { type: 'string', minLength: 1 } },
     license: { type: 'string', minLength: 1 },

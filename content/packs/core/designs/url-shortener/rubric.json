@@ -1,0 +1,81 @@
+{
+  "dimensions": [
+    {
+      "id": "requirements",
+      "name": "Requirements and scope",
+      "description": "Clarifies functional and non-functional requirements, states assumptions, and identifies what is out of scope.",
+      "levels": {
+        "1": "Restates the prompt without clarifying scope or assumptions.",
+        "2": "Lists the main features but misses availability, latency, or retention expectations.",
+        "3": "Separates functional and non-functional requirements and states the important assumptions.",
+        "4": "Also identifies ambiguous requirements, proposes concrete targets, and explains which trade-offs the targets imply."
+      }
+    },
+    {
+      "id": "api",
+      "name": "API design",
+      "description": "Defines the create, redirect, delete, and analytics interfaces, including errors and idempotency.",
+      "levels": {
+        "1": "No clear API or only a vague create-link call.",
+        "2": "Defines the main endpoints but omits error cases, auth, or response shapes.",
+        "3": "Defines request and response shapes, status codes, and the main error cases.",
+        "4": "Also covers idempotency, rate limits, custom aliases, expiry semantics, and how clients discover short links."
+      }
+    },
+    {
+      "id": "data-model",
+      "name": "Data model and storage",
+      "description": "Chooses entities, keys, indexes, and a storage engine that fit the access pattern.",
+      "levels": {
+        "1": "No data model or an unusable one-to-one table.",
+        "2": "Has a mapping table but does not justify the key or storage engine.",
+        "3": "Defines the mapping and analytics schemas with keys and indexes that match the read path.",
+        "4": "Also discusses sharding, hot keys, retention, and how the model evolves for custom aliases and expiry."
+      }
+    },
+    {
+      "id": "architecture",
+      "name": "High-level architecture",
+      "description": "Separates the read and write paths and places caches, queues, and datastores sensibly.",
+      "levels": {
+        "1": "A single box with no separation of components.",
+        "2": "Names services or datastores but does not show how requests flow.",
+        "3": "Shows a clear read path, write path, and the role of the cache and analytics pipeline.",
+        "4": "Also explains why each boundary exists, how components scale independently, and what happens during partial failure."
+      }
+    },
+    {
+      "id": "scale",
+      "name": "Scale and performance",
+      "description": "Sizes the system against the stated traffic and explains how each tier scales.",
+      "levels": {
+        "1": "Ignores the stated traffic numbers.",
+        "2": "Repeats the numbers without estimating storage, QPS, or cache size.",
+        "3": "Estimates storage and per-tier QPS and describes horizontal scaling for the hot path.",
+        "4": "Also quantifies cache hit rate, tail latency, replication lag, and the cost of the proposed capacity."
+      }
+    },
+    {
+      "id": "tradeoffs",
+      "name": "Trade-offs",
+      "description": "Names the important choices and defends them against at least one alternative.",
+      "levels": {
+        "1": "No alternatives considered.",
+        "2": "Mentions one trade-off without connecting it to the design.",
+        "3": "Compares at least two meaningful alternatives, such as SQL vs key-value storage or cache-aside vs write-through.",
+        "4": "Also explains the conditions under which the chosen option would be wrong and how to revisit the decision."
+      }
+    },
+    {
+      "id": "failure-modes",
+      "name": "Failure modes and operations",
+      "description": "Covers what breaks, how it is detected, and how the system recovers.",
+      "levels": {
+        "1": "Assumes nothing fails.",
+        "2": "Mentions replication or backups without a recovery path.",
+        "3": "Identifies the main failure modes and the metrics or alerts that detect them.",
+        "4": "Also covers degraded modes, cache or queue outages, poison links, abuse handling, and runbook-level recovery steps."
+      }
+    }
+  ]
+}

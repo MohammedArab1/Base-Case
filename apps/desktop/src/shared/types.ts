@@ -377,6 +377,161 @@ export interface SaveProblemNoteInput {
   readonly notes: string
 }
 
+export interface DesignScenarioSummary {
+  readonly id: string
+  readonly slug: string
+  readonly title: string
+  readonly difficulty: 'easy' | 'medium' | 'hard'
+  readonly tags: readonly string[]
+  readonly packId: string
+  readonly packName: string
+  readonly source: 'bundled' | 'user'
+}
+
+export interface DesignRubricLevels {
+  readonly '1': string
+  readonly '2': string
+  readonly '3': string
+  readonly '4': string
+}
+
+export interface DesignRubricDimension {
+  readonly id: string
+  readonly name: string
+  readonly description: string
+  readonly levels: DesignRubricLevels
+}
+
+export interface DesignReference {
+  readonly markdown: string
+  readonly sceneJson: string | null
+}
+
+export interface DesignScenarioDetail extends DesignScenarioSummary {
+  readonly prompt: string
+  readonly requirements: {
+    readonly functional: readonly string[]
+    readonly nonFunctional: readonly string[]
+  }
+  readonly scale: {
+    readonly writesPerDay: number
+    readonly readsPerDay: number
+    readonly retentionYears: number
+  }
+  readonly rubric: readonly DesignRubricDimension[]
+  readonly checklist: readonly string[]
+  readonly reference: DesignReference
+  readonly followUps: readonly string[]
+  readonly commonMistakes: readonly string[]
+}
+
+export const designNoteSections = [
+  {
+    id: 'requirements',
+    label: 'Requirements',
+    placeholder: 'Functional and non-functional requirements, assumptions, out of scope.',
+  },
+  {
+    id: 'api',
+    label: 'API',
+    placeholder: 'Endpoints, request and response shapes, auth, pagination.',
+  },
+  {
+    id: 'dataModel',
+    label: 'Data model',
+    placeholder: 'Entities, keys, indexes, and storage choices.',
+  },
+  {
+    id: 'architecture',
+    label: 'High-level architecture',
+    placeholder: 'Clients, services, queues, caches, and datastores.',
+  },
+  {
+    id: 'deepDives',
+    label: 'Deep dives',
+    placeholder: 'Two or three components you would go deep on.',
+  },
+  {
+    id: 'tradeoffs',
+    label: 'Trade-offs',
+    placeholder: 'Consistency vs availability, SQL vs NoSQL, cost, complexity.',
+  },
+  {
+    id: 'failureModes',
+    label: 'Failure modes and monitoring',
+    placeholder: 'What breaks, how you detect it, and how you recover.',
+  },
+] as const
+
+export type DesignNoteSectionId = (typeof designNoteSections)[number]['id']
+
+export type DesignNotes = Record<DesignNoteSectionId, string>
+
+export const emptyDesignNotes: DesignNotes = {
+  requirements: '',
+  api: '',
+  dataModel: '',
+  architecture: '',
+  deepDives: '',
+  tradeoffs: '',
+  failureModes: '',
+}
+
+export interface DesignRubricAnswer {
+  readonly score: number
+  readonly evidence: string
+}
+
+export type DesignRubricAnswers = Record<string, DesignRubricAnswer>
+
+export interface DesignDraft {
+  readonly scenarioId: string
+  readonly sceneJson: string
+  readonly notes: DesignNotes
+  readonly rubric: DesignRubricAnswers
+  readonly updatedAt: string | null
+}
+
+export interface SaveDesignDraftInput {
+  readonly scenarioId: string
+  readonly sceneJson?: string
+  readonly notes?: DesignNotes
+  readonly rubric?: DesignRubricAnswers
+}
+
+export interface SubmitDesignInput {
+  readonly scenarioId: string
+  readonly sceneJson: string
+  readonly notes: DesignNotes
+  readonly rubric: DesignRubricAnswers
+}
+
+export interface DesignAttemptSummary {
+  readonly id: string
+  readonly scenarioId: string
+  readonly status: string
+  readonly averageScore: number | null
+  readonly createdAt: string
+  readonly updatedAt: string
+}
+
+export interface DesignAttemptDetail extends DesignAttemptSummary {
+  readonly sceneJson: string
+  readonly notes: DesignNotes
+  readonly rubric: DesignRubricAnswers
+}
+
+export interface ExportDesignAttemptInput {
+  readonly attemptId: string
+  readonly pngDataUrl?: string
+}
+
+export interface ExportDesignAttemptResult {
+  readonly saved: boolean
+  readonly path?: string
+  readonly pngPath?: string
+}
+
 export interface DesignScenePayload {
   readonly sceneJson: string | null
   readonly updatedAt: string | null
@@ -497,6 +652,14 @@ export interface BaseCaseApi {
     uninstall(packId: string): Promise<void>
   }
   readonly design: {
+    listScenarios(): Promise<DesignScenarioSummary[]>
+    getScenario(scenarioId: string): Promise<DesignScenarioDetail>
+    getDraft(scenarioId: string): Promise<DesignDraft>
+    saveDraft(input: SaveDesignDraftInput): Promise<DesignDraft>
+    submit(input: SubmitDesignInput): Promise<DesignAttemptSummary>
+    listAttempts(scenarioId: string): Promise<DesignAttemptSummary[]>
+    getAttempt(attemptId: string): Promise<DesignAttemptDetail>
+    exportAttempt(input: ExportDesignAttemptInput): Promise<ExportDesignAttemptResult>
     getScene(): Promise<DesignScenePayload>
     saveScene(sceneJson: string): Promise<void>
     exportPng(dataUrl: string): Promise<{ saved: boolean; path?: string }>

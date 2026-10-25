@@ -3,8 +3,22 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { app } from 'electron'
 import { validatePack } from '@base-case/schema'
-import type { HintFile, PackManifest, Problem, Signature, TestCase } from '@base-case/schema'
-import type { Language, ProblemDetail, ProblemSummary } from '../shared/types'
+import type {
+  DesignScenario,
+  HintFile,
+  PackManifest,
+  Problem,
+  Rubric,
+  Signature,
+  TestCase,
+} from '@base-case/schema'
+import type {
+  DesignScenarioDetail,
+  DesignScenarioSummary,
+  Language,
+  ProblemDetail,
+  ProblemSummary,
+} from '../shared/types'
 import type { ContentPackSummary } from '../shared/types'
 import { getLogger } from './logger'
 
@@ -23,6 +37,17 @@ interface LoadedProblem {
   readonly packId: string
   readonly packName: string
   readonly source: ProblemSummary['source']
+}
+
+interface LoadedDesign {
+  readonly manifest: DesignScenario
+  readonly prompt: string
+  readonly rubric: Rubric
+  readonly reference: string
+  readonly referenceSceneJson: string | null
+  readonly packId: string
+  readonly packName: string
+  readonly source: DesignScenarioSummary['source']
 }
 
 export interface ProblemSearchDocument {
@@ -245,10 +270,12 @@ function languageTemplates(signature: Signature): Record<Language, string> {
 
 export class ContentRepository {
   private readonly problems = new Map<string, LoadedProblem>()
+  private readonly designs = new Map<string, LoadedDesign>()
   private readonly packs = new Map<string, LoadedPack>()
 
   async initialize(userDataPath?: string): Promise<void> {
     this.problems.clear()
+    this.designs.clear()
     this.packs.clear()
 
     const bundledRoot = join(contentRoot(), 'packs')
@@ -271,6 +298,33 @@ export class ContentRepository {
 
   listProblems(): ProblemSummary[] {
     return [...this.problems.values()].map((problem) => this.summary(problem))
+  }
+
+  listDesigns(): DesignScenarioSummary[] {
+    return [...this.designs.values()].map((design) => this.designSummary(design))
+  }
+
+  getDesign(scenarioId: string): DesignScenarioDetail {
+    const design = this.designs.get(scenarioId)
+
+    if (!design) {
+      throw new Error(`Unknown design scenario: ${scenarioId}`)
+    }
+
+    return {
+      ...this.designSummary(design),
+      prompt: design.prompt,
+      requirements: design.manifest.requirements,
+      scale: design.manifest.scale,
+      rubric: design.rubric.dimensions,
+      checklist: design.manifest.checklist ?? [],
+      reference: {
+        markdown: design.reference,
+        sceneJson: design.referenceSceneJson,
+      },
+      followUps: design.manifest.followUps,
+      commonMistakes: design.manifest.commonMistakes,
+    }
   }
 
   listPacks(): ContentPackSummary[] {
@@ -432,6 +486,22 @@ export class ContentRepository {
         })
       }
     }
+
+    for (const slug of validation.pack.designs) {
+      try {
+        await this.loadDesign(directory, validation.pack, slug, source)
+      } catch (error) {
+        if (required) {
+          throw error
+        }
+
+        getLogger('content').warn('design.skipped', {
+          pack: validation.pack.id,
+          slug,
+          message: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
   }
 
   private async loadProblem(
@@ -480,6 +550,57 @@ export class ContentRepository {
       packId: problem.packId,
       packName: problem.packName,
       source: problem.source,
+    }
+  }
+
+  private async loadDesign(
+    packDirectory: string,
+    pack: PackManifest,
+    slug: string,
+    source: DesignScenarioSummary['source'],
+  ): Promise<void> {
+    const directory = join(packDirectory, 'designs', slug)
+    const manifest = await readJson<DesignScenario>(join(directory, 'design.json'))
+
+    if (manifest.id !== `${pack.id}/${slug}`) {
+      throw new Error(`Design ${slug} has an unexpected id: ${manifest.id}`)
+    }
+
+    if (this.designs.has(manifest.id)) {
+      throw new Error(`Duplicate design id "${manifest.id}" from ${packDirectory}`)
+    }
+
+    const [prompt, rubric, reference, referenceSceneJson] = await Promise.all([
+      readFile(join(directory, manifest.prompt), 'utf8'),
+      readJson<Rubric>(join(directory, manifest.rubric)),
+      readFile(join(directory, manifest.reference), 'utf8'),
+      manifest.referenceScene
+        ? readFile(join(directory, manifest.referenceScene), 'utf8')
+        : Promise.resolve(null),
+    ])
+
+    this.designs.set(manifest.id, {
+      manifest,
+      prompt,
+      rubric,
+      reference,
+      referenceSceneJson,
+      packId: pack.id,
+      packName: pack.name,
+      source,
+    })
+  }
+
+  private designSummary(design: LoadedDesign): DesignScenarioSummary {
+    return {
+      id: design.manifest.id,
+      slug: design.manifest.slug,
+      title: design.manifest.title,
+      difficulty: design.manifest.difficulty,
+      tags: design.manifest.tags,
+      packId: design.packId,
+      packName: design.packName,
+      source: design.source,
     }
   }
 }

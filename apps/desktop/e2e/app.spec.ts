@@ -296,3 +296,121 @@ test('solves, submits, reviews, grades, and tags a mistake', async () => {
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
   }
 })
+
+test('draws, writes notes, scores the rubric, submits, and reveals the reference', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-design-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'System Design' })
+      .click()
+    await expect(page.getByTestId('design-scenario').first()).toBeVisible()
+    await page.getByTestId('design-scenario').first().click()
+    await expect(page.getByRole('heading', { name: 'URL Shortener', level: 2 })).toBeVisible()
+
+    // Draw a rectangle on the interactive Excalidraw canvas.
+    const canvas = page.locator('.excalidraw__canvas.interactive').first()
+    await expect(canvas).toBeVisible()
+    await page.waitForTimeout(900)
+    const box = await canvas.boundingBox()
+    expect(box).not.toBeNull()
+    await canvas.click({ position: { x: 40, y: 40 } })
+    await page.keyboard.press('r')
+    await page.waitForTimeout(250)
+    await page.mouse.move(box!.x + 120, box!.y + 120)
+    await page.mouse.down()
+    await page.mouse.move(box!.x + 280, box!.y + 230, { steps: 8 })
+    await page.mouse.up()
+    await page.waitForTimeout(250)
+
+    // Wait for the debounced scene autosave.
+    await page.waitForTimeout(1400)
+    const draft = (await page.evaluate(
+      "window.baseCase.design.getDraft('core/url-shortener')",
+    )) as { sceneJson: string; notes: Record<string, string> }
+    expect(draft.sceneJson).toContain('rectangle')
+
+    await page.getByRole('tab', { name: 'Notes' }).click()
+    const noteValues: Record<string, string> = {
+      Requirements: '10M writes/day, 1B reads/day, 5-year retention.',
+      API: 'POST /v1/links, GET /:code, DELETE /v1/links/:code.',
+      'Data model': 'Links keyed by code; clicks in an append-only store.',
+      'High-level architecture': 'Redirect service, cache, links store, async analytics.',
+      'Deep dives': 'Key generation and the hot read path.',
+      'Trade-offs': 'Random codes vs sequential ids; cache-aside vs write-through.',
+      'Failure modes and monitoring': 'Cache outage falls back to the store; monitor p99.',
+    }
+
+    for (const [label, value] of Object.entries(noteValues)) {
+      await page.getByLabel(label, { exact: true }).fill(value)
+    }
+
+    await page.getByRole('tab', { name: 'Rubric' }).click()
+    const dimensions = [
+      'Requirements and scope',
+      'API design',
+      'Data model and storage',
+      'High-level architecture',
+      'Scale and performance',
+      'Trade-offs',
+      'Failure modes and operations',
+    ]
+
+    for (const dimension of dimensions) {
+      await page
+        .getByRole('group', { name: `${dimension} score` })
+        .getByRole('button', { name: '3', exact: true })
+        .click()
+      await page
+        .getByLabel(`${dimension} evidence`, { exact: true })
+        .fill('Covered in the notes and on the canvas.')
+    }
+
+    await page.getByTestId('submit-design').click()
+    await expect(page.getByText('Expected topics')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Reference design: URL shortener' }),
+    ).toBeVisible()
+
+    await page.getByRole('tab', { name: 'History' }).click()
+    await expect(page.getByTestId('design-attempts')).toContainText('3 / 4')
+
+    // The submission creates a design review card that can be graded manually.
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Review' })
+      .click()
+    await expect(page.getByTestId('review-item').first()).toContainText('Design scenario')
+    await page.getByTestId('grade-good').first().click()
+    await expect(page.getByTestId('review-message')).toBeVisible()
+
+    // Restart: the draft, notes, and submitted attempts survive.
+    await launched.app.close()
+    launched = null
+    launched = await launchApp(userDataDirectory)
+    const reopened = launched.page
+
+    await reopened
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'System Design' })
+      .click()
+    await reopened.getByTestId('design-scenario').first().click()
+    await expect(reopened.getByRole('heading', { name: 'URL Shortener', level: 2 })).toBeVisible()
+    await expect(reopened.getByText('Expected topics')).toBeVisible()
+    await reopened.getByRole('tab', { name: 'Notes' }).click()
+    await expect(reopened.getByLabel('Requirements', { exact: true })).toHaveValue(
+      noteValues.Requirements ?? '',
+    )
+    await capture(reopened, 'design-reference')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})

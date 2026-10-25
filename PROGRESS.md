@@ -1,9 +1,9 @@
 # Progress Log
 
-> Last updated: 2026-10-24
-> Current phase: Phase 4 — Coding practice (complete; Windows E2E confirmation comes from CI)
-> Overall status: On track — the full attempt → failure → fix → review loop, filters, KaTeX, cancellation, and local data transfer work; all local checks are green
-> Next milestone: Phase 5 design scenarios and rubrics
+> Last updated: 2026-10-25
+> Current phase: Phase 5 — System design (core loop complete; three more scenarios remain)
+> Overall status: On track — coding and design practice both run end to end with local persistence, FSRS review, and Markdown/PNG export
+> Next milestone: Add the remaining Phase 5 scenarios, then Phase 6 AI tutor
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -17,7 +17,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
-| Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
+| Phase 5 — System design | In progress | 2026-10-25 | Scenario loader, themed canvas, structured notes, seven-dimension rubric, reference reveal, attempt history, design FSRS cards, and Markdown+PNG export are complete; three more scenarios and a native-dialog export test remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
 | Phase 8 — Alpha release | Not started | — | Installers, docs, beta |
@@ -26,9 +26,10 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start Phase 5 design scenarios, prompts, rubrics, and reference comparison.
-2. Confirm the Windows Playwright run in CI.
-3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
+1. Add the three remaining Phase 5 design scenarios and reference scenes.
+2. Add an automated check for the native export dialog, then start Phase 6 AI tutor work.
+3. Confirm the Windows Playwright run in CI.
+4. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
 5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -41,6 +42,30 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 5 — Design practice loop
+
+- Status: Phase 5 core loop complete (scenario content expansion remains)
+- Done:
+  - Added `checklist` to the design scenario schema and loader; `ContentRepository` now loads `designs/` and exposes scenario summaries and details.
+  - Added the original `core/url-shortener` scenario with a seven-dimension rubric, reference design, expected-topics checklist, follow-ups, and common mistakes.
+  - Added `DesignRepository` drafts, submissions, attempt history, and a pure Markdown exporter, with IPC and preload coverage.
+  - Rebuilt the System Design view: scenario list, theme-aware Excalidraw canvas, seven structured note sections, rubric self-assessment with required evidence, reference reveal, score summary, attempt history, and Markdown+PNG export.
+  - Design submissions create an FSRS card for manual grading in Review.
+  - Added repository and exporter tests, a 150-element scene round-trip test, and a Playwright draw → notes → rubric → submit → reference → restart flow.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 65 tests passed across 18 files.
+  - `pnpm content:validate` — passed with one warning (no reference Excalidraw scene).
+  - `pnpm build`, `pnpm smoke:e2e` — passed (design scenario, draft, submit, and review card).
+  - `pnpm --filter @base-case/desktop test:e2e` — 3 passed.
+- Files/PRs:
+  - Key paths: `apps/desktop/src/main/content.ts`, `repositories/design.ts`, `design-export.ts`, `renderer/src/views/DesignView.tsx`, `content/packs/core/designs/url-shortener/`.
+- Next:
+  - Add three more design scenarios and optional reference scenes; add a native export-dialog check; then Phase 6 AI tutor.
+- Notes/decisions:
+  - Design drafts reuse `design_attempts` with the deterministic id `draft:<scenarioId>` and status `draft`; submitted attempts are immutable snapshots.
+  - The reference is revealed only after a submission, and design cards are graded manually so the learner can reflect before scheduling.
 
 ### 2026-10-24 — Phase 4 — KaTeX and editor polish
 

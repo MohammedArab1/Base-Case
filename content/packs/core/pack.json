@@ -6,5 +6,5 @@
   "license": "CC-BY-SA-4.0",
   "attribution": "Original problems by the Base Case contributors.",
   "problems": ["pair-sum"],
-  "designs": []
+  "designs": ["url-shortener"]
 }

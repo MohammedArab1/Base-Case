@@ -168,6 +168,7 @@ export interface DesignScenario {
   readonly rubric: string
   readonly reference: string
   readonly referenceScene?: string
+  readonly checklist?: readonly string[]
   readonly followUps: readonly string[]
   readonly commonMistakes: readonly string[]
   readonly license: string

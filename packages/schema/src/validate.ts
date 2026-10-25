@@ -464,6 +464,10 @@ async function validateDesign(
     warnings.push(`${design.id} has no reference Excalidraw scene.`)
   }
 
+  if (!design.checklist || design.checklist.length === 0) {
+    warnings.push(`${design.id} has no expected-topics checklist.`)
+  }
+
   if (design.followUps.length === 0) {
     warnings.push(`${design.id} has no follow-up questions listed.`)
   }

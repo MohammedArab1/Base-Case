@@ -1163,6 +1163,206 @@ pre {
   font-weight: 600;
 }
 
+.design-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.design-side {
+  min-height: 0;
+  max-height: min(72vh, 760px);
+}
+
+.design-canvas {
+  height: min(72vh, 760px);
+  min-height: 520px;
+}
+
+.design-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.design-note-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.design-note-field span {
+  color: var(--muted);
+}
+
+.design-note-input {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 12.5px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.design-note-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.design-rubric {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+}
+
+.rubric-dimension {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rubric-dimension:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.rubric-dimension h3 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.rubric-dimension p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.rubric-scores {
+  display: flex;
+  gap: 4px;
+}
+
+.rubric-scores button {
+  width: 34px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rubric-scores button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.rubric-descriptor {
+  padding: 7px 9px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 7px 7px 0;
+  background: var(--surface-muted);
+  font-size: 12px !important;
+}
+
+.design-checklist {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-muted);
+}
+
+.design-checklist h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.design-checklist ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+}
+
+.design-requirements {
+  margin-top: 18px;
+}
+
+.design-requirements h3 {
+  margin: 12px 0 4px;
+  font-size: 13px;
+}
+
+.design-requirements ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+}
+
+.design-score-summary {
+  margin-bottom: 18px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-muted);
+}
+
+.design-score-summary h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.design-score-summary ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+}
+
+.design-score-summary li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.design-score-summary p {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+.design-locked {
+  min-height: 240px;
+}
+
+@media (max-width: 1180px) {
+  .design-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .design-side {
+    max-height: none;
+  }
+
+  .design-canvas {
+    height: 520px;
+  }
+}
+
 @media (max-width: 1480px) {
   .coding-layout {
     flex-direction: column;

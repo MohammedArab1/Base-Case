@@ -2642,30 +2642,30 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Design scenario schema/loader/list/detail.
-- [ ] Design workspace layout.
-- [ ] Excalidraw:
-  - [ ] Embed and theme.
-  - [ ] Save/restore scene JSON.
-  - [ ] Debounced autosave.
-  - [ ] Undo/redo, export PNG/SVG/JSON.
-  - [ ] Offline assets.
-  - [ ] Performance test with 100+ elements.
-- [ ] Notes template:
-  - [ ] Structured sections.
-  - [ ] Autosave.
-  - [ ] Markdown export.
-- [ ] Rubric:
-  - [ ] 7 dimensions with descriptors.
-  - [ ] Self-assessment.
-  - [ ] Required evidence/notes per dimension.
-- [ ] Submit/review:
-  - [ ] Reveal reference design + checklist.
-  - [ ] Compare self-scores to reference expectations.
-  - [ ] Attempt history.
-- [ ] FSRS card for design scenarios.
-- [ ] Export design attempt (Markdown + PNG).
-- [ ] Tests: canvas persistence/export, rubric, E2E.
+- [x] Design scenario schema/loader/list/detail.
+- [x] Design workspace layout.
+- [x] Excalidraw:
+  - [x] Embed and theme.
+  - [x] Save/restore scene JSON.
+  - [x] Debounced autosave.
+  - [x] Undo/redo, export PNG/SVG/JSON.
+  - [x] Offline assets.
+  - [x] Performance test with 100+ elements.
+- [x] Notes template:
+  - [x] Structured sections.
+  - [x] Autosave.
+  - [x] Markdown export.
+- [x] Rubric:
+  - [x] 7 dimensions with descriptors.
+  - [x] Self-assessment.
+  - [x] Required evidence/notes per dimension.
+- [x] Submit/review:
+  - [x] Reveal reference design + checklist.
+  - [x] Compare self-scores to reference expectations.
+  - [x] Attempt history.
+- [x] FSRS card for design scenarios.
+- [x] Export design attempt (Markdown + PNG).
+- [x] Tests: canvas persistence/export, rubric, E2E.
 
 **Deliverables**
 

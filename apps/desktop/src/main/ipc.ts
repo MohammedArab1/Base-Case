@@ -9,13 +9,17 @@ import type { Channel, IpcResult } from '../shared/ipc'
 import type { AiContext, JudgeRunEvent, ReviewCard, ReviewQueueItem } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
+import { renderDesignAttemptMarkdown } from './design-export'
 import { toIpcError } from './ipc-errors'
 import {
   aiConfigSchema,
   aiContextSchema,
   attemptIdSchema,
   cardIdSchema,
+  designAttemptIdSchema,
+  designScenarioIdSchema,
   draftInputSchema,
+  exportDesignAttemptSchema,
   gradeReviewSchema,
   noInputSchema,
   packIdSchema,
@@ -27,10 +31,12 @@ import {
   recentAttemptsSchema,
   requestIdSchema,
   runInputSchema,
+  saveDesignDraftSchema,
   saveDraftSchema,
   sceneJsonSchema,
   searchQuerySchema,
   settingsPatchSchema,
+  submitDesignSchema,
   tagAttemptSchema,
 } from './ipc-schemas'
 import type { JudgeClient } from './judge'
@@ -386,6 +392,62 @@ export function registerIpc({
 
   register(channels.designSaveScene, sceneJsonSchema, (sceneJson) => {
     design.saveScene(sceneJson)
+  })
+
+  register(channels.designListScenarios, noInputSchema, () => content.listDesigns())
+  register(channels.designGetScenario, designScenarioIdSchema, (scenarioId) =>
+    content.getDesign(scenarioId),
+  )
+  register(channels.designGetDraft, designScenarioIdSchema, (scenarioId) =>
+    design.getDraft(scenarioId),
+  )
+  register(channels.designSaveDraft, saveDesignDraftSchema, (input) => design.saveDraft(input))
+  register(channels.designSubmit, submitDesignSchema, (input) => {
+    const attempt = design.submit(input)
+
+    // The first submission creates a design review card. Grading stays manual so
+    // the learner can reflect on the reference before scheduling the next review.
+    review.ensureCard('design', input.scenarioId)
+
+    return attempt
+  })
+  register(channels.designListAttempts, designScenarioIdSchema, (scenarioId) =>
+    design.listAttempts(scenarioId),
+  )
+  register(channels.designGetAttempt, designAttemptIdSchema, (attemptId) =>
+    design.getAttempt(attemptId),
+  )
+
+  register(channels.designExportAttempt, exportDesignAttemptSchema, async (input) => {
+    const attempt = design.getAttempt(input.attemptId)
+    const scenario = content.getDesign(attempt.scenarioId)
+    const markdown = renderDesignAttemptMarkdown(scenario, attempt)
+    const selection = await dialog.showSaveDialog({
+      title: 'Export design attempt',
+      defaultPath: `base-case-${scenario.slug}-${attempt.createdAt.slice(0, 10)}.md`,
+      filters: [{ name: 'Markdown', extensions: ['md'] }],
+    })
+
+    if (selection.canceled || !selection.filePath) {
+      return { saved: false }
+    }
+
+    await writeFile(selection.filePath, markdown, 'utf8')
+
+    if (!input.pngDataUrl) {
+      return { saved: true, path: selection.filePath }
+    }
+
+    const match = /^data:image\/png;base64,(.+)$/.exec(input.pngDataUrl)
+
+    if (!match?.[1]) {
+      throw new Error('Expected a base64 PNG data URL.')
+    }
+
+    const pngPath = `${selection.filePath.replace(/\.md$/i, '')}.png`
+    await writeFile(pngPath, Buffer.from(match[1], 'base64'))
+
+    return { saved: true, path: selection.filePath, pngPath }
   })
 
   register(channels.designExportPng, pngDataUrlSchema, async (dataUrl) => {

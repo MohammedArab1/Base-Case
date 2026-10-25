@@ -11,9 +11,16 @@ import type {
   AttemptSummary,
   ContentPackSummary,
   DataTransferResult,
+  DesignAttemptDetail,
+  DesignAttemptSummary,
+  DesignDraft,
+  DesignScenarioDetail,
+  DesignScenarioSummary,
   DesignScenePayload,
   DraftInput,
   DraftRecord,
+  ExportDesignAttemptInput,
+  ExportDesignAttemptResult,
   GradeReviewInput,
   GradeReviewResult,
   JudgeRunEvent,
@@ -31,10 +38,12 @@ import type {
   RunInput,
   RunResult,
   SaveAiConfigInput,
+  SaveDesignDraftInput,
   SaveDraftInput,
   SaveProblemNoteInput,
   SettingsPatch,
   Stats,
+  SubmitDesignInput,
   TagAttemptInput,
   TodaySummary,
 } from '../shared/types'
@@ -129,6 +138,20 @@ const api: BaseCaseApi = {
     uninstall: (packId: string) => invoke<void>(channels.packsUninstall, packId),
   },
   design: {
+    listScenarios: () => invoke<DesignScenarioSummary[]>(channels.designListScenarios),
+    getScenario: (scenarioId: string) =>
+      invoke<DesignScenarioDetail>(channels.designGetScenario, scenarioId),
+    getDraft: (scenarioId: string) => invoke<DesignDraft>(channels.designGetDraft, scenarioId),
+    saveDraft: (input: SaveDesignDraftInput) =>
+      invoke<DesignDraft>(channels.designSaveDraft, input),
+    submit: (input: SubmitDesignInput) =>
+      invoke<DesignAttemptSummary>(channels.designSubmit, input),
+    listAttempts: (scenarioId: string) =>
+      invoke<DesignAttemptSummary[]>(channels.designListAttempts, scenarioId),
+    getAttempt: (attemptId: string) =>
+      invoke<DesignAttemptDetail>(channels.designGetAttempt, attemptId),
+    exportAttempt: (input: ExportDesignAttemptInput) =>
+      invoke<ExportDesignAttemptResult>(channels.designExportAttempt, input),
     getScene: () => invoke<DesignScenePayload>(channels.designGetScene),
     saveScene: (sceneJson: string) => invoke<void>(channels.designSaveScene, sceneJson),
     exportPng: (dataUrl: string) =>

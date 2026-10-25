@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "core/url-shortener",
+  "slug": "url-shortener",
+  "title": "URL Shortener",
+  "difficulty": "medium",
+  "tags": ["api-design", "storage", "caching", "scale"],
+  "prompt": "prompt.md",
+  "requirements": {
+    "functional": [
+      "Create a short code for a long URL and return a short link.",
+      "Redirect a short link to the original URL.",
+      "Support optional custom aliases and expiry.",
+      "Show basic click analytics for the owner."
+    ],
+    "nonFunctional": [
+      "Redirects should be fast and highly available.",
+      "Short codes should be hard to guess and collision-safe.",
+      "The system should tolerate hot keys and traffic spikes.",
+      "Analytics may be eventually consistent."
+    ]
+  },
+  "scale": {
+    "writesPerDay": 10000000,
+    "readsPerDay": 1000000000,
+    "retentionYears": 5
+  },
+  "rubric": "rubric.json",
+  "reference": "reference.md",
+  "checklist": [
+    "API for create, redirect, delete, and analytics",
+    "Key generation strategy and collision handling",
+    "Storage choice for mappings and analytics",
+    "Cache for hot redirects and invalidation",
+    "Read and write path at the stated scale",
+    "Availability, replication, and failure modes",
+    "Trade-offs: consistency, cost, and operational complexity"
+  ],
+  "followUps": [
+    "How would you prevent abuse and phishing links?",
+    "What changes if a link must be editable after creation?",
+    "How would you support multi-region redirects with low latency?",
+    "How would you migrate from a single database to sharding without downtime?"
+  ],
+  "commonMistakes": [
+    "Generating sequential ids, which leaks volume and is easy to enumerate.",
+    "Putting the redirect path behind the same write-heavy service.",
+    "Counting every click synchronously in the primary database.",
+    "Ignoring cache invalidation when a link is deleted or expires.",
+    "Assuming strong consistency for analytics that only need eventual consistency."
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original scenario by the Base Case contributors.",
+  "version": 1
+}
