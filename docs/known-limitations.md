@@ -30,11 +30,11 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## Content
 
-- The alpha pack has 10 coding problems and 4 design scenarios. It is a
+- The MVP pack has 25 coding problems and 8 design scenarios. It is a
   representative set, not a full interview curriculum.
-- The alpha content has automated validation and passing reference solutions,
-  but the second-person editorial review is still pending (B4).
-- The four design scenarios do not yet ship reference Excalidraw scenes. The
+- The content has automated validation and passing reference solutions, but the
+  second-person editorial review is still pending (B4).
+- The eight design scenarios do not yet ship reference Excalidraw scenes. The
   reference design is Markdown; the canvas starts empty (B8).
 - Design feedback is a self-assessed rubric. There is no automatic diagram
   grading.

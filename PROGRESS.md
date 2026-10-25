@@ -75,6 +75,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - `node scripts/measure-packaged.mjs` — 2613 ms cold start, 331 ms coding library, 51 ms problem open, 401 ms design canvas, 312 ms judge run, 291.8 MB idle / 369.0 MB working memory, 253.0 MB DMG / 253.8 MB ZIP.
   - `pnpm smoke:e2e` — 25 problems, 8 designs, in-place and linked-list runs accepted, diagnostics 9/9.
   - `pnpm smoke:playwright` — 7 passed including the axe gate and the new AI tag flow.
+  - GitHub Actions CI run for `40cfe49` — all four jobs green (Node + Go × macOS + Windows).
 - Files/PRs:
   - Key paths: `scripts/package-mac.mjs`, `runtimes.json`, `scripts/measure-packaged.mjs`, `apps/desktop/src/main/ai-*`, `apps/desktop/src/renderer/src/components/AiPanel.tsx`, `docs/project/security-review.md`, `docs/project/accessibility.md`, `docs/project/performance.md`, `docs/project/states-audit.md`, `docs/screenshots.md`, `docs/assets/screenshots/`.
 - Next:

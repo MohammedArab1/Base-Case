@@ -64,12 +64,13 @@ git push origin v0.1.0-alpha
 
 ```md
 Base Case 0.1.0-alpha is a local-first coding interview and system design
-practice app for macOS (Apple Silicon) and Windows.
+practice app for macOS (Apple Silicon and Intel) and Windows.
 
-What works: 10 original coding problems, 4 design scenarios, a local Python and
+What works: 25 original coding problems, 8 design scenarios, a local Python and
 TypeScript judge, hints and explanations, FSRS review, a design canvas with
-Markdown/PNG export, data export/import, and an optional experimental AI tutor
-(off by default).
+Markdown/PNG export, data export/import, accessible core flows, and an optional
+experimental AI tutor with explain-back and confirmed mistake tags (off by
+default).
 
 Install: see docs/quickstart.md. Builds are unsigned; macOS Gatekeeper and
 Windows SmartScreen will warn. Verify SHA256SUMS.txt before running.

@@ -3,10 +3,11 @@
 > Working name. Base Case is a local-first practice app for coding interviews
 > and system design. It is not affiliated with LeetCode or any other judge.
 
-**Status:** Phase 8 alpha release. The app has 10 original coding problems, 4
+**Status:** Phase 9 MVP expansion. The app has 25 original coding problems, 8
 system design scenarios, a real Python/TypeScript judge, FSRS review, an optional
-guarded AI tutor, local persistence, a diagnostics self-test, and the alpha
-documentation set. Clean-VM installs, the manual Windows installer run, a
+guarded AI tutor, local persistence, a diagnostics self-test, dual-arch macOS
+packaging, and a security review. Manual accessibility verification, demo media,
+the release candidate, clean-VM installs, the manual Windows installer run, a
 second-person content review, a real-model AI eval run, trademark/domain, and
 GitHub project setup are pending. See `docs/project/open-blockers.md`.
 
@@ -82,37 +83,43 @@ runtimes. See ADR-0010.
 ## What works now
 
 - Secure Electron + React + TypeScript shell with a narrow typed preload API.
-- Ten original coding problems across the alpha patterns: hash map, two pointers,
-  stack, binary search, sliding window, linked list, trees, graphs/BFS/DFS, heap,
-  and DP. Each has 5 sample tests, 20 hidden tests, four hints, an explanation,
-  common mistakes, follow-ups, and Python/TypeScript reference solutions.
-- Four system design scenarios (URL Shortener, Rate Limiter, Chat System, News
-  Feed) with prompts, requirements, scale targets, seven-dimension rubrics,
-  reference designs, expected-topic checklists, and Markdown/PNG export.
+- 25 original coding problems across hash maps, two pointers, stacks, binary
+  search, sliding windows, linked lists, trees/BSTs, graphs, topological sort,
+  union-find, heaps, backtracking, intervals, bit manipulation, greedy, matrix
+  traversal, and dynamic programming. Each has 5 sample tests, 20 hidden tests,
+  four hints, an explanation, common mistakes, follow-ups, and Python/TypeScript
+  reference solutions.
+- Eight system design scenarios (URL Shortener, Rate Limiter, Chat System, News
+  Feed, Seat Reservation, Search Autocomplete, File Sync, Payment Ledger) with
+  prompts, requirements, scale targets, seven-dimension rubrics, reference
+  designs, expected-topic checklists, and Markdown/PNG export.
 - Real Go judge execution with function, in-place, linked-list, and tree
   signatures; structured statuses; time/memory/output limits; cancellation;
   compile-once TypeScript; and exact/unordered/float/set-of-sets checkers.
 - Bundled pinned Python 3.12 and Node 24 runtimes, a macOS Seatbelt sandbox,
-  and Windows Job Object limits.
+  Windows Job Object limits, and arm64/x64 macOS installers with matching
+  runtimes and judge binaries.
 - CodeMirror editors with autosave to SQLite, language switching, failing-line
   highlighting, and Copy/Reset controls.
 - Structured failure panel, FSRS review queue, mistake tags, Today and Progress
-  dashboards, and JSON data export/import.
+  dashboards (including a 14-day activity chart), and JSON data export/import.
 - Content pack import (ZIP or folder) with schema validation, preview, an
   Unverified badge, and removal that preserves attempts.
 - Excalidraw canvas with local scene persistence and PNG export.
 - SQLite (WAL) migrations, attempts, drafts, design scenes, notes, settings,
   AI feedback, and verified startup backups.
 - Optional AI: mock and OpenAI-compatible providers, token-budgeted context,
-  structured outputs, guardrails, per-feature toggles, design-note review, and a
-  local bug-zoo eval harness. AI is off by default.
+  structured outputs, guardrails, per-feature toggles, design-note review,
+  explain-back checks, user-confirmed mistake-tag suggestions, and a local
+  bug-zoo eval harness. AI is off by default.
 - Diagnostics self-test for the database, storage, logs, content, search index,
   judge, runtimes, and AI configuration, with a copyable report that never leaves
   the machine unless you copy it.
 - Unsigned installer checksums (`SHA256SUMS.txt`) and a tag-driven GitHub Release
   job, plus an alpha feedback issue form.
 
-Still open: the second-person content review, optional reference Excalidraw
+Still open: manual accessibility verification (B11), the second-person content
+review, demo GIF/video, the release candidate, optional reference Excalidraw
 scenes, local AI history, the Apple Foundation Models sidecar, clean-VM installs,
 the manual Windows installer run, a real-model AI eval, the private beta,
 trademark/domain, and GitHub milestones. See `docs/project/open-blockers.md`.
@@ -125,7 +132,7 @@ apps/desktop/          Electron main, preload, React renderer
 services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate and test commands for content packs
-content/packs/core/    Bundled core pack (10 coding + 4 design)
+content/packs/core/    Bundled core pack (25 coding + 8 design)
 docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates
 scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement
