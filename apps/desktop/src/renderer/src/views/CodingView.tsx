@@ -425,7 +425,7 @@ function ProblemLoader({
         <button type="button" className="text-button" onClick={onBack}>
           ← Back to problems
         </button>
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Could not load the problem.</strong>
           <p>{error}</p>
         </div>

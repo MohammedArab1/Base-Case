@@ -70,7 +70,7 @@ export function ResultsPanel({
   if (error) {
     return (
       <div className="results-panel" aria-live="polite">
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Run failed.</strong>
           <p>{error}</p>
         </div>
@@ -106,7 +106,7 @@ export function ResultsPanel({
       {result.message ? <p className="result-message">{result.message}</p> : null}
 
       {!result.compile.ok ? (
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Compilation failed</strong>
           <pre>{result.compile.stderr || 'The compiler returned no output.'}</pre>
         </div>
@@ -147,7 +147,7 @@ export function ResultsPanel({
           </div>
 
           {failure.error ? (
-            <div className="callout callout-error">
+            <div className="callout callout-error" role="alert">
               <strong>
                 {failure.error.type}: {failure.error.message}
               </strong>

@@ -58,7 +58,7 @@ export function ReviewView({ onStartReview }: ReviewViewProps): JSX.Element {
 
   if (error && !queue) {
     return (
-      <div className="callout callout-error">
+      <div className="callout callout-error" role="alert">
         <strong>Could not load the review queue.</strong>
         <p>{error}</p>
       </div>
@@ -106,7 +106,7 @@ export function ReviewView({ onStartReview }: ReviewViewProps): JSX.Element {
       ) : null}
 
       {error ? (
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <p>{error}</p>
         </div>
       ) : null}

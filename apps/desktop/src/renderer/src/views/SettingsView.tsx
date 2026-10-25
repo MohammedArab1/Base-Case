@@ -528,7 +528,7 @@ export function SettingsView(): JSX.Element {
       </Dialog>
 
       {error ? (
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Something went wrong.</strong>
           <p>{error}</p>
         </div>
@@ -976,7 +976,7 @@ export function SettingsView(): JSX.Element {
             ))}
           </div>
         ) : (
-          <div className="callout callout-error">
+          <div className="callout callout-error" role="alert">
             <strong>Judge unavailable</strong>
             <p>{judgeStatus?.error ?? 'The sidecar is not running.'}</p>
           </div>

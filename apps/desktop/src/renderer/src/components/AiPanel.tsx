@@ -445,7 +445,7 @@ export function AiPanel({
       ) : null}
 
       {error ? (
-        <div className="callout callout-error" data-testid="ai-error">
+        <div className="callout callout-error" role="alert" data-testid="ai-error">
           {error}
         </div>
       ) : null}

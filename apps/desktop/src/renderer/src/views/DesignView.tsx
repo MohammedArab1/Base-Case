@@ -110,7 +110,7 @@ export function DesignView(): JSX.Element {
       </div>
 
       {error ? (
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Could not load design scenarios.</strong>
           <p>{error}</p>
         </div>
@@ -419,7 +419,7 @@ function DesignWorkspace({
         <button type="button" className="text-button" onClick={onBack}>
           ← Back to scenarios
         </button>
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Could not load the scenario.</strong>
           <p>{loadError}</p>
         </div>
@@ -482,7 +482,7 @@ function DesignWorkspace({
       </div>
 
       {submitError ? (
-        <div className="callout callout-error" data-testid="design-submit-error">
+        <div className="callout callout-error" role="alert" data-testid="design-submit-error">
           <p>{submitError}</p>
         </div>
       ) : null}

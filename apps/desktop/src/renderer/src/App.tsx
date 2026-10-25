@@ -280,7 +280,7 @@ function App(): JSX.Element {
 
     if (error) {
       return (
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Could not start the workspace.</strong>
           <p>{error}</p>
           <p className="muted">
@@ -386,6 +386,7 @@ function App(): JSX.Element {
           className="content"
           id="main-content"
           tabIndex={-1}
+          aria-busy={loading}
           aria-labelledby="workspace-heading"
         >
           <p className="lede">{active.description}</p>

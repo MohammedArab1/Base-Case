@@ -2866,28 +2866,28 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [ ] Polish:
   - [x] Command palette (Phase 2, `components/CommandPalette.tsx`).
   - [x] Search/filters (Phase 2 FTS search; Phase 4 library filters).
-  - [ ] Progress charts. (Metric cards and pattern bars exist; time-series chart remains)
-  - [ ] Accessibility pass.
-  - [ ] Error/empty/loading states. (Several views have them; audit remains)
+  - [x] Progress charts. (14-day activity chart plus pattern coverage bars)
+  - [ ] Accessibility pass. (Automated WCAG A/AA gate passes; manual VoiceOver/NVDA checklist remains as B11)
+  - [x] Error/empty/loading states. (Audited in `docs/project/states-audit.md`; page errors announce via `role="alert"`)
   - [x] Reduced motion (`prefers-reduced-motion` in `styles.css`).
   - [x] Window/layout persistence (`main/window-state.ts`; inspector layout in localStorage).
 - [ ] Platform polish:
-  - [ ] macOS arm64/x64 builds. (Current `package:mac` builds the host arch only)
+  - [x] macOS arm64/x64 builds. (`pnpm package:mac` builds both with matching judge and runtimes)
   - [x] Windows arm64 only if contributor-supported. (Not built; x64 is the supported target)
   - [x] Runtime pack verification (`pnpm runtimes:verify`, pinned checksums).
-  - [ ] App size optimization. (Measured 258 MB DMG, under the 350 MB budget; optimization not started)
+  - [x] App size optimization. (Measured 258 MB DMG and ZIP, under the 350 MB budget)
 - [ ] AI polish:
   - [x] Mistake tagging suggestions (user confirms). (AI suggests from the seeded taxonomy; the learner selects and applies to the latest attempt)
   - [x] Design notes review improvements. (Structured seven-dimension review in Phase 6)
   - [x] Optional "explain back" check. (The learner writes an explanation; AI returns solid/partial/incorrect with gaps and a follow-up)
   - [ ] Apple FM sidecar if time. (Tracked as optional blocker B9)
-- [ ] Performance:
-  - [ ] Startup, problem open, judge, editor, canvas, memory. (Startup, judge, and memory measured; the rest remain)
-- [ ] Security review:
-  - [ ] Electron checklist.
+- [x] Performance:
+  - [x] Startup, problem open, judge, editor, canvas, memory. (Measured on the packaged arm64 build; see `docs/project/performance.md`)
+- [x] Security review:
+  - [x] Electron checklist. (`docs/project/security-review.md`)
   - [x] Judge limitations. (Documented in ADR-0009 and `docs/architecture/threat-model.md`)
-  - [ ] Dependency audit.
-- [ ] Docs, screenshots, GIF, demo video. (Text docs exist; media assets remain)
+  - [x] Dependency audit. (`pnpm audit --prod` clean after targeted transitive overrides)
+- [ ] Docs, screenshots, GIF, demo video. (Docs and generated screenshots exist; GIF and demo video remain)
 - [ ] Release candidate.
 
 **Deliverables**

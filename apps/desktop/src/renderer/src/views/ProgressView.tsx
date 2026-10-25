@@ -34,7 +34,7 @@ export function ProgressView({ onOpenProblem }: ProgressViewProps): JSX.Element 
 
   if (error) {
     return (
-      <div className="callout callout-error">
+      <div className="callout callout-error" role="alert">
         <strong>Could not load progress.</strong>
         <p>{error}</p>
       </div>

@@ -42,7 +42,7 @@ export function TodayView({ problems, onOpenProblem, onNavigate }: TodayViewProp
   return (
     <div className="workspace-stack">
       {error ? (
-        <div className="callout callout-error">
+        <div className="callout callout-error" role="alert">
           <strong>Could not load today&apos;s summary.</strong>
           <p>{error}</p>
         </div>
