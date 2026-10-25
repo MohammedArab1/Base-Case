@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which pointer changes?",
+      "body": "Reversing the list means every node should point to the node that used to come before it. What happens to the first node's pointer, and what should the last node point to?"
+    },
+    {
+      "level": 2,
+      "title": "Walk with three references",
+      "body": "Keep track of the previous node, the current node, and the next node. The next reference is necessary because rewiring the current node destroys the only link to the rest of the list."
+    },
+    {
+      "level": 3,
+      "title": "Rewire one node at a time",
+      "body": "Save `current.next`, point `current.next` at `previous`, then move `previous` to `current` and `current` to the saved next node. When `current` becomes null, `previous` is the new head."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nprevious = null\ncurrent = head\nwhile current is not null:\n    following = current.next\n    current.next = previous\n    previous = current\n    current = following\nreturn previous\n```\n\nThis is pseudocode, not a complete solution. Trace it once with a two-node list."
+    }
+  ]
+}

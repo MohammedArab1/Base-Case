@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "core/reverse-chain",
+  "slug": "reverse-chain",
+  "title": "Reverse Chain",
+  "difficulty": "easy",
+  "patterns": ["linked-list", "pointers"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "reverseChain",
+    "params": [{ "name": "head", "type": "ListNode" }],
+    "returns": "ListNode",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Losing the rest of the list after overwriting `next`",
+    "Returning the original head instead of the new head",
+    "Using recursion and overflowing the stack on a long list",
+    "Forgetting the empty-list case"
+  ],
+  "followUps": [
+    "How would you reverse only the nodes between two positions?",
+    "How would you reverse the list in groups of `k`?",
+    "Can you solve it recursively, and what are the trade-offs?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

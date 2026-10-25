@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "core/warmer-days",
+  "slug": "warmer-days",
+  "title": "Warmer Days",
+  "difficulty": "medium",
+  "patterns": ["stack", "monotonic-stack", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "daysUntilWarmer",
+    "params": [{ "name": "temperatures", "type": "int[]" }],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting equal temperatures as warmer",
+    "Scanning forward from every day, which is quadratic on descending input",
+    "Forgetting to leave zero for days with no warmer day ahead",
+    "Storing temperatures in the stack without also storing their indices"
+  ],
+  "followUps": [
+    "How would you answer the same question for a temperature stream?",
+    "What changes if you need the next day that is strictly colder?",
+    "How would you return the distance to the warmest day in the next week?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

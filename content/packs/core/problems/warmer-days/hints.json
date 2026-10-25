@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which days are still waiting?",
+      "body": "When you reach a warm day, it answers several earlier days at once. Which earlier days are still unresolved, and how can you find them quickly?"
+    },
+    {
+      "level": 2,
+      "title": "Keep unresolved days on a stack",
+      "body": "Push the index of each day whose answer is not known yet. Keep the corresponding temperatures decreasing from bottom to top."
+    },
+    {
+      "level": 3,
+      "title": "Pop when the answer arrives",
+      "body": "While the stack is non-empty and the current temperature is greater than the temperature at the top index, pop that index and record the distance. Then push the current index."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nanswer = array of zeros with the same length as temperatures\nstack = empty\nfor index from 0 to length(temperatures) - 1:\n    while stack is not empty and temperatures[index] > temperatures[stack.top]:\n        earlier = stack.pop()\n        answer[earlier] = index - earlier\n    stack.push(index)\nreturn answer\n```\n\nThis is pseudocode, not a complete solution. Equal temperatures must stay on the stack."
+    }
+  ]
+}

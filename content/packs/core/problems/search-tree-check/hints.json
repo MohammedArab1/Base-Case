@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What does an in-order walk produce?",
+      "body": "An in-order traversal of a valid binary search tree visits values in strictly increasing order. What would a violation look like during that walk?"
+    },
+    {
+      "level": 2,
+      "title": "Bounds, not just parents",
+      "body": "Every node is constrained by all of its ancestors. Pass down an allowed open interval `(low, high)` and check that the current value lies strictly inside it."
+    },
+    {
+      "level": 3,
+      "title": "Narrow the interval",
+      "body": "Going left narrows the upper bound to the current value; going right narrows the lower bound. A value equal to either bound is invalid. An empty subtree is valid."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfunction valid(node, low, high):\n    if node is null: return true\n    if node.value <= low or node.value >= high: return false\n    return valid(node.left, low, node.value) and valid(node.right, node.value, high)\n\nreturn valid(root, negative infinity, positive infinity)\n```\n\nThis is pseudocode, not a complete solution. Use strict comparisons to reject duplicates."
+    }
+  ]
+}

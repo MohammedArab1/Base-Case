@@ -19,7 +19,10 @@
     "target-totals",
     "shift-merge",
     "lone-beacon",
-    "compact-signals"
+    "compact-signals",
+    "warmer-days",
+    "reverse-chain",
+    "search-tree-check"
   ],
   "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
 }
