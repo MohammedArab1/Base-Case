@@ -145,4 +145,34 @@ export const migrations: readonly Migration[] = [
       );
     `,
   },
+  {
+    version: 5,
+    sql: `
+      -- ts-fsrs tracks short-term learning steps, which the Phase 2 table
+      -- did not anticipate.
+      ALTER TABLE review_cards ADD COLUMN learning_steps INTEGER NOT NULL DEFAULT 0;
+
+      -- Snapshot the plan, hint usage, and solution view with every attempt so
+      -- the review rating can be derived from what actually happened.
+      ALTER TABLE attempts ADD COLUMN plan TEXT NOT NULL DEFAULT '';
+      ALTER TABLE attempts ADD COLUMN hints_used INTEGER NOT NULL DEFAULT 0;
+      ALTER TABLE attempts ADD COLUMN solution_viewed INTEGER NOT NULL DEFAULT 0;
+
+      ALTER TABLE drafts ADD COLUMN plan TEXT NOT NULL DEFAULT '';
+
+      CREATE TABLE IF NOT EXISTS review_logs (
+        id TEXT PRIMARY KEY,
+        card_id TEXT NOT NULL REFERENCES review_cards(id) ON DELETE CASCADE,
+        rating TEXT NOT NULL,
+        state_before TEXT NOT NULL,
+        state_after TEXT NOT NULL,
+        due_at TEXT NOT NULL,
+        reviewed_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS review_logs_card_reviewed
+        ON review_logs (card_id, reviewed_at);
+      CREATE INDEX IF NOT EXISTS review_logs_reviewed
+        ON review_logs (reviewed_at);
+    `,
+  },
 ]

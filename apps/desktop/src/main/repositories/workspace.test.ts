@@ -27,10 +27,13 @@ describe('DraftsRepository', () => {
 
       drafts.save('core/pair-sum', 'python', 'first')
       drafts.save('core/pair-sum', 'typescript', 'other')
-      drafts.save('core/pair-sum', 'python', 'second')
+      drafts.save('core/pair-sum', 'python', 'second', 'Use a hash map.')
 
-      expect(drafts.get('core/pair-sum', 'python')).toBe('second')
-      expect(drafts.get('core/pair-sum', 'typescript')).toBe('other')
+      expect(drafts.get('core/pair-sum', 'python')).toEqual({
+        code: 'second',
+        plan: 'Use a hash map.',
+      })
+      expect(drafts.get('core/pair-sum', 'typescript')).toEqual({ code: 'other', plan: '' })
     })
   })
 })

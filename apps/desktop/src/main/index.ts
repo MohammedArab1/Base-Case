@@ -14,7 +14,9 @@ import { AttemptsRepository } from './repositories/attempts'
 import { ContentIndexRepository } from './repositories/content-index'
 import { DesignRepository } from './repositories/design'
 import { DraftsRepository } from './repositories/drafts'
+import { MistakesRepository } from './repositories/mistakes'
 import { ProblemNotesRepository } from './repositories/notes'
+import { ReviewRepository } from './repositories/review'
 import { SettingsRepository } from './repositories/settings'
 import { SettingsStore } from './settings'
 import { clampWindowState, loadWindowState, saveWindowState } from './window-state'
@@ -193,6 +195,8 @@ app
     const drafts = new DraftsRepository(database)
     const design = new DesignRepository(database)
     const notes = new ProblemNotesRepository(database)
+    const review = new ReviewRepository(database)
+    const mistakes = new MistakesRepository(database)
     const judge = new JudgeClient()
     const ai = new AiService(new AiProviderRepository(database), settingsRepository, content)
     const packs = new PackManager(userDataPath, content, contentIndex)
@@ -206,6 +210,8 @@ app
       drafts,
       design,
       notes,
+      review,
+      mistakes,
       judge,
       ai,
       settings,

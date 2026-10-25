@@ -1,11 +1,11 @@
 import type { JSX } from 'react'
-import type { RunResult } from '../../../shared/types'
+import type { AttemptMode, RunResult } from '../../../shared/types'
 
 interface ResultsPanelProps {
   readonly result: RunResult | null
   readonly running: boolean
   readonly error: string | null
-  readonly mode: 'sample' | 'submit'
+  readonly mode: AttemptMode
   readonly onExplain?: () => void
 }
 
@@ -58,7 +58,7 @@ export function ResultsPanel({
     return (
       <div className="results-panel" aria-live="polite">
         <p className="results-placeholder">
-          Running {mode === 'submit' ? 'hidden tests' : 'samples'}…
+          Running {mode === 'sample' ? 'samples' : 'hidden tests'}…
         </p>
       </div>
     )

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import type { JSX } from 'react'
-import type { ProblemSummary, SectionId, Stats } from '../../shared/types'
+import type { ProblemSummary, SectionId } from '../../shared/types'
 import { CommandPalette } from './components/CommandPalette'
 import type { Command } from './components/CommandPalette'
 import { matchesShortcut, shortcutLabel, shortcuts } from './lib/shortcuts'
@@ -18,6 +18,15 @@ const DesignView = lazy(() =>
 )
 const SettingsView = lazy(() =>
   import('./views/SettingsView').then((module) => ({ default: module.SettingsView })),
+)
+const ReviewView = lazy(() =>
+  import('./views/ReviewView').then((module) => ({ default: module.ReviewView })),
+)
+const TodayView = lazy(() =>
+  import('./views/TodayView').then((module) => ({ default: module.TodayView })),
+)
+const ProgressView = lazy(() =>
+  import('./views/ProgressView').then((module) => ({ default: module.ProgressView })),
 )
 
 interface Section {
@@ -72,24 +81,11 @@ function App(): JSX.Element {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [problems, setProblems] = useState<readonly ProblemSummary[]>([])
   const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null)
-  const [stats, setStats] = useState<Stats | null>(null)
+  const [reviewCardId, setReviewCardId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const active = sections.find((item) => item.id === section) ?? sections[0]!
   const api = typeof window !== 'undefined' && 'baseCase' in window ? window.baseCase : undefined
-
-  const refreshStats = useCallback((): void => {
-    if (!api) {
-      return
-    }
-
-    void api.attempts
-      .stats()
-      .then(setStats)
-      .catch((statsError: unknown) => {
-        setError(statsError instanceof Error ? statsError.message : String(statsError))
-      })
-  }, [api])
 
   useEffect(() => {
     if (!api) {
@@ -100,11 +96,11 @@ function App(): JSX.Element {
 
     let cancelled = false
 
-    void Promise.all([api.content.list(), api.attempts.stats()])
-      .then(([nextProblems, nextStats]) => {
+    void api.content
+      .list()
+      .then((nextProblems) => {
         if (!cancelled) {
           setProblems(nextProblems)
-          setStats(nextStats)
         }
       })
       .catch((loadError: unknown) => {
@@ -147,9 +143,31 @@ function App(): JSX.Element {
   }, [api])
 
   const openProblem = (problemId: string): void => {
+    setReviewCardId(null)
     setSelectedProblemId(problemId)
     setSection('coding')
   }
+
+  const startReview = useCallback((problemId: string, cardId: string): void => {
+    setReviewCardId(cardId)
+    setSelectedProblemId(problemId)
+    setSection('coding')
+  }, [])
+
+  const finishReview = useCallback((): void => {
+    setReviewCardId(null)
+    setSelectedProblemId(null)
+    setSection('review')
+  }, [])
+
+  const closeProblem = useCallback((): void => {
+    setSelectedProblemId(null)
+    setReviewCardId(null)
+
+    if (reviewCardId) {
+      setSection('review')
+    }
+  }, [reviewCardId])
 
   const finishOnboarding = useCallback((options?: { readonly openProblemId?: string }): void => {
     if (options?.openProblemId) {
@@ -279,9 +297,10 @@ function App(): JSX.Element {
           <CodingView
             problems={problems}
             selectedProblemId={selectedProblemId}
+            reviewCardId={reviewCardId}
             onOpenProblem={openProblem}
-            onBack={() => setSelectedProblemId(null)}
-            onStatsChanged={refreshStats}
+            onBack={closeProblem}
+            onReviewFinished={finishReview}
           />
         )
       case 'design':
@@ -289,26 +308,11 @@ function App(): JSX.Element {
       case 'settings':
         return <SettingsView />
       case 'today':
-        return (
-          <TodayView
-            problems={problems}
-            stats={stats}
-            onOpenProblem={openProblem}
-            onNavigate={setSection}
-          />
-        )
+        return <TodayView problems={problems} onOpenProblem={openProblem} onNavigate={setSection} />
       case 'progress':
-        return <ProgressView stats={stats} />
+        return <ProgressView onOpenProblem={openProblem} />
       case 'review':
-        return (
-          <div className="empty-state">
-            <h2>Review is not wired up yet</h2>
-            <p>
-              FSRS scheduling arrives in Phase 4. The coding loop and attempt history are already
-              stored locally.
-            </p>
-          </div>
-        )
+        return <ReviewView onStartReview={startReview} />
       default:
         return <div />
     }
@@ -397,118 +401,6 @@ function App(): JSX.Element {
         commands={commands}
         onClose={() => setPaletteOpen(false)}
       />
-    </div>
-  )
-}
-
-function TodayView({
-  problems,
-  stats,
-  onOpenProblem,
-  onNavigate,
-}: {
-  readonly problems: readonly ProblemSummary[]
-  readonly stats: Stats | null
-  readonly onOpenProblem: (problemId: string) => void
-  readonly onNavigate: (section: SectionId) => void
-}): JSX.Element {
-  const firstProblem = problems[0]
-
-  return (
-    <div className="workspace-stack">
-      <div className="card-grid">
-        <section className="card">
-          <h2>Review queue</h2>
-          <p>No cards are due. FSRS scheduling arrives with the review module.</p>
-          <button type="button" className="text-button" onClick={() => onNavigate('review')}>
-            Open Review
-          </button>
-        </section>
-
-        <section className="card">
-          <h2>Continue</h2>
-          <p>
-            {firstProblem
-              ? `Start with ${firstProblem.title} and run the sample tests.`
-              : 'No problem is loaded yet.'}
-          </p>
-          <button
-            type="button"
-            className="text-button"
-            disabled={!firstProblem}
-            onClick={() => {
-              if (firstProblem) {
-                onOpenProblem(firstProblem.id)
-              }
-            }}
-          >
-            {firstProblem ? 'Open coding workspace' : 'No problems'}
-          </button>
-        </section>
-
-        <section className="card">
-          <h2>Practice so far</h2>
-          <p>
-            {stats
-              ? `${stats.attempts} attempts · ${stats.accepted} accepted`
-              : 'No attempts yet. Your first run starts the history.'}
-          </p>
-          <button type="button" className="text-button" onClick={() => onNavigate('progress')}>
-            View progress
-          </button>
-        </section>
-      </div>
-
-      <section className="empty-state">
-        <div className="empty-illustration" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
-        <h2>Phase 1 end-to-end demo</h2>
-        <p>
-          Open the coding workspace, run Python or TypeScript against the sample tests, submit
-          against the hidden tests, reveal a hint, and ask the optional AI tutor about a failure.
-        </p>
-        <p className="hint">
-          The system design canvas saves locally and exports to PNG. AI is disabled until you
-          configure a provider in Settings.
-        </p>
-      </section>
-    </div>
-  )
-}
-
-function ProgressView({ stats }: { readonly stats: Stats | null }): JSX.Element {
-  return (
-    <div className="workspace-stack">
-      <div className="card-grid">
-        <section className="card">
-          <h2>Attempts</h2>
-          <p className="metric">{stats?.attempts ?? 0}</p>
-          <p>Sample runs and submissions stored in SQLite.</p>
-        </section>
-        <section className="card">
-          <h2>Accepted</h2>
-          <p className="metric">{stats?.accepted ?? 0}</p>
-          <p>Submissions that passed every test.</p>
-        </section>
-        <section className="card">
-          <h2>Last attempt</h2>
-          <p className="metric metric-small">
-            {stats?.lastAttemptAt ? new Date(stats.lastAttemptAt).toLocaleString() : '—'}
-          </p>
-          <p>All timestamps are local ISO-8601 values.</p>
-        </section>
-      </div>
-
-      <section className="empty-state">
-        <h2>Pattern mastery is coming next</h2>
-        <p>
-          Attempts and mistake tags are stored now. Charts, pattern weighting, review adherence, and
-          CSV/JSON export arrive with the FSRS module.
-        </p>
-      </section>
     </div>
   )
 }

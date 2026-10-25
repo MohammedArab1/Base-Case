@@ -501,6 +501,58 @@ export { Solution }
   assert(attemptList.length >= 3, 'Attempt history did not return the saved attempts')
   assert(attemptList[0]?.status === 'wrong_answer', 'Attempt history is not newest-first')
 
+  const recentAttempts = await evaluate('window.baseCase.attempts.recent(5)')
+  assert(recentAttempts.length >= 3, 'Recent attempts did not return saved attempts')
+  const attemptDetail = await evaluate(
+    `window.baseCase.attempts.get(${JSON.stringify(attemptList[0].id)})`,
+  )
+  assert(attemptDetail.code.includes('pairSum'), 'Attempt detail did not include the code snapshot')
+
+  // The first submission creates a new card; grading it reschedules the queue.
+  const reviewQueue = await evaluate('window.baseCase.review.queue()')
+  assert(reviewQueue.totalNew === 1, 'The first submission did not create a review card')
+  assert(reviewQueue.newCards[0]?.itemId === 'core/pair-sum', 'Review queue has the wrong item')
+  assert(reviewQueue.newCards[0]?.previews?.length === 4, 'Review previews are missing')
+
+  const graded = await evaluate(
+    `window.baseCase.review.grade(${JSON.stringify({
+      cardId: reviewQueue.newCards[0].id,
+      grade: 'good',
+    })})`,
+  )
+  assert(graded.card.reps === 1, 'Review grading did not update the card')
+
+  const rescheduled = await evaluate('window.baseCase.review.queue()')
+  assert(
+    rescheduled.totalNew === 0 && rescheduled.totalDue === 0,
+    'The graded card was not rescheduled',
+  )
+
+  const mistakes = await evaluate('window.baseCase.mistakes.list()')
+  assert(mistakes.length >= 6, 'The mistake taxonomy was not seeded')
+
+  const tagged = await evaluate(
+    `window.baseCase.attempts.tag(${JSON.stringify({
+      attemptId: attemptList[0].id,
+      tagIds: ['off-by-one'],
+    })})`,
+  )
+  assert(tagged.mistakeTagIds.includes('off-by-one'), 'The mistake tag was not saved')
+
+  const progress = await evaluate('window.baseCase.progress.summary()')
+  assert(
+    progress.mistakes.some((tag) => tag.tagId === 'off-by-one'),
+    'Mistake counts are missing from progress',
+  )
+  assert(progress.patterns.length > 0, 'Pattern progress is empty')
+
+  const today = await evaluate('window.baseCase.progress.today()')
+  assert(today.attemptsToday >= 3, 'The Today summary did not count attempts')
+  assert(
+    today.dueCount === 0 && today.newCount === 0,
+    'The Today summary shows stale review counts',
+  )
+
   const savedNote = await evaluate(
     `window.baseCase.notes.save({ problemId: 'core/pair-sum', notes: 'Remember the complement.' })`,
   )
@@ -595,12 +647,12 @@ export { Solution }
   assert(backups.length >= 1, 'No verified database backup was created')
 
   await evaluate(
-    `window.baseCase.drafts.save({ problemId: 'core/pair-sum', language: 'python', code: 'draft-check' })`,
+    `window.baseCase.drafts.save({ problemId: 'core/pair-sum', language: 'python', code: 'draft-check', plan: 'one pass' })`,
   )
   const draft = await evaluate(
     `window.baseCase.drafts.get({ problemId: 'core/pair-sum', language: 'python' })`,
   )
-  assert(draft === 'draft-check', 'Draft save/get failed')
+  assert(draft?.code === 'draft-check' && draft?.plan === 'one pass', 'Draft save/get failed')
 
   await evaluate(
     `window.baseCase.drafts.save(${JSON.stringify({
@@ -915,7 +967,7 @@ export { Solution }
     sample: `${sampleResult.passed}/${sampleResult.total} ${sampleResult.status}`,
     submit: `${submitResult.passed}/${submitResult.total} ${submitResult.status}`,
     wrongAnswer: wrongResult.firstFailure?.status,
-    draft: draft === 'draft-check',
+    draft: draft?.code === 'draft-check' && draft?.plan === 'one pass',
     scene: savedScene.sceneJson === scene,
     aiPreview: preview.text.length,
     aiStreamChars: aiText.length,

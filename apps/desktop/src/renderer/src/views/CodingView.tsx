@@ -2,9 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, JSX } from 'react'
 import type {
   AiPreview,
+  AttemptMode,
   Language,
   ProblemDetail,
   ProblemSummary,
+  ReviewGrade,
+  ReviewPreview,
   RunResult,
 } from '../../../shared/types'
 import { Inspector } from '../components/Inspector'
@@ -63,13 +66,32 @@ function persistInspectorOpen(open: boolean): void {
 interface CodingViewProps {
   readonly problems: readonly ProblemSummary[]
   readonly selectedProblemId: string | null
+  readonly reviewCardId?: string | null
   readonly onOpenProblem: (problemId: string) => void
   readonly onBack: () => void
-  readonly onStatsChanged: () => void
+  readonly onReviewFinished?: () => void
 }
 
 function difficultyClass(difficulty: ProblemSummary['difficulty']): string {
   return `difficulty difficulty-${difficulty}`
+}
+
+const gradeLabels: Record<ReviewGrade, string> = {
+  again: 'Again',
+  hard: 'Hard',
+  good: 'Good',
+  easy: 'Easy',
+}
+
+function formatReviewInterval(preview: ReviewPreview): string {
+  const minutes = Math.max(1, Math.round((new Date(preview.dueAt).getTime() - Date.now()) / 60_000))
+
+  if (minutes < 60) {
+    return `${minutes}m`
+  }
+
+  const hours = Math.round(minutes / 60)
+  return hours < 24 ? `${hours}h` : `${Math.round(hours / 24)}d`
 }
 
 function describeJudgeError(error: unknown): string {
@@ -94,16 +116,18 @@ function describeJudgeError(error: unknown): string {
 export function CodingView({
   problems,
   selectedProblemId,
+  reviewCardId,
   onOpenProblem,
   onBack,
-  onStatsChanged,
+  onReviewFinished,
 }: CodingViewProps): JSX.Element {
   if (selectedProblemId) {
     return (
       <ProblemLoader
         problemId={selectedProblemId}
+        reviewCardId={reviewCardId}
         onBack={onBack}
-        onStatsChanged={onStatsChanged}
+        onReviewFinished={onReviewFinished}
       />
     )
   }
@@ -226,12 +250,14 @@ function ProblemList({
 
 function ProblemLoader({
   problemId,
+  reviewCardId,
   onBack,
-  onStatsChanged,
+  onReviewFinished,
 }: {
   readonly problemId: string
+  readonly reviewCardId?: string | null
   readonly onBack: () => void
-  readonly onStatsChanged: () => void
+  readonly onReviewFinished?: () => void
 }): JSX.Element {
   const [problem, setProblem] = useState<ProblemDetail | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -279,28 +305,43 @@ function ProblemLoader({
     )
   }
 
-  return <ProblemWorkspace problem={problem} onBack={onBack} onStatsChanged={onStatsChanged} />
+  return (
+    <ProblemWorkspace
+      problem={problem}
+      reviewCardId={reviewCardId}
+      onBack={onBack}
+      onReviewFinished={onReviewFinished}
+    />
+  )
 }
 
 function ProblemWorkspace({
   problem,
+  reviewCardId,
   onBack,
-  onStatsChanged,
+  onReviewFinished,
 }: {
   readonly problem: ProblemDetail
+  readonly reviewCardId?: string | null
   readonly onBack: () => void
-  readonly onStatsChanged: () => void
+  readonly onReviewFinished?: () => void
 }): JSX.Element {
   const { settings } = useSettings()
+  const isReview = Boolean(reviewCardId)
   const [language, setLanguage] = useState<Language>(settings.language)
   const [code, setCode] = useState('')
+  const [plan, setPlan] = useState('')
   const [draftReady, setDraftReady] = useState(false)
   const [result, setResult] = useState<RunResult | null>(null)
   const [running, setRunning] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [mode, setMode] = useState<'sample' | 'submit'>('sample')
+  const [mode, setMode] = useState<AttemptMode>(isReview ? 'review' : 'sample')
   const [revealedHints, setRevealedHints] = useState<ReadonlySet<number>>(new Set())
+  const [solutionViewed, setSolutionViewed] = useState(false)
   const [confirmHint, setConfirmHint] = useState<number | null>(null)
+  const [reviewPreviews, setReviewPreviews] = useState<readonly ReviewPreview[]>([])
+  const [grading, setGrading] = useState<ReviewGrade | null>(null)
+  const [gradeError, setGradeError] = useState<string | null>(null)
   const [aiPreview, setAiPreview] = useState<AiPreview | null>(null)
   const [aiText, setAiText] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
@@ -324,7 +365,8 @@ function ProblemWorkspace({
       .get({ problemId: problem.id, language })
       .then((draft) => {
         if (!cancelled) {
-          setCode(draft ?? problem.languageTemplates[language])
+          setCode(draft?.code ?? problem.languageTemplates[language])
+          setPlan(draft?.plan ?? '')
           setDraftReady(true)
         }
       })
@@ -332,6 +374,7 @@ function ProblemWorkspace({
         if (!cancelled) {
           setError(draftError instanceof Error ? draftError.message : String(draftError))
           setCode(problem.languageTemplates[language])
+          setPlan('')
           setDraftReady(true)
         }
       })
@@ -347,13 +390,13 @@ function ProblemWorkspace({
     }
 
     const timer = window.setTimeout(() => {
-      void window.baseCase.drafts.save({ problemId: problem.id, language, code })
+      void window.baseCase.drafts.save({ problemId: problem.id, language, code, plan })
     }, 900)
 
     return () => {
       window.clearTimeout(timer)
     }
-  }, [code, draftReady, language, problem.id])
+  }, [code, draftReady, language, plan, problem.id])
 
   useEffect(() => {
     return () => {
@@ -362,7 +405,7 @@ function ProblemWorkspace({
   }, [])
 
   const run = useCallback(
-    async (nextMode: 'sample' | 'submit') => {
+    async (nextMode: AttemptMode) => {
       if (running) {
         return
       }
@@ -370,6 +413,7 @@ function ProblemWorkspace({
       setMode(nextMode)
       setRunning(true)
       setError(null)
+      setGradeError(null)
       setAiPreview(null)
       setAiText('')
       setAiError(null)
@@ -380,10 +424,12 @@ function ProblemWorkspace({
           language,
           code,
           mode: nextMode,
+          plan,
+          hintsUsed: revealedHints.size,
+          solutionViewed,
         })
         setResult(nextResult)
         setAttemptRefreshKey((current) => current + 1)
-        onStatsChanged()
       } catch (runError: unknown) {
         console.error('Judge run failed:', runError)
         setError(describeJudgeError(runError))
@@ -391,20 +437,20 @@ function ProblemWorkspace({
         setRunning(false)
       }
     },
-    [code, language, onStatsChanged, problem.id, running],
+    [code, language, plan, problem.id, revealedHints.size, running, solutionViewed],
   )
 
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
       if (matchesShortcut(event, shortcuts.runSamples)) {
         event.preventDefault()
-        void run('sample')
+        void run(isReview ? 'review' : 'sample')
         return
       }
 
       if (matchesShortcut(event, shortcuts.submit)) {
         event.preventDefault()
-        void run('submit')
+        void run(isReview ? 'review' : 'submit')
       }
     }
 
@@ -412,7 +458,7 @@ function ProblemWorkspace({
     return () => {
       window.removeEventListener('keydown', handler)
     }
-  }, [run])
+  }, [isReview, run])
 
   const changeLanguage = (nextLanguage: Language): void => {
     if (nextLanguage === language) {
@@ -420,7 +466,7 @@ function ProblemWorkspace({
     }
 
     if (draftReady) {
-      void window.baseCase.drafts.save({ problemId: problem.id, language, code })
+      void window.baseCase.drafts.save({ problemId: problem.id, language, code, plan })
     }
 
     setLanguage(nextLanguage)
@@ -433,7 +479,51 @@ function ProblemWorkspace({
     }
 
     setRevealedHints((current) => new Set(current).add(level))
+
+    if (level >= 4) {
+      setSolutionViewed(true)
+    }
   }
+
+  const gradeReview = async (grade: ReviewGrade): Promise<void> => {
+    if (!reviewCardId || grading) {
+      return
+    }
+
+    setGrading(grade)
+    setGradeError(null)
+
+    try {
+      await window.baseCase.review.grade({ cardId: reviewCardId, grade })
+      onReviewFinished?.()
+    } catch (gradeFailure: unknown) {
+      setGradeError(gradeFailure instanceof Error ? gradeFailure.message : String(gradeFailure))
+    } finally {
+      setGrading(null)
+    }
+  }
+
+  useEffect(() => {
+    if (!reviewCardId) {
+      setReviewPreviews([])
+      return
+    }
+
+    let cancelled = false
+
+    void window.baseCase.review
+      .preview(reviewCardId)
+      .then((previews) => {
+        if (!cancelled) {
+          setReviewPreviews(previews)
+        }
+      })
+      .catch(() => undefined)
+
+    return () => {
+      cancelled = true
+    }
+  }, [reviewCardId])
 
   const setInspectorVisible = (open: boolean): void => {
     setInspectorOpen(open)
@@ -552,7 +642,7 @@ function ProblemWorkspace({
       <div className="workspace-heading">
         <div className="workspace-heading-top">
           <button type="button" className="text-button" onClick={onBack}>
-            ← Back to problems
+            {isReview ? '← Back to review queue' : '← Back to problems'}
           </button>
           <Button
             size="sm"
@@ -577,6 +667,13 @@ function ProblemWorkspace({
         </div>
       </div>
 
+      {isReview ? (
+        <div className="callout review-banner" data-testid="review-banner">
+          <strong>Review mode</strong>
+          <p>Hints and solutions are hidden. Re-solve the problem, then grade the review.</p>
+        </div>
+      ) : null}
+
       <div
         className="coding-layout"
         style={{ '--inspector-width': `${inspectorWidth}px` } as CSSProperties}
@@ -590,68 +687,77 @@ function ProblemWorkspace({
             <div className="pane-scroll">
               <Markdown>{problem.statement}</Markdown>
 
-              <section className="hints">
-                <h3>Hints</h3>
-                {problem.hints.map((hint) => {
-                  const revealed = revealedHints.has(hint.level)
+              {isReview ? (
+                <p className="muted review-hidden-note">
+                  Hints, common mistakes, and follow-ups are hidden during review.
+                </p>
+              ) : (
+                <>
+                  <section className="hints">
+                    <h3>Hints</h3>
+                    {problem.hints.map((hint) => {
+                      const revealed = revealedHints.has(hint.level)
 
-                  return (
-                    <div className="hint" key={hint.level}>
-                      <button
-                        type="button"
-                        className="hint-toggle"
-                        aria-expanded={revealed}
-                        onClick={() => revealHint(hint.level)}
-                      >
-                        <span className="hint-level">Level {hint.level}</span>
-                        <span>{hint.title}</span>
-                      </button>
-                      {confirmHint === hint.level ? (
-                        <div className="hint-confirm">
-                          <p>Level 4 may reveal pseudocode. Continue?</p>
+                      return (
+                        <div className="hint" key={hint.level}>
                           <button
                             type="button"
-                            className="btn btn-secondary"
-                            onClick={() => {
-                              setRevealedHints((current) => new Set(current).add(hint.level))
-                              setConfirmHint(null)
-                            }}
+                            className="hint-toggle"
+                            aria-expanded={revealed}
+                            onClick={() => revealHint(hint.level)}
                           >
-                            Show pseudocode
+                            <span className="hint-level">Level {hint.level}</span>
+                            <span>{hint.title}</span>
                           </button>
+                          {confirmHint === hint.level ? (
+                            <div className="hint-confirm">
+                              <p>Level 4 may reveal pseudocode. Continue?</p>
+                              <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => {
+                                  setRevealedHints((current) => new Set(current).add(hint.level))
+                                  setSolutionViewed(true)
+                                  setConfirmHint(null)
+                                }}
+                              >
+                                Show pseudocode
+                              </button>
+                            </div>
+                          ) : null}
+                          {revealed ? (
+                            <div className="hint-body">
+                              <Markdown>{hint.body}</Markdown>
+                            </div>
+                          ) : null}
                         </div>
-                      ) : null}
-                      {revealed ? (
-                        <div className="hint-body">
-                          <Markdown>{hint.body}</Markdown>
-                        </div>
-                      ) : null}
-                    </div>
-                  )
-                })}
-              </section>
+                      )
+                    })}
+                  </section>
 
-              {problem.commonMistakes.length > 0 ? (
-                <details className="statement-details">
-                  <summary>Common mistakes</summary>
-                  <ul>
-                    {problem.commonMistakes.map((mistake) => (
-                      <li key={mistake}>{mistake}</li>
-                    ))}
-                  </ul>
-                </details>
-              ) : null}
+                  {problem.commonMistakes.length > 0 ? (
+                    <details className="statement-details">
+                      <summary>Common mistakes</summary>
+                      <ul>
+                        {problem.commonMistakes.map((mistake) => (
+                          <li key={mistake}>{mistake}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
 
-              {problem.followUps.length > 0 ? (
-                <details className="statement-details">
-                  <summary>Follow-ups</summary>
-                  <ul>
-                    {problem.followUps.map((followUp) => (
-                      <li key={followUp}>{followUp}</li>
-                    ))}
-                  </ul>
-                </details>
-              ) : null}
+                  {problem.followUps.length > 0 ? (
+                    <details className="statement-details">
+                      <summary>Follow-ups</summary>
+                      <ul>
+                        {problem.followUps.map((followUp) => (
+                          <li key={followUp}>{followUp}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
+                </>
+              )}
             </div>
           </section>
 
@@ -674,23 +780,48 @@ function ProblemWorkspace({
                 </button>
               </div>
               <div className="toolbar-actions">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => void run('sample')}
-                  disabled={running}
-                >
-                  Run samples
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => void run('submit')}
-                  disabled={running}
-                >
-                  Submit
-                </button>
+                {isReview ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => void run('review')}
+                    disabled={running}
+                  >
+                    Check review
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => void run('sample')}
+                      disabled={running}
+                    >
+                      Run samples
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => void run('submit')}
+                      disabled={running}
+                    >
+                      Submit
+                    </button>
+                  </>
+                )}
               </div>
+            </div>
+            <div className="plan-field">
+              <label htmlFor="problem-plan">Plan before you code</label>
+              <textarea
+                id="problem-plan"
+                data-testid="problem-plan"
+                className="plan-input"
+                value={plan}
+                onChange={(event) => setPlan(event.target.value)}
+                placeholder="Approach, data structures, edge cases, complexity…"
+                rows={2}
+              />
             </div>
             <div className="editor-body">
               <CodeEditor
@@ -710,6 +841,41 @@ function ProblemWorkspace({
                 onExplain={result?.firstFailure ? () => void openAiPreview() : undefined}
               />
             </div>
+
+            {isReview && result ? (
+              <div className="review-grade-panel" data-testid="review-grade-panel">
+                <div>
+                  <strong>Grade this review</strong>
+                  <p className="muted">
+                    The attempt is saved. Choose how well you recalled the approach.
+                  </p>
+                </div>
+                <div className="review-grades">
+                  {(['again', 'hard', 'good', 'easy'] as const).map((grade) => {
+                    const preview = reviewPreviews.find((item) => item.grade === grade)
+
+                    return (
+                      <button
+                        key={grade}
+                        type="button"
+                        className={`btn btn-secondary review-grade grade-${grade}`}
+                        onClick={() => void gradeReview(grade)}
+                        disabled={grading !== null}
+                        data-testid={`grade-${grade}`}
+                      >
+                        <span>{gradeLabels[grade]}</span>
+                        {preview ? (
+                          <span className="review-grade-interval">
+                            {formatReviewInterval(preview)}
+                          </span>
+                        ) : null}
+                      </button>
+                    )
+                  })}
+                </div>
+                {gradeError ? <p className="form-error">{gradeError}</p> : null}
+              </div>
+            ) : null}
           </section>
         </div>
 
@@ -737,6 +903,10 @@ function ProblemWorkspace({
                 loading: aiLoading,
                 error: aiError,
                 onExplain: () => void openAiPreview(),
+              }}
+              onRestore={(restoredCode, restoredPlan) => {
+                setCode(restoredCode)
+                setPlan(restoredPlan)
               }}
               onClose={() => setInspectorVisible(false)}
             />

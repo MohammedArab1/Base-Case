@@ -13,6 +13,8 @@ export interface AppSettings {
   readonly language: Language
   readonly editor: EditorSettings
   readonly dailyGoalMinutes: number
+  readonly reviewDailyLimit: number
+  readonly newCardsPerDay: number
   readonly reviewReminders: boolean
   readonly onboardingCompleted: boolean
 }
@@ -22,6 +24,8 @@ export interface SettingsPatch {
   readonly language?: Language
   readonly editor?: Partial<EditorSettings>
   readonly dailyGoalMinutes?: number
+  readonly reviewDailyLimit?: number
+  readonly newCardsPerDay?: number
   readonly reviewReminders?: boolean
   readonly onboardingCompleted?: boolean
 }
@@ -35,6 +39,8 @@ export const defaultAppSettings: AppSettings = {
     wordWrap: false,
   },
   dailyGoalMinutes: 30,
+  reviewDailyLimit: 20,
+  newCardsPerDay: 10,
   reviewReminders: true,
   onboardingCompleted: false,
 }
@@ -157,7 +163,10 @@ export interface RunInput {
   readonly problemId: string
   readonly language: Language
   readonly code: string
-  readonly mode: 'sample' | 'submit'
+  readonly mode: 'sample' | 'submit' | 'review'
+  readonly plan?: string
+  readonly hintsUsed?: number
+  readonly solutionViewed?: boolean
 }
 
 export interface RuntimeInfo {
@@ -184,8 +193,14 @@ export interface DraftInput {
   readonly language: Language
 }
 
+export interface DraftRecord {
+  readonly code: string
+  readonly plan: string
+}
+
 export interface SaveDraftInput extends DraftInput {
   readonly code: string
+  readonly plan?: string
 }
 
 export interface Stats {
@@ -194,15 +209,132 @@ export interface Stats {
   readonly lastAttemptAt: string | null
 }
 
+export type AttemptMode = 'sample' | 'submit' | 'review'
+
 export interface AttemptSummary {
   readonly id: string
   readonly problemId: string
   readonly language: Language
-  readonly mode: 'sample' | 'submit'
+  readonly mode: AttemptMode
   readonly status: string
   readonly passed: number
   readonly total: number
+  readonly hintsUsed: number
+  readonly solutionViewed: boolean
+  readonly plan: string
   readonly createdAt: string
+}
+
+export interface AttemptDetail extends AttemptSummary {
+  readonly code: string
+  readonly result: RunResult
+  readonly mistakeTagIds: readonly string[]
+}
+
+export interface TagAttemptInput {
+  readonly attemptId: string
+  readonly tagIds: readonly string[]
+}
+
+export interface MistakeTag {
+  readonly id: string
+  readonly label: string
+  readonly description: string | null
+}
+
+export interface MistakeTagCount {
+  readonly tagId: string
+  readonly label: string
+  readonly count: number
+}
+
+export type ReviewItemKind = 'problem' | 'design'
+
+export type ReviewState = 'new' | 'learning' | 'review' | 'relearning'
+
+export type ReviewGrade = 'again' | 'hard' | 'good' | 'easy'
+
+export interface ReviewCard {
+  readonly id: string
+  readonly itemKind: ReviewItemKind
+  readonly itemId: string
+  readonly dueAt: string
+  readonly stability: number
+  readonly difficulty: number
+  readonly elapsedDays: number
+  readonly scheduledDays: number
+  readonly learningSteps: number
+  readonly reps: number
+  readonly lapses: number
+  readonly state: ReviewState
+  readonly lastReviewedAt: string | null
+  readonly createdAt: string
+  readonly updatedAt: string
+}
+
+export interface ReviewPreview {
+  readonly grade: ReviewGrade
+  readonly dueAt: string
+  readonly intervalDays: number
+}
+
+export interface ReviewQueueItem extends ReviewCard {
+  readonly title: string
+  readonly subtitle: string
+  readonly previews: readonly ReviewPreview[]
+}
+
+export interface ReviewQueue {
+  readonly due: readonly ReviewQueueItem[]
+  readonly newCards: readonly ReviewQueueItem[]
+  readonly totalDue: number
+  readonly totalNew: number
+  readonly dueLimit: number
+  readonly newLimit: number
+  readonly reviewedToday: number
+  readonly nextDueAt: string | null
+}
+
+export interface GradeReviewInput {
+  readonly cardId: string
+  readonly grade: ReviewGrade
+}
+
+export interface GradeReviewResult {
+  readonly card: ReviewCard
+  readonly previews: readonly ReviewPreview[]
+}
+
+export interface TodaySummary {
+  readonly dueCount: number
+  readonly newCount: number
+  readonly reviewedToday: number
+  readonly attemptsToday: number
+  readonly acceptedToday: number
+  readonly streakDays: number
+  readonly lastAttemptAt: string | null
+  readonly continueProblemId: string | null
+  readonly dailyGoalMinutes: number
+}
+
+export interface PatternProgress {
+  readonly pattern: string
+  readonly problems: number
+  readonly attempted: number
+  readonly accepted: number
+}
+
+export interface ProgressSummary {
+  readonly attempts: number
+  readonly accepted: number
+  readonly lastAttemptAt: string | null
+  readonly streakDays: number
+  readonly reviewsDue: number
+  readonly reviewsCompleted: number
+  readonly reviewsCompletedToday: number
+  readonly patterns: readonly PatternProgress[]
+  readonly mistakes: readonly MistakeTagCount[]
+  readonly recentAttempts: readonly AttemptSummary[]
 }
 
 export interface ProblemNote {
@@ -291,12 +423,27 @@ export interface BaseCaseApi {
     status(): Promise<JudgeStatus>
   }
   readonly drafts: {
-    get(input: DraftInput): Promise<string | null>
+    get(input: DraftInput): Promise<DraftRecord | null>
     save(input: SaveDraftInput): Promise<void>
   }
   readonly attempts: {
     stats(): Promise<Stats>
     list(problemId: string): Promise<AttemptSummary[]>
+    recent(limit?: number): Promise<AttemptSummary[]>
+    get(attemptId: string): Promise<AttemptDetail>
+    tag(input: TagAttemptInput): Promise<AttemptDetail>
+  }
+  readonly mistakes: {
+    list(): Promise<MistakeTag[]>
+  }
+  readonly review: {
+    queue(): Promise<ReviewQueue>
+    preview(cardId: string): Promise<ReviewPreview[]>
+    grade(input: GradeReviewInput): Promise<GradeReviewResult>
+  }
+  readonly progress: {
+    summary(): Promise<ProgressSummary>
+    today(): Promise<TodaySummary>
   }
   readonly notes: {
     get(problemId: string): Promise<ProblemNote>

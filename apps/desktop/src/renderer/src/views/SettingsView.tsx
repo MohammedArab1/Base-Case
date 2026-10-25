@@ -512,6 +512,42 @@ export function SettingsView(): JSX.Element {
             Wrap long lines
           </label>
 
+          <label className="field">
+            <span>Reviews per day</span>
+            <select
+              className="input"
+              aria-label="Reviews per day"
+              value={settings.reviewDailyLimit}
+              onChange={(event) =>
+                void changeSettings({ reviewDailyLimit: Number(event.target.value) })
+              }
+            >
+              {[10, 20, 30, 50, 100].map((count) => (
+                <option key={count} value={count}>
+                  {count} reviews
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="field">
+            <span>New cards per day</span>
+            <select
+              className="input"
+              aria-label="New cards per day"
+              value={settings.newCardsPerDay}
+              onChange={(event) =>
+                void changeSettings({ newCardsPerDay: Number(event.target.value) })
+              }
+            >
+              {[0, 5, 10, 15, 20, 30].map((count) => (
+                <option key={count} value={count}>
+                  {count} new cards
+                </option>
+              ))}
+            </select>
+          </label>
+
           <label className="checkbox">
             <input
               type="checkbox"

@@ -877,6 +877,251 @@ pre {
   width: min(1320px, 100%);
 }
 
+/* Phase 4 — plan field, review queue, and progress */
+
+.plan-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.plan-field label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.plan-input {
+  width: 100%;
+  min-height: 44px;
+  max-height: 120px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 12.5px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.plan-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.review-banner {
+  margin-bottom: 0;
+}
+
+.review-banner p {
+  margin: 4px 0 0;
+}
+
+.review-hidden-note {
+  padding: 12px 0;
+  font-size: 12.5px;
+}
+
+.review-grade-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.review-grade-panel p {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
+.review-grades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.review-grade {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 64px;
+}
+
+.review-grade-interval {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.review-section {
+  margin-bottom: 28px;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.review-item-main {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.review-item-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-item-main p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.review-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.review-preview {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.review-preview-interval {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.review-item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.review-grade-row {
+  display: flex;
+  gap: 2px;
+}
+
+.review-design-note {
+  max-width: 220px;
+  font-size: 11px;
+  text-align: right;
+}
+
+.form-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.metric-unit {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(80px, 1fr) minmax(150px, auto);
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.progress-label {
+  font-weight: 600;
+}
+
+.progress-bar {
+  display: block;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.progress-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.progress-count {
+  color: var(--muted);
+  text-align: right;
+}
+
+.attempt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attempt-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.attempt-list-row .text-button {
+  font-weight: 600;
+}
+
 @media (max-width: 1480px) {
   .coding-layout {
     flex-direction: column;

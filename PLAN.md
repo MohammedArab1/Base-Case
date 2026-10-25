@@ -2581,41 +2581,41 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 - [ ] Problem list:
   - [ ] Search, difficulty, pattern, status, list filters.
-  - [ ] Progress summary.
+  - [x] Progress summary.
   - [ ] Review-due filter.
 - [ ] Problem detail:
   - [ ] Markdown/KaTeX renderer with sanitized HTML.
-  - [ ] Examples, constraints, follow-ups.
-  - [ ] Language selector and starter code.
+  - [x] Examples, constraints, follow-ups.
+  - [x] Language selector and starter code.
 - [ ] Editor:
   - [ ] CodeMirror 6 with Python/TS/JS modes.
   - [ ] Theme, font size, tab size, keymap.
   - [ ] Autosave, reset, copy.
   - [ ] Error line highlighting from judge results.
 - [ ] Run/submit:
-  - [ ] Run samples; submit all.
+  - [x] Run samples; submit all.
   - [ ] Progress and cancel.
-  - [ ] Results panel: status, tests, diff, stderr, compile errors, runtime/memory.
-  - [ ] Smallest failing hidden test after submit.
-- [ ] Hints:
-  - [ ] Progressive levels.
-  - [ ] Confirmation before level 4/full solution.
-  - [ ] Track hints used and solution viewed.
-- [ ] Attempt history:
-  - [ ] Code snapshots, results, hints, notes.
-  - [ ] Restore an earlier snapshot.
-- [ ] Plan field before coding.
-- [ ] Mistake tags:
-  - [ ] Manual tagging after an attempt.
-  - [ ] Seed taxonomy.
-- [ ] FSRS:
-  - [ ] `ts-fsrs` integration.
-  - [ ] Rating derivation table.
-  - [ ] Review queue and daily limits.
-  - [ ] Review mode with hints/solutions hidden.
-  - [ ] Today dashboard and progress stats.
+  - [x] Results panel: status, tests, diff, stderr, compile errors, runtime/memory.
+  - [x] Smallest failing hidden test after submit.
+- [x] Hints:
+  - [x] Progressive levels.
+  - [x] Confirmation before level 4/full solution.
+  - [x] Track hints used and solution viewed.
+- [x] Attempt history:
+  - [x] Code snapshots, results, hints, notes.
+  - [x] Restore an earlier snapshot.
+- [x] Plan field before coding.
+- [x] Mistake tags:
+  - [x] Manual tagging after an attempt.
+  - [x] Seed taxonomy.
+- [x] FSRS:
+  - [x] `ts-fsrs` integration.
+  - [x] Rating derivation table.
+  - [x] Review queue and daily limits.
+  - [x] Review mode with hints/solutions hidden.
+  - [x] Today dashboard and progress stats.
 - [ ] Export/import user data.
-- [ ] Tests: unit, integration, Playwright solve/run/submit/review.
+- [x] Tests: unit, integration, Playwright solve/run/submit/review.
 
 **Deliverables**
 

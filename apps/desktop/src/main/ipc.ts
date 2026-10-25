@@ -6,14 +6,17 @@ import type { IpcMainInvokeEvent } from 'electron'
 import type { ZodType } from 'zod'
 import { channels } from '../shared/ipc'
 import type { Channel, IpcResult } from '../shared/ipc'
-import type { AiContext } from '../shared/types'
+import type { AiContext, ReviewCard, ReviewQueueItem } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
 import { toIpcError } from './ipc-errors'
 import {
   aiConfigSchema,
   aiContextSchema,
+  attemptIdSchema,
+  cardIdSchema,
   draftInputSchema,
+  gradeReviewSchema,
   noInputSchema,
   packIdSchema,
   packImportKindSchema,
@@ -21,11 +24,13 @@ import {
   pngDataUrlSchema,
   problemIdSchema,
   problemNoteSchema,
+  recentAttemptsSchema,
   runInputSchema,
   saveDraftSchema,
   sceneJsonSchema,
   searchQuerySchema,
   settingsPatchSchema,
+  tagAttemptSchema,
 } from './ipc-schemas'
 import type { JudgeClient } from './judge'
 import { getLogger } from './logger'
@@ -34,8 +39,11 @@ import type { AttemptsRepository } from './repositories/attempts'
 import type { ContentIndexRepository } from './repositories/content-index'
 import type { DesignRepository } from './repositories/design'
 import type { DraftsRepository } from './repositories/drafts'
+import type { MistakesRepository } from './repositories/mistakes'
 import type { ProblemNotesRepository } from './repositories/notes'
+import type { ReviewRepository } from './repositories/review'
 import type { SettingsStore } from './settings'
+import { localDayKey, startOfLocalDay, streakLength } from './time'
 
 interface Services {
   readonly content: ContentRepository
@@ -44,6 +52,8 @@ interface Services {
   readonly drafts: DraftsRepository
   readonly design: DesignRepository
   readonly notes: ProblemNotesRepository
+  readonly review: ReviewRepository
+  readonly mistakes: MistakesRepository
   readonly judge: JudgeClient
   readonly ai: AiService
   readonly settings: SettingsStore
@@ -105,6 +115,8 @@ export function registerIpc({
   drafts,
   design,
   notes,
+  review,
+  mistakes,
   judge,
   ai,
   settings,
@@ -142,6 +154,19 @@ export function registerIpc({
       mode: input.mode,
       code: input.code,
       result,
+      plan: input.plan,
+      hintsUsed: input.hintsUsed,
+      solutionViewed: input.solutionViewed,
+    })
+
+    // Sample runs never schedule a card; review runs are graded explicitly so a
+    // single review session cannot update the card twice.
+    review.applyAttempt({
+      problemId: input.problemId,
+      mode: input.mode,
+      status: result.status,
+      hintsUsed: input.hintsUsed ?? 0,
+      solutionViewed: input.solutionViewed ?? false,
     })
 
     return result
@@ -152,13 +177,128 @@ export function registerIpc({
   )
 
   register(channels.draftSave, saveDraftSchema, (input) => {
-    drafts.save(input.problemId, input.language, input.code)
+    drafts.save(input.problemId, input.language, input.code, input.plan)
   })
 
   register(channels.attemptsStats, noInputSchema, () => attempts.getStats())
   register(channels.attemptsList, problemIdSchema, (problemId) =>
     attempts.listForProblem(problemId),
   )
+  register(channels.attemptsRecent, recentAttemptsSchema, (limit) =>
+    attempts.listRecent(limit ?? 20),
+  )
+  register(channels.attemptsGet, attemptIdSchema, (attemptId) => attempts.get(attemptId))
+  register(channels.attemptsTag, tagAttemptSchema, (input) => {
+    mistakes.tagAttempt(input.attemptId, input.tagIds)
+    return attempts.get(input.attemptId)
+  })
+
+  register(channels.mistakesList, noInputSchema, () => mistakes.list())
+
+  register(channels.reviewQueue, noInputSchema, () => {
+    const preferences = settings.get()
+    const queue = review.listQueue({
+      dueLimit: preferences.reviewDailyLimit,
+      newLimit: preferences.newCardsPerDay,
+    })
+    const summaries = new Map(content.listProblems().map((problem) => [problem.id, problem]))
+    const toItem = (card: ReviewCard): ReviewQueueItem => {
+      const summary = card.itemKind === 'problem' ? summaries.get(card.itemId) : undefined
+
+      return {
+        ...card,
+        title: summary?.title ?? (card.itemKind === 'design' ? 'Design scenario' : card.itemId),
+        subtitle: summary
+          ? `${summary.difficulty} · ${summary.patterns.join(', ')}`
+          : 'System design',
+        previews: review.preview(card.id),
+      }
+    }
+
+    return {
+      due: queue.due.map(toItem),
+      newCards: queue.newCards.map(toItem),
+      totalDue: queue.totalDue,
+      totalNew: queue.totalNew,
+      dueLimit: preferences.reviewDailyLimit,
+      newLimit: preferences.newCardsPerDay,
+      reviewedToday: queue.reviewedToday,
+      nextDueAt: queue.nextDueAt,
+    }
+  })
+
+  register(channels.reviewPreview, cardIdSchema, (cardId) => review.preview(cardId))
+
+  register(channels.reviewGrade, gradeReviewSchema, (input) => {
+    const card = review.review(input.cardId, input.grade)
+    return { card, previews: review.preview(card.id) }
+  })
+
+  register(channels.progressToday, noInputSchema, () => {
+    const now = new Date()
+    const counts = review.counts(now)
+    const today = attempts.countSince(startOfLocalDay(now).toISOString())
+    const active = new Set(attempts.activeDays().map((value) => localDayKey(new Date(value))))
+    const stats = attempts.getStats()
+
+    return {
+      dueCount: counts.dueCount,
+      newCount: counts.newCount,
+      reviewedToday: counts.reviewedToday,
+      attemptsToday: today.attempts,
+      acceptedToday: today.accepted,
+      streakDays: streakLength(active, now),
+      lastAttemptAt: stats.lastAttemptAt,
+      continueProblemId: attempts.latestProblemId(),
+      dailyGoalMinutes: settings.get().dailyGoalMinutes,
+    }
+  })
+
+  register(channels.progressSummary, noInputSchema, () => {
+    const now = new Date()
+    const stats = attempts.getStats()
+    const counts = review.counts(now)
+    const active = new Set(attempts.activeDays().map((value) => localDayKey(new Date(value))))
+    const progress = new Map(attempts.getProblemProgress().map((item) => [item.problemId, item]))
+    const patterns = new Map<string, { problems: number; attempted: number; accepted: number }>()
+
+    for (const problem of content.listProblems()) {
+      const item = progress.get(problem.id)
+
+      for (const pattern of problem.patterns) {
+        const entry = patterns.get(pattern) ?? { problems: 0, attempted: 0, accepted: 0 }
+        entry.problems += 1
+
+        if (item) {
+          entry.attempted += 1
+
+          if (item.accepted > 0) {
+            entry.accepted += 1
+          }
+        }
+
+        patterns.set(pattern, entry)
+      }
+    }
+
+    return {
+      attempts: stats.attempts,
+      accepted: stats.accepted,
+      lastAttemptAt: stats.lastAttemptAt,
+      streakDays: streakLength(active, now),
+      reviewsDue: counts.dueCount + counts.newCount,
+      reviewsCompleted: counts.reviewsCompleted,
+      reviewsCompletedToday: counts.reviewsCompletedToday,
+      patterns: [...patterns.entries()]
+        .map(([pattern, value]) => ({ pattern, ...value }))
+        .sort(
+          (left, right) =>
+            right.problems - left.problems || left.pattern.localeCompare(right.pattern),
+        ),
+      mistakes: mistakes.counts(),
+      recentAttempts: attempts.listRecent(20),
+    }
+  })
 
   register(channels.notesGet, problemIdSchema, (problemId) => notes.get(problemId))
   register(channels.notesSave, problemNoteSchema, (input) =>

@@ -7,16 +7,24 @@ import type {
   AppInfo,
   AppSettings,
   BaseCaseApi,
+  AttemptDetail,
   AttemptSummary,
   ContentPackSummary,
   DesignScenePayload,
   DraftInput,
+  DraftRecord,
+  GradeReviewInput,
+  GradeReviewResult,
   JudgeStatus,
+  MistakeTag,
   PackImportKind,
   PackPreviewResult,
   ProblemDetail,
   ProblemNote,
   ProblemSummary,
+  ProgressSummary,
+  ReviewPreview,
+  ReviewQueue,
   RunInput,
   RunResult,
   SaveAiConfigInput,
@@ -24,6 +32,8 @@ import type {
   SaveProblemNoteInput,
   SettingsPatch,
   Stats,
+  TagAttemptInput,
+  TodaySummary,
 } from '../shared/types'
 
 interface BridgeError extends Error {
@@ -63,12 +73,27 @@ const api: BaseCaseApi = {
     status: () => invoke<JudgeStatus>(channels.judgeStatus),
   },
   drafts: {
-    get: (input: DraftInput) => invoke<string | null>(channels.draftGet, input),
+    get: (input: DraftInput) => invoke<DraftRecord | null>(channels.draftGet, input),
     save: (input: SaveDraftInput) => invoke<void>(channels.draftSave, input),
   },
   attempts: {
     stats: () => invoke<Stats>(channels.attemptsStats),
     list: (problemId: string) => invoke<AttemptSummary[]>(channels.attemptsList, problemId),
+    recent: (limit?: number) => invoke<AttemptSummary[]>(channels.attemptsRecent, limit),
+    get: (attemptId: string) => invoke<AttemptDetail>(channels.attemptsGet, attemptId),
+    tag: (input: TagAttemptInput) => invoke<AttemptDetail>(channels.attemptsTag, input),
+  },
+  mistakes: {
+    list: () => invoke<MistakeTag[]>(channels.mistakesList),
+  },
+  review: {
+    queue: () => invoke<ReviewQueue>(channels.reviewQueue),
+    preview: (cardId: string) => invoke<ReviewPreview[]>(channels.reviewPreview, cardId),
+    grade: (input: GradeReviewInput) => invoke<GradeReviewResult>(channels.reviewGrade, input),
+  },
+  progress: {
+    summary: () => invoke<ProgressSummary>(channels.progressSummary),
+    today: () => invoke<TodaySummary>(channels.progressToday),
   },
   notes: {
     get: (problemId: string) => invoke<ProblemNote>(channels.notesGet, problemId),

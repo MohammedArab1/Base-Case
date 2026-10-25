@@ -53,6 +53,17 @@ async function capture(page: Page, name: string): Promise<void> {
   await page.screenshot({ path: join(directory, `${name}.png`) })
 }
 
+async function completeOnboarding(page: Page, language: 'python' | 'typescript'): Promise<void> {
+  await page.getByTestId('onboarding-start').click()
+  await page.getByTestId(`onboarding-language-${language}`).click()
+  await page.getByTestId('onboarding-language-next').click()
+  await page.getByTestId('onboarding-goal-30').click()
+  await page.getByTestId('onboarding-goal-next').click()
+  await page.getByTestId('onboarding-ai-none').click()
+  await page.getByTestId('onboarding-finish').click()
+  await page.getByTestId('onboarding-go-today').click()
+}
+
 test('onboards, persists the theme, searches, and reopens without onboarding', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-'))
   let first: LaunchedApp | null = null
@@ -175,6 +186,103 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
   } finally {
     await second?.app.close().catch(() => undefined)
     await first?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('solves, submits, reviews, grades, and tags a mistake', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-review-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await page.getByRole('button', { name: /Pair Sum/ }).click()
+    await expect(page.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
+
+    await page.getByTestId('problem-plan').fill('Hash map from value to index. One pass.')
+
+    const editor = page.locator('.cm-content')
+    await editor.click()
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText(
+      [
+        'from typing import List',
+        '',
+        'class Solution:',
+        '    def pairSum(self, nums: List[int], target: int) -> List[int]:',
+        '        seen = {}',
+        '        for index, value in enumerate(nums):',
+        '            complement = target - value',
+        '            if complement in seen:',
+        '                return [seen[complement], index]',
+        '            seen[value] = index',
+        '        return []',
+      ].join('\n'),
+    )
+
+    await page.getByRole('button', { name: 'Submit', exact: true }).click()
+    await expect(page.getByText('Accepted', { exact: true }).first()).toBeVisible({
+      timeout: 60_000,
+    })
+
+    // The submission created a new card for the review queue.
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Review' })
+      .click()
+    await expect(page.getByTestId('review-item').first()).toBeVisible()
+    await expect(page.getByTestId('review-item').first()).toContainText('Pair Sum')
+
+    // Review mode hides hints and solutions.
+    await page.getByTestId('start-review').first().click()
+    await expect(page.getByTestId('review-banner')).toBeVisible()
+    await expect(
+      page.getByText('Hints, common mistakes, and follow-ups are hidden during review.'),
+    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Hints' })).toHaveCount(0)
+
+    await page.getByRole('button', { name: 'Check review' }).click()
+    await expect(page.getByText('Accepted', { exact: true }).first()).toBeVisible({
+      timeout: 60_000,
+    })
+    await expect(page.getByTestId('review-grade-panel')).toBeVisible()
+
+    await page.getByTestId('grade-good').click()
+    await expect(page.getByTestId('review-empty')).toBeVisible()
+    await expect(page.getByTestId('review-item')).toHaveCount(0)
+
+    // History keeps the plan and the review attempt, and tags can be applied.
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await page.getByRole('button', { name: /Pair Sum/ }).click()
+    await page.getByRole('tab', { name: 'History' }).click()
+    await expect(page.getByTestId('attempt-row').first()).toContainText('Review')
+    await expect(page.getByTestId('attempt-row').last()).toContainText(
+      'Hash map from value to index.',
+    )
+
+    await page.getByTestId('edit-attempt-tags').first().click()
+    await page.getByTestId('tag-picker').getByLabel('Off-by-one').check()
+    await page.getByTestId('save-attempt-tags').click()
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Progress' })
+      .click()
+    await expect(page.getByTestId('mistake-progress')).toContainText('Off-by-one')
+    await capture(page, 'review-progress')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
   }
 })

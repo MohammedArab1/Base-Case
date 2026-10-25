@@ -5,10 +5,12 @@ import type {
   DraftInput,
   EditorSettings,
   Failure,
+  GradeReviewInput,
   RunInput,
   SaveAiConfigInput,
   SaveDraftInput,
   SettingsPatch,
+  TagAttemptInput,
 } from '../shared/types'
 
 export const languageSchema = z.enum(['python', 'typescript'])
@@ -16,6 +18,10 @@ export const languageSchema = z.enum(['python', 'typescript'])
 export const problemIdSchema = z.string().min(1).max(200)
 
 export const searchQuerySchema = z.string().max(200)
+
+export const attemptIdSchema = z.string().uuid()
+
+export const cardIdSchema = z.string().uuid()
 
 export const problemNoteSchema = z.object({
   problemId: problemIdSchema,
@@ -60,7 +66,10 @@ export const runInputSchema: z.ZodType<RunInput> = z.object({
   problemId: problemIdSchema,
   language: languageSchema,
   code: z.string().max(200_000),
-  mode: z.enum(['sample', 'submit']),
+  mode: z.enum(['sample', 'submit', 'review']),
+  plan: z.string().max(20_000).optional(),
+  hintsUsed: z.number().int().min(0).max(50).optional(),
+  solutionViewed: z.boolean().optional(),
 }) as z.ZodType<RunInput>
 
 export const draftInputSchema: z.ZodType<DraftInput> = z.object({
@@ -72,7 +81,22 @@ export const saveDraftSchema: z.ZodType<SaveDraftInput> = z.object({
   problemId: problemIdSchema,
   language: languageSchema,
   code: z.string().max(200_000),
+  plan: z.string().max(20_000).optional(),
 }) as z.ZodType<SaveDraftInput>
+
+const reviewGradeSchema = z.enum(['again', 'hard', 'good', 'easy'])
+
+export const gradeReviewSchema: z.ZodType<GradeReviewInput> = z.object({
+  cardId: z.string().uuid(),
+  grade: reviewGradeSchema,
+}) as z.ZodType<GradeReviewInput>
+
+export const tagAttemptSchema: z.ZodType<TagAttemptInput> = z.object({
+  attemptId: z.string().uuid(),
+  tagIds: z.array(z.string().min(1).max(100)).max(50),
+}) as z.ZodType<TagAttemptInput>
+
+export const recentAttemptsSchema = z.number().int().min(1).max(100).optional()
 
 export const aiContextSchema: z.ZodType<AiContext> = z.object({
   problemId: problemIdSchema,
@@ -104,6 +128,8 @@ export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
   language: languageSchema,
   editor: editorSettingsSchema,
   dailyGoalMinutes: z.number().int().min(5).max(480),
+  reviewDailyLimit: z.number().int().min(1).max(200).default(20),
+  newCardsPerDay: z.number().int().min(0).max(100).default(10),
   reviewReminders: z.boolean(),
   onboardingCompleted: z.boolean().default(false),
 }) as z.ZodType<AppSettings>
@@ -119,6 +145,8 @@ export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
     })
     .optional(),
   dailyGoalMinutes: z.number().int().min(5).max(480).optional(),
+  reviewDailyLimit: z.number().int().min(1).max(200).optional(),
+  newCardsPerDay: z.number().int().min(0).max(100).optional(),
   reviewReminders: z.boolean().optional(),
   onboardingCompleted: z.boolean().optional(),
 }) as z.ZodType<SettingsPatch>

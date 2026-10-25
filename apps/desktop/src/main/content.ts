@@ -37,7 +37,7 @@ export interface JudgeRunParams {
   readonly problemId: string
   readonly language: Language
   readonly code: string
-  readonly mode: 'sample' | 'submit'
+  readonly mode: 'sample' | 'submit' | 'review'
   readonly signature: Signature
   readonly limits: Problem['limits']
   readonly checker: Problem['checker']
@@ -343,7 +343,7 @@ export class ContentRepository {
     problemId: string,
     language: Language,
     code: string,
-    mode: 'sample' | 'submit',
+    mode: 'sample' | 'submit' | 'review',
   ): JudgeRunParams {
     const problem = this.problems.get(problemId)
 
@@ -355,7 +355,7 @@ export class ContentRepository {
       throw new Error('Only function signatures are supported in the Phase 1 judge.')
     }
 
-    const tests = mode === 'submit' ? problem.hiddenTests : problem.sampleTests
+    const tests = mode === 'sample' ? problem.sampleTests : problem.hiddenTests
 
     return {
       problemId,
@@ -367,7 +367,7 @@ export class ContentRepository {
       checker: problem.manifest.checker,
       tests: tests.map((test, index) => ({
         index,
-        isSample: mode !== 'submit',
+        isSample: mode === 'sample',
         input: test.input,
         expected: test.expected,
       })),

@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (complete; design harness deferred to Phase 5)
-> Overall status: On track — the packaged macOS app is 252 MB with bundled Python/Node and a ~2.4 s cold start; all judge checks and CI are green
-> Next milestone: Phase 4 review (FSRS, mistake tags, snapshots, export/import), then Phase 5 design
+> Current phase: Phase 4 — Coding practice (review slice complete; filters, cancel UI, and export/import remain)
+> Overall status: On track — FSRS review, mistake tags, plan fields, snapshots, and Today/Progress dashboards are working; all checks are green
+> Next milestone: Finish Phase 4 (problem filters, cancel UI, export/import), then Phase 5 design
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -16,7 +16,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
-| Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
+| Phase 4 — Coding practice | In progress | 2026-10-24 | FSRS review, mistake tags, plans, snapshots, and Today/Progress dashboards are complete; problem filters, cancel UI, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
 | Phase 7 — Content production | Not started | — | 10 coding + 4 design for alpha; one problem drafted in core |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start Phase 4 review work: FSRS scheduling, review queue, mistake tags, snapshots, and export/import.
+1. Finish Phase 4: problem-list filters (difficulty, pattern, status, review-due), a cancel button for in-flight judge runs, and user-data export/import.
 2. Start Phase 5 design scenarios and rubrics after the review slice.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
@@ -40,6 +40,32 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 4 — FSRS review slice
+
+- Status: Phase 4 in progress (review slice complete)
+- Done:
+  - Added migration 5: `learning_steps` for ts-fsrs, attempt snapshot columns (`plan`, `hints_used`, `solution_viewed`), draft plans, and `review_logs`.
+  - Added `ReviewRepository` on ts-fsrs 5.4.2: the first submission creates a new card, later submissions derive a grade (clean accept → Easy, hints → Good, level-4 hint or solution → Hard, failures → Again), manual grades, queue ordering, due/new daily limits, previews, and review logs.
+  - Added `MistakesRepository` with an eight-tag seed taxonomy, idempotent retagging, and counts.
+  - Added IPC and preload APIs for review queue/preview/grade, mistakes, attempt detail/recent/tag, draft plans, and Today/Progress summaries.
+  - Added a review queue UI, review mode that hides hints/solutions/follow-ups, in-workspace grade buttons with next-due previews, a plan field, snapshot restore, and mistake tagging in the Inspector.
+  - Replaced the Today and Progress stubs with live dashboards (due/new counts, streak, pattern coverage, mistake counts, recent attempts).
+  - Added review settings (reviews per day, new cards per day).
+  - Extended the unit suite (review transitions/limits, rating table, mistake tagging/rollback) and Playwright (solve → submit → review → grade → tag).
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 58 tests passed across 14 files.
+  - `pnpm content:validate` — passed.
+  - `pnpm build`, `pnpm smoke:e2e` — passed.
+  - `pnpm --filter @base-case/desktop test:e2e` — 2 passed.
+- Files/PRs:
+  - Key paths: `apps/desktop/src/main/repositories/review.ts`, `mistakes.ts`, `apps/desktop/src/renderer/src/views/ReviewView.tsx`, `TodayView.tsx`, `ProgressView.tsx`, `CodingView.tsx`, `Inspector.tsx`, `apps/desktop/src/main/migrations.ts`.
+- Next:
+  - Phase 4 remainder: problem filters, cancel UI, export/import, and KaTeX/error-line polish.
+- Notes/decisions:
+  - The first submission creates a new card instead of grading it immediately, so the first review happens in the queue rather than days later.
+  - Review-mode attempts are never auto-graded; the learner grades explicitly, which prevents a single session from updating the card twice.
 
 ### 2026-10-24 — Phase 3 — P3-F runtime bundling
 
