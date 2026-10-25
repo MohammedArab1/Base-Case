@@ -849,6 +849,10 @@ pre {
   background: var(--danger);
 }
 
+.status-dot-warn {
+  background: var(--warning);
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

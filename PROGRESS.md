@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 7 — Content production (10 coding + 4 design authored; second-person review pending)
-> Overall status: On track — coding and design practice run end to end, the optional guarded AI tutor is in place, and the alpha content set now has 10 coding problems across the target patterns
-> Next milestone: Phase 8 alpha release (after the second-person content review)
+> Current phase: Phase 8 — Alpha release (diagnostics, docs, checksums, and release automation in place; beta pending)
+> Overall status: On track — the core loop, judge, design workspace, AI tutor, 10 + 4 content set, diagnostics, and alpha documentation are in place. Remaining work is external (manual Windows run, clean-VM installs, private beta, reviews) plus the release tag
+> Next milestone: Private alpha beta and the `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -20,21 +20,23 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
 | Phase 7 — Content production | In progress | 2026-10-25 | 10 coding problems (two pointers, stack, binary search, sliding window, linked list, trees, graphs, heap, DP, hash map) and 4 design scenarios authored. All 20 reference solutions pass in Python and TypeScript. Second-person review and optional reference scenes remain |
-| Phase 8 — Alpha release | Not started | — | Installers, docs, beta |
+| Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
 | Phase 9 — MVP expansion | Not started | — | 25 + 8 content, importer, polish |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
-1. Get a second-person review of the 10 coding problems and 4 designs (Phase 7 exit criteria) and record the sign-off.
-2. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/`.
-3. Add optional local AI history with a clear delete button (privacy default stays off).
-4. Add optional reference Excalidraw scenes and an automated native export-dialog check.
-5. Confirm the Windows Playwright run in CI.
-6. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
-7. Re-run the uninstall row of the full Windows checklist on a fresh install.
-8. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
-9. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md`.
+1. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
+2. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
+3. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
+4. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
+5. Get a second-person review of the 10 coding problems and 4 designs (B4) and record the sign-off.
+6. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
+7. Add optional local AI history with a clear delete button (privacy default stays off).
+8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+9. Confirm the Windows Playwright run in CI after the next push.
+10. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+11. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
 
 ## Blockers
 
@@ -47,9 +49,38 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
+- **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
 - **Optional:** reference Excalidraw scenes for the four designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 8 — Alpha release foundations
+
+- Status: In progress; the remaining steps need external access or testers
+- Done:
+  - Added a local diagnostics self-test exposed as `app.diagnostics` and rendered in **Settings → Diagnostics**. It checks the app, database (`PRAGMA quick_check`), storage write access and free space, logs, content counts, the FTS search index, the judge sidecar, bundled runtimes, and AI configuration. It never contacts the network and the copyable report excludes code, notes, prompts, responses, and API keys.
+  - Added the Phase 8 documentation set: `docs/quickstart.md` (install, first run, two-minute tutorial), `docs/faq.md`, `docs/privacy.md`, `docs/known-limitations.md`, and `docs/project/alpha-release.md` (release checklist, beta plan, feedback triage, metrics, P0–P3 definitions).
+  - Added the **Alpha feedback** issue form and a `type:feedback` label to the GitHub setup guide.
+  - Added `scripts/checksums.mjs` and `pnpm release:checksums`. The build workflow now writes `SHA256SUMS.txt` for each platform and has a tag-driven release job that collects both artifacts, generates a combined checksum file, and publishes a pre-release with generated notes.
+  - Bumped the workspace and app version to `0.1.0-alpha` and added a dated `CHANGELOG.md` section.
+  - Updated `scripts/measure-packaged.mjs` to read the desktop package version instead of hardcoding `0.0.0`.
+  - Extended the CDP smoke test to run diagnostics and added a Playwright test that runs the self-test from Settings.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 111 tests across 26 files (4 new diagnostics tests).
+  - `pnpm content:validate` — valid; 10 problems, 4 designs; warnings only for optional reference scenes.
+  - `pnpm judge:build`, `pnpm build`, `pnpm smoke:e2e` — passed; diagnostics reports 9 checks with `ok: true`.
+  - `pnpm smoke:playwright` — 5 passed, including the new diagnostics test.
+  - `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac` — built `Base-Case-0.1.0-alpha-arm64.dmg` (258.1 MB) and ZIP (258.8 MB); `SHA256SUMS.txt` generated.
+  - `node scripts/measure-packaged.mjs` — packaged app launched with 10 problems, judge `5/5 accepted`, bundled Python and Node, 2.5 s cold start, ~267 MB idle memory.
+- Files/PRs:
+  - Key paths: `apps/desktop/src/main/diagnostics.ts`, `apps/desktop/src/shared/diagnostics.ts`, `apps/desktop/src/renderer/src/views/SettingsView.tsx`, `apps/desktop/e2e/app.spec.ts`, `scripts/checksums.mjs`, `scripts/measure-packaged.mjs`, `.github/workflows/build.yml`, `.github/ISSUE_TEMPLATE/alpha_feedback.yml`, `docs/quickstart.md`, `docs/faq.md`, `docs/privacy.md`, `docs/known-limitations.md`, `docs/project/alpha-release.md`.
+- Next:
+  - Trigger the manual Windows installer workflow (B2), record clean-VM installs (B1), recruit beta testers (B10), fix P0/P1 issues, then tag `v0.1.0-alpha`.
+- Notes/decisions:
+  - Diagnostics is local-only by design; the AI check inspects configuration and never sends a request.
+  - The release job runs only on `v*` tags. Manual workflow runs still upload per-platform artifacts and checksums.
+  - The private beta is tracked as B10 because it cannot be completed from the repository alone.
 
 ### 2026-10-25 — Phase 7 — Alpha coding content
 

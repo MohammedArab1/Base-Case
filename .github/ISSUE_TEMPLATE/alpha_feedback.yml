@@ -1,0 +1,89 @@
+name: Alpha feedback
+description: Share what worked, what confused you, or what stopped you during the alpha.
+title: '[Alpha]: '
+labels: ['type:feedback']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying Base Case. Do not include API keys, personal file
+        paths, or code or notes you do not want to share. For a defect, use the
+        Bug report form instead. For security issues, follow `SECURITY.md`.
+  - type: input
+    id: version
+    attributes:
+      label: Build
+      description: The app version from Settings → Data and environment.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS (Apple Silicon)
+        - Windows 11
+        - Windows 10
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: onboarding
+    attributes:
+      label: Did you complete onboarding without help?
+      options:
+        - 'Yes'
+        - 'No, I needed help'
+        - 'I skipped it'
+    validations:
+      required: true
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked well?
+      description: Anything that felt clear, fast, or useful.
+  - type: textarea
+    id: confused
+    attributes:
+      label: What was confusing?
+      description: Where did you hesitate or have to guess?
+    validations:
+      required: true
+  - type: textarea
+    id: stopped
+    attributes:
+      label: What stopped you or almost stopped you?
+      description: Install warnings, judge errors, missing content, unclear next steps.
+  - type: dropdown
+    id: again
+    attributes:
+      label: Would you use Base Case again?
+      options:
+        - 'Yes'
+        - 'Maybe'
+        - 'No'
+    validations:
+      required: true
+  - type: dropdown
+    id: ai
+    attributes:
+      label: How helpful was the AI tutor? (Leave as "Did not use" if AI was off.)
+      options:
+        - Did not use
+        - Not helpful
+        - Somewhat helpful
+        - Very helpful
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else?
+      description: Features you expected, content you want, or a comparison to your current workflow.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed secrets, API keys, and personal data from this report.
+          required: true
+        - label: You may contact me through this issue for follow-up.
+          required: false

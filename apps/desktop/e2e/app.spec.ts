@@ -201,6 +201,39 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
   }
 })
 
+test('runs the local diagnostics self-test from Settings', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-diagnostics-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Settings' })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
+
+    await page.getByTestId('run-diagnostics').click()
+    const report = page.getByTestId('diagnostics-report')
+    await expect(report).toBeVisible({ timeout: 15_000 })
+    await expect(report.locator('.runtime-row')).toHaveCount(9)
+    await expect(report).toContainText('Database')
+    await expect(report).toContainText('Judge sidecar')
+    await expect(report).toContainText('Language runtimes')
+    await expect(page.getByTestId('diagnostics-summary')).toContainText(
+      'All required checks passed.',
+    )
+    await capture(page, 'diagnostics')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
 test('solves, submits, reviews, grades, and tags a mistake', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-review-'))
   let launched: LaunchedApp | null = null

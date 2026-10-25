@@ -7,6 +7,7 @@ import type {
   AiTestConnectionResult,
   AppInfo,
   ContentPackSummary,
+  DiagnosticsReport,
   JudgeStatus,
   PackImportKind,
   PackPreviewResult,
@@ -14,6 +15,7 @@ import type {
   SettingsPatch,
   ThemePreference,
 } from '../../../shared/types'
+import { formatDiagnosticsReport } from '../../../shared/diagnostics'
 import { useSettings } from '../settings'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
@@ -91,6 +93,9 @@ export function SettingsView(): JSX.Element {
   const [removing, setRemoving] = useState(false)
   const [transferring, setTransferring] = useState<'export' | 'import' | null>(null)
   const [transferStatus, setTransferStatus] = useState<string | null>(null)
+  const [diagnostics, setDiagnostics] = useState<DiagnosticsReport | null>(null)
+  const [runningDiagnostics, setRunningDiagnostics] = useState(false)
+  const [diagnosticsCopied, setDiagnosticsCopied] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -203,6 +208,33 @@ export function SettingsView(): JSX.Element {
       setError(judgeError instanceof Error ? judgeError.message : String(judgeError))
     } finally {
       setLoadingJudge(false)
+    }
+  }
+
+  const runSelfTest = async (): Promise<void> => {
+    setRunningDiagnostics(true)
+    setError(null)
+
+    try {
+      setDiagnostics(await window.baseCase.app.diagnostics())
+    } catch (diagnosticError: unknown) {
+      setError(diagnosticError instanceof Error ? diagnosticError.message : String(diagnosticError))
+    } finally {
+      setRunningDiagnostics(false)
+    }
+  }
+
+  const copyDiagnostics = async (): Promise<void> => {
+    if (!diagnostics) {
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(formatDiagnosticsReport(diagnostics))
+      setDiagnosticsCopied(true)
+      window.setTimeout(() => setDiagnosticsCopied(false), 1500)
+    } catch {
+      setError('Could not copy the diagnostics report to the clipboard.')
     }
   }
 
@@ -946,6 +978,68 @@ export function SettingsView(): JSX.Element {
             <strong>Judge unavailable</strong>
             <p>{judgeStatus?.error ?? 'The sidecar is not running.'}</p>
           </div>
+        )}
+      </section>
+
+      <section className="settings-card">
+        <div className="settings-card-heading">
+          <div>
+            <h2>Diagnostics</h2>
+            <p className="muted">
+              Run a local self-test of the database, content, search index, judge, runtimes,
+              storage, logs, and AI configuration. Nothing is sent over the network.
+            </p>
+          </div>
+          <div className="settings-actions">
+            {diagnostics ? (
+              <Button
+                variant="ghost"
+                onClick={() => void copyDiagnostics()}
+                data-testid="copy-diagnostics"
+              >
+                {diagnosticsCopied ? 'Copied' : 'Copy report'}
+              </Button>
+            ) : null}
+            <Button
+              variant="secondary"
+              onClick={() => void runSelfTest()}
+              disabled={runningDiagnostics}
+              data-testid="run-diagnostics"
+            >
+              {runningDiagnostics ? 'Running…' : 'Run self-test'}
+            </Button>
+          </div>
+        </div>
+
+        {diagnostics ? (
+          <>
+            <div className="runtime-list" data-testid="diagnostics-report">
+              {diagnostics.checks.map((check) => (
+                <div className="runtime-row" key={check.id}>
+                  <span
+                    className={`status-dot ${
+                      check.status === 'pass'
+                        ? ''
+                        : check.status === 'warn'
+                          ? 'status-dot-warn'
+                          : 'status-dot-error'
+                    }`}
+                  />
+                  <strong>{check.label}</strong>
+                  <span className="muted">{check.detail}</span>
+                  <span className="muted small">{check.hint ?? ''}</span>
+                </div>
+              ))}
+            </div>
+            <p className="muted small" data-testid="diagnostics-summary">
+              {diagnostics.ok
+                ? 'All required checks passed.'
+                : 'One or more checks need attention.'}{' '}
+              Generated {new Date(diagnostics.generatedAt).toLocaleString()}.
+            </p>
+          </>
+        ) : (
+          <p className="muted">No self-test has run yet.</p>
         )}
       </section>
 

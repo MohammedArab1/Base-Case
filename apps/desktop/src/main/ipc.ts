@@ -9,6 +9,7 @@ import type { Channel, IpcResult } from '../shared/ipc'
 import type { AiEvent, JudgeRunEvent, ReviewCard, ReviewQueueItem } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
+import type { AppDatabase } from './database'
 import { renderDesignAttemptMarkdown } from './design-export'
 import { toIpcError } from './ipc-errors'
 import {
@@ -42,6 +43,7 @@ import {
 } from './ipc-schemas'
 import type { JudgeClient } from './judge'
 import { getLogger } from './logger'
+import { runDiagnostics } from './diagnostics'
 import { AiProviderError } from './ai-providers/types'
 import type { PackManager } from './pack-manager'
 import type { AttemptsRepository } from './repositories/attempts'
@@ -69,7 +71,7 @@ interface Services {
   readonly ai: AiService
   readonly settings: SettingsStore
   readonly packs: PackManager
-  readonly databasePath: string
+  readonly database: AppDatabase
 }
 
 function register<I, O>(
@@ -133,7 +135,7 @@ export function registerIpc({
   ai,
   settings,
   packs,
-  databasePath,
+  database,
 }: Services): void {
   register(channels.appInfo, noInputSchema, () => ({
     appVersion: app.getVersion(),
@@ -144,9 +146,24 @@ export function registerIpc({
       node: process.versions.node,
     },
     userDataPath: app.getPath('userData'),
-    databasePath,
+    databasePath: database.path,
     logsPath: join(app.getPath('userData'), 'logs'),
   }))
+
+  register(channels.appDiagnostics, noInputSchema, () =>
+    runDiagnostics({
+      appVersion: app.getVersion(),
+      platform: process.platform,
+      arch: process.arch,
+      database,
+      content,
+      contentIndex,
+      judge,
+      ai,
+      userDataPath: app.getPath('userData'),
+      logsPath: join(app.getPath('userData'), 'logs'),
+    }),
+  )
 
   register(channels.contentList, noInputSchema, () => content.listProblems())
   register(channels.contentGet, problemIdSchema, (problemId) => content.getProblem(problemId))

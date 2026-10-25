@@ -8,6 +8,20 @@ semantic versioning once releases begin.
 
 ### Added
 
+- Nothing yet.
+
+### Changed
+
+- Nothing yet.
+
+### Fixed
+
+- Nothing yet.
+
+## [0.1.0-alpha] — 2026-10-25
+
+### Added
+
 - Phase 0 monorepo skeleton: `apps/desktop`, `services/judge`,
   `packages/schema`, `packages/content-cli`, `content`, `docs`.
 - Secure Electron + React shell with a real coding workspace, Markdown
@@ -20,27 +34,47 @@ semantic versioning once releases begin.
   AI provider config, WAL, and verified startup backups.
 - Excalidraw canvas with local scene persistence and PNG export.
 - Optional AI: context preview, mock provider, OpenAI-compatible streaming,
-  async `safeStorage` key encryption, and a local SSE test endpoint.
+  async `safeStorage` key encryption, a local SSE test endpoint, per-feature
+  toggles, guardrails, design-note review, a follow-up interviewer, and a local
+  bug-zoo eval harness. AI is off by default.
+- Ten original coding problems across the alpha patterns, each with sample and
+  hidden tests, four hints, an explanation, common mistakes, follow-ups, and
+  Python/TypeScript reference solutions.
+- Four system design scenarios with prompts, requirements, scale targets,
+  seven-dimension rubrics, reference designs, expected-topic checklists, and
+  Markdown/PNG export.
+- FSRS review queue, mistake tags, Today and Progress dashboards, and JSON data
+  export/import.
+- Content pack import (ZIP or folder) with schema validation, preview, an
+  Unverified badge, and removal that preserves attempts.
+- Content CLI `test` command that runs every reference solution against sample
+  and hidden tests through the real judge.
+- Diagnostics self-test in Settings covering the database, storage, logs,
+  content, search index, judge, runtimes, and AI configuration, with a copyable
+  report. Nothing is sent over the network.
 - Unsigned macOS arm64 DMG/ZIP packaging with bundled content and judge;
   macOS + Windows packaging workflow; unsigned install documentation.
+- SHA-256 checksum generation and a tag-driven GitHub Release job.
 - CDP smoke test and packaged-app measurement scripts.
 - Phase 1 spike report with cold-start, memory, judge, and package measurements.
 - Versioned Go judge JSONL protocol (`hello`, `version`, `doctor`, `ping`,
   `run`, `shutdown`) with tests.
 - Content pack schema, TypeScript types, pack validation, and a `validate`
   CLI command.
-- Bundled core pack with the original `pair-sum` problem, sample/hidden tests,
-  hints, explanation, and Python/TypeScript reference solutions.
 - Problem and design templates.
-- ADRs 0001–0010, content policy, threat model, wireframes, definition of done,
-  code review checklist, risk register, and GitHub setup guide.
+- Quickstart and two-minute tutorial, FAQ, privacy and AI notes, known
+  limitations, and the alpha release runbook.
+- Alpha feedback issue form.
+- ADRs 0001–0011, content policy, threat model, wireframes, definition of done,
+  code review checklist, risk register, GitHub setup guide, and the canonical
+  open-blockers list.
 - MIT code license, CC BY-SA 4.0 content license, NOTICE, contributing guide,
   code of conduct, and security policy.
 - Initial CI, build workflow, Dependabot, issue templates, and PR template.
 
 ### Changed
 
-- None yet.
+- Version bumped to `0.1.0-alpha` and the release tag is `v0.1.0-alpha`.
 
 ### Fixed
 
@@ -51,3 +85,5 @@ semantic versioning once releases begin.
 - Renderer runs with `contextIsolation: true`, `nodeIntegration: false`, and
   `sandbox: true`.
 - Navigation is blocked; external links open in the system browser.
+- API keys are encrypted with `safeStorage` and excluded from exports and the
+  diagnostics report.

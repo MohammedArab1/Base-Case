@@ -699,6 +699,21 @@ export { Solution }
   )
   assert(backups.length >= 1, 'No verified database backup was created')
 
+  const diagnostics = await evaluate('window.baseCase.app.diagnostics()')
+  assert(diagnostics.ok, 'The diagnostics self-test reported a failing check')
+  assert(
+    diagnostics.checks.some((check) => check.id === 'database' && check.status === 'pass'),
+    'Diagnostics did not pass the database check',
+  )
+  assert(
+    diagnostics.checks.some((check) => check.id === 'judge' && check.status === 'pass'),
+    'Diagnostics did not pass the judge check',
+  )
+  assert(
+    diagnostics.checks.some((check) => check.id === 'content' && check.status === 'pass'),
+    'Diagnostics did not pass the content check',
+  )
+
   await evaluate(
     `window.baseCase.drafts.save({ problemId: 'core/pair-sum', language: 'python', code: 'draft-check', plan: 'one pass' })`,
   )
@@ -1145,6 +1160,8 @@ export { Solution }
     packAttemptsPreserved: statsAfterPackRemoval.attempts === statsBeforePackRemoval.attempts,
     packUi: true,
     backups: backups.length,
+    diagnostics: diagnostics.checks.length,
+    diagnosticsOk: diagnostics.ok,
     judge: `${judgeStatus.name} ${judgeStatus.version}`,
     runtimeSources: Object.fromEntries(
       Object.entries(judgeStatus.runtimes ?? {}).map(([name, info]) => [

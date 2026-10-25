@@ -574,6 +574,26 @@ export interface AppInfo {
   readonly logsPath: string
 }
 
+export type DiagnosticStatus = 'pass' | 'warn' | 'fail'
+
+export interface DiagnosticCheck {
+  readonly id: string
+  readonly label: string
+  readonly status: DiagnosticStatus
+  readonly detail: string
+  /** A short, actionable next step shown when the check is not passing. */
+  readonly hint?: string
+}
+
+export interface DiagnosticsReport {
+  readonly generatedAt: string
+  readonly appVersion: string
+  readonly platform: string
+  readonly arch: string
+  readonly ok: boolean
+  readonly checks: readonly DiagnosticCheck[]
+}
+
 export type AiProviderType = 'none' | 'mock' | 'openai-compatible'
 
 export type AiFeature = keyof AiFeatureSettings
@@ -770,6 +790,7 @@ export interface BaseCaseApi {
   }
   readonly app: {
     getInfo(): Promise<AppInfo>
+    diagnostics(): Promise<DiagnosticsReport>
   }
   readonly content: {
     list(): Promise<ProblemSummary[]>

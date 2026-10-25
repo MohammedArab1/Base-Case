@@ -1,10 +1,13 @@
 import { execFileSync, spawn } from 'node:child_process'
-import { existsSync, mkdtempSync, rmSync, statSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
+const desktopVersion = JSON.parse(
+  readFileSync(join(root, 'apps/desktop/package.json'), 'utf8'),
+).version
 const defaultAppBinary =
   process.platform === 'win32'
     ? join(root, 'apps/desktop/dist/win-unpacked/Base Case.exe')
@@ -284,14 +287,14 @@ async function main() {
       join(
         root,
         'apps/desktop/dist',
-        `Base-Case-0.0.0-${process.arch === 'arm64' ? 'arm64' : 'x64'}.dmg`,
+        `Base-Case-${desktopVersion}-${process.arch === 'arm64' ? 'arm64' : 'x64'}.dmg`,
       ),
     ),
     zipMb: fileSizeMb(
       join(
         root,
         'apps/desktop/dist',
-        `Base-Case-0.0.0-${process.arch === 'arm64' ? 'arm64' : 'x64'}.zip`,
+        `Base-Case-${desktopVersion}-${process.arch === 'arm64' ? 'arm64' : 'x64'}.zip`,
       ),
     ),
   }

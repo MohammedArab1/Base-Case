@@ -18,6 +18,7 @@ import type {
   DesignScenarioDetail,
   DesignScenarioSummary,
   DesignScenePayload,
+  DiagnosticsReport,
   DraftInput,
   DraftRecord,
   ExportDesignAttemptInput,
@@ -75,6 +76,7 @@ const api: BaseCaseApi = {
   },
   app: {
     getInfo: () => invoke<AppInfo>(channels.appInfo),
+    diagnostics: () => invoke<DiagnosticsReport>(channels.appDiagnostics),
   },
   content: {
     list: () => invoke<ProblemSummary[]>(channels.contentList),

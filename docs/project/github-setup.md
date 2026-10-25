@@ -35,6 +35,7 @@ Create one milestone per phase:
 | `area:ci`               | Build, test, release automation        |
 | `type:bug`              | Defect                                 |
 | `type:feature`          | New capability                         |
+| `type:feedback`         | Alpha user feedback                    |
 | `type:chore`            | Maintenance                            |
 | `type:security`         | Security-sensitive work                |
 | `good first issue`      | Small, well-scoped contribution        |
@@ -60,7 +61,8 @@ gh label create "area:ci" --color 006B75 --description "Build, test, release aut
 gh label create "good first issue" --color 7057FF --description "Small, well-scoped contribution"
 gh label create "help wanted" --color 008672 --description "Maintainer welcomes a contributor"
 gh label create "needs:content-review" --color F9D0C4 --description "Content requires a second reviewer"
-gh label create "needs:security-review" --color B60205 --description "Security-sensitive change"
+gh label create "type:security" --color B60205 --description "Security-sensitive work"
+gh label create "type:feedback" --color C2E0C6 --description "Alpha user feedback"
 
 # Milestones
 gh api repos/:owner/:repo/milestones -f title="Phase 0 — Decisions and project setup"

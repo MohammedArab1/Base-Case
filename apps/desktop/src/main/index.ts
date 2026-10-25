@@ -226,7 +226,7 @@ app
       ai,
       settings,
       packs,
-      databasePath: database.path,
+      database,
     })
     installApplicationMenu()
 

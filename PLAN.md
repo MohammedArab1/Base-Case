@@ -2810,23 +2810,23 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 
 **Tasks**
 
-- [ ] Installers for macOS and Windows.
-- [ ] Unsigned install docs + checksums.
-- [ ] Onboarding + 2-minute tutorial + sample problem.
-- [ ] Diagnostics/self-test.
-- [ ] Docs:
-  - [ ] Install/quickstart.
-  - [ ] FAQ.
-  - [ ] Architecture overview.
-  - [ ] Content authoring.
-  - [ ] Contributing.
-  - [ ] Privacy/AI.
-  - [ ] Known limitations.
-- [ ] Private beta with 10–30 users.
-- [ ] Feedback form and issue triage.
-- [ ] Metrics: activation, retention, judge failures, content errors, AI helpfulness.
-- [ ] Fix P0/P1 bugs.
-- [ ] Tag `0.1.0-alpha`.
+- [x] Installers for macOS and Windows. Configured in the build workflow; the manual Windows run is B2.
+- [x] Unsigned install docs + checksums.
+- [x] Onboarding + 2-minute tutorial + sample problem. Onboarding and the sample problem are in-app; the guided tutorial is `docs/quickstart.md`.
+- [x] Diagnostics/self-test.
+- [x] Docs:
+  - [x] Install/quickstart.
+  - [x] FAQ.
+  - [x] Architecture overview.
+  - [x] Content authoring.
+  - [x] Contributing.
+  - [x] Privacy/AI.
+  - [x] Known limitations.
+- [ ] Private beta with 10–30 users (B10).
+- [x] Feedback form and issue triage.
+- [x] Metrics: activation, retention, judge failures, content errors, AI helpfulness. Definitions and sources are in `docs/project/alpha-release.md`.
+- [ ] Fix P0/P1 bugs. Requires beta feedback.
+- [ ] Tag `0.1.0-alpha`. Version is bumped and the tag-driven release job is ready; the tag is created after the beta and the manual Windows run.
 
 **Deliverables**
 
@@ -2841,6 +2841,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - At least 70% of testers complete onboarding.
 - No data loss.
 - P0 bugs fixed or documented.
+
+> Status 2026-10-25: diagnostics, the alpha documentation set, the feedback form, SHA-256 checksums, and the tag-driven release job are in place; the version is `0.1.0-alpha`. Remaining: the manual Windows workflow (B2), clean-VM installs (B1), the private beta (B10), P0/P1 fixes, and the `v0.1.0-alpha` tag.
 
 ---
 

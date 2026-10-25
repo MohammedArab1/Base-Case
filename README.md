@@ -3,11 +3,12 @@
 > Working name. Base Case is a local-first practice app for coding interviews
 > and system design. It is not affiliated with LeetCode or any other judge.
 
-**Status:** Phase 7 alpha content. The app has 10 original coding problems, 4
+**Status:** Phase 8 alpha release. The app has 10 original coding problems, 4
 system design scenarios, a real Python/TypeScript judge, FSRS review, an optional
-guarded AI tutor, and local persistence. Phase 8 (alpha release) is next. Windows
-packaging is configured in CI; clean-VM installs, a second-person content review,
-and a real-model AI eval run are pending. See `docs/project/open-blockers.md`.
+guarded AI tutor, local persistence, a diagnostics self-test, and the alpha
+documentation set. Clean-VM installs, the manual Windows installer run, a
+second-person content review, a real-model AI eval run, trademark/domain, and
+GitHub project setup are pending. See `docs/project/open-blockers.md`.
 
 ## Why
 
@@ -105,12 +106,17 @@ runtimes. See ADR-0010.
 - Optional AI: mock and OpenAI-compatible providers, token-budgeted context,
   structured outputs, guardrails, per-feature toggles, design-note review, and a
   local bug-zoo eval harness. AI is off by default.
+- Diagnostics self-test for the database, storage, logs, content, search index,
+  judge, runtimes, and AI configuration, with a copyable report that never leaves
+  the machine unless you copy it.
+- Unsigned installer checksums (`SHA256SUMS.txt`) and a tag-driven GitHub Release
+  job, plus an alpha feedback issue form.
 
 Still open: the second-person content review, optional reference Excalidraw
 scenes, local AI history, the Apple Foundation Models sidecar, clean-VM installs,
-the manual Windows installer run, trademark/domain, and GitHub milestones. See
-`docs/project/open-blockers.md`. Windows filesystem and network isolation remain
-best-effort.
+the manual Windows installer run, a real-model AI eval, the private beta,
+trademark/domain, and GitHub milestones. See `docs/project/open-blockers.md`.
+Windows filesystem and network isolation remain best-effort.
 
 ## Repository layout
 
@@ -132,7 +138,12 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `PROGRESS.md` — living status log; read this first when returning.
 - `docs/spikes/phase-1-report.md` — measurements, gaps, go/no-go.
 - `docs/spikes/windows-verification.md` — Windows install and end-to-end checklist.
+- `docs/quickstart.md` — install, first run, and the two-minute tutorial.
 - `docs/install.md` — unsigned macOS/Windows install steps.
+- `docs/faq.md` — common questions.
+- `docs/privacy.md` — local data and AI data flow.
+- `docs/known-limitations.md` — alpha limits.
+- `docs/project/alpha-release.md` — release checklist, beta plan, triage, metrics.
 - `docs/architecture/overview.md`
 - `docs/architecture/judge-protocol.md`
 - `docs/architecture/threat-model.md`

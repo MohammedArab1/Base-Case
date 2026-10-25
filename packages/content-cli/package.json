@@ -1,6 +1,6 @@
 {
   "name": "@base-case/content-cli",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha",
   "private": true,
   "description": "Validate and test Base Case content packs.",
   "license": "MIT",

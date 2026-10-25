@@ -1,8 +1,11 @@
 # Install an unsigned build
 
-Phase 1 produces unsigned macOS and Windows artifacts. They are safe to run
-locally for development, but the operating system will show a warning because
-the app is not code-signed or notarized yet.
+The alpha builds are unsigned. They are safe to run locally, but the operating
+system will show a warning because the app is not code-signed or notarized yet.
+
+For a guided first run, see `quickstart.md`. After installing, open
+**Settings → Diagnostics → Run self-test** to verify the database, content,
+judge, and bundled runtimes.
 
 Do not disable Gatekeeper or SmartScreen globally. Use the per-app steps below.
 
@@ -24,8 +27,8 @@ clean machine does not need either language installed.
    xattr -dr com.apple.quarantine "/Applications/Base Case.app"
    ```
 
-   Only do this for a build you trust. The release notes include the SHA-256
-   checksums.
+   Only do this for a build you trust. The release includes a
+   `SHA256SUMS.txt` file with the SHA-256 checksums.
 
 The macOS build is arm64 for Apple Silicon. Intel builds are added before the
 public alpha.
@@ -34,8 +37,8 @@ public alpha.
 
 1. Download the `.exe` installer (NSIS) or the `.zip`.
 2. Run the installer. SmartScreen may show **Windows protected your PC**.
-3. Choose **More info → Run anyway**. Verify the SHA-256 checksum from the
-   release notes before running.
+3. Choose **More info → Run anyway**. Verify the SHA-256 checksum from
+   `SHA256SUMS.txt` before running.
 4. The assisted installer asks whether to install for the current user or all
    users, and lets you choose the folder. The per-user default is
    `%LOCALAPPDATA%\Programs\Base Case`; choosing the all-users mode or a custom
@@ -69,12 +72,14 @@ license files are copied next to each runtime.
 
 ## Verify a download
 
+Download `SHA256SUMS.txt` from the same release, then compare:
+
 ```sh
-shasum -a 256 Base-Case-*.dmg
-shasum -a 256 Base-Case-*.zip
+shasum -a 256 -c SHA256SUMS.txt
 ```
 
-On Windows, use `Get-FileHash -Algorithm SHA256 <file>` in PowerShell.
+On Windows, use `Get-FileHash -Algorithm SHA256 <file>` in PowerShell and
+compare the output with the matching line in `SHA256SUMS.txt`.
 
 ## Reporting install problems
 

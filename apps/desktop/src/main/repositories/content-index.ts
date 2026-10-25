@@ -35,6 +35,14 @@ export class ContentIndexRepository {
     }
   }
 
+  count(): number {
+    const row = this.database.connection
+      .prepare('SELECT COUNT(*) AS count FROM problem_search')
+      .get() as { count?: number } | undefined
+
+    return Number(row?.count ?? 0)
+  }
+
   search(query: string, limit = 50): string[] {
     const terms = query.trim().split(/\s+/).filter(Boolean).slice(0, 10)
 

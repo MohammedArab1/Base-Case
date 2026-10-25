@@ -1,6 +1,6 @@
 {
   "name": "@base-case/desktop",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha",
   "private": true,
   "description": "Base Case desktop application.",
   "author": "Base Case contributors",

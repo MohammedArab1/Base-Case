@@ -17,6 +17,7 @@ here from its Blockers section.
 | B7  | Legal review before commercial launch | `docs/authoring/content-policy.md` requires consulting a lawyer before commercial launch. This does not block engineering or the open-source alpha.                                          | A legal review of the license, content policy, and AI/privacy disclosures.                                                                                                                                       | Open            |
 | B8  | Optional reference Excalidraw scenes  | The four design scenarios have Markdown reference designs but no optional `referenceScene` files. The validator emits warnings, not errors.                                                  | Author and attach four Excalidraw scenes, or accept the warnings for the alpha.                                                                                                                                  | Open (optional) |
 | B9  | Apple Foundation Models sidecar       | The Phase 6 stretch goal for an on-device `apple-fm` provider is not implemented. It is not required for the MVP.                                                                            | Build the Swift sidecar and availability checks in a macOS-only follow-up, or keep it post-MVP.                                                                                                                  | Open (optional) |
+| B10 | Private alpha beta (10–30 users)      | Phase 8 exit criteria include 70% onboarding completion, no data loss, and fixing P0/P1 bugs from real users. This requires recruited testers and their feedback.                            | Recruit 10–30 testers, run the onboarding script in `docs/project/alpha-release.md`, and record the weekly triage and alpha summary.                                                                             | Open            |
 
 ## Verification commands for resolved blockers
 
@@ -26,3 +27,4 @@ here from its Blockers section.
 - Content review: link the review PR or comment in `PROGRESS.md`.
 - Trademark/domain: record the search result and registrar.
 - GitHub setup: link the project board.
+- Private beta: link the alpha summary with activation, retention, and the P0/P1 list.
