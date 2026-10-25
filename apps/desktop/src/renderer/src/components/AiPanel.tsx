@@ -6,6 +6,7 @@ import type {
   AiDesignContext,
   AiEvent,
   AiFeature,
+  AiMistakeTagsResult,
   AiPreview,
   AiProviderStatus,
   AiRequest,
@@ -29,6 +30,7 @@ interface AiPanelProps {
   readonly disabledReason?: string
   /** Increment to open the explain-failure preview from outside the panel. */
   readonly trigger?: number
+  readonly onAttemptsChanged?: () => void
 }
 
 export function AiPanel({
@@ -40,6 +42,7 @@ export function AiPanel({
   priorHints,
   disabledReason,
   trigger = 0,
+  onAttemptsChanged,
 }: AiPanelProps): JSX.Element {
   const { settings } = useSettings()
   const [status, setStatus] = useState<AiProviderStatus | null>(null)
@@ -357,6 +360,24 @@ export function AiPanel({
             >
               Review complexity
             </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => void openPreview('mistakeTags')}
+              disabled={!canUse('mistakeTags') || !hasFailure}
+              data-testid="ai-mistake-tags"
+            >
+              Suggest tags
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => void openPreview('explainBack')}
+              disabled={!canUse('explainBack') || question.trim().length === 0}
+              data-testid="ai-explain-back"
+            >
+              Check my explanation
+            </Button>
           </div>
 
           <label className="flex items-center gap-2 text-xs text-bc-muted">
@@ -402,7 +423,7 @@ export function AiPanel({
         <span>
           {variant === 'design'
             ? 'Your answer or question (optional)'
-            : 'Ask a specific question (optional)'}
+            : 'Ask a question or explain your solution (optional)'}
         </span>
         <textarea
           className="input"
@@ -437,6 +458,14 @@ export function AiPanel({
 
       {result || (!loading && rawText) ? (
         <AiResult feature={lastFeature ?? 'explain'} result={result} rawText={rawText} />
+      ) : null}
+
+      {lastFeature === 'mistakeTags' && result && 'suggestions' in result && context?.problemId ? (
+        <MistakeTagSuggestions
+          problemId={context.problemId}
+          result={result as AiMistakeTagsResult}
+          onApplied={onAttemptsChanged}
+        />
       ) : null}
 
       {result || (!loading && rawText) ? (
@@ -556,5 +585,139 @@ export function AiPanel({
         </div>
       ) : null}
     </div>
+  )
+}
+
+const mistakeTagLabels: Record<string, string> = {
+  'off-by-one': 'Off-by-one',
+  'missed-edge-case': 'Missed edge case',
+  'wrong-complexity': 'Wrong complexity',
+  'misread-problem': 'Misread problem',
+  'data-structure-choice': 'Wrong data structure',
+  'state-management': 'State management',
+  syntax: 'Syntax or API',
+  'time-pressure': 'Time pressure',
+}
+
+function MistakeTagSuggestions({
+  problemId,
+  result,
+  onApplied,
+}: {
+  readonly problemId: string
+  readonly result: AiMistakeTagsResult
+  readonly onApplied?: () => void
+}): JSX.Element {
+  const [selected, setSelected] = useState<ReadonlySet<string>>(
+    () => new Set(result.suggestions.map((suggestion) => suggestion.tagId)),
+  )
+  const [status, setStatus] = useState<'idle' | 'applying' | 'applied' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    setSelected(new Set(result.suggestions.map((suggestion) => suggestion.tagId)))
+    setStatus('idle')
+    setMessage('')
+  }, [result])
+
+  const toggle = (tagId: string): void => {
+    setSelected((current) => {
+      const next = new Set(current)
+
+      if (next.has(tagId)) {
+        next.delete(tagId)
+      } else {
+        next.add(tagId)
+      }
+
+      return next
+    })
+  }
+
+  const apply = async (): Promise<void> => {
+    if (selected.size === 0) {
+      setStatus('error')
+      setMessage('Select at least one tag to apply.')
+      return
+    }
+
+    setStatus('applying')
+    setMessage('')
+
+    try {
+      const attempts = await window.baseCase.attempts.list(problemId)
+      const latest = attempts[0]
+
+      if (!latest) {
+        throw new Error('Run the problem first, then apply tags to the latest attempt.')
+      }
+
+      const detail = await window.baseCase.attempts.get(latest.id)
+      const merged = [...new Set([...detail.mistakeTagIds, ...selected])]
+      await window.baseCase.attempts.tag({ attemptId: latest.id, tagIds: merged })
+      setStatus('applied')
+      setMessage(`Applied to the latest ${latest.mode} attempt.`)
+      onApplied?.()
+    } catch (error) {
+      setStatus('error')
+      setMessage(error instanceof Error ? error.message : String(error))
+    }
+  }
+
+  return (
+    <section
+      className="mt-3 rounded-lg border border-bc-border bg-bc-surface-muted p-2.5"
+      data-testid="ai-mistake-suggestions"
+      aria-live="polite"
+    >
+      <h4 className="m-0 text-xs font-semibold uppercase tracking-wide text-bc-muted">
+        Suggested mistake tags
+      </h4>
+      {result.suggestions.length === 0 ? (
+        <p className="m-0 mt-1.5 text-xs leading-relaxed text-bc-muted">
+          No tag was justified by the available evidence.
+        </p>
+      ) : (
+        <>
+          <ul className="m-0 mt-1.5 flex list-none flex-col gap-1.5 p-0">
+            {result.suggestions.map((suggestion) => (
+              <li key={suggestion.tagId}>
+                <label className="flex items-start gap-2 text-xs leading-relaxed text-bc-text">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5"
+                    checked={selected.has(suggestion.tagId)}
+                    onChange={() => toggle(suggestion.tagId)}
+                    data-testid={`ai-mistake-tag-${suggestion.tagId}`}
+                  />
+                  <span>
+                    <strong>{mistakeTagLabels[suggestion.tagId] ?? suggestion.tagId}</strong>
+                    <span className="block text-bc-muted">{suggestion.reason}</span>
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-2 flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => void apply()}
+              disabled={status === 'applying'}
+              data-testid="ai-apply-mistake-tags"
+            >
+              {status === 'applying' ? 'Applying…' : 'Apply selected tags'}
+            </Button>
+            {message ? (
+              <span
+                className={status === 'error' ? 'text-xs text-bc-danger' : 'text-xs text-bc-muted'}
+              >
+                {message}
+              </span>
+            ) : null}
+          </div>
+        </>
+      )}
+    </section>
   )
 }

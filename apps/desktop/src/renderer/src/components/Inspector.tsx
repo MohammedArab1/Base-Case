@@ -18,6 +18,7 @@ interface InspectorProps {
   readonly aiTrigger: number
   readonly aiDisabledReason?: string
   readonly onRestore: (code: string, plan: string) => void
+  readonly onAttemptsChanged?: () => void
   readonly onClose: () => void
 }
 
@@ -33,6 +34,7 @@ export function Inspector({
   aiTrigger,
   aiDisabledReason,
   onRestore,
+  onAttemptsChanged,
   onClose,
 }: InspectorProps): JSX.Element {
   return (
@@ -73,6 +75,7 @@ export function Inspector({
               priorHints={priorHints}
               trigger={aiTrigger}
               disabledReason={aiDisabledReason}
+              onAttemptsChanged={onAttemptsChanged}
             />
           </TabsContent>
           <TabsContent value="notes" className="pt-0">
@@ -100,6 +103,7 @@ function AiTab({
   priorHints,
   trigger,
   disabledReason,
+  onAttemptsChanged,
 }: {
   readonly problemId: string
   readonly language: Language
@@ -109,6 +113,7 @@ function AiTab({
   readonly priorHints?: readonly string[]
   readonly trigger: number
   readonly disabledReason?: string
+  readonly onAttemptsChanged?: () => void
 }): JSX.Element {
   return (
     <AiPanel
@@ -119,6 +124,7 @@ function AiTab({
       priorHints={priorHints}
       trigger={trigger}
       disabledReason={disabledReason}
+      onAttemptsChanged={onAttemptsChanged}
     />
   )
 }

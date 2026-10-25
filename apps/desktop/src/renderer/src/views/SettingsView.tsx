@@ -42,6 +42,8 @@ const aiFeatureOptions: readonly {
   { id: 'hint', label: 'Hints' },
   { id: 'approach', label: 'Approach review' },
   { id: 'complexity', label: 'Complexity review' },
+  { id: 'mistakeTags', label: 'Mistake tag suggestions' },
+  { id: 'explainBack', label: 'Explain-back check' },
   { id: 'designNotes', label: 'Design notes review' },
   { id: 'followUp', label: 'Follow-up interviewer' },
 ]

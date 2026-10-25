@@ -31,6 +31,14 @@ Return a JSON object with exactly these fields:
 
 Return a JSON object with exactly these fields:
 {"time": "O(...)", "space": "O(...)", "reasoning": "one or two sentences", "confidence": "low|medium|high"}`,
+  mistakeTags: `Suggest mistake tags for the latest failed attempt so the learner can confirm them. Use only these tag ids: off-by-one, missed-edge-case, wrong-complexity, misread-problem, data-structure-choice, state-management, syntax, time-pressure. Ground every reason in the code or the failing test. Return at most three suggestions, and return an empty list when the evidence is too weak to justify a tag.
+
+Return a JSON object with exactly these fields:
+{"suggestions": [{"tagId": "off-by-one", "reason": "one sentence citing the code or test"}]}`,
+  explainBack: `The learner has written an explanation of their own solution in the question field. Evaluate that explanation against the code and the problem. Do not rewrite the solution or add new implementation details they did not mention. Mark the verdict as solid only when the explanation covers the key idea, the correctness argument, and the complexity. Mark it partial when one of those is missing, and incorrect when the stated reasoning contradicts the code.
+
+Return a JSON object with exactly these fields:
+{"verdict": "solid|partial|incorrect", "strengths": ["..."], "gaps": ["..."], "nextQuestion": "one question"}`,
   designNotes: `Review the learner's structured design notes against the rubric. Score each rubric dimension from 1 to 4 using its level descriptions. Cite the learner's own notes as evidence. Suggest one next step per dimension. Do not write a reference design.
 
 Return a JSON object with exactly these fields:

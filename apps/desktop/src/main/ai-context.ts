@@ -18,6 +18,8 @@ const outputBudget: Record<AiFeature, number> = {
   hint: 350,
   approach: 450,
   complexity: 300,
+  mistakeTags: 250,
+  explainBack: 350,
   designNotes: 1100,
   followUp: 250,
 }

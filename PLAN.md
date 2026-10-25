@@ -2877,9 +2877,9 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Runtime pack verification (`pnpm runtimes:verify`, pinned checksums).
   - [ ] App size optimization. (Measured 258 MB DMG, under the 350 MB budget; optimization not started)
 - [ ] AI polish:
-  - [ ] Mistake tagging suggestions (user confirms).
+  - [x] Mistake tagging suggestions (user confirms). (AI suggests from the seeded taxonomy; the learner selects and applies to the latest attempt)
   - [x] Design notes review improvements. (Structured seven-dimension review in Phase 6)
-  - [ ] Optional "explain back" check.
+  - [x] Optional "explain back" check. (The learner writes an explanation; AI returns solid/partial/incorrect with gaps and a follow-up)
   - [ ] Apple FM sidecar if time. (Tracked as optional blocker B9)
 - [ ] Performance:
   - [ ] Startup, problem open, judge, editor, canvas, memory. (Startup, judge, and memory measured; the rest remain)

@@ -36,6 +36,35 @@ const complexitySchema = z.object({
   confidence,
 })
 
+const mistakeTagIdSchema = z.enum([
+  'off-by-one',
+  'missed-edge-case',
+  'wrong-complexity',
+  'misread-problem',
+  'data-structure-choice',
+  'state-management',
+  'syntax',
+  'time-pressure',
+])
+
+const mistakeTagsSchema = z.object({
+  suggestions: z
+    .array(
+      z.object({
+        tagId: mistakeTagIdSchema,
+        reason: z.string().min(1).max(400),
+      }),
+    )
+    .max(3),
+})
+
+const explainBackSchema = z.object({
+  verdict: z.enum(['solid', 'partial', 'incorrect']),
+  strengths: z.array(z.string().max(1000)).max(6),
+  gaps: z.array(z.string().max(1000)).max(6),
+  nextQuestion: shortText,
+})
+
 const designDimensionSchema = z.object({
   name: z.string().min(1).max(200),
   score: z.number().int().min(1).max(4),
@@ -59,6 +88,8 @@ export const aiOutputSchemas = {
   hint: hintSchema,
   approach: approachSchema,
   complexity: complexitySchema,
+  mistakeTags: mistakeTagsSchema,
+  explainBack: explainBackSchema,
   designNotes: designNotesSchema,
   followUp: followUpSchema,
 } satisfies Record<AiFeature, z.ZodTypeAny>

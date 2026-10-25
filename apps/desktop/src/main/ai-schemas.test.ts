@@ -50,6 +50,42 @@ describe('parseStructuredOutput', () => {
     expect(parsed.ok).toBe(false)
   })
 
+  it('parses mistake tag suggestions and rejects unknown tags', () => {
+    const parsed = parseStructuredOutput(
+      'mistakeTags',
+      JSON.stringify({
+        suggestions: [{ tagId: 'off-by-one', reason: 'The loop excludes the last index.' }],
+      }),
+    )
+    expect(parsed.ok).toBe(true)
+    expect(parsed.result).toMatchObject({ suggestions: [{ tagId: 'off-by-one' }] })
+
+    const unknown = parseStructuredOutput(
+      'mistakeTags',
+      JSON.stringify({ suggestions: [{ tagId: 'made-up-tag', reason: 'Nope.' }] }),
+    )
+    expect(unknown.ok).toBe(false)
+  })
+
+  it('accepts an empty mistake tag suggestion list', () => {
+    const parsed = parseStructuredOutput('mistakeTags', JSON.stringify({ suggestions: [] }))
+    expect(parsed.ok).toBe(true)
+  })
+
+  it('parses an explain-back verdict', () => {
+    const parsed = parseStructuredOutput(
+      'explainBack',
+      JSON.stringify({
+        verdict: 'partial',
+        strengths: ['Names the hash map.'],
+        gaps: ['Does not explain the complexity.'],
+        nextQuestion: 'What is the cost of each lookup?',
+      }),
+    )
+    expect(parsed.ok).toBe(true)
+    expect(parsed.result).toMatchObject({ verdict: 'partial' })
+  })
+
   it('returns the raw text when there is no JSON', () => {
     const parsed = parseStructuredOutput('followUp', 'Ask about caching.')
     expect(parsed.ok).toBe(false)

@@ -496,7 +496,7 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
   }
 })
 
-test('previews and runs a mock AI hint with guardrails', async () => {
+test('previews AI assistance, checks an explanation, and applies suggested tags', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-ai-'))
   let launched: LaunchedApp | null = null
 
@@ -532,6 +532,49 @@ test('previews and runs a mock AI hint with guardrails', async () => {
 
     await page.getByTestId('ai-feedback-unhelpful').click()
     await expect(page.getByText('Saved locally. Thanks.')).toBeVisible()
+
+    // Explain-back evaluates the learner's own words without writing the solution.
+    await page
+      .getByLabel('AI question')
+      .fill('I scan once, store each value and its index, and check the complement first.')
+    await page.getByTestId('ai-explain-back').click()
+    await expect(page.getByTestId('ai-preview')).toBeVisible()
+    await page.getByTestId('ai-send').click()
+    await expect(page.getByTestId('ai-result-explain-back')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByTestId('ai-result-explain-back')).toContainText('partial')
+
+    // A failed run enables tag suggestions. Suggestions stay user-confirmed.
+    const editor = page.locator('.cm-content')
+    await editor.click()
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText(
+      [
+        'class Solution {',
+        '  pairSum(nums: number[], target: number): number[] {',
+        '    return []',
+        '  }',
+        '}',
+        'export { Solution }',
+      ].join('\n'),
+    )
+    await page.getByRole('button', { name: 'Run samples' }).click()
+    await expect(page.getByText('Wrong answer', { exact: true }).first()).toBeVisible({
+      timeout: 60_000,
+    })
+
+    await page.getByTestId('ai-mistake-tags').click()
+    await expect(page.getByTestId('ai-preview')).toBeVisible()
+    await page.getByTestId('ai-send').click()
+    await expect(page.getByTestId('ai-mistake-suggestions')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByTestId('ai-mistake-tag-off-by-one')).toBeChecked()
+    await page.getByTestId('ai-apply-mistake-tags').click()
+    await expect(page.getByTestId('ai-mistake-suggestions')).toContainText('Applied to the latest')
+
+    await page.getByRole('tab', { name: 'History' }).click()
+    await page.getByTestId('edit-attempt-tags').first().click()
+    await expect(
+      page.getByTestId('tag-picker').getByLabel('Off-by-one', { exact: true }),
+    ).toBeChecked()
     await capture(page, 'ai-hint')
   } finally {
     await launched?.app.close().catch(() => undefined)

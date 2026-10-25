@@ -151,6 +151,33 @@ describe('AiService', () => {
     expect(outcome.warning).toContain('outside the code')
   })
 
+  it('suggests mistake tags from the mock provider', async () => {
+    const outcome = await service.run(
+      { feature: 'mistakeTags', context },
+      'req-tags',
+      () => undefined,
+    )
+
+    expect(outcome.result).toMatchObject({
+      suggestions: expect.arrayContaining([
+        expect.objectContaining({ tagId: 'off-by-one', reason: expect.any(String) }),
+      ]),
+    })
+  })
+
+  it('evaluates an explain-back response', async () => {
+    const outcome = await service.run(
+      {
+        feature: 'explainBack',
+        context: { ...context, question: 'I scan once and remember values.' },
+      },
+      'req-explain-back',
+      () => undefined,
+    )
+
+    expect(outcome.result).toMatchObject({ verdict: 'partial' })
+  })
+
   it('refuses to run when AI is globally disabled', async () => {
     appSettings = { ...appSettings, aiEnabled: false }
 

@@ -30,6 +30,24 @@ const cannedResponses: Record<AiFeature, string> = {
     reasoning: 'The nested loop compares every pair.',
     confidence: 'medium',
   }),
+  mistakeTags: JSON.stringify({
+    suggestions: [
+      {
+        tagId: 'off-by-one',
+        reason: 'The loop condition in the failing test excludes the final index.',
+      },
+      {
+        tagId: 'state-management',
+        reason: 'The saved index is overwritten before the complement check runs.',
+      },
+    ],
+  }),
+  explainBack: JSON.stringify({
+    verdict: 'partial',
+    strengths: ['Names the hash-map lookup correctly.'],
+    gaps: ['Does not explain why checking before inserting prevents self-pairing.'],
+    nextQuestion: 'What would happen if you inserted the current value before checking it?',
+  }),
   designNotes: JSON.stringify({
     dimensions: [
       {

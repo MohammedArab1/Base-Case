@@ -37,6 +37,8 @@ const featureLabels: Record<AiFeature, string> = {
   hint: 'Hint',
   approach: 'Approach review',
   complexity: 'Complexity review',
+  mistakeTags: 'Mistake tag suggestions',
+  explainBack: 'Explain-back check',
   designNotes: 'Design notes review',
   followUp: 'Follow-up interviewer',
 }

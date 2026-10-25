@@ -1062,6 +1062,7 @@ function ProblemWorkspace({
                   ? 'AI is unavailable in review mode. Re-solve the problem, then grade the review.'
                   : undefined
               }
+              onAttemptsChanged={() => setAttemptRefreshKey((current) => current + 1)}
               onRestore={(restoredCode, restoredPlan) => {
                 setCode(restoredCode)
                 setPlan(restoredPlan)

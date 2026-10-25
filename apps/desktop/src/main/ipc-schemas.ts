@@ -177,7 +177,14 @@ export const aiDesignContextSchema: z.ZodType<AiDesignContext> = z.object({
   history: z.array(aiConversationTurnSchema).max(20).optional(),
 }) as z.ZodType<AiDesignContext>
 
-const codingAiFeatureSchema = z.enum(['explain', 'hint', 'approach', 'complexity'])
+const codingAiFeatureSchema = z.enum([
+  'explain',
+  'hint',
+  'approach',
+  'complexity',
+  'mistakeTags',
+  'explainBack',
+])
 const designAiFeatureSchema = z.enum(['designNotes', 'followUp'])
 
 export const aiRequestSchema: z.ZodType<AiRequest> = z.union([
@@ -186,7 +193,16 @@ export const aiRequestSchema: z.ZodType<AiRequest> = z.union([
 ]) as z.ZodType<AiRequest>
 
 export const aiFeedbackSchema: z.ZodType<AiFeedbackInput> = z.object({
-  feature: z.enum(['explain', 'hint', 'approach', 'complexity', 'designNotes', 'followUp']),
+  feature: z.enum([
+    'explain',
+    'hint',
+    'approach',
+    'complexity',
+    'mistakeTags',
+    'explainBack',
+    'designNotes',
+    'followUp',
+  ]),
   reason: z.enum(['unhelpful', 'leaky', 'wrong', 'other']),
   comment: z.string().max(2_000).optional(),
 }) as z.ZodType<AiFeedbackInput>
@@ -221,6 +237,8 @@ const aiFeatureSettingsSchema = z.object({
   hint: z.boolean().default(true),
   approach: z.boolean().default(true),
   complexity: z.boolean().default(true),
+  mistakeTags: z.boolean().default(true),
+  explainBack: z.boolean().default(true),
   designNotes: z.boolean().default(true),
   followUp: z.boolean().default(true),
 })
@@ -235,6 +253,8 @@ export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
     hint: true,
     approach: true,
     complexity: true,
+    mistakeTags: true,
+    explainBack: true,
     designNotes: true,
     followUp: true,
   }),
@@ -262,6 +282,8 @@ export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
       hint: z.boolean().optional(),
       approach: z.boolean().optional(),
       complexity: z.boolean().optional(),
+      mistakeTags: z.boolean().optional(),
+      explainBack: z.boolean().optional(),
       designNotes: z.boolean().optional(),
       followUp: z.boolean().optional(),
     })

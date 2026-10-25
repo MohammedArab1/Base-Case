@@ -5,6 +5,8 @@ const outputLimits: Record<AiFeature, number> = {
   hint: 1800,
   approach: 2200,
   complexity: 1400,
+  mistakeTags: 1200,
+  explainBack: 1600,
   designNotes: 6000,
   followUp: 900,
 }
@@ -14,6 +16,8 @@ const codeBlockLineLimits: Record<AiFeature, number> = {
   hint: 6,
   approach: 10,
   complexity: 10,
+  mistakeTags: 4,
+  explainBack: 6,
   designNotes: 14,
   followUp: 14,
 }

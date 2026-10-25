@@ -13,6 +13,8 @@ export interface AiFeatureSettings {
   readonly hint: boolean
   readonly approach: boolean
   readonly complexity: boolean
+  readonly mistakeTags: boolean
+  readonly explainBack: boolean
   readonly designNotes: boolean
   readonly followUp: boolean
 }
@@ -22,6 +24,8 @@ export const defaultAiFeatureSettings: AiFeatureSettings = {
   hint: true,
   approach: true,
   complexity: true,
+  mistakeTags: true,
+  explainBack: true,
   designNotes: true,
   followUp: true,
 }
@@ -732,6 +736,22 @@ export interface AiComplexityResult {
   readonly confidence: AiConfidence
 }
 
+export interface AiMistakeTagSuggestion {
+  readonly tagId: string
+  readonly reason: string
+}
+
+export interface AiMistakeTagsResult {
+  readonly suggestions: readonly AiMistakeTagSuggestion[]
+}
+
+export interface AiExplainBackResult {
+  readonly verdict: 'solid' | 'partial' | 'incorrect'
+  readonly strengths: readonly string[]
+  readonly gaps: readonly string[]
+  readonly nextQuestion: string
+}
+
 export interface AiDesignDimensionReview {
   readonly name: string
   readonly score: number
@@ -755,6 +775,8 @@ export type AiStructuredResult =
   | AiHintResult
   | AiApproachResult
   | AiComplexityResult
+  | AiMistakeTagsResult
+  | AiExplainBackResult
   | AiDesignNotesResult
   | AiFollowUpResult
 

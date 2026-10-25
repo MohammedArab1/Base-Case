@@ -3,10 +3,12 @@ import type {
   AiApproachResult,
   AiComplexityResult,
   AiDesignNotesResult,
+  AiExplainBackResult,
   AiExplainResult,
   AiFeature,
   AiFollowUpResult,
   AiHintResult,
+  AiMistakeTagsResult,
   AiStructuredResult,
 } from '../../../shared/types'
 import { Badge } from '../ui/Badge'
@@ -139,9 +141,44 @@ export function AiResult({ feature, result, rawText }: AiResultProps): JSX.Eleme
     )
   }
 
+  if (feature === 'mistakeTags') {
+    const data = result as AiMistakeTagsResult
+
+    return (
+      <p
+        className="m-0 mt-3 text-sm leading-relaxed text-bc-muted"
+        data-testid="ai-result-mistake-tags"
+      >
+        {data.suggestions.length === 0
+          ? 'The model did not find enough evidence for a tag.'
+          : `The model suggested ${data.suggestions.length} tag${data.suggestions.length === 1 ? '' : 's'}. Confirm or deselect them below before applying.`}
+      </p>
+    )
+  }
+
+  if (feature === 'explainBack') {
+    const data = result as AiExplainBackResult
+
+    return (
+      <div className="mt-3" data-testid="ai-result-explain-back">
+        <Badge
+          tone={
+            data.verdict === 'solid' ? 'success' : data.verdict === 'partial' ? 'accent' : 'danger'
+          }
+        >
+          {data.verdict}
+        </Badge>
+        <ListSection title="What works" items={data.strengths} testId="ai-explain-back-strengths" />
+        <ListSection title="What is missing" items={data.gaps} testId="ai-explain-back-gaps" />
+        <p className="m-0 mt-3 rounded-lg border border-bc-border bg-bc-surface-muted p-2.5 text-sm leading-relaxed text-bc-text">
+          {data.nextQuestion}
+        </p>
+      </div>
+    )
+  }
+
   if (feature === 'designNotes') {
     const data = result as AiDesignNotesResult
-
     return (
       <div className="mt-3" data-testid="ai-result-design">
         <div className="flex flex-col gap-2">
