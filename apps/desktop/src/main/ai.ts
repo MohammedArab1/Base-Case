@@ -8,7 +8,8 @@ import type {
   SaveAiConfigInput,
 } from '../shared/types'
 import type { ContentRepository } from './content'
-import type { AppDatabase } from './database'
+import type { AiProviderRepository } from './repositories/ai-providers'
+import type { SettingsRepository } from './repositories/settings'
 
 const KEY_SETTING = 'ai.apiKey'
 const SYSTEM_PROMPT = `You are a Socratic coding tutor inside an offline practice app.
@@ -69,12 +70,13 @@ function isProviderType(value: string): value is AiProviderType {
 
 export class AiService {
   constructor(
-    private readonly database: AppDatabase,
+    private readonly providers: AiProviderRepository,
+    private readonly settings: SettingsRepository,
     private readonly content: ContentRepository,
   ) {}
 
   getStatus(): AiProviderStatus {
-    const stored = this.database.getProviderConfig()
+    const stored = this.providers.getConfig()
 
     if (!stored) {
       return {
@@ -91,26 +93,26 @@ export class AiService {
       baseUrl: stored.base_url,
       model: stored.model,
       enabled: stored.enabled === 1,
-      hasKey: Boolean(this.database.getSetting(KEY_SETTING)),
+      hasKey: Boolean(this.settings.get(KEY_SETTING)),
     }
   }
 
   async saveConfig(input: SaveAiConfigInput): Promise<AiProviderStatus> {
     if (input.clearKey) {
-      this.database.deleteSetting(KEY_SETTING)
+      this.settings.remove(KEY_SETTING)
     } else if (input.apiKey && input.apiKey.trim().length > 0) {
       if (!(await safeStorage.isAsyncEncryptionAvailable())) {
         throw new Error('Encryption is unavailable, so the API key was not saved.')
       }
 
       const encrypted = await safeStorage.encryptStringAsync(input.apiKey.trim())
-      this.database.setSetting(KEY_SETTING, encrypted.toString('base64'))
+      this.settings.set(KEY_SETTING, encrypted.toString('base64'))
     }
 
-    const hasKey = Boolean(this.database.getSetting(KEY_SETTING))
+    const hasKey = Boolean(this.settings.get(KEY_SETTING))
     const enabled = input.type !== 'none' && (input.type === 'mock' || hasKey)
 
-    this.database.saveProviderConfig({
+    this.providers.saveConfig({
       type: input.type,
       baseUrl: input.baseUrl.trim(),
       model: input.model.trim(),
@@ -267,7 +269,7 @@ export class AiService {
   }
 
   private async getApiKey(): Promise<string> {
-    const stored = this.database.getSetting(KEY_SETTING)
+    const stored = this.settings.get(KEY_SETTING)
 
     if (!stored) {
       return ''

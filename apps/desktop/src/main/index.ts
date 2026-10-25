@@ -9,6 +9,12 @@ import { JudgeClient } from './judge'
 import { configureLogger, getLogger } from './logger'
 import { installApplicationMenu } from './menu'
 import { PackManager } from './pack-manager'
+import { AiProviderRepository } from './repositories/ai-providers'
+import { AttemptsRepository } from './repositories/attempts'
+import { ContentIndexRepository } from './repositories/content-index'
+import { DesignRepository } from './repositories/design'
+import { DraftsRepository } from './repositories/drafts'
+import { SettingsRepository } from './repositories/settings'
 import { SettingsStore } from './settings'
 import { clampWindowState, loadWindowState, saveWindowState } from './window-state'
 
@@ -167,9 +173,10 @@ app
 
     const content = new ContentRepository()
     const database = new AppDatabase(userDataPath)
+    const contentIndex = new ContentIndexRepository(database)
 
     try {
-      await rebuildContentIndex(content, database, userDataPath)
+      await rebuildContentIndex(content, contentIndex, userDataPath)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       logger.error('content.load.failed', { message })
@@ -179,14 +186,29 @@ app
       return
     }
 
-    const settings = new SettingsStore(database)
+    const settingsRepository = new SettingsRepository(database)
+    const settings = new SettingsStore(settingsRepository)
+    const attempts = new AttemptsRepository(database)
+    const drafts = new DraftsRepository(database)
+    const design = new DesignRepository(database)
     const judge = new JudgeClient()
-    const ai = new AiService(database, content)
-    const packs = new PackManager(userDataPath, content, database)
+    const ai = new AiService(new AiProviderRepository(database), settingsRepository, content)
+    const packs = new PackManager(userDataPath, content, contentIndex)
 
     await packs.cleanupStaleImports()
 
-    registerIpc({ content, database, judge, ai, settings, packs })
+    registerIpc({
+      content,
+      contentIndex,
+      attempts,
+      drafts,
+      design,
+      judge,
+      ai,
+      settings,
+      packs,
+      databasePath: database.path,
+    })
     installApplicationMenu()
 
     app.on('before-quit', () => {

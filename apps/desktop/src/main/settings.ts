@@ -1,7 +1,7 @@
 import { defaultAppSettings } from '../shared/types'
 import type { AppSettings, SettingsPatch } from '../shared/types'
 import { appSettingsSchema, settingsPatchSchema } from './ipc-schemas'
-import type { AppDatabase } from './database'
+import type { SettingsRepository } from './repositories/settings'
 
 const settingsKey = 'app'
 
@@ -10,10 +10,10 @@ const settingsKey = 'app'
  * downgraded database falls back to defaults instead of crashing the UI.
  */
 export class SettingsStore {
-  constructor(private readonly database: AppDatabase) {}
+  constructor(private readonly repository: SettingsRepository) {}
 
   get(): AppSettings {
-    const raw = this.database.getSetting(settingsKey)
+    const raw = this.repository.get(settingsKey)
 
     if (!raw) {
       return defaultAppSettings
@@ -39,7 +39,7 @@ export class SettingsStore {
       },
     })
 
-    this.database.setSetting(settingsKey, JSON.stringify(next))
+    this.repository.set(settingsKey, JSON.stringify(next))
     return next
   }
 }

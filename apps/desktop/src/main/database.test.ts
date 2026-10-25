@@ -1,73 +1,107 @@
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { DatabaseSync } from 'node:sqlite'
 import { describe, expect, it } from 'vitest'
 import { AppDatabase } from './database'
+import { migrations } from './migrations'
 
-function withDatabase(run: (database: AppDatabase) => void): void {
+const expectedTables = [
+  'ai_provider_configs',
+  'attempt_events',
+  'attempt_mistake_tags',
+  'attempts',
+  'design_attempts',
+  'design_scenes',
+  'drafts',
+  'mistake_tags',
+  'review_cards',
+  'schema_migrations',
+  'settings',
+]
+
+function tableNames(database: AppDatabase): string[] {
+  const rows = database.connection
+    .prepare("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
+    .all() as { name: string }[]
+
+  return rows.map((row) => row.name)
+}
+
+function appliedVersions(database: AppDatabase): number[] {
+  const rows = database.connection
+    .prepare('SELECT version FROM schema_migrations ORDER BY version')
+    .all() as { version: number }[]
+
+  return rows.map((row) => Number(row.version))
+}
+
+function withDirectory(run: (directory: string) => void): void {
   const directory = mkdtempSync(join(tmpdir(), 'base-case-database-'))
-  const database = new AppDatabase(directory)
 
   try {
-    run(database)
+    run(directory)
   } finally {
-    database.close()
     rmSync(directory, { recursive: true, force: true })
   }
 }
 
-const rows = [
-  {
-    problemId: 'core/pair-sum',
-    title: 'Pair Sum',
-    patterns: 'arrays hash-map',
-    packName: 'Core pack',
-    body: 'Return the indices of two distinct values that add up to the target.',
-  },
-  {
-    problemId: 'core/reverse-list',
-    title: 'Reverse a Linked List',
-    patterns: 'linked-list',
-    packName: 'Core pack',
-    body: 'Reverse the pointers of a singly linked list.',
-  },
-]
+describe('AppDatabase migrations', () => {
+  it('creates the current schema from an empty database', () => {
+    withDirectory((directory) => {
+      const database = new AppDatabase(directory)
 
-describe('problem search index', () => {
-  it('finds problems by title, pattern, and body text', () => {
-    withDatabase((database) => {
-      database.replaceProblemIndex(rows)
-
-      expect(database.searchProblemIds('hash')).toEqual(['core/pair-sum'])
-      expect(database.searchProblemIds('linked list')).toEqual(['core/reverse-list'])
-      expect(database.searchProblemIds('pointers')).toEqual(['core/reverse-list'])
+      try {
+        expect(tableNames(database)).toEqual(expect.arrayContaining(expectedTables))
+        expect(appliedVersions(database)).toEqual(migrations.map((migration) => migration.version))
+      } finally {
+        database.close()
+      }
     })
   })
 
-  it('supports prefix matches while typing', () => {
-    withDatabase((database) => {
-      database.replaceProblemIndex(rows)
-      expect(database.searchProblemIds('pai')).toEqual(['core/pair-sum'])
-    })
-  })
+  it('upgrades a version-2 database without losing user state', () => {
+    withDirectory((directory) => {
+      const databasePath = join(directory, 'app.db')
+      const previous = new DatabaseSync(databasePath)
 
-  it('replaces the index instead of duplicating rows', () => {
-    withDatabase((database) => {
-      database.replaceProblemIndex(rows)
-      database.replaceProblemIndex(rows.slice(0, 1))
+      try {
+        previous.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;')
+        previous.exec(`
+          CREATE TABLE schema_migrations (
+            version INTEGER PRIMARY KEY,
+            applied_at TEXT NOT NULL
+          );
+        `)
 
-      expect(database.searchProblemIds('linked')).toEqual([])
-      expect(database.searchProblemIds('pair')).toEqual(['core/pair-sum'])
-    })
-  })
+        for (const migration of migrations.filter((entry) => entry.version <= 2)) {
+          previous.exec(migration.sql)
+          previous
+            .prepare('INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)')
+            .run(migration.version, new Date().toISOString())
+        }
 
-  it('returns no results for blank or punctuation-only queries', () => {
-    withDatabase((database) => {
-      database.replaceProblemIndex(rows)
+        previous
+          .prepare('INSERT INTO settings (key, value_json, updated_at) VALUES (?, ?, ?)')
+          .run('app', JSON.stringify({ theme: 'dark' }), new Date().toISOString())
+      } finally {
+        previous.close()
+      }
 
-      expect(database.searchProblemIds('')).toEqual([])
-      expect(database.searchProblemIds('   ')).toEqual([])
-      expect(database.searchProblemIds('"')).toEqual([])
+      const database = new AppDatabase(directory)
+
+      try {
+        expect(tableNames(database)).toEqual(expect.arrayContaining(expectedTables))
+        expect(appliedVersions(database)).toEqual(migrations.map((migration) => migration.version))
+
+        const row = database.connection
+          .prepare("SELECT value_json FROM settings WHERE key = 'app'")
+          .get() as { value_json?: string } | undefined
+
+        expect(row?.value_json).toContain('"theme":"dark"')
+      } finally {
+        database.close()
+      }
     })
   })
 })

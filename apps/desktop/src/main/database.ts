@@ -1,320 +1,38 @@
-import { randomUUID } from 'node:crypto'
 import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'node:fs'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
-import type { AiProviderType, DesignScenePayload, RunResult, Stats } from '../shared/types'
+import { migrations } from './migrations'
 
-export interface ProviderRow {
-  readonly type: AiProviderType
-  readonly base_url: string
-  readonly model: string
-  readonly key_ref: string | null
-  readonly enabled: number
-}
-
-const migrations = [
-  {
-    version: 1,
-    sql: `
-      CREATE TABLE IF NOT EXISTS settings (
-        key TEXT PRIMARY KEY,
-        value_json TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS attempts (
-        id TEXT PRIMARY KEY,
-        problem_id TEXT NOT NULL,
-        language TEXT NOT NULL,
-        mode TEXT NOT NULL,
-        code TEXT NOT NULL,
-        status TEXT NOT NULL,
-        passed INTEGER NOT NULL,
-        total INTEGER NOT NULL,
-        result_json TEXT NOT NULL,
-        created_at TEXT NOT NULL
-      );
-      CREATE INDEX IF NOT EXISTS attempts_problem_created
-        ON attempts (problem_id, created_at);
-
-      CREATE TABLE IF NOT EXISTS drafts (
-        problem_id TEXT NOT NULL,
-        language TEXT NOT NULL,
-        code TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        PRIMARY KEY (problem_id, language)
-      );
-
-      CREATE TABLE IF NOT EXISTS design_scenes (
-        id TEXT PRIMARY KEY,
-        scene_json TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS ai_provider_configs (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        type TEXT NOT NULL,
-        base_url TEXT NOT NULL,
-        model TEXT NOT NULL,
-        key_ref TEXT,
-        enabled INTEGER NOT NULL,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      );
-    `,
-  },
-  {
-    version: 2,
-    sql: `
-      CREATE VIRTUAL TABLE IF NOT EXISTS problem_search USING fts5(
-        problem_id UNINDEXED,
-        title,
-        patterns,
-        pack_name,
-        body,
-        tokenize = 'unicode61 remove_diacritics 2'
-      );
-    `,
-  },
-]
-
+/**
+ * Owns the SQLite connection, migrations, and backups. Domain operations live
+ * in `repositories/` so callers depend on a narrow interface.
+ */
 export class AppDatabase {
   readonly path: string
-  private readonly db: DatabaseSync
+  readonly connection: DatabaseSync
 
   constructor(userDataPath: string) {
     mkdirSync(userDataPath, { recursive: true })
     this.path = join(userDataPath, 'app.db')
-    this.db = new DatabaseSync(this.path)
-    this.db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;')
+    this.connection = new DatabaseSync(this.path)
+    this.connection.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;')
     this.runMigrations()
     this.backupIfPossible(userDataPath)
   }
 
   close(): void {
-    this.db.close()
-  }
-
-  getDraft(problemId: string, language: string): string | null {
-    const row = this.db
-      .prepare('SELECT code FROM drafts WHERE problem_id = ? AND language = ?')
-      .get(problemId, language) as { code?: string } | undefined
-
-    return row?.code ?? null
-  }
-
-  saveDraft(problemId: string, language: string, code: string): void {
-    const now = new Date().toISOString()
-    this.db
-      .prepare(
-        `INSERT INTO drafts (problem_id, language, code, updated_at)
-         VALUES (?, ?, ?, ?)
-         ON CONFLICT(problem_id, language)
-         DO UPDATE SET code = excluded.code, updated_at = excluded.updated_at`,
-      )
-      .run(problemId, language, code, now)
-  }
-
-  saveAttempt(input: {
-    problemId: string
-    language: string
-    mode: string
-    code: string
-    result: RunResult
-  }): string {
-    const id = randomUUID()
-    const createdAt = new Date().toISOString()
-
-    this.db
-      .prepare(
-        `INSERT INTO attempts
-         (id, problem_id, language, mode, code, status, passed, total, result_json, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      )
-      .run(
-        id,
-        input.problemId,
-        input.language,
-        input.mode,
-        input.code,
-        input.result.status,
-        input.result.passed,
-        input.result.total,
-        JSON.stringify(input.result),
-        createdAt,
-      )
-
-    return id
-  }
-
-  getStats(): Stats {
-    const row = this.db
-      .prepare(
-        `SELECT
-           COUNT(*) AS attempts,
-           COALESCE(SUM(CASE WHEN status = 'accepted' THEN 1 ELSE 0 END), 0) AS accepted,
-           MAX(created_at) AS last_attempt_at
-         FROM attempts`,
-      )
-      .get() as
-      { attempts?: number; accepted?: number; last_attempt_at?: string | null } | undefined
-
-    return {
-      attempts: Number(row?.attempts ?? 0),
-      accepted: Number(row?.accepted ?? 0),
-      lastAttemptAt: row?.last_attempt_at ?? null,
-    }
-  }
-
-  saveDesignScene(sceneJson: string): void {
-    const now = new Date().toISOString()
-    this.db
-      .prepare(
-        `INSERT INTO design_scenes (id, scene_json, updated_at)
-         VALUES ('sandbox', ?, ?)
-         ON CONFLICT(id)
-         DO UPDATE SET scene_json = excluded.scene_json, updated_at = excluded.updated_at`,
-      )
-      .run(sceneJson, now)
-  }
-
-  getDesignScene(): DesignScenePayload {
-    const row = this.db
-      .prepare("SELECT scene_json, updated_at FROM design_scenes WHERE id = 'sandbox'")
-      .get() as { scene_json?: string; updated_at?: string } | undefined
-
-    return {
-      sceneJson: row?.scene_json ?? null,
-      updatedAt: row?.updated_at ?? null,
-    }
-  }
-
-  getSetting(key: string): string | null {
-    const row = this.db.prepare('SELECT value_json FROM settings WHERE key = ?').get(key) as
-      { value_json?: string } | undefined
-
-    return row?.value_json ?? null
-  }
-
-  setSetting(key: string, valueJson: string): void {
-    const now = new Date().toISOString()
-    this.db
-      .prepare(
-        `INSERT INTO settings (key, value_json, updated_at)
-         VALUES (?, ?, ?)
-         ON CONFLICT(key)
-         DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at`,
-      )
-      .run(key, valueJson, now)
-  }
-
-  deleteSetting(key: string): void {
-    this.db.prepare('DELETE FROM settings WHERE key = ?').run(key)
-  }
-
-  replaceProblemIndex(
-    rows: readonly {
-      readonly problemId: string
-      readonly title: string
-      readonly patterns: string
-      readonly packName: string
-      readonly body: string
-    }[],
-  ): void {
-    this.db.exec('BEGIN')
-
-    try {
-      this.db.exec('DELETE FROM problem_search')
-      const insert = this.db.prepare(
-        'INSERT INTO problem_search (problem_id, title, patterns, pack_name, body) VALUES (?, ?, ?, ?, ?)',
-      )
-
-      for (const row of rows) {
-        insert.run(row.problemId, row.title, row.patterns, row.packName, row.body)
-      }
-
-      this.db.exec('COMMIT')
-    } catch (error) {
-      this.db.exec('ROLLBACK')
-      throw error
-    }
-  }
-
-  searchProblemIds(query: string, limit = 50): string[] {
-    const terms = query.trim().split(/\s+/).filter(Boolean).slice(0, 10)
-
-    if (terms.length === 0) {
-      return []
-    }
-
-    // Quote each term so punctuation cannot become FTS operators, then use a
-    // prefix match so typing "pai" finds "pair".
-    const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' AND ')
-
-    try {
-      const rows = this.db
-        .prepare(
-          `SELECT problem_id FROM problem_search
-           WHERE problem_search MATCH ?
-           ORDER BY rank
-           LIMIT ?`,
-        )
-        .all(match, limit) as { problem_id?: string }[]
-
-      return rows
-        .map((row) => row.problem_id)
-        .filter((problemId): problemId is string => typeof problemId === 'string')
-    } catch {
-      return []
-    }
-  }
-
-  getProviderConfig(): ProviderRow | null {
-    const row = this.db
-      .prepare(
-        `SELECT type, base_url, model, key_ref, enabled
-         FROM ai_provider_configs WHERE id = 'default'`,
-      )
-      .get() as ProviderRow | undefined
-
-    return row ?? null
-  }
-
-  saveProviderConfig(input: {
-    type: AiProviderType
-    baseUrl: string
-    model: string
-    keyRef: string | null
-    enabled: boolean
-  }): void {
-    const now = new Date().toISOString()
-    this.db
-      .prepare(
-        `INSERT INTO ai_provider_configs
-         (id, name, type, base_url, model, key_ref, enabled, created_at, updated_at)
-         VALUES ('default', 'Default provider', ?, ?, ?, ?, ?, ?, ?)
-         ON CONFLICT(id)
-         DO UPDATE SET
-           type = excluded.type,
-           base_url = excluded.base_url,
-           model = excluded.model,
-           key_ref = excluded.key_ref,
-           enabled = excluded.enabled,
-           updated_at = excluded.updated_at`,
-      )
-      .run(input.type, input.baseUrl, input.model, input.keyRef, input.enabled ? 1 : 0, now, now)
+    this.connection.close()
   }
 
   private runMigrations(): void {
-    this.db.exec(`
+    this.connection.exec(`
       CREATE TABLE IF NOT EXISTS schema_migrations (
         version INTEGER PRIMARY KEY,
         applied_at TEXT NOT NULL
       );
     `)
 
-    const appliedRows = this.db.prepare('SELECT version FROM schema_migrations').all() as {
+    const appliedRows = this.connection.prepare('SELECT version FROM schema_migrations').all() as {
       version: number
     }[]
     const applied = new Set(appliedRows.map((row) => Number(row.version)))
@@ -324,15 +42,15 @@ export class AppDatabase {
         continue
       }
 
-      this.db.exec('BEGIN')
+      this.connection.exec('BEGIN')
       try {
-        this.db.exec(migration.sql)
-        this.db
+        this.connection.exec(migration.sql)
+        this.connection
           .prepare('INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)')
           .run(migration.version, new Date().toISOString())
-        this.db.exec('COMMIT')
+        this.connection.exec('COMMIT')
       } catch (error) {
-        this.db.exec('ROLLBACK')
+        this.connection.exec('ROLLBACK')
         throw error
       }
     }
@@ -347,7 +65,7 @@ export class AppDatabase {
       const backupPath = join(backupDirectory, `app-${timestamp}.db`)
       const escapedPath = backupPath.replaceAll("'", "''")
 
-      this.db.exec(`VACUUM INTO '${escapedPath}'`)
+      this.connection.exec(`VACUUM INTO '${escapedPath}'`)
 
       if (!this.verifyDatabase(backupPath)) {
         unlinkSync(backupPath)

@@ -12,9 +12,9 @@ import type {
 } from '../shared/types'
 import type { ContentRepository } from './content'
 import { rebuildContentIndex } from './content-sync'
-import type { AppDatabase } from './database'
 import { AppError } from './ipc-errors'
 import { getLogger } from './logger'
+import type { ContentIndexRepository } from './repositories/content-index'
 import { defaultZipLimits, extractZip, ZipExtractionError } from './zip'
 
 const pendingLifetimeMs = 15 * 60 * 1000
@@ -41,7 +41,7 @@ export class PackManager {
   constructor(
     private readonly userDataPath: string,
     private readonly content: ContentRepository,
-    private readonly database: AppDatabase,
+    private readonly contentIndex: ContentIndexRepository,
   ) {}
 
   async preview(kind: PackImportKind): Promise<PackPreviewResult | null> {
@@ -200,12 +200,12 @@ export class PackManager {
       }
 
       try {
-        await rebuildContentIndex(this.content, this.database, this.userDataPath)
+        await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath)
       } catch (error) {
         await rm(target, { recursive: true, force: true }).catch(() => undefined)
 
         try {
-          await rebuildContentIndex(this.content, this.database, this.userDataPath)
+          await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath)
         } catch (rollbackError) {
           log.error('pack.rollback.failed', {
             pack: pending.manifest.id,
@@ -270,7 +270,7 @@ export class PackManager {
     }
 
     await rm(target, { recursive: true, force: true })
-    await rebuildContentIndex(this.content, this.database, this.userDataPath)
+    await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath)
 
     log.info('pack.uninstalled', { pack: packId })
   }

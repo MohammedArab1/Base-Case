@@ -1,9 +1,9 @@
 # Progress Log
 
-> Last updated: 2026-10-23
-> Current phase: Phase 2 — App foundation (started; Phase 1 clean-VM installs still pending)
-> Overall status: On track — Windows/ macOS functional verification is complete; Phase 2 foundation landed with typed IPC, logging, settings, window state, and the app menu
-> Next milestone: finish the Phase 2 shell (app layout, repositories), then clean-VM installs
+> Last updated: 2026-10-24
+> Current phase: Phase 2 — App foundation (Phase 1 clean-VM installs still pending)
+> Overall status: On track — Phase 2 foundation is nearly complete; repositories and the user-state schema are split, and only the app-layout inspector remains
+> Next milestone: finish the Phase 2 shell (app-layout inspector and primitive migration), then clean-VM installs
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -14,7 +14,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
-| Phase 2 — App foundation | In progress | 2026-10-23 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, user pack loading, radix/tailwind primitives, onboarding, pack install/uninstall, and Playwright smoke done; remaining shell work next |
+| Phase 2 — App foundation | In progress | 2026-10-24 | Typed IPC, logging, settings/theme, window state, app menu, command palette, shortcuts, FTS5 search, pack install/uninstall, Playwright smoke, repository split, and the user-state schema are done; the app-layout inspector and primitive migration remain |
 | Phase 3 — Judge engine | Not started | — | Python + TypeScript adapters, sandbox, conformance |
 | Phase 4 — Coding practice | Not started | — | Editor, run/submit, hints, FSRS |
 | Phase 5 — System design | Not started | — | Canvas, notes, rubric, reference |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Continue Phase 2: the remaining Settings/Coding migration to the design-system primitives, the app-layout inspector, and the repository split.
+1. Continue Phase 2: add the app-layout inspector and finish migrating the remaining Settings/Coding surfaces to the design-system primitives.
 2. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 3. Re-run the uninstall row of the full Windows checklist on a fresh install.
 4. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -39,6 +39,28 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 2 — Repository split and schema scope
+
+- Status: in progress (structural database work done; app-layout inspector remains)
+- Done:
+  - Split the old `AppDatabase` into a connection/migration/backup owner plus focused repositories: `ContentIndexRepository`, `SettingsRepository`, `AttemptsRepository`, `DraftsRepository`, `DesignRepository`, and `AiProviderRepository`.
+  - Updated `SettingsStore`, `AiService`, `PackManager`, the IPC handlers, and startup wiring to depend on repositories. The IPC layer no longer receives the raw SQLite handle; it receives narrow repositories plus the database path for diagnostics.
+  - Added ADR-0011: pack content stays file-backed and SQLite holds user state plus the FTS index. The Section 4.3 content mirror tables are intentionally deferred; a rebuildable derived table is the preferred future option if SQL access is needed.
+  - Added migration 3 with `attempt_events`, `mistake_tags`, `attempt_mistake_tags`, `review_cards`, and `design_attempts`. The existing `schema_migrations` history table records it.
+  - Added a migration test that upgrades a version-2 database and preserves settings, plus repository tests for attempts/stats, drafts, design scenes, content search, and AI provider metadata.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 35 desktop TypeScript tests + 4 schema tests + the Go suites passed.
+  - `pnpm build && pnpm smoke:e2e && pnpm smoke:playwright` — passed.
+- Files/PRs:
+  - Key paths: `main/database.ts`, `main/migrations.ts`, `main/repositories/*`, `main/settings.ts`, `main/ai.ts`, `main/ipc.ts`, `main/index.ts`, `main/content-sync.ts`, `main/pack-manager.ts`, `docs/adr/0011-sqlite-scope.md`, `PLAN.md`.
+- Next:
+  - Build the inspector shell and finish the remaining Settings/Coding primitive migration; then clean-VM installs and the Phase 3 gap analysis.
+- Notes/decisions:
+  - The repository split keeps SQL out of IPC and service classes while avoiding a generic query layer.
+  - `design_attempts` exists for Phase 5, but the current single `design_scenes` sandbox row remains the live design workspace until scenario attempts land.
+  - Content tables are not mirrored into SQLite; ADR-0011 explains the tradeoff and the future derived-table escape hatch.
 
 ### 2026-10-23 — Phase 2 — Playwright smoke
 

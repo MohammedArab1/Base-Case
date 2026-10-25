@@ -547,6 +547,12 @@ Single local profile for MVP. If profiles are added later, introduce `profile_id
 
 This is a shape, not final DDL. Use `TEXT` IDs (stable slugs for content, UUIDs for user records), ISO-8601 timestamps, and JSON columns validated in application code.
 
+> **Implementation note (2026-10-24):** ADR-0011 narrows this outline. Pack
+> content stays file-backed; SQLite stores user state and the search index.
+> Migration 3 creates `attempt_events`, `mistake_tags`, `attempt_mistake_tags`,
+> `review_cards`, and `design_attempts`. The content tables below are deferred
+> until a concrete query or export need exists.
+
 **content_packs**
 
 - `id` TEXT PK
@@ -2456,8 +2462,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - [ ] SQLite:
   - [x] Driver decision (`node:sqlite`, provisional; revisit in Phase 3).
   - [x] Migration runner.
-  - [ ] Core tables from Section 4.3.
-  - [ ] Repositories for content, attempts, settings.
+  - [x] Core tables from Section 4.3 (user-state subset; ADR-0011).
+  - [x] Repositories for content, attempts, settings.
   - [x] WAL mode and backup-on-start.
 - [x] Content loader:
   - [x] JSON Schema validation.

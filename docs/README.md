@@ -11,7 +11,7 @@ Start here:
 - `architecture/overview.md` — process model and data flows.
 - `architecture/judge-protocol.md` — JSONL protocol draft.
 - `architecture/threat-model.md` — assets, actors, threats, mitigations.
-- `adr/` — architecture decision records 0001–0010.
+- `adr/` — architecture decision records 0001–0011.
 
 ## Spikes
 

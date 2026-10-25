@@ -9,7 +9,6 @@ import type { Channel, IpcResult } from '../shared/ipc'
 import type { AiContext } from '../shared/types'
 import type { AiService } from './ai'
 import type { ContentRepository } from './content'
-import type { AppDatabase } from './database'
 import { toIpcError } from './ipc-errors'
 import {
   aiConfigSchema,
@@ -30,15 +29,23 @@ import {
 import type { JudgeClient } from './judge'
 import { getLogger } from './logger'
 import type { PackManager } from './pack-manager'
+import type { AttemptsRepository } from './repositories/attempts'
+import type { ContentIndexRepository } from './repositories/content-index'
+import type { DesignRepository } from './repositories/design'
+import type { DraftsRepository } from './repositories/drafts'
 import type { SettingsStore } from './settings'
 
 interface Services {
   readonly content: ContentRepository
-  readonly database: AppDatabase
+  readonly contentIndex: ContentIndexRepository
+  readonly attempts: AttemptsRepository
+  readonly drafts: DraftsRepository
+  readonly design: DesignRepository
   readonly judge: JudgeClient
   readonly ai: AiService
   readonly settings: SettingsStore
   readonly packs: PackManager
+  readonly databasePath: string
 }
 
 function register<I, O>(
@@ -88,7 +95,18 @@ function sendAiEvent(
   }
 }
 
-export function registerIpc({ content, database, judge, ai, settings, packs }: Services): void {
+export function registerIpc({
+  content,
+  contentIndex,
+  attempts,
+  drafts,
+  design,
+  judge,
+  ai,
+  settings,
+  packs,
+  databasePath,
+}: Services): void {
   register(channels.appInfo, noInputSchema, () => ({
     appVersion: app.getVersion(),
     platform: process.platform,
@@ -98,14 +116,14 @@ export function registerIpc({ content, database, judge, ai, settings, packs }: S
       node: process.versions.node,
     },
     userDataPath: app.getPath('userData'),
-    databasePath: database.path,
+    databasePath,
     logsPath: join(app.getPath('userData'), 'logs'),
   }))
 
   register(channels.contentList, noInputSchema, () => content.listProblems())
   register(channels.contentGet, problemIdSchema, (problemId) => content.getProblem(problemId))
   register(channels.contentSearch, searchQuerySchema, (query) =>
-    content.getSummaries(database.searchProblemIds(query)),
+    content.getSummaries(contentIndex.search(query)),
   )
 
   register(channels.judgeStatus, noInputSchema, () => judge.status())
@@ -114,7 +132,7 @@ export function registerIpc({ content, database, judge, ai, settings, packs }: S
     const params = content.getRunParams(input.problemId, input.language, input.code, input.mode)
     const result = await judge.run(params)
 
-    database.saveAttempt({
+    attempts.save({
       problemId: input.problemId,
       language: input.language,
       mode: input.mode,
@@ -126,19 +144,19 @@ export function registerIpc({ content, database, judge, ai, settings, packs }: S
   })
 
   register(channels.draftGet, draftInputSchema, (input) =>
-    database.getDraft(input.problemId, input.language),
+    drafts.get(input.problemId, input.language),
   )
 
   register(channels.draftSave, saveDraftSchema, (input) => {
-    database.saveDraft(input.problemId, input.language, input.code)
+    drafts.save(input.problemId, input.language, input.code)
   })
 
-  register(channels.attemptsStats, noInputSchema, () => database.getStats())
+  register(channels.attemptsStats, noInputSchema, () => attempts.getStats())
 
-  register(channels.designGetScene, noInputSchema, () => database.getDesignScene())
+  register(channels.designGetScene, noInputSchema, () => design.getScene())
 
   register(channels.designSaveScene, sceneJsonSchema, (sceneJson) => {
-    database.saveDesignScene(sceneJson)
+    design.saveScene(sceneJson)
   })
 
   register(channels.designExportPng, pngDataUrlSchema, async (dataUrl) => {
