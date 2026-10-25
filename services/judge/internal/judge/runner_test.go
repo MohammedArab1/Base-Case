@@ -848,6 +848,126 @@ export { Solution }
 	}
 }
 
+func TestRuntimeError(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	request := pairSumRequest("python", `class Solution:
+    def pairSum(self, nums, target):
+        raise ValueError("boom")
+`)
+	request.Tests = request.Tests[:1]
+
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusRuntimeError {
+		t.Fatalf("expected runtime_error, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+	if result.FirstFailure == nil || result.FirstFailure.Error == nil {
+		t.Fatalf("expected a harness error, got %+v", result.FirstFailure)
+	}
+	if result.FirstFailure.Error.Type != "ValueError" {
+		t.Fatalf("expected ValueError, got %q", result.FirstFailure.Error.Type)
+	}
+}
+
+func TestJavaScriptPairSumAccepted(t *testing.T) {
+	runAcceptedProblem(t, "javascript", `class Solution {
+  pairSum(nums, target) {
+    const seen = new Map()
+    for (let index = 0; index < nums.length; index += 1) {
+      const value = nums[index]
+      const complement = target - value
+      const first = seen.get(complement)
+      if (first !== undefined) {
+        return [first, index]
+      }
+      seen.set(value, index)
+    }
+    return []
+  }
+}
+
+export { Solution }
+`)
+}
+
+func TestFloatCheckerRunner(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	tolerance := 0.001
+	request := RunRequest{
+		ProblemID: "test/third",
+		Language:  "python",
+		Code: `class Solution:
+    def third(self, value):
+        return value / 3.0
+`,
+		Mode: "sample",
+		Signature: Signature{
+			Kind:      "function",
+			ClassName: "Solution",
+			Method:    "third",
+			Params:    []Param{{Name: "value", Type: "double"}},
+			Returns:   "double",
+			Mutates:   []string{},
+		},
+		Limits:  Limits{TimeMs: 2000, MemoryMb: 256},
+		Checker: Checker{Kind: "float", AbsoluteTolerance: &tolerance},
+		Tests: []Test{
+			{Index: 0, IsSample: true, Input: json.RawMessage(`{"value":1}`), Expected: json.RawMessage(`0.3333`)},
+		},
+	}
+
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if result.Status != StatusAccepted {
+		t.Fatalf("expected accepted, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+}
+
+func TestSetOfSetsCheckerRunner(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	request := RunRequest{
+		ProblemID: "test/groups",
+		Language:  "python",
+		Code: `class Solution:
+    def groups(self, count):
+        return [[1, 2], [3]]
+`,
+		Mode: "sample",
+		Signature: Signature{
+			Kind:      "function",
+			ClassName: "Solution",
+			Method:    "groups",
+			Params:    []Param{{Name: "count", Type: "int"}},
+			Returns:   "int[][]",
+			Mutates:   []string{},
+		},
+		Limits:  Limits{TimeMs: 2000, MemoryMb: 256},
+		Checker: Checker{Kind: "set-of-sets"},
+		Tests: []Test{
+			{Index: 0, IsSample: true, Input: json.RawMessage(`{"count":3}`), Expected: json.RawMessage(`[[3],[2,1]]`)},
+		},
+	}
+
+	result, err := runner.Run(context.Background(), request)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if result.Status != StatusAccepted {
+		t.Fatalf("expected accepted, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+}
+
 func TestMissingRuntime(t *testing.T) {
 	runner := &Runner{}
 	_, err := runner.Run(context.Background(), pairSumRequest("python", pythonPairSum))

@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (P3-A through P3-E done; runtime decision and conformance matrix next)
-> Overall status: On track — the judge now has a macOS Seatbelt sandbox, Windows job limits, security fixtures, and the full coding harness
-> Next milestone: Measure pinned runtimes for ADR-0010, then P3-F packaging and P3-G conformance
+> Current phase: Phase 3 — Judge engine (P3-A through P3-E and P3-G done; P3-F waits on the runtime decision)
+> Overall status: On track — the coding judge is feature-complete for the alpha except bundled runtimes; conformance and sandbox coverage are in place
+> Next milestone: Measure pinned runtimes for ADR-0010 (P3-F), then move to Phase 4 review and Phase 5 design
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, P3-C compile-once, P3-D harness, and P3-E sandbox done. Runtime bundles and the conformance matrix remain |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol, P3-B memory, P3-C compile-once, P3-D harness, P3-E sandbox, and P3-G conformance done. P3-F runtime bundling waits on ADR-0010 |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -27,7 +27,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 ## Next up
 
 1. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging (P3-F).
-2. Build the 20+ fixture conformance matrix and app-level judge E2E in CI (P3-G).
+2. Start Phase 4 review work (FSRS scheduling, mistake tags, snapshots, export/import) while P3-F is pending.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
 5. Do a basic trademark search for “Base Case” before public launch (the name is confirmed). Register the domain when branding starts.
@@ -41,6 +41,26 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-G conformance and CI E2E
+
+- Status: Phase 3 in progress (P3-G complete; P3-F blocked on the runtime decision)
+- Done:
+  - Added the remaining conformance cases: runtime error, JavaScript accepted, float tolerance, and set-of-sets at the runner level.
+  - The Go suite now covers every user-facing status except design-specific paths: accepted, wrong answer, compile error, runtime error, time limit, memory limit, output limit, internal start failure, and cancellation.
+  - Added the app-level judge E2E (`pnpm smoke:e2e`) to the macOS and Windows CI matrix, with Go and Python set up in the Node job.
+  - Recorded the conformance scope in `PLAN.md`; content problems remain Phase 7 work.
+- Tests run:
+  - Targeted conformance tests — passed.
+  - `go test -C services/judge -race ./...` — passed.
+  - `GOOS=windows GOARCH=amd64 go build -C services/judge ./...` — passed.
+- Files/PRs:
+  - Key paths: `services/judge/internal/judge/runner_test.go`, `.github/workflows/ci.yml`, `PLAN.md`.
+- Next:
+  - P3-F: measure pinned Python/Node runtimes, then accept or supersede ADR-0010.
+- Notes/decisions:
+  - CI now runs the judge inside the real Electron app on both supported platforms, not just the Go suites.
+  - Design fixtures are intentionally deferred to Phase 5.
 
 ### 2026-10-24 — Phase 3 — P3-E sandbox hardening
 

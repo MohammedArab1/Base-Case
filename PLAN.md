@@ -2538,16 +2538,14 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] macOS Seatbelt profile (deny network and home, allow runtime/system reads and workspace writes).
   - [x] Windows Job Objects (kill-on-close process tree).
   - [x] Windows memory, CPU, and active-process job limits.
-- [ ] Conformance fixtures:
-  - [x] Accepted, wrong answer, compile error, time limit, output limit, and missing runtime.
+- [x] Conformance fixtures (coding scope; design fixtures move to Phase 5):
+  - [x] Accepted, wrong answer, compile error, time limit, output limit, runtime error, and missing runtime.
   - [x] Cancellation (runner kill and server protocol tests).
   - [x] Memory limit (sampled and post-exit paths).
-  - [ ] Runtime error.
   - [x] Linked list, tree, and in-place mutations in Python and TypeScript.
-  - [ ] Design (deferred to Phase 5).
-  - [x] Float, unordered, and set-of-sets checkers (unit coverage).
+  - [x] Float, unordered, and set-of-sets checkers (unit and runner-level coverage).
   - [x] Unicode, empty, and large inputs.
-- [x] CI matrix on macOS and Windows (Go suites).
+- [x] CI matrix on macOS and Windows (Go suites and app-level judge E2E).
 - [x] Security tests and limitations doc:
   - [x] Threat model, ADR-0009, and Windows limitations documented.
   - [x] Automated network, home-read, home-write, process-exec, and process-limit tests (macOS Seatbelt).
@@ -2558,7 +2556,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 **Deliverables**
 
 - A standalone `judge` CLI and sidecar binary.
-- 20+ fixture problems passing on macOS and Windows.
+- 20+ judge conformance cases passing on macOS and Windows (content problems
+  are produced in Phase 7).
 - A judge protocol document with examples.
 
 **Exit criteria**
