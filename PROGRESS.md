@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 9 — MVP expansion (content set growing to 25 + 8; importer and several polish items already delivered earlier)
-> Overall status: On track — the core loop, judge, design workspace, AI tutor, 10 + 4 content set, diagnostics, and alpha documentation are in place, and CI is green on macOS and Windows. Phase 9 reconciliation found that the importer and several polish items were already delivered; remaining work is content, targeted polish, platform builds, performance, security, and docs. External alpha items (B1, B2, B3, B4, B10) remain open
-> Next milestone: 25 coding + 8 design content set, then the MVP feature-complete build
+> Current phase: Phase 9 — MVP expansion (25 + 8 content, importer, polish, platform, AI, performance, and security work complete; manual accessibility and media remain)
+> Overall status: On track — the full 25 + 8 content set, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, and packaged performance measurements are in place. Remaining Phase 9 work is manual accessibility verification, GIF/demo media, and the release candidate. External alpha blockers B1–B11 remain open
+> Next milestone: MVP feature-complete build and release candidate, then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -21,23 +21,24 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
 | Phase 7 — Content production | In progress | 2026-10-25 | Alpha set of 10 coding problems and 4 design scenarios completed in Phase 7; Phase 9 expanded the pack to 25 coding + 8 design. All 50 reference solutions pass. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-25 | Content target reached: 25 coding problems (50/50 reference solutions pass) and 8 design scenarios. Also reconciled as already done: importer, command palette, search/filters, reduced motion, window/layout persistence, runtime verification, and design-notes review. Remaining: progress chart, accessibility, states audit, arm64/x64 builds, app-size work, mistake suggestions/explain-back, performance, security review, media docs, RC |
+| Phase 9 — MVP expansion | In progress | 2026-10-25 | Content target reached: 25 coding problems (50/50 reference solutions) and 8 design scenarios. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, and the security review are done. Remaining: manual accessibility verification (B11), GIF/demo video, and the release candidate |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
-1. Expand the core pack to 25 coding problems and 8 design scenarios, validating every problem against the real judge.
-2. Finish Phase 9 polish: progress chart, accessibility pass, error/empty/loading audit, macOS arm64/x64 builds, AI mistake suggestions and explain-back, performance, security review, and media docs.
-3. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
-4. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
-5. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
-6. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-7. Get a second-person review of the coding problems and design scenarios (B4) and record the sign-off.
-8. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
-9. Add optional local AI history with a clear delete button (privacy default stays off).
-10. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-11. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-12. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+1. Run the manual accessibility checklist in `docs/project/accessibility.md` on macOS and Windows and record the result (B11).
+2. Capture a GIF and short demo video for the README and release notes.
+3. Build the release candidate, review known issues, and confirm export/import plus backup/restore one final time.
+4. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
+5. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
+6. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
+7. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
+8. Get a second-person review of the 25 coding problems and 8 design scenarios (B4) and record the sign-off.
+9. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
+10. Add optional local AI history with a clear delete button (privacy default stays off).
+11. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+12. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+13. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
 
 ## Blockers
 
@@ -51,9 +52,76 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
 - **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
+- **B11 — Manual accessibility verification:** the automated axe gate passes; VoiceOver/NVDA, 200% zoom, forced colors, and canvas keyboard fallback still need a human at a real desktop.
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 9 — Platform, AI, security, and docs
+
+- Status: Phase 9 feature work complete except manual accessibility, GIF/video, and the release candidate
+- Done:
+  - Added macOS arm64 and x64 packaging through `scripts/package-mac.mjs`; each architecture gets a matching judge binary and runtime pack, and the host runtimes are restored after packaging. Added verified darwin-x64 runtime entries.
+  - Added AI mistake-tag suggestions with an explicit review/apply step on the latest attempt, plus a new explain-back check that grades the learner's own explanation.
+  - Patched transitive advisories with pnpm overrides for `lodash-es`, `katex`, and `nanoid`; `pnpm audit --prod` now reports no known vulnerabilities.
+  - Added the security review (Electron checklist, judge limits, dependency audit), accessibility gate and manual checklist (B11), loading/empty/error audit, and packaged performance measurements.
+  - Generated screenshots from the Playwright suite and added `docs/screenshots.md`; updated install docs for both macOS architectures.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 117 tests across 26 files.
+  - `pnpm content:validate` and `pnpm content:test` — valid; 50/50 reference solutions accepted.
+  - `pnpm audit --prod` — no known vulnerabilities.
+  - `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac` — arm64 and x64 DMG/ZIP built; embedded judge and Python binaries match each architecture.
+  - `node scripts/measure-packaged.mjs` — 2613 ms cold start, 331 ms coding library, 51 ms problem open, 401 ms design canvas, 312 ms judge run, 291.8 MB idle / 369.0 MB working memory, 253.0 MB DMG / 253.8 MB ZIP.
+  - `pnpm smoke:e2e` — 25 problems, 8 designs, in-place and linked-list runs accepted, diagnostics 9/9.
+  - `pnpm smoke:playwright` — 7 passed including the axe gate and the new AI tag flow.
+- Files/PRs:
+  - Key paths: `scripts/package-mac.mjs`, `runtimes.json`, `scripts/measure-packaged.mjs`, `apps/desktop/src/main/ai-*`, `apps/desktop/src/renderer/src/components/AiPanel.tsx`, `docs/project/security-review.md`, `docs/project/accessibility.md`, `docs/project/performance.md`, `docs/project/states-audit.md`, `docs/screenshots.md`, `docs/assets/screenshots/`.
+- Next:
+  - Run the manual accessibility checklist (B11), capture a GIF and demo video, then build the release candidate.
+  - Continue the external alpha work (B1, B2, B3, B4, B10) before tagging.
+- Notes/decisions:
+  - The runtime and judge for each installer are built for that installer's architecture; do not mix an x64 app with arm64 runtime files.
+  - Dependency overrides affect Excalidraw/Mermaid transitive code and were revalidated with the build, unit tests, design Playwright flow, and math rendering test.
+  - The app remains fully usable with AI off; both new AI tools are off only when the global or per-feature toggle is disabled.
+
+### 2026-10-25 — Phase 9 — Progress chart, accessibility gate, and state audit
+
+- Status: Polish items complete except manual assistive-tech verification
+- Done:
+  - Added a 14-day activity chart to Progress with per-day bars, accessible text alternatives, attempt/accepted counts, and a repo query for recent activity.
+  - Added an axe-core Playwright gate for six main views (WCAG 2.1 A/AA serious/critical), a skip-to-content link, correct main-landmark labelling, `aria-busy` on the workspace, and live notes-status announcements.
+  - Fixed the one serious contrast violation found by axe (sidebar version opacity).
+  - Added `role="alert"` to page-level error callouts and documented loading, empty, and error behavior per view.
+- Tests run:
+  - `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 112 tests after the activity query test (117 after the later AI tests).
+  - `pnpm --filter @base-case/desktop test:e2e -g accessibility` — passed.
+  - Full Playwright suite — 7 passed.
+- Files/PRs:
+  - `apps/desktop/src/renderer/src/views/ProgressView.tsx`, `workspace.css`, `App.tsx`, `components/Inspector.tsx`, `main/repositories/attempts.ts`, `main/ipc.ts`, `e2e/app.spec.ts`, `docs/project/accessibility.md`, `docs/project/states-audit.md`.
+- Next:
+  - Manual VoiceOver/NVDA and high-contrast pass (B11); then platform and AI work.
+- Notes/decisions:
+  - The automated gate is necessary but not sufficient; the manual checklist stays open as B11.
+  - The chart uses local-day buckets so streaks and bars agree across time zones and DST.
+
+### 2026-10-25 — Phase 9 — Smoke coverage for expanded content
+
+- Status: In-repo coverage for 25 + 8 content
+- Done:
+  - Extended the Electron smoke test to run the in-place `compact-signals` problem and the linked-list `reverse-chain` problem, and to expect 25 problems and 8 design scenarios.
+  - Added a Playwright case that opens Reverse Chain, writes a TypeScript solution, and runs the sample tests.
+  - Updated the difficulty-filter assertion now that hard problems exist in the pack.
+- Tests run:
+  - `pnpm smoke:e2e` — inPlace `5/5 accepted`, linkedList `5/5 accepted`, designScenarios 8.
+  - `pnpm smoke:playwright` — 6 passed at this stage, including the new linked-list case.
+- Files/PRs:
+  - `scripts/smoke-electron.mjs`, `apps/desktop/e2e/app.spec.ts`.
+- Next:
+  - Progress chart and accessibility work, then platform polish.
+- Notes/decisions:
+  - The smoke summary now surfaces `inPlace` and `linkedList` results so a regression is visible without reading logs.
 
 ### 2026-10-25 — Phase 9 — MVP content set: 25 coding + 8 design
 
