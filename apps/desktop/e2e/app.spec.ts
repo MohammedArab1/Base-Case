@@ -352,24 +352,30 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
     // Draw a rectangle on the interactive Excalidraw canvas.
     const canvas = page.locator('.excalidraw__canvas.interactive').first()
     await expect(canvas).toBeVisible()
-    await page.waitForTimeout(900)
+    await page.waitForTimeout(1500)
     const box = await canvas.boundingBox()
     expect(box).not.toBeNull()
     await canvas.click({ position: { x: 40, y: 40 } })
     await page.keyboard.press('r')
-    await page.waitForTimeout(250)
+    await page.waitForTimeout(400)
     await page.mouse.move(box!.x + 120, box!.y + 120)
     await page.mouse.down()
     await page.mouse.move(box!.x + 280, box!.y + 230, { steps: 8 })
     await page.mouse.up()
-    await page.waitForTimeout(250)
+    await page.waitForTimeout(400)
 
-    // Wait for the debounced scene autosave.
-    await page.waitForTimeout(1400)
-    const draft = (await page.evaluate(
-      "window.baseCase.design.getDraft('core/url-shortener')",
-    )) as { sceneJson: string; notes: Record<string, string> }
-    expect(draft.sceneJson).toContain('rectangle')
+    // Wait for the debounced scene autosave instead of guessing a fixed delay.
+    await expect
+      .poll(
+        async () => {
+          const draft = (await page.evaluate(
+            "window.baseCase.design.getDraft('core/url-shortener')",
+          )) as { sceneJson: string }
+          return draft.sceneJson
+        },
+        { timeout: 15_000 },
+      )
+      .toContain('rectangle')
 
     await page.getByRole('tab', { name: 'Notes' }).click()
     const noteValues: Record<string, string> = {
