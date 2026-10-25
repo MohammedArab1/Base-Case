@@ -20,16 +20,16 @@ samples the process tree. It never contacts the network.
 
 | Measurement                     | Budget | Result   | Status |
 | ------------------------------- | ------ | -------- | ------ |
-| Cold start to first shell       | < 4000 | 2929 ms  | Pass   |
-| Coding library ready            | < 750  | 328 ms   | Pass   |
-| Problem open to editor ready    | < 250  | 40 ms    | Pass   |
-| Design scenario to canvas ready | < 1500 | 720 ms   | Pass   |
-| Judge sample run (5 tests)      | < 2000 | 288 ms   | Pass   |
-| Idle memory, whole process tree | < 600  | 381.6 MB | Pass   |
-| Working memory after canvas     | < 900  | TBD      | —      |
-| macOS DMG                       | < 350  | 257.9 MB | Pass   |
-| macOS ZIP                       | < 350  | 258.6 MB | Pass   |
-| App bundle on disk              | —      | 692.3 MB | —      |
+| Cold start to first shell       | < 4000 | 2613 ms  | Pass   |
+| Coding library ready            | < 750  | 331 ms   | Pass   |
+| Problem open to editor ready    | < 250  | 51 ms    | Pass   |
+| Design scenario to canvas ready | < 1500 | 401 ms   | Pass   |
+| Judge sample run (5 tests)      | < 2000 | 312 ms   | Pass   |
+| Idle memory, whole process tree | < 600  | 291.8 MB | Pass   |
+| Working memory after canvas     | < 900  | 369.0 MB | Pass   |
+| macOS DMG                       | < 350  | 253.0 MB | Pass   |
+| macOS ZIP                       | < 350  | 253.8 MB | Pass   |
+| App bundle on disk              | —      | 688.2 MB | —      |
 
 The idle figure includes Electron helpers and the spawned judge sidecar. The
 working figure is sampled four seconds after the design canvas finishes
