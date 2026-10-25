@@ -1,7 +1,7 @@
 # Screenshots
 
 Captured automatically from the Playwright suite with
-`BASE_CASE_PLAYWRIGHT_SCREENSHOTS=docs/assets/screenshots pnpm smoke:playwright`.
+`BASE_CASE_PLAYWRIGHT_SCREENSHOTS="$PWD/docs/assets/screenshots" pnpm smoke:playwright`.
 The screenshots use a fresh local profile and the mock AI provider; no real
 account, network service, or personal data is involved.
 

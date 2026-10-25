@@ -1,7 +1,7 @@
 # Security review — Phase 9
 
 Last reviewed: 2026-10-25
-Commit: `52ac50a` (dependency overrides applied after this commit; re-run the commands below)
+Commit: `e53187d` (re-run the commands below after any dependency change)
 Scope: Electron main/preload/renderer boundary, judge execution, content packs, AI
 configuration, and production dependencies.
 
