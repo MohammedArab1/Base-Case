@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (gap analysis complete; implementation starts with protocol and memory)
-> Overall status: On track — Phase 2 is complete; the Phase 1 spike left a working judge foundation, and the Phase 3 gaps are now scoped and ordered
-> Next milestone: P3-A protocol completion (cancel, events, version guard) and P3-B memory enforcement
+> Current phase: Phase 3 — Judge engine (P3-A protocol completion done; P3-B memory enforcement next)
+> Overall status: On track — Phase 2 is complete; the judge now supports concurrent cancellation, streaming events, and a host version guard
+> Next milestone: P3-B memory enforcement, then P3-C compile/transpile once
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -15,7 +15,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
 | Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
-| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`). Function judge, limits, process control, and CI work; memory, cancellation, streaming, sandbox, runtime bundles, and harness coverage remain |
+| Phase 3 — Judge engine | In progress | 2026-10-24 | Gap analysis complete (`docs/spikes/phase-3-gap-analysis.md`); P3-A protocol completion done (concurrent cancel, `test_result` events, host version guard). Memory, compile-once, sandbox, runtime bundles, and harness coverage remain |
 | Phase 4 — Coding practice | In progress | 2026-10-24 | Editor, run/submit, hints, drafts, notes, and attempt history exist; FSRS/review, mistake tags, snapshots, and export/import remain |
 | Phase 5 — System design | In progress | 2026-10-24 | Canvas save/export exists; prompts, rubric, reference comparison, and scenario attempts remain |
 | Phase 6 — AI tutor | In progress | 2026-10-24 | Mock + OpenAI-compatible streaming, encrypted key, context preview, and redaction exist; guardrails/evals and history remain |
@@ -26,7 +26,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 
 ## Next up
 
-1. Start Phase 3 with P3-A (concurrent cancel, `test_result` events, host protocol-version guard) and P3-B (process-tree memory sampling, `memory_limit_exceeded`, peak memory).
+1. Start P3-B (process-tree memory sampling, `memory_limit_exceeded`, peak memory), then P3-C (compile/transpile once).
 2. Measure pinned Python/Node runtimes and accept or supersede ADR-0010 before runtime packaging.
 3. Install the rebuilt Windows build and the macOS DMG on clean VMs and record the result.
 4. Re-run the uninstall row of the full Windows checklist on a fresh install.
@@ -41,6 +41,29 @@ This is the living status document for the project. `PLAN.md` describes the inte
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-A protocol completion
+
+- Status: Phase 3 in progress (P3-A complete)
+- Done:
+  - Reworked the Go server to read requests continuously while runs execute in goroutines. All output is serialized through one encoder, so responses and events from concurrent requests cannot interleave mid-line.
+  - Added `cancel` with `{"targetId": "..."}`. It cancels the run context, kills the process group, returns `{"cancelled": true}`, and the run still receives a final `cancelled` result. Late cancels return `false` instead of erroring.
+  - Added `test_result` streaming events from the runner (`RunWithEvents`) and the server. Events share the run id but never complete the request.
+  - Added `duplicate_request_id` rejection, `invalid_params` handling, and shutdown that cancels active runs and waits briefly before replying.
+  - Added a host protocol-version guard: `JudgeClient` performs `hello` once per sidecar, rejects unknown versions with `protocol_version_mismatch`, and ignores event lines when matching pending requests.
+  - Added `JudgeClient.cancel(requestId)` and per-run `requestId`/`onEvent` options. The IPC/renderer cancel button is intentionally deferred to Phase 4.
+  - Updated `docs/architecture/judge-protocol.md` with concurrency, cancel, event, and shutdown semantics.
+- Tests run:
+  - `go test -C services/judge ./...` and `go test -C services/judge -race ./...` — passed.
+  - `pnpm test` — 44 desktop TypeScript tests + 4 schema tests + the Go suites passed.
+  - `pnpm typecheck` — passed.
+- Files/PRs:
+  - Key paths: `services/judge/internal/server/server.go`, `services/judge/internal/protocol/protocol.go`, `services/judge/internal/judge/runner.go`, `apps/desktop/src/main/judge.ts`, `docs/architecture/judge-protocol.md`.
+- Next:
+  - P3-B memory enforcement: process-tree sampling every 50–100 ms, hard kill, `memory_limit_exceeded`, and peak memory in every result.
+- Notes/decisions:
+  - Protocol version stays at 1; events and `cancel` are additive.
+  - Cancellation is context-based end to end: server run context → `runTest` context → process-group kill.
 
 ### 2026-10-24 — Phase 3 — Judge gap analysis
 

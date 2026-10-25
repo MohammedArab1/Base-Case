@@ -17,8 +17,14 @@ language child process; the judge compares results.
 - Blank lines are ignored.
 - A request larger than 1 MiB is a protocol error and terminates the session.
 - Request IDs are opaque strings chosen by the host; they must be echoed.
-- Responses may be emitted in a different order only when the host explicitly
-  opts into concurrent requests. Version 1 is sequential.
+- Multiple requests may be in flight. The sidecar reads stdin continuously and
+  writes all output through one serialized writer, so responses and events can
+  interleave. Hosts must correlate by `id` and must not assume ordering across
+  different IDs.
+- A `run` request id must be unique while that run is active; reusing it returns
+  `duplicate_request_id`.
+- `shutdown` cancels active runs, waits briefly for them to finish, then replies
+  and exits.
 
 ## Request
 
@@ -73,7 +79,7 @@ Failure:
 }
 ```
 
-Streaming event (Phase 3):
+Streaming event:
 
 ```json
 {
@@ -84,8 +90,10 @@ Streaming event (Phase 3):
 }
 ```
 
-The final response for a run has no `event` field and includes the complete
-result model.
+`test_result` events are best-effort progress updates. They share the run's
+`id` but never complete the request; the final response for a run has no `event`
+field and includes the complete result model. Hosts must ignore unknown event
+names and must not treat an event as a final response.
 
 ## Version 1 methods
 
@@ -96,11 +104,16 @@ result model.
 | `ping`     | none                                                             | `{"pong": true}`                                                |
 | `doctor`   | none                                                             | Resolved Python and Node runtime paths/versions                 |
 | `shutdown` | none                                                             | `{"stopping": true}`; the sidecar exits                         |
-| `run`      | problem, language, code, mode, signature, limits, checker, tests | Result model (Phase 1 subset)                                   |
-| `cancel`   | request ID                                                       | `{"cancelled": true}` (Phase 3)                                 |
+| `run`      | problem, language, code, mode, signature, limits, checker, tests | Result model                                                    |
+| `cancel`   | `{"targetId": "run-01"}`                                         | `{"cancelled": true, "targetId": "run-01"}`                     |
+
+`cancel` returns `cancelled: false` when no run with that id is active, so a
+late cancel is not an error. The cancelled run still receives its own final
+response with `status: "cancelled"`.
 
 Unknown methods return `unknown_method`. Malformed JSON returns `invalid_json`
-with an empty `id`.
+with an empty `id`. Unknown or malformed params return `invalid_params`.
+Reusing an active run id returns `duplicate_request_id`.
 
 ## Result model
 
@@ -140,14 +153,17 @@ Rules:
 
 ## Lifecycle
 
-1. Host spawns the sidecar and sends `hello`.
-2. Host sends `run` requests sequentially.
+1. Host spawns the sidecar and sends `hello`; it rejects a `protocolVersion`
+   other than the one it implements.
+2. Host sends `run` requests; the sidecar reads further requests while runs
+   execute.
 3. Sidecar prepares a temp workspace, transpiles/compiles once, then runs each
    test in a fresh child process.
 4. Sidecar streams `test_result` events, then a final result.
-5. Host may send `cancel`; sidecar kills the process group and reports
-   `cancelled`.
-6. Host sends `shutdown` on app exit; sidecar kills any children and exits.
+5. Host may send `cancel` with the run's id; the sidecar cancels the run
+   context, kills the process group, and reports `cancelled`.
+6. Host sends `shutdown` on app exit; the sidecar cancels active runs, waits
+   briefly, and exits.
 
 ## Security invariants
 
@@ -176,5 +192,8 @@ Rules:
 - Additive fields are allowed within version 1.
 - Removing fields, changing meanings, or changing framing requires a new
   protocol version.
-- The host rejects a hello result with an unknown major protocol version.
+- The host performs the `hello` handshake once per sidecar process and rejects
+  an unknown protocol version before sending any other request.
+- Events are additive: a host that ignores them still receives a correct final
+  response.
 - The judge is a standalone CLI for testing and future integrations.

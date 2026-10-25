@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"testing"
+	"time"
 )
 
 const pythonPairSum = `class Solution:
@@ -217,6 +218,93 @@ func TestOutputLimitExceeded(t *testing.T) {
 
 	if result.Status != StatusOutputLimitExceeded {
 		t.Fatalf("expected output_limit_exceeded, got %s", result.Status)
+	}
+}
+
+func TestRunEmitsTestResults(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	var events []TestResult
+	result, err := runner.RunWithEvents(
+		context.Background(),
+		pairSumRequest("python", pythonPairSum),
+		func(testResult TestResult) {
+			events = append(events, testResult)
+		},
+	)
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+
+	if result.Status != StatusAccepted {
+		t.Fatalf("expected accepted, got %s", result.Status)
+	}
+	if len(events) != 2 {
+		t.Fatalf("expected 2 events, got %d", len(events))
+	}
+	for index, event := range events {
+		if event.Index != index || event.Status != StatusAccepted {
+			t.Fatalf("unexpected event %d: %+v", index, event)
+		}
+	}
+}
+
+func TestRunCancellation(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	request := pairSumRequest("python", `class Solution:
+    def pairSum(self, nums, target):
+        while True:
+            pass
+`)
+	request.Limits.TimeMs = 10000
+	request.Tests = request.Tests[:1]
+
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan struct{})
+	var result RunResult
+	var runErr error
+
+	go func() {
+		result, runErr = runner.Run(ctx, request)
+		close(done)
+	}()
+
+	time.Sleep(500 * time.Millisecond)
+	cancel()
+
+	select {
+	case <-done:
+	case <-time.After(10 * time.Second):
+		t.Fatal("run did not stop after cancellation")
+	}
+
+	if runErr != nil {
+		t.Fatalf("run: %v", runErr)
+	}
+	if result.Status != StatusCancelled {
+		t.Fatalf("expected cancelled, got %s failure=%+v", result.Status, result.FirstFailure)
+	}
+}
+
+func TestRunCancelledBeforeStart(t *testing.T) {
+	runner := NewRunner()
+	requireRuntime(t, runner, "python")
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	result, err := runner.Run(ctx, pairSumRequest("python", pythonPairSum))
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if result.Status != StatusCancelled {
+		t.Fatalf("expected cancelled, got %s", result.Status)
+	}
+	if len(result.Tests) != 0 {
+		t.Fatalf("expected no tests to run, got %d", len(result.Tests))
 	}
 }
 

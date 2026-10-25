@@ -1,4 +1,8 @@
-import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
+import {
+  spawn,
+  type ChildProcessWithoutNullStreams,
+  type SpawnOptionsWithoutStdio,
+} from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { createInterface } from 'node:readline'
@@ -6,8 +10,38 @@ import { app } from 'electron'
 import type { JudgeStatus, RunResult, RuntimeInfo } from '../shared/types'
 import type { JudgeRunParams } from './content'
 
+export const JUDGE_PROTOCOL_VERSION = 1
+
+export function isSupportedProtocolVersion(version: unknown): boolean {
+  return version === JUDGE_PROTOCOL_VERSION
+}
+
+export interface JudgeEvent {
+  readonly event: string
+  readonly result?: unknown
+}
+
+export interface JudgeRunOptions {
+  /** Correlates this run with a later `cancel(requestId)` call. */
+  readonly requestId?: string
+  /** Receives streaming progress events such as `test_result`. */
+  readonly onEvent?: (event: JudgeEvent) => void
+}
+
+export type JudgeSpawn = (
+  command: string,
+  args: readonly string[],
+  options: SpawnOptionsWithoutStdio,
+) => ChildProcessWithoutNullStreams
+
+export interface JudgeClientOptions {
+  readonly path?: string
+  readonly spawnProcess?: JudgeSpawn
+}
+
 interface JudgeResponse {
   readonly id: string
+  readonly event?: string
   readonly ok: boolean
   readonly result?: unknown
   readonly error?: {
@@ -20,6 +54,7 @@ interface PendingRequest {
   readonly resolve: (value: unknown) => void
   readonly reject: (error: Error) => void
   readonly timer: NodeJS.Timeout
+  readonly onEvent?: (event: JudgeEvent) => void
 }
 
 interface HelloResult {
@@ -62,19 +97,50 @@ export function resolveJudgePath(): string {
 }
 
 export class JudgeClient {
-  private readonly path = resolveJudgePath()
+  private readonly path: string
+  private readonly spawnProcess: JudgeSpawn
   private child: ChildProcessWithoutNullStreams | null = null
   private readonly pending = new Map<string, PendingRequest>()
   private nextId = 0
+  private hello: HelloResult | null = null
+  private starting: Promise<void> | null = null
 
-  async run(params: JudgeRunParams): Promise<RunResult> {
-    return this.request<RunResult>('run', params, 120_000)
+  constructor(options: JudgeClientOptions = {}) {
+    this.path = options.path ?? resolveJudgePath()
+    this.spawnProcess = options.spawnProcess ?? (spawn as unknown as JudgeSpawn)
+  }
+
+  async run(params: JudgeRunParams, options: JudgeRunOptions = {}): Promise<RunResult> {
+    return this.request<RunResult>('run', params, 120_000, options)
+  }
+
+  /**
+   * Cancels an in-flight run by the request id supplied to `run`. Returns false
+   * when the run already finished or the sidecar is not running.
+   */
+  async cancel(requestId: string): Promise<boolean> {
+    if (!this.child) {
+      return false
+    }
+
+    const result = await this.request<{ readonly cancelled?: boolean }>(
+      'cancel',
+      { targetId: requestId },
+      5_000,
+    )
+
+    return result?.cancelled === true
   }
 
   async status(): Promise<JudgeStatus> {
     try {
-      const hello = await this.request<HelloResult>('hello', {}, 5_000)
+      await this.ensureStarted()
       const runtimes = await this.request<Record<string, RuntimeInfo>>('doctor', {}, 10_000)
+      const hello = this.hello
+
+      if (!hello) {
+        throw new Error('The judge handshake did not complete.')
+      }
 
       return {
         ok: true,
@@ -99,6 +165,9 @@ export class JudgeClient {
     }
 
     this.child = null
+    this.hello = null
+    this.starting = null
+    this.failAll(new Error('Judge sidecar stopped.'))
 
     const shutdown = `${JSON.stringify({ id: 'shutdown', method: 'shutdown' })}\n`
 
@@ -121,12 +190,24 @@ export class JudgeClient {
     }, 500)
   }
 
-  private async ensureStarted(): Promise<void> {
-    if (this.child) {
-      return
+  private ensureStarted(): Promise<void> {
+    if (this.child && this.hello) {
+      return Promise.resolve()
     }
 
-    const child = spawn(this.path, [], {
+    if (this.starting) {
+      return this.starting
+    }
+
+    this.starting = this.start().finally(() => {
+      this.starting = null
+    })
+
+    return this.starting
+  }
+
+  private async start(): Promise<void> {
+    const child = this.spawnProcess(this.path, [], {
       stdio: ['pipe', 'pipe', 'pipe'],
       windowsHide: true,
     })
@@ -134,6 +215,11 @@ export class JudgeClient {
     this.child = child
 
     child.on('error', (error) => {
+      if (this.child !== child) {
+        return
+      }
+      this.child = null
+      this.hello = null
       this.failAll(new Error(`Judge sidecar failed to start: ${error.message}`))
     })
 
@@ -152,9 +238,12 @@ export class JudgeClient {
     })
 
     child.on('exit', (code, signal) => {
-      if (this.child === child) {
-        this.child = null
+      if (this.child !== child) {
+        return
       }
+
+      this.child = null
+      this.hello = null
       this.failAll(
         new Error(`Judge sidecar exited (code=${code ?? 'null'}, signal=${signal ?? 'null'})`),
       )
@@ -174,6 +263,32 @@ export class JudgeClient {
     lines.on('line', (line) => {
       this.handleLine(line)
     })
+
+    try {
+      const hello = await this.send<HelloResult>('hello', {}, 5_000)
+
+      if (!isSupportedProtocolVersion(hello.protocolVersion)) {
+        throw new JudgeProtocolError(
+          'protocol_version_mismatch',
+          `Judge speaks protocol version ${String(hello.protocolVersion)}, but this app supports ${JUDGE_PROTOCOL_VERSION}.`,
+        )
+      }
+
+      this.hello = hello
+    } catch (error) {
+      if (this.child === child) {
+        this.child = null
+      }
+      this.hello = null
+
+      try {
+        child.kill()
+      } catch {
+        // The process may already be gone.
+      }
+
+      throw error
+    }
   }
 
   private handleLine(line: string): void {
@@ -183,6 +298,14 @@ export class JudgeClient {
       response = JSON.parse(line) as JudgeResponse
     } catch {
       console.error('[judge] Ignoring malformed response line.')
+      return
+    }
+
+    // Events share the request id with their run. They are progress updates,
+    // not the final response, so they must never resolve the pending request.
+    if (response.event) {
+      const pending = this.pending.get(response.id)
+      pending?.onEvent?.({ event: response.event, result: response.result })
       return
     }
 
@@ -208,51 +331,71 @@ export class JudgeClient {
     )
   }
 
-  private request<T>(method: string, params: unknown, timeoutMs: number): Promise<T> {
+  private async request<T>(
+    method: string,
+    params: unknown,
+    timeoutMs: number,
+    options: JudgeRunOptions = {},
+  ): Promise<T> {
+    await this.ensureStarted()
+    return this.send<T>(method, params, timeoutMs, options)
+  }
+
+  private send<T>(
+    method: string,
+    params: unknown,
+    timeoutMs: number,
+    options: JudgeRunOptions = {},
+  ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      void this.ensureStarted().then(() => {
-        const child = this.child
+      const child = this.child
 
-        if (!child) {
-          reject(new Error('Judge sidecar is not running.'))
-          return
+      if (!child) {
+        reject(new Error('Judge sidecar is not running.'))
+        return
+      }
+
+      const id = options.requestId ?? `req-${++this.nextId}`
+
+      if (this.pending.has(id)) {
+        reject(new Error(`Judge request id ${id} is already pending.`))
+        return
+      }
+
+      const timer = setTimeout(() => {
+        this.pending.delete(id)
+        reject(new Error(`Judge request timed out after ${timeoutMs} ms.`))
+      }, timeoutMs)
+
+      this.pending.set(id, {
+        resolve: (value) => resolve(value as T),
+        reject,
+        timer,
+        onEvent: options.onEvent,
+      })
+
+      try {
+        if (child.stdin.destroyed || !child.stdin.writable) {
+          throw new Error('Judge sidecar input is closed.')
         }
 
-        const id = `req-${++this.nextId}`
-        const timer = setTimeout(() => {
-          this.pending.delete(id)
-          reject(new Error(`Judge request timed out after ${timeoutMs} ms.`))
-        }, timeoutMs)
+        child.stdin.write(
+          `${JSON.stringify({ id, method, params })}\n`,
+          (error: NodeJS.ErrnoException | null | undefined) => {
+            if (!error || error.code === 'EPIPE') {
+              return
+            }
 
-        this.pending.set(id, {
-          resolve: (value) => resolve(value as T),
-          reject,
-          timer,
-        })
-
-        try {
-          if (child.stdin.destroyed || !child.stdin.writable) {
-            throw new Error('Judge sidecar input is closed.')
-          }
-
-          child.stdin.write(
-            `${JSON.stringify({ id, method, params })}\n`,
-            (error: NodeJS.ErrnoException | null | undefined) => {
-              if (!error || error.code === 'EPIPE') {
-                return
-              }
-
-              clearTimeout(timer)
-              this.pending.delete(id)
-              reject(error)
-            },
-          )
-        } catch (error) {
-          clearTimeout(timer)
-          this.pending.delete(id)
-          reject(error instanceof Error ? error : new Error(String(error)))
-        }
-      }, reject)
+            clearTimeout(timer)
+            this.pending.delete(id)
+            reject(error)
+          },
+        )
+      } catch (error) {
+        clearTimeout(timer)
+        this.pending.delete(id)
+        reject(error instanceof Error ? error : new Error(String(error)))
+      }
     })
   }
 

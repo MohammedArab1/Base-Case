@@ -2505,11 +2505,11 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 **Tasks**
 
 - [x] Define the JSONL protocol and version it.
-- [ ] Implement request IDs, streaming events, cancellation, shutdown.
+- [x] Implement request IDs, streaming events, cancellation, shutdown.
   - [x] Request IDs and shutdown.
-  - [ ] Streaming `test_result` events.
-  - [ ] Concurrent `cancel` while a run is in flight.
-  - [ ] Host rejects unknown protocol versions.
+  - [x] Streaming `test_result` events.
+  - [x] Concurrent `cancel` while a run is in flight.
+  - [x] Host rejects unknown protocol versions.
 - [ ] Runtime manager:
   - [ ] Bundle Python standalone and Node.
   - [ ] Platform/arch paths and checksums.
@@ -2539,7 +2539,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [ ] Windows memory/CPU job limits.
 - [ ] Conformance fixtures:
   - [x] Accepted, wrong answer, compile error, time limit, output limit, and missing runtime.
-  - [ ] Memory limit, runtime error, and cancellation.
+  - [x] Cancellation (runner kill and server protocol tests).
+  - [ ] Memory limit and runtime error.
   - [ ] Design, linked list, tree, and in-place.
   - [x] Float, unordered, and set-of-sets checkers (unit coverage).
   - [ ] Unicode, empty, and large inputs.

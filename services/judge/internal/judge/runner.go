@@ -26,6 +26,25 @@ type testOutcome struct {
 }
 
 func (r *Runner) Run(ctx context.Context, request RunRequest) (RunResult, error) {
+	return r.run(ctx, request, nil)
+}
+
+// RunWithEvents behaves like Run and additionally emits one TestResult after
+// each test. Events are best-effort progress updates; the final RunResult is
+// authoritative.
+func (r *Runner) RunWithEvents(
+	ctx context.Context,
+	request RunRequest,
+	emit func(TestResult),
+) (RunResult, error) {
+	return r.run(ctx, request, emit)
+}
+
+func (r *Runner) run(
+	ctx context.Context,
+	request RunRequest,
+	emit func(TestResult),
+) (RunResult, error) {
 	if err := validateRequest(request); err != nil {
 		return RunResult{}, err
 	}
@@ -54,15 +73,25 @@ func (r *Runner) Run(ctx context.Context, request RunRequest) (RunResult, error)
 	}
 
 	for _, test := range request.Tests {
+		if ctx.Err() != nil {
+			result.Status = StatusCancelled
+			result.Message = "The run was cancelled."
+			break
+		}
+
 		outcome := r.runTest(ctx, workspace, language, runtimePath, request, test)
 
-		result.Tests = append(result.Tests, TestResult{
+		testResult := TestResult{
 			Index:       test.Index,
 			IsSample:    test.IsSample,
 			Status:      outcome.Status,
 			RuntimeMs:   outcome.DurationMs,
 			MemoryBytes: outcome.MemoryBytes,
-		})
+		}
+		result.Tests = append(result.Tests, testResult)
+		if emit != nil {
+			emit(testResult)
+		}
 		result.Runtime.TotalMs += outcome.DurationMs
 		if outcome.DurationMs > result.Runtime.MaxMs {
 			result.Runtime.MaxMs = outcome.DurationMs
@@ -104,7 +133,7 @@ func (r *Runner) Run(ctx context.Context, request RunRequest) (RunResult, error)
 		break
 	}
 
-	if result.Passed == result.Total {
+	if result.Passed == result.Total && result.Status != StatusCancelled {
 		result.Status = StatusAccepted
 	}
 
@@ -206,6 +235,13 @@ func (r *Runner) runTest(
 		}
 	}
 
+	if parent.Err() != nil {
+		return testOutcome{
+			Status:  StatusCancelled,
+			Message: "The run was cancelled.",
+		}
+	}
+
 	timeout := time.Duration(effectiveTimeLimit(request)) * time.Millisecond
 	testContext, cancel := context.WithTimeout(parent, timeout)
 	defer cancel()
@@ -269,8 +305,11 @@ func (r *Runner) runTest(
 
 	if forcedStatus != "" {
 		message := "Execution exceeded its time limit."
-		if forcedStatus == StatusOutputLimitExceeded {
+		switch forcedStatus {
+		case StatusOutputLimitExceeded:
 			message = "Execution produced too much output and was stopped."
+		case StatusCancelled:
+			message = "The run was cancelled."
 		}
 		return testOutcome{
 			Status:     forcedStatus,
