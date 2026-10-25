@@ -957,5 +957,10 @@ try {
     await new Promise((resolve) => aiServer.close(resolve))
   }
   await sleep(500)
-  rmSync(userDataDirectory, { recursive: true, force: true })
+  rmSync(userDataDirectory, {
+    recursive: true,
+    force: true,
+    maxRetries: 5,
+    retryDelay: 100,
+  })
 }

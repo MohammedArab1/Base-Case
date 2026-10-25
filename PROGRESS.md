@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-24
-> Current phase: Phase 3 — Judge engine (P3-A through P3-E and P3-G done; P3-F waits on the runtime decision)
-> Overall status: On track — the coding judge is feature-complete for the alpha except bundled runtimes; conformance and sandbox coverage are in place
-> Next milestone: Measure pinned runtimes for ADR-0010 (P3-F), then move to Phase 4 review and Phase 5 design
+> Current phase: Phase 3 — Judge engine (P3-A through P3-E and P3-G done; P3-F measurement complete, awaiting the bundling decision)
+> Overall status: On track — the coding judge is feature-complete for the alpha except bundled runtimes; the measured installer projection is ~269 MB, under the 350 MB budget
+> Next milestone: Maintainer decision on ADR-0010, then P3-F packaging or Phase 4 review work
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -36,11 +36,31 @@ This is the living status document for the project. `PLAN.md` describes the inte
 ## Blockers
 
 - **Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
-- **Runtime strategy:** ADR-0010 is still Proposed. It blocks runtime packaging (P3-F), not protocol, memory, or harness work. A measurement spike is the next decision input.
+- **Runtime strategy:** ADR-0010 is still Proposed. The Phase 3 measurement projects a ~269 MB macOS installer and ~255 MiB Windows installer, under the 350 MB budget; cold start is 2652 ms, under 3 s. Recommendation: accept bundling. P3-F packaging waits on maintainer approval.
 - **Name/trademark:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding; neither blocks Phase 3 engineering.
 - **GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 
 ## Work log (newest first)
+
+### 2026-10-24 — Phase 3 — P3-F runtime measurement
+
+- Status: P3-F measurement complete; packaging waits on the ADR-0010 decision
+- Done:
+  - Downloaded pinned Python 3.12.15 (`python-build-standalone`) and Node 24.22.0 packs for macOS arm64 and Windows x64.
+  - Measured compressed pack sizes: macOS 25.2 MB + 53.0 MB = 78.2 MB; Windows 46.4 MB + 37.7 MB = 84.1 MB.
+  - Measured the existing package: 190.6 MB DMG/ZIP, 482.5 MB app bundle, 2652 ms cold start, 220 ms for 5 judge tests.
+  - Projected installers of ~269 MB (macOS) and ~255 MiB (Windows), under the 350 MB budget. The judge is spawned lazily, so bundling does not affect cold start.
+  - Ran the judge against the pinned packs: first Python run 0.43 s, first Node run 1.71 s, later tests 50–80 ms.
+  - Recorded the data and recommendation in ADR-0010.
+- Tests run:
+  - `node scripts/measure-packaged.mjs` — passed.
+  - Judge codec tests with `BASE_CASE_PYTHON`/`BASE_CASE_NODE` pointed at the pinned packs — passed.
+- Files/PRs:
+  - Key paths: `docs/adr/0010-runtime-bundling.md`, `PROGRESS.md`, `scripts/smoke-electron.mjs` (Windows cleanup retries).
+- Next:
+  - Maintainer decision on ADR-0010. If accepted, implement P3-F (fetch script, `runtimes.json`, licenses, repair, packaged measurement). If declined, move to Phase 4 review.
+- Notes/decisions:
+  - Node's npm/corepack/headers/docs are unnecessary for the judge; shipping only the `node` binary keeps the extracted footprint down.
 
 ### 2026-10-24 — Phase 3 — P3-G conformance and CI E2E
 
