@@ -1,0 +1,5 @@
+{"input":{"weights":[1,1,1],"target":2},"expected":2}
+{"input":{"weights":[1,2,3],"target":3},"expected":2}
+{"input":{"weights":[-1,-1,1],"target":0},"expected":1}
+{"input":{"weights":[1,-1,1,-1],"target":0},"expected":4}
+{"input":{"weights":[3],"target":3},"expected":1}

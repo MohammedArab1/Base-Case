@@ -15,7 +15,8 @@
     "symmetric-branches",
     "island-count",
     "kth-largest",
-    "skip-neighbors"
+    "skip-neighbors",
+    "target-totals"
   ],
   "designs": ["url-shortener", "rate-limiter", "chat-system", "news-feed"]
 }

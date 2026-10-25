@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A range is a difference",
+      "body": "If you knew the total of every prefix of `weights`, how could you describe the total of a range that starts after the first prefix and ends at the second?"
+    },
+    {
+      "level": 2,
+      "title": "Rearrange the subtraction",
+      "body": "A range ending at position `i` has total `running - earlier`, where `running` is the prefix total through `i`. You need this total to equal `target`, so you need `earlier = running - target`."
+    },
+    {
+      "level": 3,
+      "title": "Count, do not search",
+      "body": "Keep a map from each prefix total to how many times it has appeared. Seed it with total `0` occurring once, for the empty prefix. For each value, add the count of `running - target` to the answer, then record the new `running`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncounts = {0: 1}\nrunning = 0\nanswer = 0\nfor value in weights:\n    running = running + value\n    answer = answer + counts.get(running - target, 0)\n    counts[running] = counts.get(running, 0) + 1\nreturn answer\n```\n\nThis is pseudocode, not a complete solution. Translate it into your language and test it on the examples."
+    }
+  ]
+}
