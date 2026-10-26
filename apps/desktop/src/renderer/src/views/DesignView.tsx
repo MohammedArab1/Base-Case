@@ -247,6 +247,12 @@ function DesignWorkspace({
           trigger.setAttribute('aria-label', 'Excalidraw main menu')
         }
       }
+
+      for (const reset of wrap.querySelectorAll('.reset-zoom-button')) {
+        const text = reset.textContent?.replace(/\s+/g, ' ').trim() ?? ''
+        const label = text === '' ? 'Reset zoom' : /reset/i.test(text) ? text : `${text} reset zoom`
+        reset.setAttribute('aria-label', label)
+      }
     }
 
     labelMenu()

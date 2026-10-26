@@ -694,6 +694,13 @@ test('has no serious accessibility violations in the main views', async () => {
     await page.keyboard.press('Enter')
     await expect(page.locator('#main-content')).toBeFocused()
 
+    // Match the minimum supported window so canvas controls are not hidden by a
+    // larger local display.
+    await launched.app.evaluate(({ BrowserWindow }) => {
+      BrowserWindow.getAllWindows()[0]?.setSize(1024, 700)
+    })
+    await page.waitForTimeout(300)
+
     const views: readonly { nav: string; title: string }[] = [
       { nav: 'Today', title: 'Today' },
       { nav: 'Coding', title: 'Coding' },
