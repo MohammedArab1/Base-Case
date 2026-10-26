@@ -5,6 +5,7 @@ import {
   createReadStream,
   createWriteStream,
   existsSync,
+  lstatSync,
   mkdirSync,
   readFileSync,
   readdirSync,
@@ -81,6 +82,36 @@ function extract(archivePath, destination) {
 
 function removeIfExists(path) {
   rmSync(path, { recursive: true, force: true })
+}
+
+function removePythonBytecode(target) {
+  const walk = (directory) => {
+    for (const entry of readdirSync(directory)) {
+      const path = join(directory, entry)
+
+      if (entry === '__pycache__') {
+        removeIfExists(path)
+        continue
+      }
+
+      const info = lstatSync(path)
+
+      if (info.isSymbolicLink()) {
+        continue
+      }
+
+      if (info.isDirectory()) {
+        walk(path)
+        continue
+      }
+
+      if (entry.endsWith('.pyc') || entry.endsWith('.pyo')) {
+        removeIfExists(path)
+      }
+    }
+  }
+
+  walk(target)
 }
 
 function keepOnly(target, keepPaths) {
@@ -212,6 +243,10 @@ async function installRuntime(manifest, name) {
 
   if (archive.keep) {
     keepOnly(target, archive.keep)
+  }
+
+  if (name === 'python') {
+    removePythonBytecode(target)
   }
 
   const licenseSource = join(target, archive.licensePath)

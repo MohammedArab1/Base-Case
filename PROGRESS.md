@@ -56,6 +56,32 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 ## Work log (newest first)
 
+### 2026-10-26 — Post-alpha fix — Large-screen layout and macOS bundle signing
+
+- Status: External-monitor layout and installer launch failures fixed
+- Done:
+  - Removed the 1320 px content cap so coding, design, review, progress, and settings use the full workspace on large/external displays.
+  - Made the design canvas and side panel grow with the viewport instead of stopping at a fixed height.
+  - Added an `afterPack` ad-hoc codesign hook for macOS bundles and a CI signature-verification step.
+  - Fixed the runtime cause of signature invalidation: Python isolated mode (`-I`) ignores `PYTHONDONTWRITEBYTECODE`, so bytecode was being written into the app bundle. All Python invocations now use `-B`; doctor, compile, and harness runs no longer modify the signed bundle.
+  - Stripped Python bytecode from fetched runtime packs and verified that a packaged app still passes `codesign --verify --deep --strict` after a full judge run.
+  - Documented Apple Silicon vs Intel artifacts, GitHub Actions artifact layout, Rosetta, checksum verification, and the quarantine fix in `docs/install.md`.
+- Tests run:
+  - `go test -C services/judge ./...` — passed.
+  - `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 125 tests.
+  - Playwright — 11 passed including a wide-window layout regression.
+  - `pnpm smoke:e2e` — passed.
+  - `codesign --verify --deep --strict` on both app bundles after packaging and after running the packaged app — passed.
+  - Rebuilt installers and refreshed checksums.
+- Files/PRs:
+  - `workspace.css`, `apps/desktop/scripts/after-pack.cjs`, `electron-builder.yml`, `.github/workflows/build.yml`, judge compile/runner/runtimes, `scripts/fetch-runtimes.mjs`, `docs/install.md`.
+- Next:
+  - Re-run the `Build installers` workflow to publish signed/ad-hoc candidate artifacts; continue B1/B2/B10/B11.
+- Notes/decisions:
+  - Ad-hoc signing makes the bundle internally valid but does not notarize it. Users still clear quarantine once; it should no longer report “damaged”.
+  - x64 builds still prompt for Rosetta on Apple Silicon; the arm64 artifact is the correct default.
+
 ### 2026-10-26 — Post-alpha fix — Non-JSON AI responses and development logging
 
 - Status: AI response parsing and dev-process debugging improved

@@ -14,26 +14,50 @@ clean machine does not need either language installed.
 
 ## macOS
 
-1. Download and open the `.dmg`.
-2. Drag **Base Case** to `Applications`.
-3. The first launch from Finder will be blocked. Open **System Settings →
-   Privacy & Security**, find the blocked-app notice, and choose **Open
-   Anyway**. Alternatively, Control-click the app in Finder, choose **Open**,
-   then confirm.
-4. If macOS says the app is damaged, verify the download checksum first. If it
-   still fails, run:
+Release builds are produced for both Apple Silicon (`arm64`) and Intel (`x64`).
+The judge and bundled runtimes are built for the same architecture as the app.
+
+- **Apple Silicon (M1/M2/M3/M4):** use the `arm64` DMG.
+- **Intel Macs:** use the `x64` DMG.
+- A Rosetta installation prompt on an Apple Silicon Mac means you downloaded the
+  `x64` build. Close it and download the `arm64` build instead. If you
+  deliberately need to run the Intel build, install Rosetta with
+  `softwareupdate --install-rosetta --agree-to-license`.
+
+### From a GitHub Actions artifact
+
+The `base-case-macOS` artifact is a ZIP containing both architectures, their
+ZIPs, and `SHA256SUMS.txt`.
+
+1. Download and extract the artifact ZIP.
+2. Verify the DMG you intend to use:
 
    ```sh
-   xattr -dr com.apple.quarantine "/Applications/Base Case.app"
+   shasum -a 256 "Base-Case-0.1.0-alpha-arm64.dmg"
    ```
 
-   Only do this for a build you trust. The release includes a
-   `SHA256SUMS.txt` file with the SHA-256 checksums.
+   Compare the result with the matching line in `SHA256SUMS.txt`.
 
-Release builds are produced for both Apple Silicon (`arm64`) and Intel (`x64`).
-Download the DMG that matches the machine. The judge and bundled runtimes are
-built for the same architecture as the app; do not mix an x64 app with arm64
-runtime files.
+3. Open the DMG and drag **Base Case** to `Applications`.
+4. The first launch is blocked because the build is not notarized. Open
+   **System Settings → Privacy & Security**, find the blocked-app notice, and
+   choose **Open Anyway**. Alternatively, Control-click the app and choose
+   **Open**.
+
+### “Base Case is damaged and can’t be opened”
+
+This usually means macOS quarantined the downloaded app. The build is ad-hoc
+signed but not notarized. Only do this for a build you trust:
+
+```sh
+xattr -dr com.apple.quarantine "/Applications/Base Case.app"
+open "/Applications/Base Case.app"
+```
+
+If the warning persists, verify the SHA-256 checksum against
+`SHA256SUMS.txt` and download the artifact again. Do not disable Gatekeeper
+globally. A “damaged” message from artifacts built before the ad-hoc signing
+fix is expected; newer builds have a valid bundle signature.
 
 ## Windows
 

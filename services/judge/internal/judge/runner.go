@@ -563,7 +563,7 @@ func (r *Runner) runTest(
 
 func commandFor(language, runtimePath string, request RunRequest) *exec.Cmd {
 	if language == "python" {
-		return exec.Command(runtimePath, "-I", "harness.py")
+		return exec.Command(runtimePath, "-I", "-B", "harness.py")
 	}
 
 	args := []string{

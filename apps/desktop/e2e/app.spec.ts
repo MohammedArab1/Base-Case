@@ -790,6 +790,55 @@ test('autocompletes TypeScript members, indents with Tab, and flags syntax error
   }
 })
 
+test('uses the available width on large windows', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-layout-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+    await launched.app.evaluate(({ BrowserWindow }) => {
+      BrowserWindow.getAllWindows()[0]?.setSize(1600, 1000)
+    })
+    await page.waitForTimeout(300)
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Problem library' })).toBeVisible()
+
+    const layout = await page.evaluate(() => {
+      const content = document.querySelector('.content') as HTMLElement | null
+      return content
+        ? {
+            maxWidth: getComputedStyle(content).maxWidth,
+            width: content.getBoundingClientRect().width,
+          }
+        : null
+    })
+    expect(layout?.maxWidth).toBe('none')
+    expect(layout?.width ?? 0).toBeGreaterThan(1200)
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'System Design' })
+      .click()
+    await page.getByTestId('design-scenario').first().click()
+    const canvas = page.locator('.excalidraw__canvas.interactive').first()
+    await expect(canvas).toBeVisible()
+    const canvasHeight = await page
+      .locator('.design-canvas')
+      .evaluate((element) => element.getBoundingClientRect().height)
+    expect(canvasHeight).toBeGreaterThan(550)
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
 test('has no serious accessibility violations in the main views', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-a11y-'))
   let launched: LaunchedApp | null = null

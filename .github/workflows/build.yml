@@ -53,6 +53,12 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
 
+      - name: Verify macOS bundle signatures
+        if: runner.os == 'macOS'
+        run: |
+          codesign --verify --deep --strict "apps/desktop/dist/mac/Base Case.app"
+          codesign --verify --deep --strict "apps/desktop/dist/mac-arm64/Base Case.app"
+
       - name: Generate checksums
         run: node scripts/checksums.mjs apps/desktop/dist
 

@@ -20,12 +20,12 @@ CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac
 pnpm release:checksums
 ```
 
-| Artifact                          | Size  | SHA-256                                                            |
-| --------------------------------- | ----- | ------------------------------------------------------------------ |
-| `Base-Case-0.1.0-alpha-arm64.dmg` | 253 M | `d48abd97ecd354ed56aed2dd72694e2c0e872049008d8da175ad4740a2d9f3e4` |
-| `Base-Case-0.1.0-alpha-arm64.zip` | 254 M | `8ac87f429b484e14a3aa86b6f038280313b7fabbfca6d4c261c3b9643cf07d92` |
-| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M | `92058f5d192736a5715ded8fd613e4d62eb497946337c10d347f9ca9e9c2ecec` |
-| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M | `93bdb16fc0806292466e5ba505c1a7c03fc891847638a81f34415426e4206679` |
+| Artifact                          | Size    | SHA-256                                                            |
+| --------------------------------- | ------- | ------------------------------------------------------------------ |
+| `Base-Case-0.1.0-alpha-arm64.dmg` | 251.9 M | `fcf24e295a0df56e2435ea802188ea41a15eaffdeddd50b20c0d405f41f03550` |
+| `Base-Case-0.1.0-alpha-arm64.zip` | 252.7 M | `e553f8ed6372d9c8ebf23fc0213d6f851bf8234ac0ed9b950627e48583312ba5` |
+| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M   | `e8d40a3f14945718ff00e41e1f19e3e67c913d97f9706fdf416f7adf5b30972f` |
+| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M   | `e8b4da502c3523679ff2c99f7f4e2a2c599ec2b632874af010c2d607056990c3` |
 
 The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 `docs/install.md`. Verify the checksum before running.
@@ -44,8 +44,9 @@ The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 
 ## Verification completed
 
-- Packaged app: 2766 ms cold start, 48 ms problem open, 410 ms design canvas,
-  316 ms judge run, 294.8 MB idle / 377.7 MB working memory.
+- Packaged app: 2619 ms cold start, 50 ms problem open, 409 ms design canvas,
+  451 ms judge run, 289.8 MB idle / 379.1 MB working memory.
+- Both app bundles pass `codesign --verify --deep --strict`; the judge prevents Python bytecode writes inside the signed bundle.
 - Embedded binaries confirmed by architecture with `file`.
 - 50/50 reference solutions accepted through the real judge.
 - 117 unit tests, 4 schema tests, Go suites, Electron smoke, and 7 Playwright

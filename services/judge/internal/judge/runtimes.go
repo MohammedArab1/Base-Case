@@ -196,7 +196,7 @@ func (r *Runner) outputLimit() int {
 // env override, a bundled pack, or the host system.
 func (r *Runner) Doctor(ctx context.Context) map[string]RuntimeInfo {
 	return map[string]RuntimeInfo{
-		"python": r.runtimeInfo(ctx, "python", r.PythonPath, r.PythonSource, "--version"),
+		"python": r.runtimeInfo(ctx, "python", r.PythonPath, r.PythonSource, "-B", "--version"),
 		"node":   r.runtimeInfo(ctx, "node", r.NodePath, r.NodeSource, "--version"),
 	}
 }

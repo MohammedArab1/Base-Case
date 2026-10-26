@@ -51,7 +51,7 @@ func compilePython(
 	compileContext, cancel := context.WithTimeout(ctx, compileTimeout)
 	defer cancel()
 
-	command := exec.CommandContext(compileContext, runtimePath, "-I", "-m", "py_compile", "solution.py")
+	command := exec.CommandContext(compileContext, runtimePath, "-I", "-B", "-m", "py_compile", "solution.py")
 	command.Dir = workspace
 	command.Env = sanitizedEnv(workspace, filepath.Dir(runtimePath))
 
