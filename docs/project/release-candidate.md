@@ -22,10 +22,10 @@ pnpm release:checksums
 
 | Artifact                          | Size    | SHA-256                                                            |
 | --------------------------------- | ------- | ------------------------------------------------------------------ |
-| `Base-Case-0.1.0-alpha-arm64.dmg` | 251.9 M | `fcf24e295a0df56e2435ea802188ea41a15eaffdeddd50b20c0d405f41f03550` |
-| `Base-Case-0.1.0-alpha-arm64.zip` | 252.7 M | `e553f8ed6372d9c8ebf23fc0213d6f851bf8234ac0ed9b950627e48583312ba5` |
-| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M   | `e8d40a3f14945718ff00e41e1f19e3e67c913d97f9706fdf416f7adf5b30972f` |
-| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M   | `e8b4da502c3523679ff2c99f7f4e2a2c599ec2b632874af010c2d607056990c3` |
+| `Base-Case-0.1.0-alpha-arm64.dmg` | 253.8 M | `762bc89dcd460cbd8ab727c44b041ff71ad5df0137c2ee1a6934ded300befa5e` |
+| `Base-Case-0.1.0-alpha-arm64.zip` | 253.5 M | `6e79d45032b98834a8ca06dfa5b8bd56328e776df66ee6b05a091bc60db967a8` |
+| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M   | `1afaa53ddfdb6d2c6a9bf51836c42bb64796d89afbedb066f8d775e171e0d7e5` |
+| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M   | `32ab1b05c1ada737ab6abdaac95d055e9c90e73dce57ed072baccff56154cefc` |
 
 The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 `docs/install.md`. Verify the checksum before running.

@@ -66,6 +66,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - Added an `afterPack` ad-hoc codesign hook for macOS bundles and a CI signature-verification step.
   - Fixed the runtime cause of signature invalidation: Python isolated mode (`-I`) ignores `PYTHONDONTWRITEBYTECODE`, so bytecode was being written into the app bundle. All Python invocations now use `-B`; doctor, compile, and harness runs no longer modify the signed bundle.
   - Stripped Python bytecode from fetched runtime packs and verified that a packaged app still passes `codesign --verify --deep --strict` after a full judge run.
+  - Added a custom app icon (`>_` terminal motif) with `.icns`, `.ico`, `.png`, and SVG source; packaging now reports `CFBundleIconFile = icon.icns` instead of the default Electron icon.
   - Documented Apple Silicon vs Intel artifacts, GitHub Actions artifact layout, Rosetta, checksum verification, the quarantine fix, and the exact **System Settings → Privacy & Security → Open Anyway** flow for the modern “Apple could not verify…” Gatekeeper message.
   - Added B12 for Developer ID signing and notarization; the alpha remains ad-hoc signed and is expected to require per-app approval on first launch.
 - Tests run:
@@ -75,6 +76,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - Playwright — 11 passed including a wide-window layout regression.
   - `pnpm smoke:e2e` — passed.
   - `codesign --verify --deep --strict` on both app bundles after packaging and after running the packaged app — passed.
+  - Both packaged apps report `CFBundleIconFile = icon.icns`; icon assets are committed under `apps/desktop/build/`.
   - Rebuilt installers and refreshed checksums.
 - Files/PRs:
   - `workspace.css`, `apps/desktop/scripts/after-pack.cjs`, `electron-builder.yml`, `.github/workflows/build.yml`, judge compile/runner/runtimes, `scripts/fetch-runtimes.mjs`, `docs/install.md`.

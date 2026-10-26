@@ -27,8 +27,8 @@ samples the process tree. It never contacts the network.
 | Judge sample run (5 tests)      | < 2000 | 451 ms   | Pass   |
 | Idle memory, whole process tree | < 600  | 289.8 MB | Pass   |
 | Working memory after canvas     | < 900  | 379.1 MB | Pass   |
-| macOS DMG                       | < 350  | 251.9 MB | Pass   |
-| macOS ZIP                       | < 350  | 252.7 MB | Pass   |
+| macOS DMG                       | < 350  | 253.8 MB | Pass   |
+| macOS ZIP                       | < 350  | 253.5 MB | Pass   |
 | App bundle on disk              | —      | 690.4 MB | —      |
 
 The idle figure includes Electron helpers and the spawned judge sidecar. The
