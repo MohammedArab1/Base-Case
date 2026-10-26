@@ -76,6 +76,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - `pnpm smoke:playwright` — 8 passed, including both accessibility tests.
   - `pnpm demo:record` — 40 frames, 10-second MP4/GIF.
   - Packaged measurement — 3442 ms cold start, 51 ms problem open, 417 ms design canvas, 353 ms judge run, 276.6 MB idle / 353.0 MB working memory, 253.0 MB DMG / 253.8 MB ZIP.
+  - GitHub Actions CI for `6c8667a` (code through `15c07c7`) — all four Node/Go macOS/Windows jobs green.
 - Files/PRs:
   - `scripts/record-demo.mjs`, `docs/demo.md`, `docs/assets/demo/`, `docs/project/release-candidate.md`, `apps/desktop/e2e/app.spec.ts`, `CommandPalette.tsx`, `DesignView.tsx`, `styles.css`.
 - Next:
