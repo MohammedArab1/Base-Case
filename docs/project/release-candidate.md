@@ -2,7 +2,7 @@
 
 Date: 2026-10-25
 Version: `0.1.0-alpha`
-Code commit: `aca148d` (layout and signed-bundle fixes); later
+Code commit: `0e5ed87` (includes the custom app icon); later
 documentation-only commits do not change packaged bytes
 Platforms: macOS arm64, macOS x64
 Status: **build candidate only** — not tagged and not published.
