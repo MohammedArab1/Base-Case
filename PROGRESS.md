@@ -75,7 +75,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - `pnpm smoke:e2e` — passed with 25 problems, 8 designs, in-place and linked-list runs.
   - `pnpm smoke:playwright` — 8 passed, including both accessibility tests.
   - `pnpm demo:record` — 40 frames, 10-second MP4/GIF.
-  - Packaged measurement — 2883 ms cold start, 46 ms problem open, 416 ms design canvas, 301 ms judge run, 292.0 MB idle / 379.1 MB working memory, 253.0 MB DMG / 253.8 MB ZIP.
+  - Packaged measurement — 3442 ms cold start, 51 ms problem open, 417 ms design canvas, 353 ms judge run, 276.6 MB idle / 353.0 MB working memory, 253.0 MB DMG / 253.8 MB ZIP.
 - Files/PRs:
   - `scripts/record-demo.mjs`, `docs/demo.md`, `docs/assets/demo/`, `docs/project/release-candidate.md`, `apps/desktop/e2e/app.spec.ts`, `CommandPalette.tsx`, `DesignView.tsx`, `styles.css`.
 - Next:
