@@ -6,8 +6,12 @@ For the operating-system warnings on unsigned builds and checksum steps, see
 
 ## 1. Install the app
 
-- **macOS:** open the `.dmg`, drag **Base Case** to `Applications`, then approve
-  the app once in **System Settings → Privacy & Security**.
+- **macOS:** open the `.dmg`, drag **Base Case** to `Applications`, then
+  double-click it once. When macOS says it could not verify the app, open
+  **System Settings → Privacy & Security**, scroll to **Security**, click
+  **Open Anyway** for **Base Case**, authenticate, and confirm. The button only
+  appears after the blocked launch attempt. See `install.md` for why this is
+  expected and for the older “unidentified developer” wording.
 - **Windows:** run the `.exe`, choose **More info → Run anyway** on the
   SmartScreen prompt, and finish the installer.
 - Both installers bundle Python and Node. You do not need either language on the

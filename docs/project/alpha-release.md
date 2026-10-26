@@ -72,8 +72,9 @@ Markdown/PNG export, data export/import, accessible core flows, and an optional
 experimental AI tutor with explain-back and confirmed mistake tags (off by
 default).
 
-Install: see docs/quickstart.md. Builds are unsigned; macOS Gatekeeper and
-Windows SmartScreen will warn. Verify SHA256SUMS.txt before running.
+Install: see docs/quickstart.md. macOS builds are ad-hoc signed but not
+notarized; the first launch needs System Settings → Privacy & Security → Open
+Anyway. Windows SmartScreen will also warn. Verify SHA256SUMS.txt before running.
 
 Known limitations: docs/known-limitations.md. Report bugs with the diagnostics
 report from Settings → Diagnostics.

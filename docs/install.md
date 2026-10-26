@@ -1,7 +1,8 @@
 # Install an unsigned build
 
-The alpha builds are unsigned. They are safe to run locally, but the operating
-system will show a warning because the app is not code-signed or notarized yet.
+The alpha builds are ad-hoc signed but not Developer ID-signed or notarized.
+They are safe to run locally, but macOS Gatekeeper will block the first launch.
+The app is not malware; Apple has no notarization ticket to verify.
 
 For a guided first run, see `quickstart.md`. After installing, open
 **Settings → Diagnostics → Run self-test** to verify the database, content,
@@ -39,10 +40,34 @@ ZIPs, and `SHA256SUMS.txt`.
    Compare the result with the matching line in `SHA256SUMS.txt`.
 
 3. Open the DMG and drag **Base Case** to `Applications`.
-4. The first launch is blocked because the build is not notarized. Open
-   **System Settings → Privacy & Security**, find the blocked-app notice, and
-   choose **Open Anyway**. Alternatively, Control-click the app and choose
-   **Open**.
+4. Double-click **Base Case** once. macOS blocks it and shows:
+   **“Apple could not verify ‘Base Case’ is free of malware that may harm your
+   Mac or compromise your privacy.”**
+5. Open **System Settings → Privacy & Security**. Scroll to the **Security**
+   section, find the blocked **Base Case** entry, and click **Open Anyway**.
+   Authenticate with Touch ID or your password, then confirm **Open** in the
+   final dialog.
+6. The app launches and subsequent launches work normally.
+
+The **Open Anyway** button appears only after a blocked launch attempt; if it is
+missing, double-click the app again and reopen the pane. On older macOS versions
+you may see **“unidentified developer”** instead, with a Control-click **Open**
+option. Both messages mean the same thing: the build is not notarized.
+
+### Why this message differs from “unknown developer”
+
+macOS shows **“Apple could not verify … free of malware”** when Gatekeeper cannot
+find a valid Developer ID signature and notarization ticket. Recent macOS
+versions removed the right-click bypass and require the per-app **Open Anyway**
+flow. The older “unidentified developer” wording is the same underlying trust
+problem. A local ad-hoc signature validates the bundle but is not an Apple
+identity, so the OS still requires explicit approval.
+
+Making this prompt disappear requires an Apple Developer Program membership,
+a **Developer ID Application** certificate, notarization with Apple, and
+stapling the ticket to the app. That is tracked as blocker B12 in
+`docs/project/open-blockers.md`; it cannot be completed from the repository
+alone. Do not disable Gatekeeper globally.
 
 ### “Base Case is damaged and can’t be opened”
 

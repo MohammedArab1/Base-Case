@@ -5,11 +5,13 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## Platform and packaging
 
-- macOS builds are arm64 only. Intel builds are planned before the public alpha
-  and are not part of the first unsigned artifacts.
+- macOS builds are produced for arm64 and x64. Use the artifact that matches
+  the Mac; x64 on Apple Silicon requires Rosetta.
 - Windows 10 21H2+ and Windows 11 x64 are supported. Linux is out of scope.
-- Builds are unsigned and not notarized. Gatekeeper and SmartScreen warnings are
-  expected; follow `install.md`.
+- macOS builds are ad-hoc signed but not notarized. Gatekeeper requires per-app
+  **Open Anyway** approval on first launch and may show “Apple could not verify
+  … free of malware.” Windows SmartScreen warnings are also expected. Follow
+  `install.md`; Developer ID signing and notarization are tracked as B12.
 - Automatic updates are not implemented. Install a newer build over the old one.
 
 ## Judge and sandbox

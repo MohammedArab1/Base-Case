@@ -75,7 +75,7 @@ corepack pnpm smoke:playwright
 Packaging:
 
 ```sh
-corepack pnpm package:mac   # unsigned arm64 + x64 DMG and ZIP
+corepack pnpm package:mac   # ad-hoc signed arm64 + x64 DMG and ZIP
 corepack pnpm package:win   # NSIS + ZIP
 ```
 
@@ -120,7 +120,7 @@ runtimes. See ADR-0010.
 - Diagnostics self-test for the database, storage, logs, content, search index,
   judge, runtimes, and AI configuration, with a copyable report that never leaves
   the machine unless you copy it.
-- Unsigned installer checksums (`SHA256SUMS.txt`) and a tag-driven GitHub Release
+- Installer checksums (`SHA256SUMS.txt`) and a tag-driven GitHub Release
   job, plus an alpha feedback issue form.
 
 Still open: manual accessibility verification (B11), the second-person content
@@ -151,7 +151,7 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `docs/spikes/phase-1-report.md` — measurements, gaps, go/no-go.
 - `docs/spikes/windows-verification.md` — Windows install and end-to-end checklist.
 - `docs/quickstart.md` — install, first run, and the two-minute tutorial.
-- `docs/install.md` — unsigned macOS/Windows install steps.
+- `docs/install.md` — macOS/Windows install steps and first-launch approval.
 - `docs/faq.md` — common questions.
 - `docs/privacy.md` — local data and AI data flow.
 - `docs/known-limitations.md` — alpha limits.

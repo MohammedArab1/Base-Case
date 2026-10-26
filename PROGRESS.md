@@ -52,6 +52,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
 - **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
 - **B11 — Manual accessibility verification:** the automated axe gate passes; VoiceOver/NVDA, 200% zoom, forced colors, and canvas keyboard fallback still need a human at a real desktop.
+- **B12 — Apple Developer ID signing and notarization:** the macOS build is ad-hoc signed, so Gatekeeper requires per-app **Open Anyway** approval on first launch. Needs an Apple Developer Program membership, certificate, and notary credentials.
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
@@ -65,7 +66,8 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - Added an `afterPack` ad-hoc codesign hook for macOS bundles and a CI signature-verification step.
   - Fixed the runtime cause of signature invalidation: Python isolated mode (`-I`) ignores `PYTHONDONTWRITEBYTECODE`, so bytecode was being written into the app bundle. All Python invocations now use `-B`; doctor, compile, and harness runs no longer modify the signed bundle.
   - Stripped Python bytecode from fetched runtime packs and verified that a packaged app still passes `codesign --verify --deep --strict` after a full judge run.
-  - Documented Apple Silicon vs Intel artifacts, GitHub Actions artifact layout, Rosetta, checksum verification, and the quarantine fix in `docs/install.md`.
+  - Documented Apple Silicon vs Intel artifacts, GitHub Actions artifact layout, Rosetta, checksum verification, the quarantine fix, and the exact **System Settings → Privacy & Security → Open Anyway** flow for the modern “Apple could not verify…” Gatekeeper message.
+  - Added B12 for Developer ID signing and notarization; the alpha remains ad-hoc signed and is expected to require per-app approval on first launch.
 - Tests run:
   - `go test -C services/judge ./...` — passed.
   - `pnpm lint`, `pnpm typecheck` — passed.
