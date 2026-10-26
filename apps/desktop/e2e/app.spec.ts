@@ -681,6 +681,7 @@ test('has no serious accessibility violations in the main views', async () => {
     launched = await launchApp(userDataDirectory)
     const page = launched.page
 
+    await page.emulateMedia({ colorScheme: 'light' })
     await page.addInitScript({ content: axeSource })
     await page.reload()
     await page.waitForLoadState('domcontentloaded')
@@ -741,6 +742,7 @@ test('audits onboarding, the command palette, forced colors, and reduced motion'
     launched = await launchApp(userDataDirectory)
     const page = launched.page
 
+    await page.emulateMedia({ colorScheme: 'light' })
     await page.addInitScript({ content: axeSource })
     await page.reload()
     await page.waitForLoadState('domcontentloaded')
@@ -767,7 +769,11 @@ test('audits onboarding, the command palette, forced colors, and reduced motion'
     findings.push(...(await seriousAxeViolations(page, 'Command palette')))
     await page.keyboard.press('Escape')
 
-    await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' })
+    await page.emulateMedia({
+      colorScheme: 'light',
+      forcedColors: 'active',
+      reducedMotion: 'reduce',
+    })
     await page
       .getByRole('navigation', { name: 'Primary' })
       .getByRole('button', { name: 'Coding' })

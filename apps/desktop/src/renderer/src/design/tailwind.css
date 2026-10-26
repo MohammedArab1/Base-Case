@@ -16,6 +16,7 @@
   --color-bc-border: var(--border);
   --color-bc-border-strong: var(--border-strong);
   --color-bc-accent: var(--accent);
+  --color-bc-accent-strong: var(--accent-strong);
   --color-bc-accent-soft: var(--accent-soft);
   --color-bc-success: var(--success);
   --color-bc-success-soft: var(--success-soft);
