@@ -22,10 +22,10 @@ pnpm release:checksums
 
 | Artifact                          | Size  | SHA-256                                                            |
 | --------------------------------- | ----- | ------------------------------------------------------------------ |
-| `Base-Case-0.1.0-alpha-arm64.dmg` | 253 M | `a0315919ed39461b5a77a25a012ac8a7d8beb610d9dba15a703d9db53627af70` |
-| `Base-Case-0.1.0-alpha-arm64.zip` | 254 M | `cc78f6c0026794c8fb31fdc28328ecf0a0dc81eb54db2314d466028a46e420c3` |
-| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M | `3609e3f1b820ba3dfd1bf7d27897c3945c3c24e8c1d2548e4642e23d3681fd89` |
-| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M | `8b0ec45480fd206e680c66aa40de319a2c8325df7a0c9ddd4b0d29eca4580252` |
+| `Base-Case-0.1.0-alpha-arm64.dmg` | 253 M | `b507ee9789622d834f68fe7556311c50eb8b097cf8e49c8d9590e09af21d5aee` |
+| `Base-Case-0.1.0-alpha-arm64.zip` | 254 M | `36bff530dff2d3303ffd334898fa06f40f189f223c90372da784a419808ac3f7` |
+| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M | `1e5b0b3d3835ddf812e104df5b5bba0c1e82337e68cf7f205139fcaf086cc504` |
+| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M | `8071254dc8cdf4971b847c036d3cbe7c015bf89ead9973fab7c76effd9447b65` |
 
 The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 `docs/install.md`. Verify the checksum before running.
@@ -44,8 +44,8 @@ The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 
 ## Verification completed
 
-- Packaged app: 2777 ms cold start, 48 ms problem open, 407 ms design canvas,
-  341 ms judge run, 291.0 MB idle / 368.0 MB working memory.
+- Packaged app: 2488 ms cold start, 44 ms problem open, 415 ms design canvas,
+  385 ms judge run, 290.8 MB idle / 343.5 MB working memory.
 - Embedded binaries confirmed by architecture with `file`.
 - 50/50 reference solutions accepted through the real judge.
 - 117 unit tests, 4 schema tests, Go suites, Electron smoke, and 7 Playwright

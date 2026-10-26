@@ -60,6 +60,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 - Status: 401 debugging and local logs improved
 - Done:
+  - Fixed API key decryption for Electron 45: `decryptStringAsync` returns `{ result, shouldReEncrypt }`, and the app was stringifying that object, sending `Bearer [object Object]`. It now returns the decrypted string and re-encrypts when Electron requests key rotation.
   - 401/403 messages now include the provider's redacted, truncated response body and mention custom headers, not just a generic key warning.
   - Added structured local logging for provider saves, AI requests, connection tests, and HTTP failures. Logs include provider/model/endpoint host, key presence, header names, status, and redacted response detail. Keys, header values, code, prompts, notes, and responses are never logged.
   - Added **Open logs folder** to Settings → Data and environment with a note about the AI log events.
@@ -68,9 +69,9 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - Tests run:
   - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
   - `pnpm test` — 122 tests across 28 files.
-  - `pnpm smoke:e2e` — passed with `unauthorizedDetail: true` and `aiLog: true`.
+  - `pnpm smoke:e2e` — passed with `authorizationHeader: true`, `unauthorizedDetail: true`, and `aiLog: true`.
   - `pnpm smoke:playwright` — 10 passed.
-  - Rebuilt installers: 2777 ms cold start, 48 ms problem open, 407 ms design canvas, 341 ms judge run, 291.0 MB idle / 368.0 MB working memory; checksums refreshed in `docs/project/release-candidate.md`.
+  - Rebuilt installers: 2488 ms cold start, 44 ms problem open, 415 ms design canvas, 385 ms judge run, 290.8 MB idle / 343.5 MB working memory; checksums refreshed in `docs/project/release-candidate.md`.
 - Files/PRs:
   - `ai-providers/openai-compatible.ts`, `ai.ts`, `main/ipc.ts`, `SettingsView.tsx`, `docs/troubleshooting.md`, `docs/faq.md`, smoke test.
 - Next:

@@ -12,7 +12,10 @@ vi.mock('electron', () => ({
   safeStorage: {
     isAsyncEncryptionAvailable: async () => true,
     encryptStringAsync: async (value: string) => Buffer.from(value),
-    decryptStringAsync: async (buffer: Buffer) => buffer.toString(),
+    decryptStringAsync: async (buffer: Buffer) => ({
+      result: buffer.toString(),
+      shouldReEncrypt: false,
+    }),
   },
 }))
 

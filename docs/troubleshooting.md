@@ -38,7 +38,9 @@ the UI.
 2. Check the **Base URL**. It should usually end in `/v1`; a full
    `/chat/completions` URL is also accepted.
 3. Re-enter the API key, or confirm the stored key is the one the provider
-   expects. Whitespace is trimmed before saving.
+   expects. Whitespace is trimmed before saving. The key is decrypted from the
+   OS credential store and sent as `Authorization: Bearer <key>`; it is never
+   displayed or logged.
 4. If the provider needs routing metadata, add it under **Custom headers
    (JSON)**. OpenCode Go commonly needs:
 

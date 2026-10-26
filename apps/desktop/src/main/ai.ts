@@ -491,7 +491,14 @@ export class AiService {
       )
     }
 
-    return String(await safeStorage.decryptStringAsync(Buffer.from(stored, 'base64')))
+    const decrypted = await safeStorage.decryptStringAsync(Buffer.from(stored, 'base64'))
+
+    if (decrypted.shouldReEncrypt) {
+      const reEncrypted = await safeStorage.encryptStringAsync(decrypted.result)
+      this.settings.set(KEY_SETTING, reEncrypted.toString('base64'))
+    }
+
+    return decrypted.result
   }
 }
 

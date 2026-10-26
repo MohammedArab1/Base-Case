@@ -951,6 +951,7 @@ export { Solution }
   let keyStorage = 'unavailable'
   let compatibleText = ''
   let receivedSessionHeader = null
+  let receivedAuthorizationHeader = null
   let unauthorizedMessage = ''
   try {
     aiServer = createServer((request, response) => {
@@ -974,6 +975,7 @@ export { Solution }
       }
 
       receivedSessionHeader = request.headers['x-opencode-session'] ?? null
+      receivedAuthorizationHeader = request.headers.authorization ?? null
 
       response.writeHead(200, {
         'Content-Type': 'text/event-stream',
@@ -1058,6 +1060,10 @@ export { Solution }
     assert(
       receivedSessionHeader === 'smoke-session',
       'The custom provider header did not reach the endpoint',
+    )
+    assert(
+      receivedAuthorizationHeader === 'Bearer sk-smoke-test',
+      'The decrypted API key was not sent as a Bearer token',
     )
 
     await evaluate(
@@ -1258,6 +1264,7 @@ export { Solution }
     aiStreamChars: aiText.length,
     compatibleStreamChars: compatibleText.length,
     compatibleHeader: receivedSessionHeader,
+    authorizationHeader: receivedAuthorizationHeader === 'Bearer sk-smoke-test',
     unauthorizedDetail: unauthorizedMessage.includes('MissingSessionID'),
     aiLog: aiLogText.includes('provider.test_failed') && aiLogText.includes('MissingSessionID'),
     keyStorage,
