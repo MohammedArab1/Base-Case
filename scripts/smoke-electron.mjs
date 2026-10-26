@@ -951,8 +951,23 @@ export { Solution }
   let keyStorage = 'unavailable'
   let compatibleText = ''
   let receivedSessionHeader = null
+  let unauthorizedMessage = ''
   try {
     aiServer = createServer((request, response) => {
+      if (request.url === '/v1/unauthorized/chat/completions') {
+        response.writeHead(401, { 'Content-Type': 'application/json' })
+        response.end(
+          JSON.stringify({
+            type: 'error',
+            error: {
+              type: 'MissingSessionID',
+              message: 'Request is missing x-opencode-session and cannot be routed efficiently.',
+            },
+          }),
+        )
+        return
+      }
+
       if (request.method !== 'POST' || request.url !== '/v1/chat/completions') {
         response.writeHead(404).end()
         return
@@ -1044,6 +1059,18 @@ export { Solution }
       receivedSessionHeader === 'smoke-session',
       'The custom provider header did not reach the endpoint',
     )
+
+    await evaluate(
+      `window.baseCase.ai.saveConfig({ type: 'openai-compatible', baseUrl: 'http://127.0.0.1:${address.port}/v1/unauthorized', model: 'test' })`,
+    )
+    const unauthorized = await evaluate('window.baseCase.ai.testConnection()')
+    unauthorizedMessage = unauthorized.message
+    assert(unauthorized.ok === false, 'The unauthorized endpoint unexpectedly succeeded')
+    assert(unauthorizedMessage.includes('401'), 'The 401 message did not include the status')
+    assert(
+      unauthorizedMessage.includes('MissingSessionID'),
+      'The 401 message did not include the provider detail',
+    )
   } catch (error) {
     keyStorage = `unavailable: ${error.message}`
   } finally {
@@ -1056,6 +1083,14 @@ export { Solution }
   await evaluate(
     `window.baseCase.ai.saveConfig({ type: 'none', baseUrl: '', model: '', clearKey: true })`,
   )
+
+  const aiLogText = readFileSync(logPath, 'utf8')
+  assert(aiLogText.includes('"event":"ai.request"'), 'AI requests are not logged')
+  assert(
+    aiLogText.includes('"event":"provider.test_failed"'),
+    'AI provider failures are not logged',
+  )
+  assert(aiLogText.includes('MissingSessionID'), 'The provider failure detail is missing from logs')
 
   await evaluate(
     `(() => { const button = [...document.querySelectorAll('.nav-item')].find((item) => item.textContent.trim() === 'Coding'); button?.click(); return Boolean(button) })()`,
@@ -1223,6 +1258,8 @@ export { Solution }
     aiStreamChars: aiText.length,
     compatibleStreamChars: compatibleText.length,
     compatibleHeader: receivedSessionHeader,
+    unauthorizedDetail: unauthorizedMessage.includes('MissingSessionID'),
+    aiLog: aiLogText.includes('provider.test_failed') && aiLogText.includes('MissingSessionID'),
     keyStorage,
     attempts: stats.attempts,
     attemptHistory: attemptList.length >= 3 && attemptList[0]?.status === 'wrong_answer',

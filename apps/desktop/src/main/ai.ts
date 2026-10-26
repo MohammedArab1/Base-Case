@@ -20,6 +20,7 @@ import type { AiProvider } from './ai-providers/types'
 import { RateLimiter } from './ai-rate-limit'
 import { aiJsonSchema, parseStructuredOutput } from './ai-schemas'
 import type { ContentRepository } from './content'
+import { getLogger } from './logger'
 import type { AiFeedbackRepository } from './repositories/ai-feedback'
 import type { AiProviderRepository } from './repositories/ai-providers'
 import type { SettingsRepository } from './repositories/settings'
@@ -102,6 +103,25 @@ export function sanitizeHeaders(input?: Readonly<Record<string, string>>): Recor
   }
 
   return headers
+}
+
+function endpointHost(baseUrl: string): string {
+  try {
+    const url = new URL(baseUrl)
+    return `${url.protocol}//${url.host}${url.pathname}`
+  } catch {
+    return baseUrl ? 'invalid-url' : ''
+  }
+}
+
+function providerLogFields(status: AiProviderStatus): Record<string, unknown> {
+  return {
+    provider: status.type,
+    model: status.model,
+    endpoint: endpointHost(status.baseUrl),
+    hasKey: status.hasKey,
+    headerNames: Object.keys(status.headers),
+  }
 }
 
 function isProviderType(value: string): value is AiProviderType {
@@ -200,6 +220,15 @@ export class AiService {
       enabled,
     })
 
+    getLogger('ai').info('provider.saved', {
+      provider: input.type,
+      model: input.model.trim(),
+      endpoint: endpointHost(input.baseUrl.trim()),
+      hasKey,
+      headerNames: Object.keys(headers),
+      enabled,
+    })
+
     return this.getStatus()
   }
 
@@ -219,9 +248,15 @@ export class AiService {
       const provider = await this.createProvider(status)
       return await provider.testConnection()
     } catch (error) {
+      const failure = toProviderError(error)
+      getLogger('ai').warn('provider.test_failed', {
+        ...providerLogFields(status),
+        code: failure.code,
+        message: failure.message,
+      })
       return {
         ok: false,
-        message: error instanceof Error ? error.message : 'The connection test failed.',
+        message: failure.message,
         latencyMs: 0,
         model: status.model,
       }
@@ -284,7 +319,13 @@ export class AiService {
 
     const provider = await this.createProvider(status)
     const liveStream = request.feature === 'designNotes'
+    const log = getLogger('ai')
     let raw = ''
+
+    log.info('ai.request', {
+      feature: request.feature,
+      ...providerLogFields(status),
+    })
 
     this.active.set(requestId, provider)
 
@@ -307,7 +348,14 @@ export class AiService {
         },
       )
     } catch (error) {
-      throw toProviderError(error)
+      const failure = toProviderError(error)
+      log.warn('ai.request_failed', {
+        feature: request.feature,
+        ...providerLogFields(status),
+        code: failure.code,
+        message: failure.message,
+      })
+      throw failure
     } finally {
       this.active.delete(requestId)
     }

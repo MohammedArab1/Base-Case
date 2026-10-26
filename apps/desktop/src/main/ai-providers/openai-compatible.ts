@@ -1,4 +1,5 @@
 import type { AiTestConnectionResult } from '../../shared/types'
+import { getLogger } from '../logger'
 import { abortError, AiProviderError } from './types'
 import type { AiProvider, AiProviderRequest } from './types'
 
@@ -6,6 +7,38 @@ const defaultTimeoutMs = 120_000
 const testTimeoutMs = 15_000
 
 type JsonMode = 'schema' | 'object' | 'none'
+
+function sanitizeProviderDetail(detail: string): string {
+  return truncate(
+    detail
+      .replace(/\b(?:sk|rk|pk)-[A-Za-z0-9_-]{8,}\b/g, '[redacted-key]')
+      .replace(/Bearer\s+[A-Za-z0-9._-]+/gi, 'Bearer [redacted]')
+      .replace(/("?(?:x-opencode-session|session)"?\s*[:=]\s*)["']?[^"',}\s]+/gi, '$1[redacted]')
+      .replace(/\s+/g, ' ')
+      .trim(),
+    800,
+  )
+}
+
+function describeStatus(status: number, detail: string): string {
+  const providerDetail = sanitizeProviderDetail(detail)
+
+  if (status === 401 || status === 403) {
+    return `The provider rejected the API key or request (${status}).${
+      providerDetail ? ` Provider response: ${providerDetail}.` : ''
+    } Check the key, custom headers, and endpoint in Settings.`
+  }
+  if (status === 404) {
+    return 'The provider endpoint was not found (404). Check the base URL and model name.'
+  }
+  if (status === 429) {
+    return 'The provider is rate-limiting requests (429). Wait a moment and try again.'
+  }
+  if (status >= 500) {
+    return `The provider returned a server error (${status}). Try again later.`
+  }
+  return `The provider returned ${status}: ${truncate(providerDetail || detail, 500)}`
+}
 
 export interface OpenAiCompatibleOptions {
   readonly baseUrl: string
@@ -25,22 +58,6 @@ interface ChatCompletionPayload {
 
 function truncate(value: string, limit: number): string {
   return value.length <= limit ? value : `${value.slice(0, limit)}… [truncated]`
-}
-
-function describeStatus(status: number, detail: string): string {
-  if (status === 401 || status === 403) {
-    return `The provider rejected the API key (${status}). Check the key in Settings.`
-  }
-  if (status === 404) {
-    return 'The provider endpoint was not found (404). Check the base URL and model name.'
-  }
-  if (status === 429) {
-    return 'The provider is rate-limiting requests (429). Wait a moment and try again.'
-  }
-  if (status >= 500) {
-    return `The provider returned a server error (${status}). Try again later.`
-  }
-  return `The provider returned ${status}: ${truncate(detail, 500)}`
 }
 
 /**
@@ -123,6 +140,7 @@ export class OpenAiCompatibleProvider implements AiProvider {
     const started = Date.now()
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), testTimeoutMs)
+    const log = getLogger('ai.provider')
 
     try {
       const response = await fetch(this.endpoint(), {
@@ -140,15 +158,22 @@ export class OpenAiCompatibleProvider implements AiProvider {
       const latencyMs = Date.now() - started
 
       if (!response.ok) {
+        const detail = await response.text()
+        log.warn('provider.test_failed', {
+          status: response.status,
+          model: this.options.model,
+          detail: sanitizeProviderDetail(detail),
+        })
         return {
           ok: false,
-          message: describeStatus(response.status, await response.text()),
+          message: describeStatus(response.status, detail),
           latencyMs,
           model: this.options.model,
         }
       }
 
       await response.text()
+      log.info('provider.test_ok', { latencyMs, model: this.options.model })
       return {
         ok: true,
         message: `Connected in ${latencyMs} ms.`,
@@ -190,6 +215,7 @@ export class OpenAiCompatibleProvider implements AiProvider {
     signal: AbortSignal,
   ): Promise<Response> {
     const modes: readonly JsonMode[] = request.jsonSchema ? ['schema', 'object', 'none'] : ['none']
+    const log = getLogger('ai.provider')
     let lastStatus = 0
     let lastDetail = ''
 
@@ -202,6 +228,12 @@ export class OpenAiCompatibleProvider implements AiProvider {
 
       lastStatus = response.status
       lastDetail = await response.text()
+      log.warn('provider.http_error', {
+        status: lastStatus,
+        model: this.options.model,
+        format: mode,
+        detail: sanitizeProviderDetail(lastDetail),
+      })
 
       // Not every OpenAI-compatible endpoint implements `response_format`.
       // Fall back from a strict schema to JSON mode to no format at all.

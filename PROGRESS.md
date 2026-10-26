@@ -56,6 +56,28 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 ## Work log (newest first)
 
+### 2026-10-26 — Post-alpha fix — AI provider error diagnostics
+
+- Status: 401 debugging and local logs improved
+- Done:
+  - 401/403 messages now include the provider's redacted, truncated response body and mention custom headers, not just a generic key warning.
+  - Added structured local logging for provider saves, AI requests, connection tests, and HTTP failures. Logs include provider/model/endpoint host, key presence, header names, status, and redacted response detail. Keys, header values, code, prompts, notes, and responses are never logged.
+  - Added **Open logs folder** to Settings → Data and environment with a note about the AI log events.
+  - Added `docs/troubleshooting.md` with log locations, privacy boundaries, and a 401/403 checklist including the OpenCode session-header example.
+  - Extended the smoke test with a local 401 endpoint that returns a `MissingSessionID` body and asserts both the UI message and `provider.test_failed` log entry.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 122 tests across 28 files.
+  - `pnpm smoke:e2e` — passed with `unauthorizedDetail: true` and `aiLog: true`.
+  - `pnpm smoke:playwright` — 10 passed.
+  - Rebuilt installers: 2777 ms cold start, 48 ms problem open, 407 ms design canvas, 341 ms judge run, 291.0 MB idle / 368.0 MB working memory; checksums refreshed in `docs/project/release-candidate.md`.
+- Files/PRs:
+  - `ai-providers/openai-compatible.ts`, `ai.ts`, `main/ipc.ts`, `SettingsView.tsx`, `docs/troubleshooting.md`, `docs/faq.md`, smoke test.
+- Next:
+  - Manual accessibility and the remaining external release gates (B1, B2, B10, B11).
+- Notes/decisions:
+  - Provider response bodies are sanitized for common key/session patterns before being shown or logged. They are still truncated and local-only.
+
 ### 2026-10-26 — Post-alpha fixes — Editor, canvas save, import docs, and provider headers
 
 - Status: User-reported issues fixed and verified

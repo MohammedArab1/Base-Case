@@ -155,6 +155,7 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `docs/faq.md` — common questions.
 - `docs/privacy.md` — local data and AI data flow.
 - `docs/known-limitations.md` — alpha limits.
+- `docs/troubleshooting.md` — logs and AI provider 401/403 debugging.
 - `docs/screenshots.md` — generated screenshots of the main workflows.
 - `docs/project/alpha-release.md` — release checklist, beta plan, triage, metrics.
 - `docs/project/security-review.md` — Electron checklist, judge limits, dependency audit.

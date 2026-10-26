@@ -13,6 +13,7 @@ Start here:
 - `faq.md` — common questions about install, judge, AI, data, and review.
 - `privacy.md` — what stays local, what AI sends, and how to remove data.
 - `known-limitations.md` — intentional alpha limits and pending blockers.
+- `troubleshooting.md` — logs, AI 401/403 debugging, and common fixes.
 - `screenshots.md` — generated screenshots of the main workflows.
 - `demo.md` — 10-second generated GIF/MP4 walkthrough.
 

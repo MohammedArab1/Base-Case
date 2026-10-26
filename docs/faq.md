@@ -82,6 +82,14 @@ environment. **Export data** writes a JSON file with attempts, drafts, notes,
 review cards, mistake tags, and settings. API keys and custom provider headers
 are excluded. Import merges the file into the current profile.
 
+## Where are the logs?
+
+Logs are local files in the app data folder. Open **Settings → Data and
+environment → Open logs folder**, or read `logs/app.log` under the path shown
+there. AI failures are recorded as `provider.test_failed`,
+`provider.http_error`, or `ai.request_failed` with the provider's redacted
+response detail. See `troubleshooting.md` for a 401/403 checklist.
+
 ## Can I use my own content?
 
 Yes. Content packs can be imported as a ZIP or folder from Settings. Imported

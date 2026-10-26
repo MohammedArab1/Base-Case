@@ -823,6 +823,7 @@ export interface BaseCaseApi {
     getInfo(): Promise<AppInfo>
     diagnostics(): Promise<DiagnosticsReport>
     readClipboardText(): Promise<string>
+    openLogsFolder(): Promise<boolean>
   }
   readonly content: {
     list(): Promise<ProblemSummary[]>

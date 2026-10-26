@@ -1210,6 +1210,17 @@ export function SettingsView(): JSX.Element {
               <dt>Logs</dt>
               <dd>
                 <code>{appInfo.logsPath}</code>
+                <button
+                  type="button"
+                  className="text-button"
+                  onClick={() => void window.baseCase.app.openLogsFolder()}
+                >
+                  Open logs folder
+                </button>
+                <p className="muted small">
+                  AI failures are logged as ai.request_failed or provider.http_error. Keys, header
+                  values, code, and prompts are never logged.
+                </p>
               </dd>
             </div>
           </dl>
