@@ -208,12 +208,24 @@ importers:
       '@base-case/schema':
         specifier: workspace:*
         version: link:../../packages/schema
+      '@codemirror/autocomplete':
+        specifier: ^6.20.4
+        version: 6.20.4
+      '@codemirror/commands':
+        specifier: ^6.11.1
+        version: 6.11.1
       '@codemirror/lang-javascript':
         specifier: ^6.2.5
         version: 6.2.5
       '@codemirror/lang-python':
         specifier: ^6.2.1
         version: 6.2.1
+      '@codemirror/language':
+        specifier: ^6.13.1
+        version: 6.13.1
+      '@codemirror/lint':
+        specifier: ^6.9.7
+        version: 6.9.7
       '@codemirror/state':
         specifier: ^6.7.6
         version: 6.7.6

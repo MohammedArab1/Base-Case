@@ -43,6 +43,67 @@ const featureLabels: Record<AiFeature, string> = {
   followUp: 'Follow-up interviewer',
 }
 
+const reservedHeaders = new Set([
+  'connection',
+  'content-length',
+  'host',
+  'transfer-encoding',
+  'upgrade',
+])
+
+function parseHeaders(value: string | null | undefined): Record<string, string> {
+  if (!value) {
+    return {}
+  }
+
+  try {
+    const parsed = JSON.parse(value) as unknown
+
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return {}
+    }
+
+    return Object.fromEntries(
+      Object.entries(parsed).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string',
+      ),
+    )
+  } catch {
+    return {}
+  }
+}
+
+export function sanitizeHeaders(input?: Readonly<Record<string, string>>): Record<string, string> {
+  const entries = Object.entries(input ?? {})
+
+  if (entries.length > 50) {
+    throw new Error('At most 50 custom headers are allowed.')
+  }
+
+  const headers: Record<string, string> = {}
+
+  for (const [rawName, rawValue] of entries) {
+    const name = rawName.trim()
+    const value = rawValue.trim()
+
+    if (!/^[A-Za-z0-9-]+$/.test(name)) {
+      throw new Error(`Invalid header name: ${rawName}`)
+    }
+
+    if (reservedHeaders.has(name.toLowerCase())) {
+      throw new Error(`The ${name} header is managed by the app.`)
+    }
+
+    if (value.length > 4000 || /[\r\n]/.test(value)) {
+      throw new Error(`Invalid value for the ${name} header.`)
+    }
+
+    headers[name] = value
+  }
+
+  return headers
+}
+
 function isProviderType(value: string): value is AiProviderType {
   return value === 'none' || value === 'mock' || value === 'openai-compatible'
 }
@@ -79,6 +140,7 @@ export class AiService {
         baseUrl: '',
         model: '',
         contextWindow: DEFAULT_CONTEXT_WINDOW,
+        headers: {},
         enabled: false,
         hasKey: false,
       }
@@ -91,6 +153,7 @@ export class AiService {
       baseUrl: stored.base_url,
       model: stored.model,
       contextWindow: this.getContextWindow(type),
+      headers: parseHeaders(stored.headers_json),
       enabled: stored.enabled === 1,
       hasKey: Boolean(this.settings.get(KEY_SETTING)),
     }
@@ -122,12 +185,18 @@ export class AiService {
       (input.type === 'openai-compatible' &&
         input.baseUrl.trim().length > 0 &&
         input.model.trim().length > 0)
+    const stored = this.providers.getConfig()
+    const headers =
+      input.headers === undefined
+        ? parseHeaders(stored?.headers_json)
+        : sanitizeHeaders(input.headers)
 
     this.providers.saveConfig({
       type: input.type,
       baseUrl: input.baseUrl.trim(),
       model: input.model.trim(),
       keyRef: hasKey ? `settings:${KEY_SETTING}` : null,
+      headers,
       enabled,
     })
 
@@ -324,6 +393,7 @@ export class AiService {
       model: status.model,
       apiKey: await this.getApiKey(),
       contextWindow: status.contextWindow,
+      headers: status.headers,
     })
 
     if (!provider.available()) {

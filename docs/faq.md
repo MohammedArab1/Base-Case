@@ -64,19 +64,31 @@ OpenAI, local servers such as Ollama, and other compatible endpoints. API keys
 are stored with the operating system's secure storage and are never exposed to
 the renderer or included in exports.
 
+Some gateways also require routing headers. Settings → AI provider → **Custom
+headers (JSON)** accepts a JSON object sent with every request. For example,
+OpenCode Go can need a session header:
+
+```json
+{ "x-opencode-session": "your-session-id" }
+```
+
+Header values are stored locally in plain text, are not exported, and are only
+sent to the configured provider.
+
 ## Where is my data, and how do I move it?
 
 Data lives in the platform application-data folder shown in Settings → Data and
 environment. **Export data** writes a JSON file with attempts, drafts, notes,
-review cards, mistake tags, and settings. API keys are excluded. Import merges
-the file into the current profile.
+review cards, mistake tags, and settings. API keys and custom provider headers
+are excluded. Import merges the file into the current profile.
 
 ## Can I use my own content?
 
 Yes. Content packs can be imported as a ZIP or folder from Settings. Imported
 packs are validated, shown with an **Unverified** badge, and can be removed
-without deleting attempts. See `authoring/problem-authoring.md` and
-`authoring/design-authoring.md`.
+without deleting attempts. The folder/ZIP structure and a complete example pack
+are documented in `authoring/pack-import.md`; the example lives at
+`scripts/fixtures/packs/smoke-fixture/`.
 
 ## Does the app collect telemetry?
 

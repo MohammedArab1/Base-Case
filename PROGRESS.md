@@ -56,6 +56,32 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 ## Work log (newest first)
 
+### 2026-10-26 — Post-alpha fixes — Editor, canvas save, import docs, and provider headers
+
+- Status: User-reported issues fixed and verified
+- Done:
+  - Added TypeScript/JavaScript and Python member autocomplete. Common built-in methods are inferred from constructors, literals, and type annotations, and the completion source is registered through the CodeMirror language data.
+  - Added syntax-error diagnostics and a lint gutter for both languages, plus `indentWithTab` so Tab indents instead of moving focus out of the editor.
+  - Fixed design canvas loss when leaving a scenario immediately: the workspace now flushes the draft before navigating back, so reopening it cannot read a stale scene.
+  - Added `docs/authoring/pack-import.md` with the folder/ZIP layout, validation rules, and the complete importable example at `scripts/fixtures/packs/smoke-fixture/`.
+  - Added clipboard controls for the API key: a Paste button backed by the main-process clipboard, native Cmd/Ctrl+V, and a context menu for editable fields.
+  - Added optional custom provider headers as a validated JSON field. Migration 7 stores them locally, they are sent on every OpenAI-compatible request, excluded from data exports and diagnostics, and documented in the privacy/FAQ docs. OpenCode's `x-opencode-session` is the documented example.
+  - Added a guard that disables the provider selector until initial AI settings finish loading, preventing a load race from resetting a fast edit.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 121 tests across 27 files.
+  - `pnpm smoke:e2e` — passed; `compatibleHeader` confirmed `smoke-session` reached the local endpoint.
+  - `pnpm smoke:playwright` — 10 passed, including editor completions/Tab/lint, provider paste+headers, and design back/reopen persistence.
+  - `pnpm content:validate`/`content:test` — unchanged, 50/50 solutions.
+  - Rebuilt the dual-arch installers; 2496 ms cold start, 43 ms problem open, 404 ms design canvas, 265 ms judge run, 295.9 MB idle / 380.2 MB working memory. Checksums refreshed in `docs/project/release-candidate.md`.
+- Files/PRs:
+  - `editor-completions.ts`, `editor-syntax.ts`, `CodeEditor.tsx`, `DesignView.tsx`, `SettingsView.tsx`, `ai.ts`, `ai-providers/`, `migrations.ts`, `main/index.ts`, `ipc.ts`, `shared/types.ts`, `docs/authoring/pack-import.md`, `docs/privacy.md`, `docs/faq.md`, E2E tests.
+- Next:
+  - Run the manual accessibility pass and the remaining external release gates (B1, B2, B10, B11).
+- Notes/decisions:
+  - Custom header values are intentionally plain text and excluded from exports because they can contain session tokens. The API key remains in OS secure storage.
+  - Syntax diagnostics are parser-based (Lezer error nodes), not a type checker; they catch malformed syntax, not type mismatches.
+
 ### 2026-10-25 — Phase 9 — Demo media, expanded accessibility, and release-candidate record
 
 - Status: All remaining Phase 9 work that does not need a human is complete

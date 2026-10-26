@@ -77,6 +77,7 @@ const api: BaseCaseApi = {
   app: {
     getInfo: () => invoke<AppInfo>(channels.appInfo),
     diagnostics: () => invoke<DiagnosticsReport>(channels.appDiagnostics),
+    readClipboardText: () => invoke<string>(channels.appReadClipboardText),
   },
   content: {
     list: () => invoke<ProblemSummary[]>(channels.contentList),

@@ -42,12 +42,17 @@ the machine.
 - Keys are excluded from data export and from the diagnostics report.
 - If secure storage is unavailable, the app refuses to save the key rather than
   storing it in plain text.
+- Optional custom request headers are stored in the local database as plain
+  text, sent only to the configured provider, and excluded from data export and
+  diagnostics. Use the API key field for secrets when possible; headers are for
+  routing or session metadata such as OpenCode's `x-opencode-session`.
 
 ## AI guardrails
 
-- AI is disabled by default. Six per-feature toggles let you turn off
-  explanations, hints, approach review, complexity review, design-note review,
-  or the follow-up interviewer independently.
+- AI is disabled by default. Eight per-feature toggles let you turn off
+  explanations, hints, approach review, complexity review, mistake-tag
+  suggestions, explain-back checks, design-note review, or the follow-up
+  interviewer independently.
 - Requests are rate-limited to eight per minute.
 - The context builder enforces a token budget (75% of the configured window) and
   redacts obvious secrets before sending.

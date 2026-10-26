@@ -103,8 +103,9 @@ runtimes. See ADR-0010.
 - Bundled pinned Python 3.12 and Node 24 runtimes, a macOS Seatbelt sandbox,
   Windows Job Object limits, and arm64/x64 macOS installers with matching
   runtimes and judge binaries.
-- CodeMirror editors with autosave to SQLite, language switching, failing-line
-  highlighting, and Copy/Reset controls.
+- CodeMirror editors with autocomplete for common TypeScript/JavaScript and
+  Python members, syntax-error markers, Tab indentation, autosave to SQLite,
+  language switching, failing-line highlighting, and Copy/Reset controls.
 - Structured failure panel, FSRS review queue, mistake tags, Today and Progress
   dashboards (including a 14-day activity chart), and JSON data export/import.
 - Content pack import (ZIP or folder) with schema validation, preview, an

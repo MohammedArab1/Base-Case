@@ -32,6 +32,13 @@ A linked-list problem from the 25-problem core pack, solved in TypeScript.
 
 ![Reverse Chain in the coding workspace](assets/screenshots/linked-list.png)
 
+## Editor assistance
+
+TypeScript and Python completion lists, Tab indentation, and visible syntax-error
+markers.
+
+![Editor with a syntax error marker](assets/screenshots/editor-diagnostics.png)
+
 ## Progress and review
 
 The 14-day activity chart, pattern coverage, mistake tags, and review queue are

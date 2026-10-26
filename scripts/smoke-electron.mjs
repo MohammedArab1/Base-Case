@@ -950,12 +950,15 @@ export { Solution }
 
   let keyStorage = 'unavailable'
   let compatibleText = ''
+  let receivedSessionHeader = null
   try {
     aiServer = createServer((request, response) => {
       if (request.method !== 'POST' || request.url !== '/v1/chat/completions') {
         response.writeHead(404).end()
         return
       }
+
+      receivedSessionHeader = request.headers['x-opencode-session'] ?? null
 
       response.writeHead(200, {
         'Content-Type': 'text/event-stream',
@@ -989,10 +992,14 @@ export { Solution }
     assert(address && typeof address === 'object', 'Could not start the local AI server')
 
     const withKey = await evaluate(
-      `window.baseCase.ai.saveConfig({ type: 'openai-compatible', baseUrl: 'http://127.0.0.1:${address.port}/v1', model: 'test', apiKey: 'sk-smoke-test' })`,
+      `window.baseCase.ai.saveConfig({ type: 'openai-compatible', baseUrl: 'http://127.0.0.1:${address.port}/v1', model: 'test', apiKey: 'sk-smoke-test', headers: { 'x-opencode-session': 'smoke-session' } })`,
     )
     keyStorage = withKey.hasKey ? 'stored' : 'missing'
     assert(withKey.enabled === true, 'OpenAI-compatible provider was not enabled')
+    assert(
+      withKey.headers?.['x-opencode-session'] === 'smoke-session',
+      'Custom provider headers were not returned',
+    )
 
     compatibleText = await evaluate(`new Promise(async (resolve, reject) => {
       const chunks = []
@@ -1033,6 +1040,10 @@ export { Solution }
       }, 5000)
     })`)
     assert(compatibleText.includes('complement'), 'OpenAI-compatible stream returned no text')
+    assert(
+      receivedSessionHeader === 'smoke-session',
+      'The custom provider header did not reach the endpoint',
+    )
   } catch (error) {
     keyStorage = `unavailable: ${error.message}`
   } finally {
@@ -1211,6 +1222,7 @@ export { Solution }
     aiPreview: preview.text.length,
     aiStreamChars: aiText.length,
     compatibleStreamChars: compatibleText.length,
+    compatibleHeader: receivedSessionHeader,
     keyStorage,
     attempts: stats.attempts,
     attemptHistory: attemptList.length >= 3 && attemptList[0]?.status === 'wrong_answer',

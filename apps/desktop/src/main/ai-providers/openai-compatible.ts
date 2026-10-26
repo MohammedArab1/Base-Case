@@ -12,6 +12,7 @@ export interface OpenAiCompatibleOptions {
   readonly model: string
   readonly apiKey: string
   readonly contextWindow: number
+  readonly headers?: Readonly<Record<string, string>>
   readonly timeoutMs?: number
 }
 
@@ -178,7 +179,9 @@ export class OpenAiCompatibleProvider implements AiProvider {
   private headers(): Record<string, string> {
     return {
       'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
       ...(this.options.apiKey ? { Authorization: `Bearer ${this.options.apiKey}` } : {}),
+      ...this.options.headers,
     }
   }
 

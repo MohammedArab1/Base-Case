@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { app, dialog, ipcMain } from 'electron'
+import { app, clipboard, dialog, ipcMain } from 'electron'
 import type { IpcMainInvokeEvent } from 'electron'
 import type { ZodType } from 'zod'
 import { channels } from '../shared/ipc'
@@ -164,6 +164,8 @@ export function registerIpc({
       logsPath: join(app.getPath('userData'), 'logs'),
     }),
   )
+
+  register(channels.appReadClipboardText, noInputSchema, () => clipboard.readText())
 
   register(channels.contentList, noInputSchema, () => content.listProblems())
   register(channels.contentGet, problemIdSchema, (problemId) => content.getProblem(problemId))

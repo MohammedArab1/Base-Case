@@ -630,6 +630,7 @@ export interface AiProviderStatus {
   readonly baseUrl: string
   readonly model: string
   readonly contextWindow: number
+  readonly headers: Readonly<Record<string, string>>
   readonly enabled: boolean
   readonly hasKey: boolean
 }
@@ -639,6 +640,7 @@ export interface SaveAiConfigInput {
   readonly baseUrl: string
   readonly model: string
   readonly contextWindow?: number
+  readonly headers?: Readonly<Record<string, string>>
   readonly apiKey?: string
   readonly clearKey?: boolean
 }
@@ -820,6 +822,7 @@ export interface BaseCaseApi {
   readonly app: {
     getInfo(): Promise<AppInfo>
     diagnostics(): Promise<DiagnosticsReport>
+    readClipboardText(): Promise<string>
   }
   readonly content: {
     list(): Promise<ProblemSummary[]>

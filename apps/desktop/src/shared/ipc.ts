@@ -5,6 +5,7 @@
 export const channels = {
   appInfo: 'app:info',
   appDiagnostics: 'app:diagnostics',
+  appReadClipboardText: 'app:read-clipboard-text',
   contentList: 'content:list',
   contentGet: 'content:get',
   contentSearch: 'content:search',

@@ -192,4 +192,13 @@ export const migrations: readonly Migration[] = [
         ON ai_feedback (created_at);
     `,
   },
+  {
+    version: 7,
+    sql: `
+      -- Custom request headers for OpenAI-compatible endpoints. Stored locally
+      -- and excluded from user-data exports because values may be sensitive.
+      ALTER TABLE ai_provider_configs
+        ADD COLUMN headers_json TEXT NOT NULL DEFAULT '{}';
+    `,
+  },
 ]

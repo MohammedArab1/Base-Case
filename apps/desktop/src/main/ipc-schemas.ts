@@ -124,6 +124,7 @@ export const aiConfigSchema: z.ZodType<SaveAiConfigInput> = z.object({
   baseUrl: z.string().max(2000),
   model: z.string().max(200),
   contextWindow: z.number().int().min(2048).max(2_000_000).optional(),
+  headers: z.record(z.string().min(1).max(100), z.string().max(4000)).optional(),
   apiKey: z.string().max(10_000).optional(),
   clearKey: z.boolean().optional(),
 }) as z.ZodType<SaveAiConfigInput>

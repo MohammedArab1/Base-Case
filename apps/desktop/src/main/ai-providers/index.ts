@@ -10,6 +10,7 @@ export interface CreateProviderOptions {
   readonly model: string
   readonly apiKey: string
   readonly contextWindow: number
+  readonly headers?: Readonly<Record<string, string>>
 }
 
 export function createProvider(options: CreateProviderOptions): AiProvider {
@@ -23,6 +24,7 @@ export function createProvider(options: CreateProviderOptions): AiProvider {
       model: options.model,
       apiKey: options.apiKey,
       contextWindow: options.contextWindow,
+      headers: options.headers ?? {},
     })
   }
 

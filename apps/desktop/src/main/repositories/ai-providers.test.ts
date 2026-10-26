@@ -31,6 +31,7 @@ describe('AiProviderRepository', () => {
         baseUrl: 'http://127.0.0.1:11434/v1',
         model: 'llama3',
         keyRef: 'settings:ai.apiKey',
+        headers: { 'x-opencode-session': 'session-1' },
         enabled: true,
       })
 
@@ -39,6 +40,7 @@ describe('AiProviderRepository', () => {
         base_url: 'http://127.0.0.1:11434/v1',
         model: 'llama3',
         key_ref: 'settings:ai.apiKey',
+        headers_json: '{"x-opencode-session":"session-1"}',
         enabled: 1,
       })
 
@@ -47,6 +49,7 @@ describe('AiProviderRepository', () => {
         baseUrl: '',
         model: 'mock',
         keyRef: null,
+        headers: {},
         enabled: true,
       })
 
@@ -55,6 +58,7 @@ describe('AiProviderRepository', () => {
         base_url: '',
         model: 'mock',
         key_ref: null,
+        headers_json: '{}',
         enabled: 1,
       })
     })

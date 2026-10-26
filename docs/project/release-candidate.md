@@ -2,8 +2,8 @@
 
 Date: 2026-10-25
 Version: `0.1.0-alpha`
-Code commit: `15c07c7` (the commit that contains the packaged code; later
-documentation-only commits do not change packaged bytes)
+Code commit: the editor/provider/canvas fix commit (see git history); later
+documentation-only commits do not change packaged bytes
 Platforms: macOS arm64, macOS x64
 Status: **build candidate only** — not tagged and not published.
 
@@ -22,10 +22,10 @@ pnpm release:checksums
 
 | Artifact                          | Size  | SHA-256                                                            |
 | --------------------------------- | ----- | ------------------------------------------------------------------ |
-| `Base-Case-0.1.0-alpha-arm64.dmg` | 253 M | `73ff592e03e5ae8a41ec20cd02404d60dd73053968d7c3e56aa24baa039fba4b` |
-| `Base-Case-0.1.0-alpha-arm64.zip` | 254 M | `9a5ac4ad459e11a00295d0a6320ebd677013ec9543a3165dd3367bf56583fe9b` |
-| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M | `dec2f735c2e3474e32fa32e04ac118a084870b496d0d2c2cb38742524c2d23d6` |
-| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M | `6009945c26ee8dd3836e740df1aa8a8ec35b5c9de1e76f0950f6c6820f865881` |
+| `Base-Case-0.1.0-alpha-arm64.dmg` | 253 M | `13d364c0b3e09035cdbc90faec2d2507c4576ef6d579fb05250054621b8b23f1` |
+| `Base-Case-0.1.0-alpha-arm64.zip` | 254 M | `ac1658c97f2019e46b3abb68dfbca6ad5279cdabbed1a450766f359ad71cb175` |
+| `Base-Case-0.1.0-alpha-x64.dmg`   | 259 M | `1d56521eeafb73073d55cea85b416cc5d89fb747fe4e124ddc48ceb2ffb333cb` |
+| `Base-Case-0.1.0-alpha-x64.zip`   | 259 M | `0df6bd8f81326732b529b37c693d7bdf33ef2d2d86f4f190cb253e2799bc526f` |
 
 The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 `docs/install.md`. Verify the checksum before running.
@@ -44,8 +44,8 @@ The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 
 ## Verification completed
 
-- Packaged app: 3442 ms cold start, 51 ms problem open, 417 ms design canvas,
-  353 ms judge run, 276.6 MB idle / 353.0 MB working memory.
+- Packaged app: 2496 ms cold start, 43 ms problem open, 404 ms design canvas,
+  265 ms judge run, 295.9 MB idle / 380.2 MB working memory.
 - Embedded binaries confirmed by architecture with `file`.
 - 50/50 reference solutions accepted through the real judge.
 - 117 unit tests, 4 schema tests, Go suites, Electron smoke, and 7 Playwright

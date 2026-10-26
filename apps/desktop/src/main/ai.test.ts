@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defaultAppSettings, defaultAiFeatureSettings } from '../shared/types'
 import type { AiContext, AppSettings, DesignScenarioDetail } from '../shared/types'
 import type { ContentRepository } from './content'
-import { AiService } from './ai'
+import { AiService, sanitizeHeaders } from './ai'
 import type { AiFeedbackRepository } from './repositories/ai-feedback'
 import type { AiProviderRepository, ProviderRow } from './repositories/ai-providers'
 import type { SettingsRepository } from './repositories/settings'
@@ -101,6 +101,7 @@ describe('AiService', () => {
       base_url: '',
       model: 'mock',
       key_ref: null,
+      headers_json: '{}',
       enabled: 1,
     }
     feedbackAdd = vi.fn()
@@ -163,6 +164,27 @@ describe('AiService', () => {
         expect.objectContaining({ tagId: 'off-by-one', reason: expect.any(String) }),
       ]),
     })
+  })
+
+  it('validates and stores custom provider headers', async () => {
+    expect(sanitizeHeaders({ ' x-opencode-session ': ' session-1 ' })).toEqual({
+      'x-opencode-session': 'session-1',
+    })
+    expect(() => sanitizeHeaders({ host: 'example.com' })).toThrow('managed by the app')
+    expect(() => sanitizeHeaders({ 'bad header': 'value' })).toThrow('Invalid header name')
+
+    await service.saveConfig({
+      type: 'openai-compatible',
+      baseUrl: 'http://127.0.0.1:8080/v1',
+      model: 'local',
+      headers: { 'x-opencode-session': 'session-1' },
+    })
+
+    expect(providers.saveConfig).toHaveBeenCalledWith(
+      expect.objectContaining({
+        headers: { 'x-opencode-session': 'session-1' },
+      }),
+    )
   })
 
   it('evaluates an explain-back response', async () => {

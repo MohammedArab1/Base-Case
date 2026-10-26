@@ -135,6 +135,11 @@ Never put full code before level 4. Use the same terminology as the statement.
 - Do not include debug prints or non-deterministic behavior.
 - Keep the class/method names aligned with `problem.json`.
 
+If you are packaging multiple problems, start from the core pack layout
+(`content/packs/core/`) and see `docs/authoring/pack-import.md` for the pack
+manifest and ZIP/folder structure. A complete single-problem example lives in
+`scripts/fixtures/packs/smoke-fixture/`.
+
 ## Before opening a PR
 
 ```sh

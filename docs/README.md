@@ -34,6 +34,7 @@ Start here:
 - `authoring/problem-authoring.md` — problem schema, tests, hints, solutions.
 - `authoring/design-authoring.md` — design scenarios and the seven-dimension
   rubric.
+- `authoring/pack-import.md` — folder/ZIP structure and a complete example pack.
 
 ## Project
 

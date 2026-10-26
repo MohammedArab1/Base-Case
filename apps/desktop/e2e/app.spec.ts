@@ -441,9 +441,15 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
       clientY: box!.y + 230,
       bubbles: true,
     })
-    await page.waitForTimeout(400)
+    await page.waitForTimeout(100)
 
-    // Wait for the debounced scene autosave instead of guessing a fixed delay.
+    // Leave immediately and reopen: the final scene must be flushed before the
+    // workspace unmounts, not lost to a debounce timer.
+    await page.getByRole('button', { name: /Back to scenarios/ }).click()
+    await expect(page.getByTestId('design-scenario').first()).toBeVisible()
+    await page.getByTestId('design-scenario').first().click()
+    await expect(page.getByRole('heading', { name: 'URL Shortener', level: 2 })).toBeVisible()
+
     await expect
       .poll(
         async () => {
@@ -667,6 +673,117 @@ test('runs a linked-list problem from the expanded content set', async () => {
       timeout: 60_000,
     })
     await capture(page, 'linked-list')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('configures custom provider headers and pastes an API key', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-provider-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Settings' })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
+
+    await expect(page.getByLabel('AI provider')).toBeEnabled()
+    await page.getByLabel('AI provider').selectOption('openai-compatible')
+    await page.getByLabel('Base URL').fill('http://127.0.0.1:9/v1')
+    await page.getByLabel('Model').fill('opencode-test')
+
+    await launched.app.evaluate(({ clipboard }) => clipboard.writeText('sk-paste-test'))
+    await page.getByTestId('paste-api-key').click()
+    await expect(page.getByLabel('API key')).toHaveValue('sk-paste-test')
+
+    // Native paste must work as well as the button.
+    await page.getByLabel('API key').fill('')
+    await page.getByLabel('API key').click()
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+V' : 'Control+V')
+    await expect(page.getByLabel('API key')).toHaveValue('sk-paste-test')
+
+    await page
+      .getByTestId('ai-custom-headers')
+      .fill(JSON.stringify({ 'x-opencode-session': 'session-123' }))
+    await page.getByRole('button', { name: 'Save provider' }).click()
+    await expect(page.getByText(/AI provider saved/)).toBeVisible()
+
+    const status = (await page.evaluate('window.baseCase.ai.getStatus()')) as {
+      hasKey: boolean
+      headers: Readonly<Record<string, string>>
+    }
+    expect(status.hasKey).toBe(true)
+    expect(status.headers).toEqual({ 'x-opencode-session': 'session-123' })
+
+    await page.getByTestId('ai-custom-headers').fill('[]')
+    await page.getByRole('button', { name: 'Save provider' }).click()
+    await expect(page.getByText('Could not save the AI provider')).toBeVisible()
+    await expect(page.getByText(/Custom headers must be a JSON object/)).toBeVisible()
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('autocompletes TypeScript members, indents with Tab, and flags syntax errors', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-editor-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'typescript')
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await page.getByRole('button', { name: /Pair Sum/ }).click()
+    await expect(page.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
+
+    const editor = page.locator('.cm-content')
+    await editor.click()
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText('const myMap = new Map<string, number>()\nmyMap.')
+
+    const completion = page.locator('.cm-tooltip-autocomplete')
+    await expect(completion).toBeVisible()
+    await expect(completion).toContainText('get')
+    await expect(completion).toContainText('set')
+    await expect(completion).toContainText('size')
+    await page.keyboard.press('Escape')
+
+    // Tab indents instead of moving focus out of the editor.
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText('const value = 1')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Tab')
+    await expect(page.locator('.cm-line').nth(1)).toContainText(/^\s{2,}/)
+    expect(await page.evaluate(() => Boolean(document.activeElement?.closest('.cm-editor')))).toBe(
+      true,
+    )
+
+    // A malformed expression gets a visible lint marker, not silent highlighting.
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText('function broken( {')
+    await expect(page.locator('.cm-lintRange-error').first()).toBeVisible({ timeout: 5_000 })
+    await capture(page, 'editor-diagnostics')
+
+    // Python gets the same member suggestions and syntax linting.
+    await page.getByRole('button', { name: 'Python', exact: true }).click()
+    await editor.click()
+    await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
+    await page.keyboard.insertText('items = []\nitems.')
+    await expect(completion).toBeVisible()
+    await expect(completion).toContainText('append')
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

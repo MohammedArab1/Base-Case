@@ -191,6 +191,7 @@ function DesignWorkspace({
   const rubricRef = useRef<DesignRubricAnswers>({})
   const draftLoadedRef = useRef(false)
   const dirtyRef = useRef(false)
+  const leavingRef = useRef(false)
   const saveTimer = useRef<number | null>(null)
   const lastInput = useRef<{ elements: unknown; files: unknown } | null>(null)
 
@@ -300,6 +301,27 @@ function DesignWorkspace({
       void persistDraft()
     }, 800)
   }, [persistDraft])
+
+  const leaveWorkspace = useCallback(async (): Promise<void> => {
+    if (leavingRef.current) {
+      return
+    }
+
+    leavingRef.current = true
+
+    if (saveTimer.current !== null) {
+      window.clearTimeout(saveTimer.current)
+      saveTimer.current = null
+    }
+
+    if (draftLoadedRef.current) {
+      // Await the save so reopening the scenario immediately cannot read a
+      // stale draft from before the final canvas or notes edit.
+      await persistDraft()
+    }
+
+    onBack()
+  }, [onBack, persistDraft])
 
   useEffect(() => {
     return () => {
@@ -447,7 +469,7 @@ function DesignWorkspace({
   if (loadError) {
     return (
       <div className="workspace-stack">
-        <button type="button" className="text-button" onClick={onBack}>
+        <button type="button" className="text-button" onClick={() => void leaveWorkspace()}>
           ← Back to scenarios
         </button>
         <div className="callout callout-error" role="alert">
@@ -487,7 +509,7 @@ function DesignWorkspace({
     <div className="workspace-stack design-workspace">
       <div className="workspace-heading">
         <div className="workspace-heading-top">
-          <button type="button" className="text-button" onClick={onBack}>
+          <button type="button" className="text-button" onClick={() => void leaveWorkspace()}>
             ← Back to scenarios
           </button>
           <div className="toolbar-actions">

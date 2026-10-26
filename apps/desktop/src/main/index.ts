@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { app, BrowserWindow, dialog, screen, shell } from 'electron'
+import { app, BrowserWindow, dialog, Menu, screen, shell } from 'electron'
 import { AiService } from './ai'
 import { ContentRepository } from './content'
 import { rebuildContentIndex } from './content-sync'
@@ -151,6 +151,22 @@ function createWindow(): void {
 
   window.webContents.session.setPermissionRequestHandler((_webContents, _permission, callback) => {
     callback(false)
+  })
+
+  // Electron has no default context menu. Add the standard editing actions for
+  // inputs and the code editor so right-click paste/cut/copy work everywhere.
+  window.webContents.on('context-menu', (_event, params) => {
+    if (!params.isEditable) {
+      return
+    }
+
+    Menu.buildFromTemplate([
+      { role: 'cut', enabled: params.editFlags.canCut },
+      { role: 'copy', enabled: params.editFlags.canCopy },
+      { role: 'paste', enabled: params.editFlags.canPaste },
+      { type: 'separator' },
+      { role: 'selectAll', enabled: params.editFlags.canSelectAll },
+    ]).popup({ window })
   })
 
   if (rendererUrl) {

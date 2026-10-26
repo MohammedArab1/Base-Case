@@ -27,7 +27,44 @@ interface AiForm {
   readonly baseUrl: string
   readonly model: string
   readonly contextWindow: number
+  readonly headersText: string
   readonly apiKey: string
+}
+
+function headersToText(headers: Readonly<Record<string, string>>): string {
+  return Object.keys(headers).length > 0 ? JSON.stringify(headers, null, 2) : ''
+}
+
+function parseHeadersText(text: string): Record<string, string> {
+  const trimmed = text.trim()
+
+  if (trimmed.length === 0) {
+    return {}
+  }
+
+  let parsed: unknown
+
+  try {
+    parsed = JSON.parse(trimmed)
+  } catch {
+    throw new Error('Custom headers must be a JSON object.')
+  }
+
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Custom headers must be a JSON object of string values.')
+  }
+
+  const headers: Record<string, string> = {}
+
+  for (const [name, value] of Object.entries(parsed)) {
+    if (typeof value !== 'string') {
+      throw new Error(`The ${name} header must have a string value.`)
+    }
+
+    headers[name.trim()] = value.trim()
+  }
+
+  return headers
 }
 
 const defaultBaseUrl = 'https://api.openai.com/v1'
@@ -70,6 +107,7 @@ function breakablePath(path: string): JSX.Element {
 export function SettingsView(): JSX.Element {
   const { settings, update } = useSettings()
   const [provider, setProvider] = useState<AiProviderStatus | null>(null)
+  const [aiReady, setAiReady] = useState(false)
   const [judgeStatus, setJudgeStatus] = useState<JudgeStatus | null>(null)
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
   const [form, setForm] = useState<AiForm>({
@@ -77,6 +115,7 @@ export function SettingsView(): JSX.Element {
     baseUrl: defaultBaseUrl,
     model: defaultModel,
     contextWindow: defaultContextWindow,
+    headersText: '',
     apiKey: '',
   })
   const [clearKey, setClearKey] = useState(false)
@@ -122,12 +161,18 @@ export function SettingsView(): JSX.Element {
           baseUrl: aiStatus.baseUrl || defaultBaseUrl,
           model: aiStatus.model || defaultModel,
           contextWindow: aiStatus.contextWindow || defaultContextWindow,
+          headersText: headersToText(aiStatus.headers),
           apiKey: '',
         })
       })
       .catch((loadError: unknown) => {
         if (!cancelled) {
           setError(loadError instanceof Error ? loadError.message : String(loadError))
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setAiReady(true)
         }
       })
 
@@ -245,9 +290,22 @@ export function SettingsView(): JSX.Element {
     baseUrl: form.baseUrl,
     model: form.model,
     contextWindow: form.contextWindow,
+    headers: parseHeadersText(form.headersText),
     ...(form.apiKey.trim() ? { apiKey: form.apiKey.trim() } : {}),
     ...(clearKey ? { clearKey: true } : {}),
   })
+
+  const pasteApiKey = async (): Promise<void> => {
+    try {
+      const text = await window.baseCase.app.readClipboardText()
+
+      if (text.trim().length > 0) {
+        setForm((current) => ({ ...current, apiKey: text.trim() }))
+      }
+    } catch (pasteError: unknown) {
+      setError(pasteError instanceof Error ? pasteError.message : String(pasteError))
+    }
+  }
 
   const save = async (): Promise<void> => {
     setSaving(true)
@@ -787,6 +845,7 @@ export function SettingsView(): JSX.Element {
               className="input"
               aria-label="AI provider"
               value={form.type}
+              disabled={!aiReady}
               onChange={(event) =>
                 setForm((current) => ({ ...current, type: event.target.value as AiProviderType }))
               }
@@ -825,20 +884,55 @@ export function SettingsView(): JSX.Element {
                 />
               </label>
 
+              <div className="field field-wide">
+                <label htmlFor="ai-api-key">
+                  <span>API key</span>
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    id="ai-api-key"
+                    className="input flex-1 min-w-0"
+                    type="password"
+                    autoComplete="off"
+                    value={form.apiKey}
+                    onChange={(event) =>
+                      setForm((current) => ({ ...current, apiKey: event.target.value }))
+                    }
+                    placeholder={
+                      provider?.hasKey ? 'A key is stored; leave blank to keep it' : 'sk-…'
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => void pasteApiKey()}
+                    data-testid="paste-api-key"
+                  >
+                    Paste
+                  </button>
+                </div>
+                <p className="muted small">
+                  Paste with the button, the context menu, or Cmd/Ctrl+V.
+                </p>
+              </div>
+
               <label className="field field-wide">
-                <span>API key</span>
-                <input
+                <span>Custom headers (JSON)</span>
+                <textarea
                   className="input"
-                  type="password"
-                  autoComplete="off"
-                  value={form.apiKey}
+                  rows={3}
+                  value={form.headersText}
                   onChange={(event) =>
-                    setForm((current) => ({ ...current, apiKey: event.target.value }))
+                    setForm((current) => ({ ...current, headersText: event.target.value }))
                   }
-                  placeholder={
-                    provider?.hasKey ? 'A key is stored; leave blank to keep it' : 'sk-…'
-                  }
+                  placeholder={'{\n  "x-opencode-session": "..."\n}'}
+                  data-testid="ai-custom-headers"
                 />
+                <span className="muted small">
+                  Optional. Sent with every request. Example: an OpenCode Go session needs an
+                  x-opencode-session header. Stored locally in plain text and excluded from data
+                  exports.
+                </span>
               </label>
 
               <label className="field">

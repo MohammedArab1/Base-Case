@@ -2,13 +2,27 @@ import { useEffect, useRef } from 'react'
 import type { JSX } from 'react'
 import { basicSetup } from 'codemirror'
 import { Compartment, EditorState, StateEffect, StateField } from '@codemirror/state'
-import { Decoration, EditorView } from '@codemirror/view'
+import { Decoration, EditorView, keymap } from '@codemirror/view'
 import type { DecorationSet } from '@codemirror/view'
-import { javascript } from '@codemirror/lang-javascript'
-import { python } from '@codemirror/lang-python'
+import { indentWithTab } from '@codemirror/commands'
+import { linter, lintGutter } from '@codemirror/lint'
+import {
+  javascript,
+  javascriptLanguage,
+  localCompletionSource,
+  scopeCompletionSource,
+} from '@codemirror/lang-javascript'
+import {
+  globalCompletion,
+  localCompletionSource as pythonLocalCompletionSource,
+  python,
+  pythonLanguage,
+} from '@codemirror/lang-python'
 import { oneDark } from '@codemirror/theme-one-dark'
 import type { Language } from '../../../shared/types'
 import { useSettings } from '../settings'
+import { javascriptMemberCompletions, pythonMemberCompletions } from './editor-completions'
+import { syntaxDiagnostics } from './editor-syntax'
 
 function fontSizeTheme(size: number): ReturnType<typeof EditorView.theme> {
   return EditorView.theme({
@@ -81,15 +95,31 @@ export function CodeEditor({
       return
     }
 
-    const languageExtension = language === 'python' ? python() : javascript({ typescript: true })
+    const languageExtensions =
+      language === 'python'
+        ? [
+            python(),
+            pythonLanguage.data.of({ autocomplete: pythonMemberCompletions }),
+            pythonLanguage.data.of({ autocomplete: pythonLocalCompletionSource }),
+            pythonLanguage.data.of({ autocomplete: globalCompletion }),
+          ]
+        : [
+            javascript({ typescript: true }),
+            javascriptLanguage.data.of({ autocomplete: javascriptMemberCompletions }),
+            javascriptLanguage.data.of({ autocomplete: localCompletionSource }),
+            javascriptLanguage.data.of({ autocomplete: scopeCompletionSource(globalThis) }),
+          ]
 
     const view = new EditorView({
       state: EditorState.create({
         doc: value,
         extensions: [
           basicSetup,
-          languageExtension,
+          languageExtensions,
           oneDark,
+          keymap.of([indentWithTab]),
+          linter(syntaxDiagnostics, { delay: 250 }),
+          lintGutter(),
           errorLineField,
           tabSizeCompartment.of(EditorState.tabSize.of(settingsRef.current.tabSize)),
           fontSizeCompartment.of(fontSizeTheme(settingsRef.current.fontSize)),
