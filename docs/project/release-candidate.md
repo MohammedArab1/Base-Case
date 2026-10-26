@@ -2,7 +2,7 @@
 
 Date: 2026-10-25
 Version: `0.1.0-alpha`
-Code commit: `b831d83` (editor, canvas, and provider fixes); later
+Code commit: `ebf18bf` (editor, canvas, provider, and diagnostics fixes); later
 documentation-only commits do not change packaged bytes
 Platforms: macOS arm64, macOS x64
 Status: **build candidate only** — not tagged and not published.
