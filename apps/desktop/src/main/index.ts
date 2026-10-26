@@ -184,7 +184,10 @@ app
   .whenReady()
   .then(async () => {
     const userDataPath = app.getPath('userData')
-    const logger = configureLogger({ directory: join(userDataPath, 'logs') })
+    const logger = configureLogger({
+      directory: join(userDataPath, 'logs'),
+      console: isDevelopment,
+    })
     logger.info('app.start', {
       version: app.getVersion(),
       platform: process.platform,

@@ -361,6 +361,20 @@ export class AiService {
     }
 
     const parsed = parseStructuredOutput(request.feature, raw)
+    log.info('ai.response', {
+      feature: request.feature,
+      characters: raw.length,
+      parsed: parsed.ok,
+      warning: parsed.error,
+    })
+
+    if (raw.trim().length === 0) {
+      log.warn('ai.empty_response', {
+        feature: request.feature,
+        ...providerLogFields(status),
+      })
+    }
+
     const guarded = applyGuardrails(parsed.text, parsed.result, {
       feature: request.feature,
       hintLevel: built.hintLevel,

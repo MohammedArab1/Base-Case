@@ -31,6 +31,50 @@ file is `app.log`. Logging never leaves the machine.
 Secrets found in provider error text are redacted before they reach the log or
 the UI.
 
+## Debugging in development
+
+- `pnpm dev` prints main-process JSON logs to the terminal as well as
+  `logs/app.log`. Leave the terminal visible while exercising AI actions.
+- The DevTools window that opens with `pnpm dev` is for the **renderer**. Its
+  Console shows renderer errors, and its Network tab shows renderer requests.
+  AI provider calls and judge execution happen in the Electron **main**
+  process, so they do not appear in the renderer Network tab.
+- For main-process breakpoints, run:
+
+  ```sh
+  pnpm dev:inspect
+  ```
+
+  Then open `chrome://inspect` in Chrome/Edge and connect to
+  `localhost:9229`. See `apps/desktop/src/main/` for main-process code.
+
+- Useful AI log events:
+  - `ai.request`: feature, provider, model, endpoint, key presence, header names.
+  - `ai.response`: response character count, whether parsing succeeded, warning.
+  - `ai.empty_response`: the provider returned zero characters.
+  - `provider.stream_complete`: SSE event/chunk/character counts.
+  - `provider.empty_stream`: streaming returned no text.
+  - `provider.http_error` / `provider.test_failed`: HTTP status and redacted
+    provider detail.
+
+## The model returned text instead of JSON
+
+The app asks for a structured JSON object and shows the raw model response when
+parsing fails. If you see “The model returned text instead of a JSON object”,
+the raw response is displayed below the warning; copy it to see what the model
+actually sent.
+
+Check:
+
+1. The model supports JSON/structured output or follows the prompt. Some
+   reasoning or chat-tuned models wrap answers in prose.
+2. The provider honors `stream: true`. Use **Test connection** and then check
+   `provider.stream_complete` in the logs. `provider.empty_stream` with zero
+   characters usually means the endpoint does not stream in OpenAI SSE format.
+3. The base URL points at an OpenAI-compatible `/chat/completions` endpoint, not
+   a dashboard or proxy landing page.
+4. The model name is the provider's exact model ID.
+
 ## Debugging a 401 or 403
 
 1. Click **Test connection** in Settings → AI provider. The message now includes

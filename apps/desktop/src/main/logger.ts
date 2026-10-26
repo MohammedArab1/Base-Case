@@ -8,6 +8,8 @@ export interface LoggerOptions {
   readonly maxBytes?: number
   readonly maxFiles?: number
   readonly level?: LogLevel
+  /** Mirror lines to stdout as well as the rotating file. */
+  readonly console?: boolean
 }
 
 interface LogSink {
@@ -106,6 +108,16 @@ class ConsoleSink implements LogSink {
   }
 }
 
+class TeeSink implements LogSink {
+  constructor(private readonly sinks: readonly LogSink[]) {}
+
+  write(level: LogLevel, line: string): void {
+    for (const sink of this.sinks) {
+      sink.write(level, line)
+    }
+  }
+}
+
 export class Logger {
   private constructor(
     private readonly sink: LogSink,
@@ -114,12 +126,14 @@ export class Logger {
   ) {}
 
   static file(options: LoggerOptions): Logger {
+    const fileSink = new FileSink(
+      options.directory,
+      options.maxBytes ?? defaultMaxBytes,
+      options.maxFiles ?? defaultMaxFiles,
+    )
+
     return new Logger(
-      new FileSink(
-        options.directory,
-        options.maxBytes ?? defaultMaxBytes,
-        options.maxFiles ?? defaultMaxFiles,
-      ),
+      options.console ? new TeeSink([fileSink, new ConsoleSink()]) : fileSink,
       '',
       options.level ?? 'info',
     )

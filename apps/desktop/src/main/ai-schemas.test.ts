@@ -90,6 +90,13 @@ describe('parseStructuredOutput', () => {
     const parsed = parseStructuredOutput('followUp', 'Ask about caching.')
     expect(parsed.ok).toBe(false)
     expect(parsed.text).toBe('Ask about caching.')
+    expect(parsed.error).toContain('text instead of a JSON object')
+  })
+
+  it('explains an empty provider response', () => {
+    const parsed = parseStructuredOutput('explain', '   ')
+    expect(parsed.ok).toBe(false)
+    expect(parsed.error).toContain('empty response')
   })
 
   it('exports a JSON schema for providers that support structured outputs', () => {

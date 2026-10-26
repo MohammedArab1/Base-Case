@@ -51,9 +51,45 @@ export interface OpenAiCompatibleOptions {
 
 interface ChatCompletionPayload {
   readonly choices?: readonly {
-    readonly delta?: { readonly content?: string }
-    readonly message?: { readonly content?: string }
+    readonly delta?: { readonly content?: unknown }
+    readonly message?: { readonly content?: unknown }
+    readonly text?: string
   }[]
+}
+
+function contentText(content: unknown): string {
+  if (typeof content === 'string') {
+    return content
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => {
+        if (typeof part === 'string') {
+          return part
+        }
+
+        if (part && typeof part === 'object' && 'text' in part) {
+          const text = (part as { text?: unknown }).text
+          return typeof text === 'string' ? text : ''
+        }
+
+        return ''
+      })
+      .join('')
+  }
+
+  return ''
+}
+
+function choiceText(payload: ChatCompletionPayload): string {
+  const choice = payload.choices?.[0]
+  return (
+    contentText(choice?.delta?.content) ||
+    contentText(choice?.message?.content) ||
+    choice?.text ||
+    ''
+  )
 }
 
 function truncate(value: string, limit: number): string {
@@ -99,7 +135,13 @@ export class OpenAiCompatibleProvider implements AiProvider {
 
       if (contentType.includes('application/json')) {
         const payload = (await response.json()) as ChatCompletionPayload
-        const text = payload.choices?.[0]?.message?.content
+        const text = choiceText(payload)
+
+        getLogger('ai.provider').info('provider.json_response', {
+          model: this.options.model,
+          characters: text.length,
+        })
+
         if (text) {
           onChunk(text)
         }
@@ -285,42 +327,72 @@ export class OpenAiCompatibleProvider implements AiProvider {
   ): Promise<void> {
     const reader = body.getReader()
     const decoder = new TextDecoder()
+    const log = getLogger('ai.provider')
     let buffer = ''
+    let events = 0
+    let chunks = 0
+    let characters = 0
 
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) {
-        break
-      }
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) {
+          break
+        }
 
-      buffer += decoder.decode(value, { stream: true }).replaceAll('\r\n', '\n')
+        buffer += decoder.decode(value, { stream: true }).replaceAll('\r\n', '\n')
 
-      let boundary = buffer.indexOf('\n\n')
-      while (boundary !== -1) {
-        const event = buffer.slice(0, boundary)
-        buffer = buffer.slice(boundary + 2)
-        boundary = buffer.indexOf('\n\n')
+        let boundary = buffer.indexOf('\n\n')
+        while (boundary !== -1) {
+          const event = buffer.slice(0, boundary)
+          buffer = buffer.slice(boundary + 2)
+          boundary = buffer.indexOf('\n\n')
 
-        for (const line of event.split('\n')) {
-          if (!line.startsWith('data:')) {
-            continue
-          }
+          for (const line of event.split('\n')) {
+            const trimmed = line.trim()
 
-          const data = line.slice(5).trim()
-          if (data === '[DONE]') {
-            return
-          }
+            // Standard SSE uses `data:`; some local gateways stream bare JSON
+            // objects, one per line. Accept both.
+            const data = trimmed.startsWith('data:')
+              ? trimmed.slice(5).trim()
+              : trimmed.startsWith('{')
+                ? trimmed
+                : ''
 
-          try {
-            const payload = JSON.parse(data) as ChatCompletionPayload
-            const text = payload.choices?.[0]?.delta?.content
-            if (text) {
-              onChunk(text)
+            if (!data) {
+              continue
             }
-          } catch {
-            // Ignore keep-alive or provider-specific non-JSON events.
+
+            if (data === '[DONE]') {
+              return
+            }
+
+            try {
+              const payload = JSON.parse(data) as ChatCompletionPayload
+              events += 1
+              const text = choiceText(payload)
+
+              if (text) {
+                chunks += 1
+                characters += text.length
+                onChunk(text)
+              }
+            } catch {
+              // Ignore keep-alive or provider-specific non-JSON events.
+            }
           }
         }
+      }
+    } finally {
+      log.info('provider.stream_complete', {
+        model: this.options.model,
+        events,
+        chunks,
+        characters,
+      })
+
+      if (characters === 0) {
+        log.warn('provider.empty_stream', { model: this.options.model, events })
       }
     }
   }

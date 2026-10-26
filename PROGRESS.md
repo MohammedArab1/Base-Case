@@ -56,6 +56,29 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 ## Work log (newest first)
 
+### 2026-10-26 — Post-alpha fix — Non-JSON AI responses and development logging
+
+- Status: AI response parsing and dev-process debugging improved
+- Done:
+  - Added clearer parse failures: empty responses now explain the likely cause, and prose responses say the raw text is shown below.
+  - Logged `ai.response` character counts and parse outcome, `ai.empty_response`, and provider stream event/chunk/character counts.
+  - Made the OpenAI-compatible stream parser accept bare JSON lines as well as `data:` SSE events, and content provided as arrays of text parts or `message.content`.
+  - Mirrored main-process logs to the development terminal when running `pnpm dev`; production logs remain file-only.
+  - Added `pnpm dev:inspect`, which exposes the Electron main process on port 9229 for `chrome://inspect` breakpoints.
+  - Documented the difference between renderer DevTools and main-process logging, and how to diagnose non-JSON/empty responses, in `docs/troubleshooting.md`.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 125 tests across 28 files, including content-array and bare-JSON streaming fixtures and a console-mirroring logger test.
+  - `pnpm smoke:e2e` — passed with key, header, 401 detail, and log assertions.
+  - `pnpm smoke:playwright` — 10 passed.
+- Files/PRs:
+  - `ai-schemas.ts`, `ai.ts`, `ai-providers/openai-compatible.ts`, `logger.ts`, `main/index.ts`, `docs/troubleshooting.md`, package scripts.
+- Next:
+  - Candidate artifacts and checksums were refreshed; continue with manual accessibility and external release gates (B1, B2, B10, B11).
+- Notes/decisions:
+  - Raw model text is shown in the AI panel when structured parsing fails, but is never written to logs. Logs only record length and parse status.
+  - The renderer Network tab cannot show main-process provider requests by design; use the terminal logs, `app.log`, or the main-process inspector.
+
 ### 2026-10-26 — Post-alpha fix — AI provider error diagnostics
 
 - Status: 401 debugging and local logs improved

@@ -128,10 +128,15 @@ export function parseStructuredOutput(feature: AiFeature, raw: string): ParsedAi
   const candidate = extractJsonObject(raw)
 
   if (!candidate) {
+    const trimmed = raw.trim()
+
     return {
       ok: false,
       text: raw,
-      error: 'The model did not return a JSON object.',
+      error:
+        trimmed.length === 0
+          ? 'The provider returned an empty response. Check the model name and whether it supports streaming chat completions.'
+          : 'The model returned text instead of a JSON object. The raw response is shown below.',
     }
   }
 

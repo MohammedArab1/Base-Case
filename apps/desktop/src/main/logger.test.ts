@@ -1,7 +1,7 @@
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { Logger, redactForLog } from './logger'
 
 function temporaryDirectory(): string {
@@ -42,6 +42,21 @@ describe('Logger', () => {
       expect(record.channel).toBe('app:info')
       expect(typeof record.time).toBe('string')
     } finally {
+      rmSync(directory, { recursive: true, force: true })
+    }
+  })
+
+  it('mirrors to the console when requested for development', () => {
+    const directory = temporaryDirectory()
+    const spy = vi.spyOn(console, 'info').mockImplementation(() => undefined)
+
+    try {
+      Logger.file({ directory, console: true }).info('dev.log', { ok: true })
+
+      expect(spy).toHaveBeenCalledWith(expect.stringContaining('"event":"dev.log"'))
+      expect(readFileSync(join(directory, 'app.log'), 'utf8')).toContain('"event":"dev.log"')
+    } finally {
+      spy.mockRestore()
       rmSync(directory, { recursive: true, force: true })
     }
   })

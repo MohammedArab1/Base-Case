@@ -59,4 +59,47 @@ describe('OpenAiCompatibleProvider', () => {
     expect(received[0]?.['x-opencode-session']).toBe('session-123')
     expect(received[0]?.authorization).toBe('Bearer sk-secret-value')
   })
+
+  it('reads JSON content parts and bare JSON stream lines', async () => {
+    const server = createServer((_request, response) => {
+      response.writeHead(200, { 'Content-Type': 'text/event-stream' })
+      response.end(
+        [
+          JSON.stringify({ choices: [{ delta: { content: [{ text: 'hello ' }] } }] }),
+          JSON.stringify({ choices: [{ delta: { content: 'world' } }] }),
+        ]
+          .map((event) => `${event}\n\n`)
+          .join(''),
+      )
+    })
+    servers.push(server)
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address()
+
+    if (!address || typeof address === 'string') {
+      throw new Error('Could not bind the test server.')
+    }
+
+    const provider = new OpenAiCompatibleProvider({
+      baseUrl: `http://127.0.0.1:${address.port}/v1`,
+      model: 'test-model',
+      apiKey: '',
+      contextWindow: 8192,
+    })
+    const chunks: string[] = []
+
+    await provider.stream(
+      {
+        requestId: 'test-stream',
+        feature: 'explain',
+        system: 'system',
+        messages: [],
+        maxOutputTokens: 20,
+        temperature: 0,
+      },
+      (text) => chunks.push(text),
+    )
+
+    expect(chunks.join('')).toBe('hello world')
+  })
 })
