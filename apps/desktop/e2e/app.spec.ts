@@ -54,6 +54,44 @@ async function capture(page: Page, name: string): Promise<void> {
   await page.screenshot({ path: join(directory, `${name}.png`) })
 }
 
+interface AxeViolation {
+  readonly id: string
+  readonly help: string
+  readonly impact: string | null
+  readonly nodes: readonly { readonly target: readonly string[] }[]
+}
+
+const axeTags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']
+
+async function seriousAxeViolations(page: Page, view: string): Promise<unknown[]> {
+  const results = await page.evaluate(
+    async (tags): Promise<{ violations: readonly AxeViolation[] }> => {
+      const axe = (
+        window as unknown as {
+          axe: {
+            run: (
+              context: Document,
+              options: unknown,
+            ) => Promise<{ violations: readonly AxeViolation[] }>
+          }
+        }
+      ).axe
+
+      return axe.run(document, { runOnly: { type: 'tag', values: tags } })
+    },
+    axeTags,
+  )
+
+  return results.violations
+    .filter((violation) => violation.impact === 'serious' || violation.impact === 'critical')
+    .map((violation) => ({
+      view,
+      id: violation.id,
+      help: violation.help,
+      nodes: violation.nodes.map((node) => node.target),
+    }))
+}
+
 async function completeOnboarding(page: Page, language: 'python' | 'typescript'): Promise<void> {
   await page.getByTestId('onboarding-start').click()
   await page.getByTestId(`onboarding-language-${language}`).click()
@@ -639,13 +677,6 @@ test('has no serious accessibility violations in the main views', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-a11y-'))
   let launched: LaunchedApp | null = null
 
-  interface AxeViolation {
-    readonly id: string
-    readonly help: string
-    readonly impact: string | null
-    readonly nodes: readonly { readonly target: readonly string[] }[]
-  }
-
   try {
     launched = await launchApp(userDataDirectory)
     const page = launched.page
@@ -671,6 +702,7 @@ test('has no serious accessibility violations in the main views', async () => {
       { nav: 'Progress', title: 'Progress' },
       { nav: 'Settings', title: 'Settings' },
     ]
+    const findings: unknown[] = []
 
     for (const view of views) {
       await page
@@ -678,40 +710,80 @@ test('has no serious accessibility violations in the main views', async () => {
         .getByRole('button', { name: view.nav })
         .click()
       await expect(page.getByRole('heading', { name: view.title, level: 1 })).toBeVisible()
+      findings.push(...(await seriousAxeViolations(page, view.title)))
 
-      const results = await page.evaluate(
-        async (): Promise<{
-          violations: readonly AxeViolation[]
-        }> => {
-          const axe = (
-            window as unknown as {
-              axe: {
-                run: (
-                  context: Document,
-                  options: unknown,
-                ) => Promise<{ violations: readonly AxeViolation[] }>
-              }
-            }
-          ).axe
-
-          return axe.run(document, {
-            runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
-          })
-        },
-      )
-      const serious = results.violations.filter(
-        (violation) => violation.impact === 'serious' || violation.impact === 'critical',
-      )
-
-      expect(
-        serious.map((violation) => ({
-          view: view.title,
-          id: violation.id,
-          help: violation.help,
-          nodes: violation.nodes.map((node) => node.target),
-        })),
-      ).toEqual([])
+      if (view.nav === 'System Design') {
+        await page.getByTestId('design-scenario').first().click()
+        await expect(page.locator('.excalidraw__canvas.interactive')).toBeVisible()
+        findings.push(...(await seriousAxeViolations(page, 'Design scenario canvas')))
+      }
     }
+
+    expect(findings).toEqual([])
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('audits onboarding, the command palette, forced colors, and reduced motion', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-a11y-modes-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await page.addInitScript({ content: axeSource })
+    await page.reload()
+    await page.waitForLoadState('domcontentloaded')
+    await page.waitForFunction(() => Boolean((window as unknown as { axe?: unknown }).axe))
+    const findings: unknown[] = []
+
+    await expect(page.getByTestId('onboarding-start')).toBeVisible()
+    findings.push(...(await seriousAxeViolations(page, 'Onboarding welcome')))
+    await page.getByTestId('onboarding-start').click()
+    findings.push(...(await seriousAxeViolations(page, 'Onboarding language')))
+
+    await page.getByTestId('onboarding-language-python').click()
+    await page.getByTestId('onboarding-language-next').click()
+    await page.getByTestId('onboarding-goal-30').click()
+    await page.getByTestId('onboarding-goal-next').click()
+    findings.push(...(await seriousAxeViolations(page, 'Onboarding AI')))
+    await page.getByTestId('onboarding-ai-none').click()
+    await page.getByTestId('onboarding-finish').click()
+    findings.push(...(await seriousAxeViolations(page, 'Onboarding summary')))
+    await page.getByTestId('onboarding-go-today').click()
+
+    await page.getByRole('button', { name: /commands$/ }).click()
+    await expect(page.locator('.command-palette')).toBeVisible()
+    findings.push(...(await seriousAxeViolations(page, 'Command palette')))
+    await page.keyboard.press('Escape')
+
+    await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' })
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Coding' })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Problem library' })).toBeVisible()
+    findings.push(...(await seriousAxeViolations(page, 'Coding forced colors')))
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Progress' })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Activity' })).toBeVisible()
+    findings.push(...(await seriousAxeViolations(page, 'Progress forced colors')))
+
+    const animationDurations = await page.evaluate(() =>
+      [...document.querySelectorAll('.nav-item')].map((element) =>
+        Number.parseFloat(getComputedStyle(element).transitionDuration),
+      ),
+    )
+
+    expect(findings).toEqual([])
+    expect(animationDurations.length).toBeGreaterThan(0)
+    expect(animationDurations.every((duration) => duration <= 0.001)).toBe(true)
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

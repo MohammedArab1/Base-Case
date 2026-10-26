@@ -185,6 +185,7 @@ function DesignWorkspace({
   const [exportState, setExportState] = useState<string | null>(null)
 
   const apiRef = useRef<ExcalidrawImperativeAPI | null>(null)
+  const canvasWrapRef = useRef<HTMLDivElement>(null)
   const sceneJsonRef = useRef('')
   const notesRef = useRef<DesignNotes>({ ...emptyDesignNotes })
   const rubricRef = useRef<DesignRubricAnswers>({})
@@ -230,6 +231,30 @@ function DesignWorkspace({
       cancelled = true
     }
   }, [scenarioId])
+
+  // Excalidraw's icon-only main menu ships without an accessible name. Label it
+  // once the canvas mounts so keyboard and screen-reader users can identify it.
+  useEffect(() => {
+    const wrap = canvasWrapRef.current
+
+    if (!wrap) {
+      return
+    }
+
+    const labelMenu = (): void => {
+      for (const trigger of wrap.querySelectorAll('.main-menu-trigger')) {
+        if (!trigger.getAttribute('aria-label')) {
+          trigger.setAttribute('aria-label', 'Excalidraw main menu')
+        }
+      }
+    }
+
+    labelMenu()
+    const observer = new MutationObserver(labelMenu)
+    observer.observe(wrap, { childList: true, subtree: true })
+
+    return () => observer.disconnect()
+  }, [scenario?.id])
 
   const persistDraft = useCallback(async (): Promise<void> => {
     if (!draftLoadedRef.current) {
@@ -499,7 +524,7 @@ function DesignWorkspace({
             <span>Canvas</span>
             <span className="muted">Excalidraw · autosaves locally</span>
           </div>
-          <div className="canvas-wrap design-canvas">
+          <div className="canvas-wrap design-canvas" ref={canvasWrapRef}>
             <Excalidraw
               excalidrawAPI={(api) => {
                 apiRef.current = api

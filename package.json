@@ -29,6 +29,7 @@
     "release:checksums": "node scripts/checksums.mjs apps/desktop/dist",
     "smoke:e2e": "node scripts/smoke-electron.mjs",
     "smoke:playwright": "pnpm --filter @base-case/desktop build && pnpm --filter @base-case/desktop test:e2e",
+    "demo:record": "node scripts/record-demo.mjs",
     "evals": "tsx scripts/ai-evals.ts"
   },
   "devDependencies": {

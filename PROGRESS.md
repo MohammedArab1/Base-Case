@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-25
-> Current phase: Phase 9 — MVP expansion (25 + 8 content, importer, polish, platform, AI, performance, and security work complete; manual accessibility and media remain)
-> Overall status: On track — the full 25 + 8 content set, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, and packaged performance measurements are in place. Remaining Phase 9 work is manual accessibility verification, GIF/demo media, and the release candidate. External alpha blockers B1–B11 remain open
-> Next milestone: MVP feature-complete build and release candidate, then the private alpha and `v0.1.0-alpha` tag
+> Current phase: Phase 9 — MVP expansion (25 + 8 content, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
+> Overall status: On track — the full 25 + 8 content set, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. External alpha blockers B1–B11 remain open
+> Next milestone: MVP release candidate once B1, B2, B10, and B11 clear, then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -21,24 +21,23 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
 | Phase 7 — Content production | In progress | 2026-10-25 | Alpha set of 10 coding problems and 4 design scenarios completed in Phase 7; Phase 9 expanded the pack to 25 coding + 8 design. All 50 reference solutions pass. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-25 | Content target reached: 25 coding problems (50/50 reference solutions) and 8 design scenarios. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, and the security review are done. Remaining: manual accessibility verification (B11), GIF/demo video, and the release candidate |
+| Phase 9 — MVP expansion | In progress | 2026-10-25 | Content target reached: 25 coding problems (50/50 reference solutions) and 8 design scenarios. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
 1. Run the manual accessibility checklist in `docs/project/accessibility.md` on macOS and Windows and record the result (B11).
-2. Capture a GIF and short demo video for the README and release notes.
-3. Build the release candidate, review known issues, and confirm export/import plus backup/restore one final time.
-4. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
-5. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
-6. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
-7. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-8. Get a second-person review of the 25 coding problems and 8 design scenarios (B4) and record the sign-off.
-9. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
-10. Add optional local AI history with a clear delete button (privacy default stays off).
-11. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-12. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-13. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+2. Confirm the release-candidate checksums in `docs/project/release-candidate.md` after the final rebuild, then review known issues and re-run export/import plus backup/restore one final time.
+3. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
+4. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
+5. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
+6. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
+7. Get a second-person review of the 25 coding problems and 8 design scenarios (B4) and record the sign-off.
+8. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
+9. Add optional local AI history with a clear delete button (privacy default stays off).
+10. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+11. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+12. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
 
 ## Blockers
 
@@ -56,6 +55,34 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-25 — Phase 9 — Demo media, expanded accessibility, and release-candidate record
+
+- Status: All remaining Phase 9 work that does not need a human is complete
+- Done:
+  - Added `scripts/record-demo.mjs` and `pnpm demo:record`. It drives the built app with Playwright, captures real renderer frames from a fresh profile, and encodes a 10-second MP4, GIF, and poster with ffmpeg.
+  - Added `docs/demo.md`, embedded the GIF in the README, and linked the MP4/poster.
+  - Extended the axe gate to onboarding, the command palette, the Excalidraw design canvas, forced-colors mode, and reduced motion.
+  - Fixed the issues the expanded gate found: labelled the command listbox, labelled Excalidraw's icon-only main menu, removed low-contrast opacity from the empty-state hint, and added forced-colors styling for the brand mark.
+  - Rebuilt the dual-arch installers and recorded sizes and SHA-256 checksums in `docs/project/release-candidate.md`.
+  - Re-ran packaged performance measurements on the new build.
+- Tests run:
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck` — passed.
+  - `pnpm test` — 117 tests; schema and Go suites passed.
+  - `pnpm content:validate`, `pnpm content:test` — 25 problems, 8 designs, 50/50 reference solutions.
+  - `pnpm evals` — 60 cases, 0 leaks.
+  - `pnpm audit --prod` — no known vulnerabilities.
+  - `pnpm smoke:e2e` — passed with 25 problems, 8 designs, in-place and linked-list runs.
+  - `pnpm smoke:playwright` — 8 passed, including both accessibility tests.
+  - `pnpm demo:record` — 40 frames, 10-second MP4/GIF.
+  - Packaged measurement — 2883 ms cold start, 46 ms problem open, 416 ms design canvas, 301 ms judge run, 292.0 MB idle / 379.1 MB working memory, 253.0 MB DMG / 253.8 MB ZIP.
+- Files/PRs:
+  - `scripts/record-demo.mjs`, `docs/demo.md`, `docs/assets/demo/`, `docs/project/release-candidate.md`, `apps/desktop/e2e/app.spec.ts`, `CommandPalette.tsx`, `DesignView.tsx`, `styles.css`.
+- Next:
+  - Manual accessibility verification (B11) and the remaining external gates (B1, B2, B4, B10) before tagging.
+- Notes/decisions:
+  - The demo is a real UI capture, not a mockup. ffmpeg is only needed to regenerate it; the generated media is committed.
+  - The release-candidate build is intentionally untagged. Its checksums are recorded so the artifacts can be verified before publication.
 
 ### 2026-10-25 — Phase 9 — Platform, AI, security, and docs
 

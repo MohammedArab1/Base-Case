@@ -14,6 +14,7 @@ Start here:
 - `privacy.md` — what stays local, what AI sends, and how to remove data.
 - `known-limitations.md` — intentional alpha limits and pending blockers.
 - `screenshots.md` — generated screenshots of the main workflows.
+- `demo.md` — 10-second generated GIF/MP4 walkthrough.
 
 ## Architecture
 

@@ -11,6 +11,10 @@ the release candidate, clean-VM installs, the manual Windows installer run, a
 second-person content review, a real-model AI eval run, trademark/domain, and
 GitHub project setup are pending. See `docs/project/open-blockers.md`.
 
+![Base Case demo walkthrough](docs/assets/demo/base-case-demo.gif)
+
+A 10-second tour is in `docs/demo.md` ([MP4](docs/assets/demo/base-case-demo.mp4)).
+
 ## Why
 
 Online judges hide tests and say "wrong answer." Offline judges often need

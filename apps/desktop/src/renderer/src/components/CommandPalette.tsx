@@ -120,6 +120,7 @@ export function CommandPalette({
           id="command-list"
           className="command-list flex flex-col gap-0.5 overflow-auto p-1.5"
           role="listbox"
+          aria-label="Commands"
         >
           {filtered.length === 0 ? (
             <p className="command-empty px-3 py-6 text-center text-sm text-bc-muted">

@@ -399,7 +399,7 @@ button.badge-action:hover {
   margin-top: 14px;
   color: var(--muted);
   font-size: 12px;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .empty-illustration {
@@ -450,5 +450,13 @@ button.badge-action:hover {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .brand-mark {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
   }
 }

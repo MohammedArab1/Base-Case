@@ -2867,7 +2867,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Command palette (Phase 2, `components/CommandPalette.tsx`).
   - [x] Search/filters (Phase 2 FTS search; Phase 4 library filters).
   - [x] Progress charts. (14-day activity chart plus pattern coverage bars)
-  - [ ] Accessibility pass. (Automated WCAG A/AA gate passes; manual VoiceOver/NVDA checklist remains as B11)
+  - [ ] Accessibility pass. (Automated WCAG A/AA gate covers the six main views, canvas, onboarding, command palette, forced colors, and reduced motion; manual VoiceOver/NVDA checklist remains as B11)
   - [x] Error/empty/loading states. (Audited in `docs/project/states-audit.md`; page errors announce via `role="alert"`)
   - [x] Reduced motion (`prefers-reduced-motion` in `styles.css`).
   - [x] Window/layout persistence (`main/window-state.ts`; inspector layout in localStorage).
@@ -2887,8 +2887,8 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Electron checklist. (`docs/project/security-review.md`)
   - [x] Judge limitations. (Documented in ADR-0009 and `docs/architecture/threat-model.md`)
   - [x] Dependency audit. (`pnpm audit --prod` clean after targeted transitive overrides)
-- [ ] Docs, screenshots, GIF, demo video. (Docs and generated screenshots exist; GIF and demo video remain)
-- [ ] Release candidate.
+- [x] Docs, screenshots, GIF, demo video. (Docs, generated screenshots, and a 10-second GIF/MP4 walkthrough exist)
+- [ ] Release candidate. (MVP build candidate and checksums recorded; tagging waits on B1, B2, B10, and B11)
 
 **Deliverables**
 
