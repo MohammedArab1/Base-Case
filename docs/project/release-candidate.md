@@ -2,7 +2,7 @@
 
 Date: 2026-10-25
 Version: `0.1.0-alpha`
-Code commit: `7ef5b5d` (includes the API key decryption fix); later
+Code commit: `5cdf198` (API key, response parsing, and logging fixes); later
 documentation-only commits do not change packaged bytes
 Platforms: macOS arm64, macOS x64
 Status: **build candidate only** — not tagged and not published.
