@@ -2,8 +2,8 @@
 
 Date: 2026-10-25
 Version: `0.1.0-alpha`
-Code commit: `c22a1b2` (subsequent demo and documentation commits do not change
-packaged bytes)
+Code commit: `f5df6e5` (the commit that contains the packaged code; later
+documentation-only commits do not change packaged bytes)
 Platforms: macOS arm64, macOS x64
 Status: **build candidate only** — not tagged and not published.
 
