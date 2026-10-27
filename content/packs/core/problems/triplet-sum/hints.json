@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Fix one value",
+      "body": "After sorting, choose one value and find two others that complete the sum."
+    },
+    {
+      "level": 2,
+      "title": "Two pointers",
+      "body": "For a fixed first value, move a left pointer and a right pointer inward based on the current sum."
+    },
+    {
+      "level": 3,
+      "title": "Skip duplicates",
+      "body": "Advance past repeated first values, and past repeated pointer values after recording a triplet."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort nums\nfor i from 0 to n-3:\n    if i > 0 and nums[i] == nums[i-1]: continue\n    left = i + 1, right = n - 1\n    while left < right:\n        total = nums[i] + nums[left] + nums[right]\n        if total < 0: left += 1\n        else if total > 0: right -= 1\n        else:\n            record triplet\n            move both pointers and skip duplicates\nreturn recorded triplets\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

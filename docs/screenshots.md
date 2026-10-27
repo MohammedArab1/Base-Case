@@ -28,7 +28,7 @@ stay unchecked until the learner confirms them.
 
 ## Expanded content
 
-A linked-list problem from the 25-problem core pack, solved in TypeScript.
+A linked-list problem from the 75-problem Grind 75 collection, solved in TypeScript.
 
 ![Reverse Chain in the coding workspace](assets/screenshots/linked-list.png)
 

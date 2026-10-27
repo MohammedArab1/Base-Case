@@ -1,0 +1,15 @@
+{"input":{"begin":"a","end":"c","words":["b"]},"expected":0}
+{"input":{"begin":"a","end":"c","words":["c"]},"expected":2}
+{"input":{"begin":"ab","end":"cd","words":["ad","cb","cd"]},"expected":3}
+{"input":{"begin":"ab","end":"cd","words":["ad","cd"]},"expected":3}
+{"input":{"begin":"abc","end":"xyz","words":["xbc","xyc","xyz"]},"expected":4}
+{"input":{"begin":"abc","end":"xyz","words":["abd","axd","axy","xyz"]},"expected":0}
+{"input":{"begin":"hot","end":"dog","words":["hot","dot","dog"]},"expected":3}
+{"input":{"begin":"hot","end":"dog","words":["hot","dot","log","dog"]},"expected":3}
+{"input":{"begin":"aaa","end":"ccc","words":["aac","acc","ccc"]},"expected":4}
+{"input":{"begin":"aaa","end":"ccc","words":["aab","abb","bbc","bcc","ccc"]},"expected":0}
+{"input":{"begin":"cat","end":"dog","words":["cot","dot","dog"]},"expected":4}
+{"input":{"begin":"cat","end":"dog","words":["cot","dot","fog"]},"expected":0}
+{"input":{"begin":"lead","end":"gold","words":["load","goad","gold"]},"expected":4}
+{"input":{"begin":"lead","end":"gold","words":["load","goad","gold"]},"expected":4}
+{"input":{"begin":"same","end":"some","words":["same","some"]},"expected":2}

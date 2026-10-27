@@ -117,6 +117,15 @@ export interface HintFile {
   readonly hints: readonly Hint[]
 }
 
+export interface ContentCollection {
+  readonly id: string
+  readonly name: string
+  readonly description: string
+  readonly problems: readonly string[]
+  readonly attribution?: string
+  readonly url?: string
+}
+
 export interface PackManifest {
   readonly schemaVersion: 1
   readonly id: string
@@ -126,6 +135,7 @@ export interface PackManifest {
   readonly attribution: string
   readonly problems: readonly string[]
   readonly designs: readonly string[]
+  readonly collections?: readonly ContentCollection[]
 }
 
 export interface DesignRequirements {

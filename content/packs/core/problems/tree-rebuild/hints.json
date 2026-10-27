@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "The first preorder value is the root",
+      "body": "The next values form the left subtree until the root appears in the inorder traversal."
+    },
+    {
+      "level": 2,
+      "title": "Split by the root",
+      "body": "The root's position in inorder separates the left and right subtree values."
+    },
+    {
+      "level": 3,
+      "title": "Consume preorder in order",
+      "body": "Build nodes from preorder while tracking how much of inorder has been completed."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nroot = new node(preorder[0])\nstack = [root]\ninIndex = 0\nfor value in preorder[1:]:\n    node = new node(value)\n    if stack.top.value != inorder[inIndex]:\n        stack.top.left = node\n    else:\n        while stack and stack.top.value == inorder[inIndex]:\n            last = stack.pop(); inIndex += 1\n        last.right = node\n    stack.push(node)\nreturn root\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

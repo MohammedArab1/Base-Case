@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What changes at one node?",
+      "body": "Swapping the two child references at a node is the entire local operation."
+    },
+    {
+      "level": 2,
+      "title": "Apply everywhere",
+      "body": "Every node needs the same swap. A traversal reaches each node exactly once."
+    },
+    {
+      "level": 3,
+      "title": "Order does not matter",
+      "body": "Swap a node, then push its children for the same treatment. Return the original root."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfunction flip(node):\n    if node is null: return null\n    swap node.left and node.right\n    flip(node.left)\n    flip(node.right)\n    return node\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

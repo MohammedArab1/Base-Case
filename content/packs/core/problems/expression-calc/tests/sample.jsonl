@@ -1,0 +1,4 @@
+{"input":{"expression":"1 + 1"},"expected":2}
+{"input":{"expression":" 2-1 + 2 "},"expected":3}
+{"input":{"expression":"(1+(4+5+2)-3)+(6+8)"},"expected":23}
+{"input":{"expression":"-2+1"},"expected":-1}

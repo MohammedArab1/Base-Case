@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "core/merge-k-arrays",
+  "slug": "merge-k-arrays",
+  "title": "Merge K Arrays",
+  "difficulty": "hard",
+  "patterns": ["arrays", "divide-and-conquer", "heap"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "mergeK",
+    "params": [
+      {
+        "name": "arrays",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(N log k)",
+      "space": "O(N)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(N log k)",
+      "space": "O(N)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Dropping empty arrays incorrectly",
+    "Forgetting the remaining tail during a merge",
+    "Comparing array lengths instead of values"
+  ],
+  "followUps": [
+    "How would you merge k sorted linked lists?",
+    "What is the heap-based alternative?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

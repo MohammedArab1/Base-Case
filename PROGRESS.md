@@ -1,8 +1,8 @@
 # Progress Log
 
-> Last updated: 2026-10-25
-> Current phase: Phase 9 — MVP expansion (25 + 8 content, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the full 25 + 8 content set, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. External alpha blockers B1–B11 remain open
+> Last updated: 2026-10-26
+> Current phase: Phase 9 — MVP expansion (79 + 8 content, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
+> Overall status: On track — the expanded 79-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. External alpha blockers B1–B12 remain open
 > Next milestone: MVP release candidate once B1, B2, B10, and B11 clear, then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
@@ -19,9 +19,9 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
-| Phase 7 — Content production | In progress | 2026-10-25 | Alpha set of 10 coding problems and 4 design scenarios completed in Phase 7; Phase 9 expanded the pack to 25 coding + 8 design. All 50 reference solutions pass. Second-person review and optional reference scenes remain |
+| Phase 7 — Content production | In progress | 2026-10-26 | Phase 9 expanded the pack to 79 coding problems (including the 75-problem Grind 75 collection) and 8 design scenarios. All 158 reference solutions pass. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-25 | Content target reached: 25 coding problems (50/50 reference solutions) and 8 design scenarios. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
+| Phase 9 — MVP expansion | In progress | 2026-10-26 | Content expanded to 79 coding problems (158/158 reference solutions) plus 8 design scenarios, with a filterable 75-problem Grind 75 collection. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
@@ -32,7 +32,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 4. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
 5. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
 6. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-7. Get a second-person review of the 25 coding problems and 8 design scenarios (B4) and record the sign-off.
+7. Get a second-person review of the 79 coding problems and 8 design scenarios (B4) and record the sign-off.
 8. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
 9. Add optional local AI history with a clear delete button (privacy default stays off).
 10. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
@@ -46,7 +46,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
 - **B2 — Manual Windows installer workflow:** trigger the `Build installers` GitHub Actions workflow and record the bundled-runtime `.exe` size and first-launch result.
 - **B3 — Real-model AI eval run:** the bug zoo is recorded against the mock provider; a real endpoint plus human ratings is needed for the Phase 6 exit criteria.
-- **B4 — Second-person content review:** the 25 coding + 8 design MVP set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
+- **B4 — Second-person content review:** the 79 coding + 8 design set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -56,6 +56,30 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-26 — Grind 75 expansion and collection filter
+
+- Status: 79 original coding problems; 75-problem Grind 75 collection filter
+- Done:
+  - Mapped 21 existing problems to the Grind 75 list and added 54 new original problems, bringing the core pack to 79 coding problems plus 8 design scenarios.
+  - Kept the four existing problems that are not in the list (`compact-signals`, `cargo-deadline`, `join-sticks`, `edit-ledger`) as untagged extras.
+  - Wrote every new statement, example, hint, explanation, and test from scratch. Problem titles remain original, and the collection credits and links to Tech Interview Handbook without implying endorsement.
+  - Added generic pack collections to the schema, types, validation, content loader, IPC, preload API, and tests. Collection IDs are namespaced as `<pack>/<collection>`.
+  - Added a **Collection** filter to the coding library, collection tags on problem rows, and a description/attribution note when a collection is selected.
+  - Added schema tests for collection membership, duplicate IDs, and the bundled 75-problem collection.
+  - Extended the Playwright suite to cover the Grind 75 filter and the Electron smoke test to assert 79 problems, 75 tagged problems, and 8 design scenarios.
+  - Updated README, PLAN, known limitations, alpha release notes, screenshots, and pack-import documentation.
+- Verification:
+  - `pnpm content:validate` — valid; 79 problems and 8 designs; only the expected optional reference-scene warnings.
+  - `pnpm content:test` — 158/158 reference solutions accepted.
+  - `pnpm typecheck` — passed.
+  - `pnpm test` — 7 schema tests, 125 desktop tests, and the Go judge tests passed.
+  - `pnpm lint` and `pnpm format:check` — passed.
+  - `pnpm smoke:e2e` — passed; 79 problems, 75 Grind 75 members, 8 design scenarios, and the existing judge/import flows.
+  - `pnpm --filter @base-case/desktop test:e2e` — 11/11 passed.
+- Notes:
+  - The public Grind 75 page currently lists 169 questions. The app ships a curated 75-problem core subset rather than all 169, and the four non-list extras stay available outside the filter.
+  - The second-person review blocker now covers the full 79 + 8 set (B4).
 
 ### 2026-10-26 — Post-alpha fix — Large-screen layout and macOS bundle signing
 

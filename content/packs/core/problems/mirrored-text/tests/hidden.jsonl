@@ -1,0 +1,15 @@
+{"input":{"text":" "},"expected":true}
+{"input":{"text":"a"},"expected":true}
+{"input":{"text":"aa"},"expected":true}
+{"input":{"text":"ab"},"expected":false}
+{"input":{"text":"0P"},"expected":false}
+{"input":{"text":"0p0"},"expected":true}
+{"input":{"text":"No 'x' in Nixon"},"expected":true}
+{"input":{"text":"Was it a car or a cat I saw?"},"expected":true}
+{"input":{"text":"hello"},"expected":false}
+{"input":{"text":"12321"},"expected":true}
+{"input":{"text":"12345"},"expected":false}
+{"input":{"text":"A1b2B1a"},"expected":true}
+{"input":{"text":".,;"},"expected":true}
+{"input":{"text":"Ab"},"expected":false}
+{"input":{"text":"zZ"},"expected":true}

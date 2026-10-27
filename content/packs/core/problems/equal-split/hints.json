@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Total must be even",
+      "body": "An equal split is impossible when the total sum is odd."
+    },
+    {
+      "level": 2,
+      "title": "Find a subset",
+      "body": "The problem is equivalent to finding a subset whose sum is half the total."
+    },
+    {
+      "level": 3,
+      "title": "Zero-one knapsack",
+      "body": "Mark reachable sums. Iterate sums downward so each value is used at most once."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntotal = sum(nums)\nif total is odd: return false\ntarget = total // 2\nreachable = array of false, reachable[0] = true\nfor value in nums:\n    for s from target down to value:\n        reachable[s] = reachable[s] or reachable[s - value]\nreturn reachable[target]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

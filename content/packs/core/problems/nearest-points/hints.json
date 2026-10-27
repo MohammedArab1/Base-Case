@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "How do you compare distances?",
+      "body": "Squared distance avoids square roots and keeps comparisons exact."
+    },
+    {
+      "level": 2,
+      "title": "What order does the output use?",
+      "body": "Sort by distance, then by `x`, then by `y`, and take the first `k`."
+    },
+    {
+      "level": 3,
+      "title": "A heap alternative",
+      "body": "Keep a max-heap of size `k` while scanning, or sort once if simplicity matters."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nordered = sort points by (x*x + y*y, x, y)\nreturn first k of ordered\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Build in order",
+      "body": "Keep combinations nondecreasing so the same multiset is never generated twice."
+    },
+    {
+      "level": 2,
+      "title": "Choose or move on",
+      "body": "At each step, either take the current candidate again or move to a later candidate."
+    },
+    {
+      "level": 3,
+      "title": "Prune with sorted values",
+      "body": "If a candidate exceeds the remaining target, every later candidate is also too large."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort candidates\nbacktrack(start, remaining, path):\n    if remaining == 0: record path; return\n    for i from start to end:\n        if candidates[i] > remaining: break\n        append candidates[i]\n        backtrack(i, remaining - candidates[i], path)\n        remove last value\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

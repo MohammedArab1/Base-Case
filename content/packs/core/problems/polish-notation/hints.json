@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What does postfix mean?",
+      "body": "An operator applies to the two most recent values that have not yet been combined."
+    },
+    {
+      "level": 2,
+      "title": "Use a stack",
+      "body": "Push numbers. On an operator, pop the right operand first, then the left operand."
+    },
+    {
+      "level": 3,
+      "title": "Order matters",
+      "body": "For subtraction and division, compute `left - right` and `left / right`, not the reverse."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nstack = []\nfor token in tokens:\n    if token is an operator:\n        right = stack.pop()\n        left = stack.pop()\n        push(left op right)\n    else:\n        push(integer value of token)\nreturn stack.pop()\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

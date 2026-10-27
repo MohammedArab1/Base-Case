@@ -1,0 +1,3 @@
+{"input":{"note":"a","source":"b"},"expected":false}
+{"input":{"note":"aa","source":"ab"},"expected":false}
+{"input":{"note":"aa","source":"aab"},"expected":true}

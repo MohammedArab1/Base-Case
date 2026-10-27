@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Last move",
+      "body": "A path reaches a cell either from above or from the left."
+    },
+    {
+      "level": 2,
+      "title": "State",
+      "body": "Let `dp[r][c]` be the number of paths to cell `(r, c)`."
+    },
+    {
+      "level": 3,
+      "title": "First row and column",
+      "body": "There is exactly one path along the top edge and one along the left edge."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndp = array of ones with length columns\nfor row from 1 to rows-1:\n    for column from 1 to columns-1:\n        dp[column] += dp[column - 1]\nreturn dp[columns - 1]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

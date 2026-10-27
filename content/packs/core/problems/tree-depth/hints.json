@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "One level at a time",
+      "body": "The depth is the number of levels in the tree."
+    },
+    {
+      "level": 2,
+      "title": "Recursive view",
+      "body": "The depth of a node is one plus the larger depth of its children."
+    },
+    {
+      "level": 3,
+      "title": "Iterative view",
+      "body": "Carry the current depth alongside each node in a stack or queue."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif root is null: return 0\nbest = 0\nstack = [(root, 1)]\nwhile stack is not empty:\n    node, depth = pop()\n    best = max(best, depth)\n    push existing children with depth + 1\nreturn best\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

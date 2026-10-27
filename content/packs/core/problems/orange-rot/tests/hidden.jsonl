@@ -1,0 +1,15 @@
+{"input":{"grid":[[0]]},"expected":0}
+{"input":{"grid":[[1]]},"expected":-1}
+{"input":{"grid":[[2]]},"expected":0}
+{"input":{"grid":[[1,2]]},"expected":1}
+{"input":{"grid":[[1,1,1]]},"expected":-1}
+{"input":{"grid":[[2,2,2]]},"expected":0}
+{"input":{"grid":[[2,1,2]]},"expected":1}
+{"input":{"grid":[[1,0,1]]},"expected":-1}
+{"input":{"grid":[[2],[1],[1]]},"expected":2}
+{"input":{"grid":[[1],[1],[2]]},"expected":2}
+{"input":{"grid":[[2,1,1,1]]},"expected":3}
+{"input":{"grid":[[1,1,1,2]]},"expected":3}
+{"input":{"grid":[[2,0],[1,1]]},"expected":2}
+{"input":{"grid":[[1,1],[1,2]]},"expected":2}
+{"input":{"grid":[[2,1],[1,2]]},"expected":1}

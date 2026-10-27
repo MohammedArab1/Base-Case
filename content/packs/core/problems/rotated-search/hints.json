@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "One half is sorted",
+      "body": "At every midpoint, either the left half or the right half is in ascending order."
+    },
+    {
+      "level": 2,
+      "title": "Find the sorted half",
+      "body": "Compare the first and middle values to decide which side is ordered."
+    },
+    {
+      "level": 3,
+      "title": "Test the target against that half",
+      "body": "If the target lies inside the sorted half's value range, search there; otherwise search the other half."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlow = 0, high = n - 1\nwhile low <= high:\n    middle = low + (high - low) // 2\n    if nums[middle] == target: return middle\n    if nums[low] <= nums[middle]:\n        if nums[low] <= target < nums[middle]: high = middle - 1\n        else: low = middle + 1\n    else:\n        if nums[middle] < target <= nums[high]: low = middle + 1\n        else: high = middle - 1\nreturn -1\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

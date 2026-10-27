@@ -1,0 +1,15 @@
+{"input":{"expression":"0"},"expected":0}
+{"input":{"expression":"1"},"expected":1}
+{"input":{"expression":"-1"},"expected":-1}
+{"input":{"expression":"1-2"},"expected":-1}
+{"input":{"expression":"10+20-30"},"expected":0}
+{"input":{"expression":"(1)"},"expected":1}
+{"input":{"expression":"-(1+2)"},"expected":-3}
+{"input":{"expression":"-(-3)"},"expected":3}
+{"input":{"expression":"1-(2-3)"},"expected":2}
+{"input":{"expression":"((((5))))"},"expected":5}
+{"input":{"expression":"1000000-1"},"expected":999999}
+{"input":{"expression":"1 + (2 - (3 + 4))"},"expected":-4}
+{"input":{"expression":" -2 + ( -3 ) "},"expected":-5}
+{"input":{"expression":"(7)-(8)+(9)"},"expected":8}
+{"input":{"expression":"2147483647-2147483647"},"expected":0}

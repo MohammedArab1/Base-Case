@@ -1,0 +1,15 @@
+{"input":{"text":""},"expected":0}
+{"input":{"text":"   "},"expected":0}
+{"input":{"text":"+1"},"expected":1}
+{"input":{"text":"-1"},"expected":-1}
+{"input":{"text":"00012"},"expected":12}
+{"input":{"text":"  +0000"},"expected":0}
+{"input":{"text":"2147483647"},"expected":2147483647}
+{"input":{"text":"2147483648"},"expected":2147483647}
+{"input":{"text":"-2147483648"},"expected":-2147483648}
+{"input":{"text":"-2147483649"},"expected":-2147483648}
+{"input":{"text":"99999999999999999999"},"expected":2147483647}
+{"input":{"text":"3.14"},"expected":3}
+{"input":{"text":"+-12"},"expected":0}
+{"input":{"text":"  -0012a42"},"expected":-12}
+{"input":{"text":"  +0 123"},"expected":0}

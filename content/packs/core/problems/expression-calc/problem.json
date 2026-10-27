@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "core/expression-calc",
+  "slug": "expression-calc",
+  "title": "Expression Calc",
+  "difficulty": "hard",
+  "patterns": ["stack", "strings", "math"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "calculate",
+    "params": [
+      {
+        "name": "expression",
+        "type": "string"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Dropping the last term",
+    "Mishandling unary minus",
+    "Restoring the outer total without its sign"
+  ],
+  "followUps": [
+    "How would you support `*` and `/` with precedence?",
+    "How would you parse variables as well as numbers?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

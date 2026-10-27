@@ -1,0 +1,3 @@
+{"input":{"first":"11","second":"1"},"expected":"100"}
+{"input":{"first":"1010","second":"1011"},"expected":"10101"}
+{"input":{"first":"0","second":"0"},"expected":"0"}

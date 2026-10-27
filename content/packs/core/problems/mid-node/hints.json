@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Two pointers",
+      "body": "Move one pointer one node at a time and another two nodes at a time."
+    },
+    {
+      "level": 2,
+      "title": "Why does it work?",
+      "body": "When the fast pointer reaches the end, the slow pointer has covered half the list."
+    },
+    {
+      "level": 3,
+      "title": "Even length",
+      "body": "Starting both pointers at the head makes the slow pointer land on the second middle node."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nslow = head\nfast = head\nwhile fast is not null and fast.next is not null:\n    slow = slow.next\n    fast = fast.next.next\nreturn slow\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

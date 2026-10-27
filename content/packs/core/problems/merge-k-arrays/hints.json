@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Merge two at a time",
+      "body": "Merging two sorted arrays is a linear two-pointer scan."
+    },
+    {
+      "level": 2,
+      "title": "Divide and conquer",
+      "body": "Pair up the arrays and merge each pair, then repeat on the results."
+    },
+    {
+      "level": 3,
+      "title": "Fewer passes",
+      "body": "Each value participates in `O(log k)` merges, giving `O(N log k)` total work."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nwhile more than one array remains:\n    next round = []\n    for each adjacent pair:\n        next round.append(merge two arrays)\n    arrays = next round\nreturn the only array, or [] if there were none\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

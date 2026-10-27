@@ -181,12 +181,27 @@
   color: var(--accent);
 }
 
+.tag-collection {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .list-filters {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 12px;
   margin: -10px 0 18px;
+}
+
+.collection-note {
+  margin: -8px 0 18px;
+}
+
+.collection-note a {
+  color: var(--accent);
+  text-decoration: underline;
 }
 
 .filter-field {

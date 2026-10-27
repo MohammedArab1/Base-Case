@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "core/orange-rot",
+  "slug": "orange-rot",
+  "title": "Orange Rot",
+  "difficulty": "medium",
+  "patterns": ["graphs", "matrix", "breadth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "rottenMinutes",
+    "params": [
+      {
+        "name": "grid",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n)",
+      "space": "O(m * n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n)",
+      "space": "O(m * n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Mixing waves",
+    "Forgetting the no-fresh early return",
+    "Not checking unreachable oranges"
+  ],
+  "followUps": [
+    "How would you return which oranges rot and when?",
+    "What if rot could also spread diagonally?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

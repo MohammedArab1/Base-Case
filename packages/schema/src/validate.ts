@@ -503,6 +503,46 @@ export async function validatePack(packDirectory: string): Promise<PackValidatio
     await validateDesign(root, manifest, slug, seenIds, issues, warnings)
   }
 
+  const collectionIds = new Set<string>()
+
+  for (const collection of manifest.collections ?? []) {
+    const label = `pack.json#collections.${collection.id}`
+
+    if (collectionIds.has(collection.id)) {
+      issues.push({
+        code: 'schema',
+        path: label,
+        message: `Duplicate collection id "${collection.id}"`,
+      })
+    }
+    collectionIds.add(collection.id)
+
+    if (collection.problems.length === 0) {
+      warnings.push(`Collection "${collection.id}" has no problems.`)
+    }
+
+    const members = new Set<string>()
+
+    for (const slug of collection.problems) {
+      if (!manifest.problems.includes(slug)) {
+        issues.push({
+          code: 'schema',
+          path: label,
+          message: `Collection entry "${slug}" is not listed in problems`,
+        })
+      }
+
+      if (members.has(slug)) {
+        issues.push({
+          code: 'schema',
+          path: label,
+          message: `Duplicate problem "${slug}" in collection`,
+        })
+      }
+      members.add(slug)
+    }
+  }
+
   if (manifest.problems.length === 0 && manifest.designs.length === 0) {
     warnings.push('Pack contains no problems or designs.')
   }

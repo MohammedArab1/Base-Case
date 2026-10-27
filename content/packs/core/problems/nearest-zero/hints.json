@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Multiple sources",
+      "body": "Every zero is a starting point at distance zero."
+    },
+    {
+      "level": 2,
+      "title": "Spread outward",
+      "body": "From the current frontier, unvisited neighbors get distance one more than their source."
+    },
+    {
+      "level": 3,
+      "title": "Breadth-first order",
+      "body": "A queue visits cells in nondecreasing distance, so the first time a cell is reached is optimal."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndist = grid of -1\nqueue = empty\nfor each cell with grid[r][c] == 0:\n    dist[r][c] = 0\n    queue.push((r, c))\nwhile queue not empty:\n    r, c = queue.pop_front()\n    for each edge-neighbor (nr, nc):\n        if inside and dist[nr][nc] == -1:\n            dist[nr][nc] = dist[r][c] + 1\n            queue.push((nr, nc))\nreturn dist\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

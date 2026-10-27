@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What survives normalization?",
+      "body": "Discard everything except letters and digits, and compare letters without case."
+    },
+    {
+      "level": 2,
+      "title": "Two ends move inward",
+      "body": "Place one pointer at each end. Skip ignored characters, then compare the remaining characters."
+    },
+    {
+      "level": 3,
+      "title": "Stop conditions",
+      "body": "If the pointers meet or cross, every pair matched. A mismatch stops the scan immediately."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nleft = 0, right = length - 1\nwhile left < right:\n    skip non-alphanumeric from left and right\n    if left < right and lower(text[left]) != lower(text[right]): return false\n    left += 1; right -= 1\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

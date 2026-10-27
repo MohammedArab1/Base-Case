@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Use the ordering",
+      "body": "At each node, compare both target values with the node's value."
+    },
+    {
+      "level": 2,
+      "title": "Split point",
+      "body": "If the targets lie on different sides, the current node is the lowest common ancestor."
+    },
+    {
+      "level": 3,
+      "title": "Walk one path",
+      "body": "If both targets are smaller, move left. If both are larger, move right. Otherwise stop."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nnode = root\nwhile node:\n    if first < node.val and second < node.val:\n        node = node.left\n    elif first > node.val and second > node.val:\n        node = node.right\n    else:\n        return node.val\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

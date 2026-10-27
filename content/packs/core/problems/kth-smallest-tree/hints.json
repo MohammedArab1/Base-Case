@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Inorder is sorted",
+      "body": "An inorder traversal of a BST visits values in ascending order."
+    },
+    {
+      "level": 2,
+      "title": "Stop early",
+      "body": "You only need the first `k` visited nodes, not the whole tree."
+    },
+    {
+      "level": 3,
+      "title": "Iterative stack",
+      "body": "Push all left descendants, pop one node, then move to its right subtree."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nstack = []\nnode = root\nremaining = k\nwhile stack or node:\n    while node:\n        push node\n        node = node.left\n    node = pop()\n    remaining -= 1\n    if remaining == 0: return node.value\n    node = node.right\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

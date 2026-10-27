@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Water above a bar",
+      "body": "The water above a bar is the smaller of the tallest bars on its left and right, minus its own height."
+    },
+    {
+      "level": 2,
+      "title": "Two pointers",
+      "body": "Walk from both ends toward the middle while tracking the tallest bar seen on each side."
+    },
+    {
+      "level": 3,
+      "title": "Move the shorter side",
+      "body": "The shorter side determines the water level, so process it and advance that pointer."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nleft = 0, right = n - 1\nleftMax = 0, rightMax = 0, water = 0\nwhile left < right:\n    if heights[left] < heights[right]:\n        leftMax = max(leftMax, heights[left])\n        water += leftMax - heights[left]\n        left += 1\n    else:\n        rightMax = max(rightMax, heights[right])\n        water += rightMax - heights[right]\n        right -= 1\nreturn water\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

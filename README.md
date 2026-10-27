@@ -3,13 +3,14 @@
 > Working name. Base Case is a local-first practice app for coding interviews
 > and system design. It is not affiliated with LeetCode or any other judge.
 
-**Status:** Phase 9 MVP expansion. The app has 25 original coding problems, 8
-system design scenarios, a real Python/TypeScript judge, FSRS review, an optional
-guarded AI tutor, local persistence, a diagnostics self-test, dual-arch macOS
-packaging, and a security review. Manual accessibility verification, demo media,
-the release candidate, clean-VM installs, the manual Windows installer run, a
-second-person content review, a real-model AI eval run, trademark/domain, and
-GitHub project setup are pending. See `docs/project/open-blockers.md`.
+**Status:** Phase 9 MVP expansion. The app has 79 original coding problems
+(including a 75-problem Grind 75 collection), 8 system design scenarios, a real
+Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
+persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
+review. Manual accessibility verification, demo media, the release candidate,
+clean-VM installs, the manual Windows installer run, a second-person content
+review, a real-model AI eval run, trademark/domain, and GitHub project setup are
+pending. See `docs/project/open-blockers.md`.
 
 ![Base Case demo walkthrough](docs/assets/demo/base-case-demo.gif)
 
@@ -87,12 +88,16 @@ runtimes. See ADR-0010.
 ## What works now
 
 - Secure Electron + React + TypeScript shell with a narrow typed preload API.
-- 25 original coding problems across hash maps, two pointers, stacks, binary
+- 79 original coding problems across hash maps, two pointers, stacks, binary
   search, sliding windows, linked lists, trees/BSTs, graphs, topological sort,
   union-find, heaps, backtracking, intervals, bit manipulation, greedy, matrix
-  traversal, and dynamic programming. Each has 5 sample tests, 20 hidden tests,
-  four hints, an explanation, common mistakes, follow-ups, and Python/TypeScript
-  reference solutions.
+  traversal, and dynamic programming. Each has 3–5 sample tests, at least 15
+  hidden tests, four hints, an explanation, common mistakes, follow-ups, and
+  Python/TypeScript reference solutions.
+- A **Grind 75** collection filter over a 75-problem core subset of the public
+  Grind 75 study list. The list is maintained by Tech Interview Handbook; this
+  app is not affiliated with or endorsed by it. Every statement, example, hint,
+  and test is original to Base Case.
 - Eight system design scenarios (URL Shortener, Rate Limiter, Chat System, News
   Feed, Seat Reservation, Search Autocomplete, File Sync, Payment Ledger) with
   prompts, requirements, scale targets, seven-dimension rubrics, reference
@@ -137,7 +142,7 @@ apps/desktop/          Electron main, preload, React renderer
 services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate and test commands for content packs
-content/packs/core/    Bundled core pack (25 coding + 8 design)
+content/packs/core/    Bundled core pack (79 coding + 8 design; 75-problem Grind 75 collection)
 docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates
 scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement

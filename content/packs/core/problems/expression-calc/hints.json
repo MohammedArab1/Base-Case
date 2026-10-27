@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Maintain a running total",
+      "body": "Keep the value before the current term, the current number, and the sign that applies to it."
+    },
+    {
+      "level": 2,
+      "title": "Parentheses suspend the total",
+      "body": "On `(`, push the current total and sign, then start a fresh subexpression."
+    },
+    {
+      "level": 3,
+      "title": "Closing parenthesis",
+      "body": "Finish the current term, apply the sign saved before the opening parenthesis, and add the outer total."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntotal = 0, number = 0, sign = 1, stack = []\nfor ch in expression:\n    if ch is a digit: number = number * 10 + digit\n    elif ch is '+' or '-':\n        total += sign * number\n        number = 0\n        sign = 1 for '+', -1 for '-'\n    elif ch == '(':\n        push total, push sign\n        total = 0, sign = 1\n    elif ch == ')':\n        total += sign * number\n        number = 0\n        total *= stack.pop()   // sign before the parenthesis\n        total += stack.pop()   // outer total\nreturn total + sign * number\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

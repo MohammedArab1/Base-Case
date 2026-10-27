@@ -1,0 +1,15 @@
+{"input":{"text":"","words":[]},"expected":true}
+{"input":{"text":"","words":["a"]},"expected":true}
+{"input":{"text":"a","words":[]},"expected":false}
+{"input":{"text":"a","words":["a"]},"expected":true}
+{"input":{"text":"ab","words":["a","b"]},"expected":true}
+{"input":{"text":"ab","words":["ab"]},"expected":true}
+{"input":{"text":"ab","words":["a"]},"expected":false}
+{"input":{"text":"aaaa","words":["a"]},"expected":true}
+{"input":{"text":"aaaa","words":["aa"]},"expected":true}
+{"input":{"text":"aaaa","words":["aaa"]},"expected":false}
+{"input":{"text":"abc","words":["a","bc"]},"expected":true}
+{"input":{"text":"abc","words":["ab","c"]},"expected":true}
+{"input":{"text":"abcd","words":["ab","cd"]},"expected":true}
+{"input":{"text":"abcd","words":["a","abc","b","cd"]},"expected":true}
+{"input":{"text":"cars","words":["car","ca","rs"]},"expected":true}

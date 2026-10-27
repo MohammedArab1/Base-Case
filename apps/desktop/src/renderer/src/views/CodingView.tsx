@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, JSX } from 'react'
 import type {
   AttemptMode,
+  ContentCollectionSummary,
   Language,
   ProblemDetail,
   ProblemProgressEntry,
@@ -146,6 +147,8 @@ function ProblemList({
   const [remoteResults, setRemoteResults] = useState<readonly ProblemSummary[] | null>(null)
   const [difficulty, setDifficulty] = useState<'all' | ProblemSummary['difficulty']>('all')
   const [pattern, setPattern] = useState('all')
+  const [collection, setCollection] = useState('all')
+  const [collections, setCollections] = useState<readonly ContentCollectionSummary[]>([])
   const [status, setStatus] = useState<'all' | 'attempted' | 'accepted' | 'not-started'>('all')
   const [dueOnly, setDueOnly] = useState(false)
   const [progress, setProgress] = useState<readonly ProblemProgressEntry[]>([])
@@ -167,10 +170,40 @@ function ProblemList({
     }
   }, [])
 
+  useEffect(() => {
+    let cancelled = false
+
+    void window.baseCase.content
+      .collections()
+      .then((entries) => {
+        if (!cancelled) {
+          setCollections(entries)
+        }
+      })
+      .catch(() => undefined)
+
+    return () => {
+      cancelled = true
+    }
+  }, [problems])
+
   const progressByProblem = useMemo(
     () => new Map(progress.map((entry) => [entry.problemId, entry])),
     [progress],
   )
+
+  const collectionById = useMemo(
+    () => new Map(collections.map((entry) => [entry.id, entry])),
+    [collections],
+  )
+
+  const selectedCollection = collectionById.get(collection)
+
+  useEffect(() => {
+    if (collection !== 'all' && !collectionById.has(collection)) {
+      setCollection('all')
+    }
+  }, [collection, collectionById])
 
   const patterns = useMemo(
     () => [...new Set(problems.flatMap((problem) => problem.patterns))].sort(),
@@ -187,6 +220,10 @@ function ProblemList({
       }
 
       if (pattern !== 'all' && !problem.patterns.includes(pattern)) {
+        return false
+      }
+
+      if (collection !== 'all' && !problem.collections.includes(collection)) {
         return false
       }
 
@@ -220,7 +257,17 @@ function ProblemList({
 
       return true
     })
-  }, [difficulty, dueOnly, pattern, problems, progressByProblem, query, remoteResults, status])
+  }, [
+    difficulty,
+    dueOnly,
+    pattern,
+    collection,
+    problems,
+    progressByProblem,
+    query,
+    remoteResults,
+    status,
+  ])
 
   useEffect(() => {
     const normalized = query.trim()
@@ -311,6 +358,25 @@ function ProblemList({
           </select>
         </label>
 
+        {collections.length > 0 ? (
+          <label className="filter-field">
+            <span>Collection</span>
+            <select
+              className="input"
+              aria-label="Collection filter"
+              value={collection}
+              onChange={(event) => setCollection(event.target.value)}
+            >
+              <option value="all">All problems</option>
+              {collections.map((entry) => (
+                <option key={entry.id} value={entry.id}>
+                  {entry.name} ({entry.problemCount})
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+
         <label className="filter-field">
           <span>Status</span>
           <select
@@ -337,6 +403,21 @@ function ProblemList({
           Review due
         </label>
       </div>
+
+      {selectedCollection ? (
+        <p className="muted small collection-note">
+          {selectedCollection.description}
+          {selectedCollection.attribution ? ` ${selectedCollection.attribution}` : ''}
+          {selectedCollection.url ? (
+            <>
+              {' '}
+              <a href={selectedCollection.url} target="_blank" rel="noreferrer">
+                View the source list
+              </a>
+            </>
+          ) : null}
+        </p>
+      ) : null}
 
       {visibleProblems.length === 0 ? (
         <section className="empty-state">
@@ -366,6 +447,15 @@ function ProblemList({
                         {value}
                       </span>
                     ))}
+                    {problem.collections.map((id) => {
+                      const entry = collectionById.get(id)
+
+                      return entry ? (
+                        <span className="tag tag-collection" key={id}>
+                          {entry.name}
+                        </span>
+                      ) : null
+                    })}
                     <span className="tag tag-pack">{problem.packName}</span>
                     {entry?.accepted ? <span className="tag tag-accepted">Accepted</span> : null}
                     {due ? <span className="tag tag-due">Review due</span> : null}

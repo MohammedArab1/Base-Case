@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Each rectangle has a limiting bar",
+      "body": "The rectangle's height is the shortest bar it includes."
+    },
+    {
+      "level": 2,
+      "title": "Find the boundaries",
+      "body": "For each bar, the widest rectangle of that height extends to the nearest shorter bar on each side."
+    },
+    {
+      "level": 3,
+      "title": "Monotonic stack",
+      "body": "Keep indices with increasing heights. A shorter bar arriving pops taller bars and fixes their right boundary."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nstack = []\nbest = 0\nfor index from 0 to n (with a sentinel height 0 at n):\n    height = heights[index] or 0\n    while stack and heights[stack.top] > height:\n        bar = stack.pop()\n        width = index if stack is empty else index - stack.top - 1\n        best = max(best, heights[bar] * width)\n    push index\nreturn best\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{"input":{"board":["A"],"word":"A"},"expected":true}
+{"input":{"board":["A"],"word":"B"},"expected":false}
+{"input":{"board":["AA"],"word":"AAA"},"expected":false}
+{"input":{"board":["AA"],"word":"AA"},"expected":true}
+{"input":{"board":["AB","CD"],"word":"AB"},"expected":true}
+{"input":{"board":["AB","CD"],"word":"AC"},"expected":true}
+{"input":{"board":["AB","CD"],"word":"AD"},"expected":false}
+{"input":{"board":["AB","CD"],"word":"ABCD"},"expected":false}
+{"input":{"board":["ABC","DEF","GHI"],"word":"CFI"},"expected":true}
+{"input":{"board":["ABC","DEF","GHI"],"word":"BEH"},"expected":true}
+{"input":{"board":["ABC","DEF","GHI"],"word":"AEI"},"expected":false}
+{"input":{"board":["AAAA","AAAA","AAAA"],"word":"AAAAAAAAAA"},"expected":true}
+{"input":{"board":["AAAA","AAAA","AAAA"],"word":"AAAAAAAAAAAAA"},"expected":false}
+{"input":{"board":["ABC","ABC","ABC"],"word":"ABCABC"},"expected":false}
+{"input":{"board":["XYZ","YXZ","ZYX"],"word":"XYZYX"},"expected":true}

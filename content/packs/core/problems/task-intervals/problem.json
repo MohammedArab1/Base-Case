@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "core/task-intervals",
+  "slug": "task-intervals",
+  "title": "Task Intervals",
+  "difficulty": "medium",
+  "patterns": ["greedy", "hash-map", "heap"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "leastInterval",
+    "params": [
+      {
+        "name": "tasks",
+        "type": "string"
+      },
+      {
+        "name": "cooldown",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Ignoring tied maximum frequencies",
+    "Returning less than the number of tasks",
+    "Adding idle slots when they are unnecessary"
+  ],
+  "followUps": [
+    "How would you construct an actual schedule?",
+    "What if tasks had different cooldowns?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Find paths from the root",
+      "body": "The common ancestor is the last node shared by the paths to the two values."
+    },
+    {
+      "level": 2,
+      "title": "Parent links",
+      "body": "Record each node's parent during one traversal."
+    },
+    {
+      "level": 3,
+      "title": "Mark ancestors",
+      "body": "Walk from the first value to the root, then walk from the second until a marked node is reached."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nparents = {root.value: null}\nvisit every node and record parent[child] = node\nseen = empty set\nvalue = first\nwhile value is not null:\n    seen.add(value)\n    value = parents[value]\nvalue = second\nwhile value not in seen:\n    value = parents[value]\nreturn value\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What matters?",
+      "body": "Only the number of each letter matters, not the order."
+    },
+    {
+      "level": 2,
+      "title": "Count the source",
+      "body": "Build a frequency table for the available letters."
+    },
+    {
+      "level": 3,
+      "title": "Consume the note",
+      "body": "Decrement a letter's count for every character in the note. A missing or zero count means failure."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif len(note) > len(source): return false\ncounts = counts of source\nfor letter in note:\n    if counts[letter] == 0: return false\n    counts[letter] -= 1\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{"input":{"nums":[]},"expected":false}
+{"input":{"nums":[1]},"expected":false}
+{"input":{"nums":[1,2]},"expected":false}
+{"input":{"nums":[2,2]},"expected":true}
+{"input":{"nums":[-1,0,1]},"expected":false}
+{"input":{"nums":[-1,-1]},"expected":true}
+{"input":{"nums":[0,0,0]},"expected":true}
+{"input":{"nums":[1000000000,-1000000000]},"expected":false}
+{"input":{"nums":[5,4,3,2,1]},"expected":false}
+{"input":{"nums":[5,4,3,2,5]},"expected":true}
+{"input":{"nums":[7,8,9,10,11]},"expected":false}
+{"input":{"nums":[1,1,1,1]},"expected":true}
+{"input":{"nums":[2,1,2,1]},"expected":true}
+{"input":{"nums":[0,1,2,3,4,5]},"expected":false}
+{"input":{"nums":[3,3]},"expected":true}

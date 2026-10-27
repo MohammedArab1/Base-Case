@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "One value per level",
+      "body": "The right view contains exactly the last node visited at each depth in a left-to-right level traversal."
+    },
+    {
+      "level": 2,
+      "title": "Level order",
+      "body": "Process one level at a time and record its final node."
+    },
+    {
+      "level": 3,
+      "title": "Right-first DFS",
+      "body": "Alternatively, visit right children before left and record the first node seen at each new depth."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif root is null: return []\nresult = []\ncurrent = [root]\nwhile current is not empty:\n    result.append(value of last node in current)\n    nextLevel = []\n    for node in current:\n        if node.left: append left\n        if node.right: append right\n    current = nextLevel\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

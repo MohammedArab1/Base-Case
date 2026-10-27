@@ -46,13 +46,30 @@ and TypeScript are expected.
   "license": "CC-BY-SA-4.0",
   "attribution": "Original content by Your Name.",
   "problems": ["echo"],
-  "designs": []
+  "designs": [],
+  "collections": [
+    {
+      "id": "interview-core",
+      "name": "Interview Core",
+      "description": "A focused subset of this pack.",
+      "problems": ["echo"],
+      "attribution": "Optional source attribution.",
+      "url": "https://example.com/list"
+    }
+  ]
 }
 ```
 
 - `id` is a lowercase slug using letters, digits, and hyphens.
 - `problems` and `designs` contain the folder names under `problems/` and
   `designs/`; no paths and no duplicates.
+- `collections` is optional. Each collection needs a unique `id`, a display
+  `name`, a `description`, and a `problems` list. Collection members must also
+  appear in the top-level `problems` list. Collections are exposed in the app as
+  filters and do not duplicate content.
+- `attribution` and `url` are optional collection fields. Use them when the
+  collection follows a public study list; link out rather than copying its
+  problem text.
 - Use `CC-BY-SA-4.0`, `CC-BY-4.0`, or `MIT` for the cleanest validation result.
 - IDs are stable. Do not renumber an existing problem.
 

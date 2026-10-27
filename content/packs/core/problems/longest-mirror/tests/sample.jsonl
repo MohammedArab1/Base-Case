@@ -1,0 +1,3 @@
+{"input":{"text":"babad"},"expected":"bab"}
+{"input":{"text":"cbbd"},"expected":"bb"}
+{"input":{"text":"a"},"expected":"a"}

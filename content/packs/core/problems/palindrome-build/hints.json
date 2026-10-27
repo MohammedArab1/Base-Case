@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pairs mirror each other",
+      "body": "A palindrome uses letters in matching pairs around its center."
+    },
+    {
+      "level": 2,
+      "title": "Count pairs",
+      "body": "For each letter, `count // 2` pairs can be used."
+    },
+    {
+      "level": 3,
+      "title": "One center",
+      "body": "If any letter count is odd, one leftover letter can sit in the middle."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncounts = frequency of each letter\npairs = sum(count // 2 for count in counts)\nlength = pairs * 2\nif any count is odd and length < total letters:\n    length += 1\nreturn length\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -8,6 +8,7 @@ export const channels = {
   appReadClipboardText: 'app:read-clipboard-text',
   appOpenLogs: 'app:open-logs',
   contentList: 'content:list',
+  contentCollections: 'content:collections',
   contentGet: 'content:get',
   contentSearch: 'content:search',
   judgeStatus: 'judge:status',

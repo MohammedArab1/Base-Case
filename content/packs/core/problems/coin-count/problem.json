@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "core/coin-count",
+  "slug": "coin-count",
+  "title": "Coin Count",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "coinChange",
+    "params": [
+      {
+        "name": "coins",
+        "type": "int[]"
+      },
+      {
+        "name": "amount",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(amount * coins.length)",
+      "space": "O(amount)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(amount * coins.length)",
+      "space": "O(amount)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using greedy coin selection",
+    "Forgetting amounts that cannot be formed",
+    "Reusing an uninitialized value as a valid answer"
+  ],
+  "followUps": [
+    "How many distinct combinations make the amount?",
+    "What if each coin could be used once?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

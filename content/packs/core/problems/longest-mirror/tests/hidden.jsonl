@@ -1,0 +1,15 @@
+{"input":{"text":""},"expected":""}
+{"input":{"text":"ab"},"expected":"a"}
+{"input":{"text":"aa"},"expected":"aa"}
+{"input":{"text":"aaa"},"expected":"aaa"}
+{"input":{"text":"aaaa"},"expected":"aaaa"}
+{"input":{"text":"abcba"},"expected":"abcba"}
+{"input":{"text":"abccba"},"expected":"abccba"}
+{"input":{"text":"forgeeksskeegfor"},"expected":"geeksskeeg"}
+{"input":{"text":"abacdfgdcaba"},"expected":"aba"}
+{"input":{"text":"racecar"},"expected":"racecar"}
+{"input":{"text":"abcdef"},"expected":"a"}
+{"input":{"text":"aab"},"expected":"aa"}
+{"input":{"text":"baa"},"expected":"aa"}
+{"input":{"text":"noon"},"expected":"noon"}
+{"input":{"text":"zzzzzzzzzz"},"expected":"zzzzzzzzzz"}

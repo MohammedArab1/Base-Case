@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pair off different values",
+      "body": "Whenever two different values meet, they can cancel each other out."
+    },
+    {
+      "level": 2,
+      "title": "Keep a candidate",
+      "body": "Track one candidate and a count. Matching values increase the count; different values decrease it."
+    },
+    {
+      "level": 3,
+      "title": "Count zero means replace",
+      "body": "When the count reaches zero, adopt the current value as the new candidate."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncandidate = nums[0]\ncount = 0\nfor value in nums:\n    if count == 0:\n        candidate = value\n    count += 1 if value == candidate else -1\nreturn candidate\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

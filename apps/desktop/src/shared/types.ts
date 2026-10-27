@@ -81,9 +81,19 @@ export interface ProblemSummary {
   readonly title: string
   readonly difficulty: 'easy' | 'medium' | 'hard'
   readonly patterns: readonly string[]
+  readonly collections: readonly string[]
   readonly packId: string
   readonly packName: string
   readonly source: 'bundled' | 'user'
+}
+
+export interface ContentCollectionSummary {
+  readonly id: string
+  readonly name: string
+  readonly description: string
+  readonly attribution?: string
+  readonly url?: string
+  readonly problemCount: number
 }
 
 export interface ContentPackSummary {
@@ -827,6 +837,7 @@ export interface BaseCaseApi {
   }
   readonly content: {
     list(): Promise<ProblemSummary[]>
+    collections(): Promise<ContentCollectionSummary[]>
     get(problemId: string): Promise<ProblemDetail>
     search(query: string): Promise<ProblemSummary[]>
   }

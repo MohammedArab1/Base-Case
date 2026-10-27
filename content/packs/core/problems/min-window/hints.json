@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Grow and shrink",
+      "body": "Expand the right edge until the window covers the target, then shrink the left edge as far as possible."
+    },
+    {
+      "level": 2,
+      "title": "Track requirements",
+      "body": "Keep required counts and a count of how many distinct letters are satisfied."
+    },
+    {
+      "level": 3,
+      "title": "Record the best",
+      "body": "After each shrink step, compare the window length with the best found so far."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nneed = counts of target\nwindow = counts in the current range\nformed = number of letters whose window count meets need\nleft = 0\nfor right in range(len(source)):\n    add source[right] to window, update formed\n    while formed == required:\n        update best window\n        remove source[left] from window, update formed\n        left += 1\nreturn best\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

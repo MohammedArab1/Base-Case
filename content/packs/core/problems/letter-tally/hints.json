@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What must be equal?",
+      "body": "The number of each letter must match. Order and positions do not matter."
+    },
+    {
+      "level": 2,
+      "title": "Count one side",
+      "body": "Build counts for the first string, then subtract counts while scanning the second."
+    },
+    {
+      "level": 3,
+      "title": "Length check first",
+      "body": "Different lengths cannot match and let you return early."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif lengths differ: return false\ncounts = empty map\nfor letter in first: counts[letter] += 1\nfor letter in second:\n    counts[letter] -= 1\n    if counts[letter] < 0: return false\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

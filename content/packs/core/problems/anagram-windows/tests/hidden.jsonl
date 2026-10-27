@@ -1,0 +1,15 @@
+{"input":{"source":"","pattern":"a"},"expected":[]}
+{"input":{"source":"a","pattern":"aa"},"expected":[]}
+{"input":{"source":"aa","pattern":"aa"},"expected":[0]}
+{"input":{"source":"abc","pattern":"d"},"expected":[]}
+{"input":{"source":"abcabc","pattern":"abc"},"expected":[0,1,2,3]}
+{"input":{"source":"aaaa","pattern":"a"},"expected":[0,1,2,3]}
+{"input":{"source":"aaaa","pattern":"aa"},"expected":[0,1,2]}
+{"input":{"source":"ababab","pattern":"aba"},"expected":[0,2]}
+{"input":{"source":"baa","pattern":"aa"},"expected":[1]}
+{"input":{"source":"xyzxyzxyz","pattern":"xyz"},"expected":[0,1,2,3,4,5,6]}
+{"input":{"source":"hello","pattern":"ll"},"expected":[2]}
+{"input":{"source":"listen","pattern":"silent"},"expected":[0]}
+{"input":{"source":"zzzz","pattern":"z"},"expected":[0,1,2,3]}
+{"input":{"source":"abacaba","pattern":"aba"},"expected":[0,4]}
+{"input":{"source":"cba","pattern":"abc"},"expected":[0]}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Remember what you have seen",
+      "body": "A value is a duplicate exactly when it has already appeared."
+    },
+    {
+      "level": 2,
+      "title": "Set membership",
+      "body": "Insert values into a set. If an insertion finds an existing value, return `true`."
+    },
+    {
+      "level": 3,
+      "title": "Alternative",
+      "body": "Sorting places equal values next to each other, at the cost of `O(n log n)` time."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nseen = empty set\nfor value in nums:\n    if value in seen: return true\n    add value to seen\nreturn false\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

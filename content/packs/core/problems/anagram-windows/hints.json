@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Fixed window size",
+      "body": "Every anagram has the same length as `pattern`, so only windows of that size matter."
+    },
+    {
+      "level": 2,
+      "title": "Slide the window",
+      "body": "Add the entering character and remove the leaving character."
+    },
+    {
+      "level": 3,
+      "title": "Compare counts",
+      "body": "A window is valid when its frequency table equals the pattern's table."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif len(pattern) > len(source): return []\nneed = counts of pattern\nwindow = counts of the first len(pattern) characters\nif window == need: record 0\nfor right from len(pattern) to len(source)-1:\n    add source[right]\n    remove source[right - len(pattern)]\n    if window == need: record right - len(pattern) + 1\nreturn indices\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

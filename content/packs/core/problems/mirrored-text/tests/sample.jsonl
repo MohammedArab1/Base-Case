@@ -1,0 +1,3 @@
+{"input":{"text":"A man, a plan, a canal: Panama"},"expected":true}
+{"input":{"text":"race a car"},"expected":false}
+{"input":{"text":""},"expected":true}

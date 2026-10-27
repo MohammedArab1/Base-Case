@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Two speeds",
+      "body": "Use two pointers that move through the list at different rates."
+    },
+    {
+      "level": 2,
+      "title": "Floyd's idea",
+      "body": "Move one pointer one step and the other two steps. In a cycle the faster pointer eventually laps the slower one."
+    },
+    {
+      "level": 3,
+      "title": "Termination",
+      "body": "If the faster pointer reaches the end, there is no cycle."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nslow = head, fast = head\nwhile fast and fast.next:\n    slow = slow.next\n    fast = fast.next.next\n    if slow is fast: return true\nreturn false\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

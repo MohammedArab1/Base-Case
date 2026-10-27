@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Save the old color",
+      "body": "The starting color defines the region. If the new color is the same, stop immediately to avoid an infinite loop."
+    },
+    {
+      "level": 2,
+      "title": "Explore four neighbors",
+      "body": "From each repainted cell, visit up, down, left, and right cells that still have the old color."
+    },
+    {
+      "level": 3,
+      "title": "Mark before exploring",
+      "body": "Paint a cell when it is pushed so it cannot be visited twice."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nold = image[row][column]\nif old == color: return image\nstack = [(row, column)]\npaint(row, column)\nwhile stack is not empty:\n    r, c = pop(stack)\n    for each edge-neighbor (nr, nc):\n        if inside and image[nr][nc] == old:\n            paint(nr, nc)\n            push((nr, nc))\nreturn image\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Sort by end time",
+      "body": "Processing jobs in order of finish time makes the compatibility structure monotonic."
+    },
+    {
+      "level": 2,
+      "title": "DP prefix",
+      "body": "Let `dp[i]` be the best profit using the first `i` sorted jobs."
+    },
+    {
+      "level": 3,
+      "title": "Two choices",
+      "body": "Either skip job `i`, or take it and add the best profit from jobs ending at or before its start."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\njobs = sorted by end\ndp[0] = 0\nfor i from 1 to n:\n    j = number of jobs with end <= jobs[i].start\n    dp[i] = max(dp[i-1], jobs[i].profit + dp[j])\nreturn dp[n]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

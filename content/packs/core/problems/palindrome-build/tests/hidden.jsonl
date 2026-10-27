@@ -1,0 +1,15 @@
+{"input":{"letters":""},"expected":0}
+{"input":{"letters":"ab"},"expected":1}
+{"input":{"letters":"aab"},"expected":3}
+{"input":{"letters":"abc"},"expected":1}
+{"input":{"letters":"aaa"},"expected":3}
+{"input":{"letters":"aaaa"},"expected":4}
+{"input":{"letters":"aaabbb"},"expected":5}
+{"input":{"letters":"aaabbbb"},"expected":7}
+{"input":{"letters":"abcdefghijklmnopqrstuvwxyz"},"expected":1}
+{"input":{"letters":"zzzzzzzzzz"},"expected":10}
+{"input":{"letters":"abababab"},"expected":8}
+{"input":{"letters":"aabbccddeeffg"},"expected":13}
+{"input":{"letters":"racecar"},"expected":7}
+{"input":{"letters":"aabb"},"expected":4}
+{"input":{"letters":"aabbc"},"expected":5}

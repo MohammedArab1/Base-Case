@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What does each node need?",
+      "body": "Each node needs the heights of both subtrees and whether both subtrees are balanced."
+    },
+    {
+      "level": 2,
+      "title": "Post-order",
+      "body": "Children must be measured before their parent, so process left and right first."
+    },
+    {
+      "level": 3,
+      "title": "Combine results",
+      "body": "A node is balanced when both subtrees are balanced and their heights differ by at most one."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfunction measure(node):\n    if node is null: return (0, true)\n    leftHeight, leftOK = measure(node.left)\n    rightHeight, rightOK = measure(node.right)\n    balanced = leftOK and rightOK and abs(leftHeight - rightHeight) <= 1\n    return (1 + max(leftHeight, rightHeight), balanced)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

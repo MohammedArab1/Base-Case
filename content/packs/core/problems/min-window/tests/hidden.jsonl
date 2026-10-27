@@ -1,0 +1,15 @@
+{"input":{"source":"","target":""},"expected":""}
+{"input":{"source":"","target":"a"},"expected":""}
+{"input":{"source":"a","target":""},"expected":""}
+{"input":{"source":"abc","target":"abc"},"expected":"abc"}
+{"input":{"source":"abc","target":"d"},"expected":""}
+{"input":{"source":"aa","target":"aa"},"expected":"aa"}
+{"input":{"source":"ab","target":"b"},"expected":"b"}
+{"input":{"source":"ab","target":"ba"},"expected":"ab"}
+{"input":{"source":"aaab","target":"ab"},"expected":"ab"}
+{"input":{"source":"abcabc","target":"bc"},"expected":"bc"}
+{"input":{"source":"xyzxyz","target":"zy"},"expected":"yz"}
+{"input":{"source":"cabwefgewcwaefgcf","target":"cae"},"expected":"cwae"}
+{"input":{"source":"aaaaaaaa","target":"aa"},"expected":"aa"}
+{"input":{"source":"bba","target":"ab"},"expected":"ba"}
+{"input":{"source":"abcdefgh","target":"h"},"expected":"h"}

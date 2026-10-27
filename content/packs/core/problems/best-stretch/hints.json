@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What ends at each position?",
+      "body": "For each position, consider the best sum of a stretch that ends exactly there."
+    },
+    {
+      "level": 2,
+      "title": "Extend or restart",
+      "body": "The best stretch ending at `i` is either the previous best plus `nums[i]`, or `nums[i]` alone."
+    },
+    {
+      "level": 3,
+      "title": "Keep a running best",
+      "body": "Track the best ending sum and the best answer seen so far in one pass."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nending = nums[0]\nbest = nums[0]\nfor value in nums[1:]:\n    ending = max(value, ending + value)\n    best = max(best, ending)\nreturn best\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

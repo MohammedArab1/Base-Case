@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Mimic column addition",
+      "body": "Start from the rightmost bit of both strings and move left."
+    },
+    {
+      "level": 2,
+      "title": "Carry",
+      "body": "At each column, add the two bits and the carry. The new bit is the sum modulo two."
+    },
+    {
+      "level": 3,
+      "title": "Unequal lengths",
+      "body": "Treat a missing position as zero until both strings and the carry are exhausted."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ni = len(first) - 1, j = len(second) - 1, carry = 0\nresult = []\nwhile i >= 0 or j >= 0 or carry:\n    total = carry\n    if i >= 0: total += first[i]; i -= 1\n    if j >= 0: total += second[j]; j -= 1\n    result.append(total % 2)\n    carry = total // 2\nreturn reverse(result)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

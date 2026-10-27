@@ -1,0 +1,3 @@
+{"input":{"letters":"abccccdd"},"expected":7}
+{"input":{"letters":"a"},"expected":1}
+{"input":{"letters":"aa"},"expected":2}

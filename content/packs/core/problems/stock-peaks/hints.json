@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What would you need to know?",
+      "body": "At each day, the best sale ending today uses the cheapest price seen before today. What state would let you answer instantly?"
+    },
+    {
+      "level": 2,
+      "title": "Track the cheapest buy",
+      "body": "Scan left to right. Keep the minimum price seen so far and the best profit so far."
+    },
+    {
+      "level": 3,
+      "title": "Update in the right order",
+      "body": "For each price, first compute the profit from the cheapest earlier price, then update the cheapest price if the current day is lower. The order ensures buy day is strictly before sell day."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncheapest = infinity\nbest = 0\nfor price in prices:\n    best = max(best, price - cheapest)\n    cheapest = min(cheapest, price)\nreturn best\n```\n\nThis is pseudocode, not a complete solution. Handle an empty list."
+    }
+  ]
+}

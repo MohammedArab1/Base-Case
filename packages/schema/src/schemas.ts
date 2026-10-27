@@ -161,6 +161,26 @@ export const packSchema = {
       uniqueItems: true,
       items: { type: 'string', pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
     },
+    collections: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id', 'name', 'description', 'problems'],
+        properties: {
+          id: { type: 'string', pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
+          name: { type: 'string', minLength: 1 },
+          description: { type: 'string', minLength: 1 },
+          problems: {
+            type: 'array',
+            uniqueItems: true,
+            items: { type: 'string', pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
+          },
+          attribution: { type: 'string', minLength: 1 },
+          url: { type: 'string', minLength: 1 },
+        },
+      },
+    },
   },
 } as const
 

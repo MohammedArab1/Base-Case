@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Look at the last move",
+      "body": "The final move is either one step or two steps."
+    },
+    {
+      "level": 2,
+      "title": "Two smaller states",
+      "body": "Ways to reach `n` equal ways to reach `n - 1` plus ways to reach `n - 2`."
+    },
+    {
+      "level": 3,
+      "title": "Base cases",
+      "body": "One step has one way; two steps have two ways."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif steps <= 2: return steps\nprevious = 1\ncurrent = 2\nfor step from 3 to steps:\n    previous, current = current, previous + current\nreturn current\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

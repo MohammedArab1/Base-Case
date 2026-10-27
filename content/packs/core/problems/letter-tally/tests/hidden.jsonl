@@ -1,0 +1,15 @@
+{"input":{"first":"a","second":"a"},"expected":true}
+{"input":{"first":"a","second":"b"},"expected":false}
+{"input":{"first":"ab","second":"ba"},"expected":true}
+{"input":{"first":"aab","second":"abb"},"expected":false}
+{"input":{"first":"abc","second":"ab"},"expected":false}
+{"input":{"first":"listen","second":"silent"},"expected":true}
+{"input":{"first":"hello","second":"world"},"expected":false}
+{"input":{"first":"aaabbb","second":"ababab"},"expected":true}
+{"input":{"first":"z","second":"z"},"expected":true}
+{"input":{"first":"abcdefghijklmnopqrstuvwxyz","second":"zyxwvutsrqponmlkjihgfedcba"},"expected":true}
+{"input":{"first":"aabbcc","second":"abcabc"},"expected":true}
+{"input":{"first":"aabbcc","second":"aabbc"},"expected":false}
+{"input":{"first":"schoolmaster","second":"theclassroom"},"expected":true}
+{"input":{"first":"x","second":""},"expected":false}
+{"input":{"first":"abc","second":"cba"},"expected":true}

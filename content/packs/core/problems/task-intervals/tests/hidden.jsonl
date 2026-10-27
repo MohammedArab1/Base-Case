@@ -1,0 +1,15 @@
+{"input":{"tasks":"AB","cooldown":2},"expected":2}
+{"input":{"tasks":"AA","cooldown":2},"expected":4}
+{"input":{"tasks":"AAA","cooldown":2},"expected":7}
+{"input":{"tasks":"AAAA","cooldown":2},"expected":10}
+{"input":{"tasks":"ABCD","cooldown":2},"expected":4}
+{"input":{"tasks":"AABB","cooldown":2},"expected":5}
+{"input":{"tasks":"AAABBB","cooldown":1},"expected":6}
+{"input":{"tasks":"AAABBB","cooldown":3},"expected":10}
+{"input":{"tasks":"AAABBBCCC","cooldown":2},"expected":9}
+{"input":{"tasks":"AAABBBCCCDDD","cooldown":2},"expected":12}
+{"input":{"tasks":"AAABBBCCCDDD","cooldown":0},"expected":12}
+{"input":{"tasks":"AAB","cooldown":3},"expected":5}
+{"input":{"tasks":"AAAB","cooldown":2},"expected":7}
+{"input":{"tasks":"ABCDEFGHIJKLMNOPQRSTUVWXYZ","cooldown":10},"expected":26}
+{"input":{"tasks":"AAAAABBBBBCCCCCDDDDD","cooldown":5},"expected":28}

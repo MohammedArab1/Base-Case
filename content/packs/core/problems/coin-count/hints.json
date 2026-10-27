@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Build from smaller amounts",
+      "body": "If you know the best answer for `amount - coin`, you can extend it with one coin."
+    },
+    {
+      "level": 2,
+      "title": "State",
+      "body": "Let `dp[x]` be the fewest coins that make exactly `x`."
+    },
+    {
+      "level": 3,
+      "title": "Transition",
+      "body": "For every coin not larger than `x`, `dp[x] = min(dp[x], dp[x - coin] + 1)`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndp = array of amount + 1 filled with infinity\ndp[0] = 0\nfor value from 1 to amount:\n    for coin in coins:\n        if coin <= value:\n            dp[value] = min(dp[value], dp[value - coin] + 1)\nreturn -1 if dp[amount] is infinity else dp[amount]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

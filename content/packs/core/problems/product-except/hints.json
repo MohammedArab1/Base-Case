@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Split around each position",
+      "body": "The product except position `i` is the product of everything to its left times the product of everything to its right."
+    },
+    {
+      "level": 2,
+      "title": "Prefix pass",
+      "body": "Store the product of all earlier values in the output slot for each position."
+    },
+    {
+      "level": 3,
+      "title": "Suffix pass",
+      "body": "Walk backward with a running suffix product and multiply it into each slot."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = array of n ones\nprefix = 1\nfor i from 0 to n-1:\n    result[i] = prefix\n    prefix *= nums[i]\nsuffix = 1\nfor i from n-1 down to 0:\n    result[i] *= suffix\n    suffix *= nums[i]\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

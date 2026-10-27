@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Fewest changes means BFS",
+      "body": "Each transformation is one edge, so breadth-first search finds the shortest chain."
+    },
+    {
+      "level": 2,
+      "title": "Neighbors",
+      "body": "Two words of equal length are neighbors when they differ in exactly one position."
+    },
+    {
+      "level": 3,
+      "title": "Avoid revisiting",
+      "body": "Remove a word from the available set as soon as it is enqueued."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif end not in words: return 0\navailable = set(words) without begin\nqueue = [(begin, 1)]\nwhile queue:\n    word, distance = pop_front()\n    for each position and letter:\n        candidate = word with that letter changed\n        if candidate == end: return distance + 1\n        if candidate in available:\n            remove candidate\n            push (candidate, distance + 1)\nreturn 0\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

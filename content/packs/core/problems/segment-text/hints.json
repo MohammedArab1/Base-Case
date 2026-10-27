@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Prefix reachability",
+      "body": "Mark every position that can be reached by a valid segmentation of the text before it."
+    },
+    {
+      "level": 2,
+      "title": "State",
+      "body": "Let `reachable[i]` mean the prefix of length `i` can be segmented."
+    },
+    {
+      "level": 3,
+      "title": "Transition",
+      "body": "If `reachable[start]` is true and `text[start:end]` is a word, mark `reachable[end]`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nreachable = array of false, reachable[0] = true\nfor end from 1 to n:\n    for start from 0 to end-1:\n        if reachable[start] and text[start:end] in words:\n            reachable[end] = true\n            break\nreturn reachable[n]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

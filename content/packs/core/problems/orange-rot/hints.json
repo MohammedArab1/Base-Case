@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "All rotten cells start together",
+      "body": "Every rotten orange begins spreading at minute zero."
+    },
+    {
+      "level": 2,
+      "title": "Track the frontier",
+      "body": "Process one minute at a time so all newly rotten oranges spread together on the next minute."
+    },
+    {
+      "level": 3,
+      "title": "Count remaining fresh",
+      "body": "Decrement a fresh-orange counter whenever one becomes rotten. If it remains positive, return `-1`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nqueue = all rotten cells\nfresh = count of fresh cells\nminutes = 0\nwhile queue not empty and fresh > 0:\n    process the current queue size:\n        for each cell, rot fresh edge-neighbors and enqueue them\n    minutes += 1\nreturn minutes if fresh == 0 else -1\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

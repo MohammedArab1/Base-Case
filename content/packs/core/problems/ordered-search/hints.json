@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Use the ordering",
+      "body": "If the middle value is too small, the target can only be to the right; if too large, only to the left."
+    },
+    {
+      "level": 2,
+      "title": "Maintain a half-open interval",
+      "body": "Search `[low, high)`. While `low < high`, compare the middle element with the target."
+    },
+    {
+      "level": 3,
+      "title": "Shrink one side",
+      "body": "Move `low` to `middle + 1` when the middle is too small, otherwise move `high` to `middle`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlow = 0, high = length(nums)\nwhile low < high:\n    middle = low + (high - low) // 2\n    if nums[middle] == target: return middle\n    if nums[middle] < target: low = middle + 1\n    else: high = middle\nreturn -1\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

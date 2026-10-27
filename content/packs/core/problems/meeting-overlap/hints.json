@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Sort by start",
+      "body": "After sorting, any overlap must involve adjacent meetings in the sorted order."
+    },
+    {
+      "level": 2,
+      "title": "Compare neighbors",
+      "body": "A conflict exists when the next start is earlier than the previous end."
+    },
+    {
+      "level": 3,
+      "title": "Touching is allowed",
+      "body": "Use a strict comparison so `end == start` is not a conflict."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort intervals by start\nfor i from 1 to n-1:\n    if intervals[i].start < intervals[i-1].end:\n        return false\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

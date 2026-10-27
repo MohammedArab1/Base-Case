@@ -1,0 +1,3 @@
+{"input":{"source":"adobecodebanc","target":"abc"},"expected":"banc"}
+{"input":{"source":"a","target":"a"},"expected":"a"}
+{"input":{"source":"a","target":"aa"},"expected":""}

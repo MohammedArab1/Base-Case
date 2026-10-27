@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "core/min-window",
+  "slug": "min-window",
+  "title": "Min Window",
+  "difficulty": "hard",
+  "patterns": ["strings", "sliding-window", "hash-map"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "minWindow",
+    "params": [
+      {
+        "name": "source",
+        "type": "string"
+      },
+      {
+        "name": "target",
+        "type": "string"
+      }
+    ],
+    "returns": "string",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Ignoring duplicate requirements",
+    "Forgetting to record the window before shrinking",
+    "Returning a later window when lengths tie"
+  ],
+  "followUps": [
+    "How would you return all shortest covering windows?",
+    "What if the target could contain uppercase letters?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

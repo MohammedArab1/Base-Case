@@ -43,6 +43,7 @@ import type {
   SaveDesignDraftInput,
   SaveDraftInput,
   SaveProblemNoteInput,
+  ContentCollectionSummary,
   SettingsPatch,
   Stats,
   SubmitDesignInput,
@@ -82,6 +83,7 @@ const api: BaseCaseApi = {
   },
   content: {
     list: () => invoke<ProblemSummary[]>(channels.contentList),
+    collections: () => invoke<ContentCollectionSummary[]>(channels.contentCollections),
     get: (problemId: string) => invoke<ProblemDetail>(channels.contentGet, problemId),
     search: (query: string) => invoke<ProblemSummary[]>(channels.contentSearch, query),
   },

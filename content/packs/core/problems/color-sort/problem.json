@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "core/color-sort",
+  "slug": "color-sort",
+  "title": "Color Sort",
+  "difficulty": "medium",
+  "patterns": ["arrays", "two-pointers", "sorting"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "sortColors",
+    "params": [
+      {
+        "name": "nums",
+        "type": "int[]"
+      }
+    ],
+    "returns": "void",
+    "mutates": ["nums"]
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Advancing the middle pointer after a two swap",
+    "Stopping the loop too early",
+    "Sorting into a new array"
+  ],
+  "followUps": [
+    "How would you partition around an arbitrary pivot?",
+    "How would you handle a fourth color?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

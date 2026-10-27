@@ -1,0 +1,4 @@
+{"input":{"text":"42"},"expected":42}
+{"input":{"text":"   -042"},"expected":-42}
+{"input":{"text":"4193 with words"},"expected":4193}
+{"input":{"text":"words and 987"},"expected":0}

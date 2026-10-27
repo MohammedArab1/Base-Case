@@ -1,0 +1,3 @@
+{"input":{"first":"anagram","second":"nagaram"},"expected":true}
+{"input":{"first":"rat","second":"car"},"expected":false}
+{"input":{"first":"","second":""},"expected":true}

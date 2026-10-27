@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Try every starting cell",
+      "body": "The first letter of the word can start anywhere on the board."
+    },
+    {
+      "level": 2,
+      "title": "Backtracking",
+      "body": "Match one letter, mark the cell used, and explore its four neighbors."
+    },
+    {
+      "level": 3,
+      "title": "Undo the choice",
+      "body": "Restore the cell after exploring so other paths can use it."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfor each starting cell:\n    if search(row, column, 0): return true\nreturn false\n\nsearch(r, c, index):\n    if index == len(word): return true\n    if out of bounds or board[r][c] != word[index]: return false\n    save = board[r][c]\n    board[r][c] = '#'\n    found = any search(neighbor, index + 1)\n    board[r][c] = save\n    return found\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

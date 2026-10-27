@@ -1,0 +1,15 @@
+{"input":{"note":"","source":""},"expected":true}
+{"input":{"note":"","source":"abc"},"expected":true}
+{"input":{"note":"a","source":""},"expected":false}
+{"input":{"note":"abc","source":"cba"},"expected":true}
+{"input":{"note":"abc","source":"ab"},"expected":false}
+{"input":{"note":"aab","source":"abb"},"expected":false}
+{"input":{"note":"fff","source":"ffffff"},"expected":true}
+{"input":{"note":"xyz","source":"zyx"},"expected":true}
+{"input":{"note":"hello","source":"helloworld"},"expected":true}
+{"input":{"note":"world","source":"helloworld"},"expected":true}
+{"input":{"note":"aabbcc","source":"abcabc"},"expected":true}
+{"input":{"note":"aabbcc","source":"aabbc"},"expected":false}
+{"input":{"note":"z","source":"z"},"expected":true}
+{"input":{"note":"zz","source":"z"},"expected":false}
+{"input":{"note":"abcdefghijklmnopqrstuvwxyz","source":"zyxwvutsrqponmlkjihgfedcba"},"expected":true}

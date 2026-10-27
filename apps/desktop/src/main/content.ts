@@ -13,6 +13,7 @@ import type {
   TestCase,
 } from '@base-case/schema'
 import type {
+  ContentCollectionSummary,
   DesignScenarioDetail,
   DesignScenarioSummary,
   Language,
@@ -37,6 +38,7 @@ interface LoadedProblem {
   readonly packId: string
   readonly packName: string
   readonly source: ProblemSummary['source']
+  readonly collections: readonly string[]
 }
 
 interface LoadedDesign {
@@ -300,6 +302,25 @@ export class ContentRepository {
     return [...this.problems.values()].map((problem) => this.summary(problem))
   }
 
+  listCollections(): ContentCollectionSummary[] {
+    const collections: ContentCollectionSummary[] = []
+
+    for (const pack of this.packs.values()) {
+      for (const collection of pack.manifest.collections ?? []) {
+        collections.push({
+          id: `${pack.manifest.id}/${collection.id}`,
+          name: collection.name,
+          description: collection.description,
+          attribution: collection.attribution,
+          url: collection.url,
+          problemCount: collection.problems.length,
+        })
+      }
+    }
+
+    return collections.sort((left, right) => left.name.localeCompare(right.name))
+  }
+
   listDesigns(): DesignScenarioSummary[] {
     return [...this.designs.values()].map((design) => this.designSummary(design))
   }
@@ -537,6 +558,9 @@ export class ContentRepository {
       packId: pack.id,
       packName: pack.name,
       source,
+      collections: (pack.collections ?? [])
+        .filter((collection) => collection.problems.includes(slug))
+        .map((collection) => `${pack.id}/${collection.id}`),
     })
   }
 
@@ -547,6 +571,7 @@ export class ContentRepository {
       title: problem.manifest.title,
       difficulty: problem.manifest.difficulty,
       patterns: problem.manifest.patterns,
+      collections: problem.collections,
       packId: problem.packId,
       packName: problem.packName,
       source: problem.source,

@@ -1,0 +1,3 @@
+{"input":{"board":["ABCE","SFCS","ADEE"],"word":"ABCCED"},"expected":true}
+{"input":{"board":["ABCE","SFCS","ADEE"],"word":"SEE"},"expected":true}
+{"input":{"board":["ABCE","SFCS","ADEE"],"word":"ABCB"},"expected":false}

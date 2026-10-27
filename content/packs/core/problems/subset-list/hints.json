@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Choose or skip",
+      "body": "At each value, either include it in the current subset or leave it out."
+    },
+    {
+      "level": 2,
+      "title": "Record at every node",
+      "body": "Every partial selection is itself a subset, not only the selections at the leaves."
+    },
+    {
+      "level": 3,
+      "title": "Ordering",
+      "body": "After generating all subsets, sort by length and then by elements, or generate in a way that already satisfies that order."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort nums\nresult = []\nbacktrack(start, path):\n    result.append(copy of path)\n    for i from start to n-1:\n        append nums[i]\n        backtrack(i + 1, path)\n        remove last value\nbacktrack(0, [])\nsort result by (length, elements)\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

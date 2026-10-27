@@ -32,8 +32,11 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## Content
 
-- The MVP pack has 25 coding problems and 8 design scenarios. It is a
-  representative set, not a full interview curriculum.
+- The pack has 79 coding problems and 8 design scenarios. The Grind 75
+  collection is a curated 75-problem subset of a public study list that currently
+  contains more entries; it is not the complete list. Every statement, example,
+  hint, and test is original to Base Case. See the collection attribution in the
+  app and `content/packs/core/pack.json`.
 - The content has automated validation and passing reference solutions, but the
   second-person editorial review is still pending (B4).
 - The eight design scenarios do not yet ship reference Excalidraw scenes. The

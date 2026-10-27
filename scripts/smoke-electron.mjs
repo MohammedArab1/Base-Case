@@ -405,10 +405,28 @@ async function main() {
   )
 
   const problems = await evaluate('window.baseCase.content.list()')
-  assert(Array.isArray(problems) && problems.length >= 1, 'Content list is empty')
+  assert(
+    Array.isArray(problems) && problems.length === 79,
+    `Expected 79 bundled problems, got ${problems.length}`,
+  )
   assert(
     problems.some((problem) => problem.id === 'core/pair-sum'),
     'pair-sum is missing',
+  )
+
+  const collections = await evaluate('window.baseCase.content.collections()')
+  const grind75 = collections.find((collection) => collection.id === 'core/grind75')
+  assert(grind75?.name === 'Grind 75', 'The Grind 75 collection is missing')
+  assert(grind75?.problemCount === 75, 'The Grind 75 collection does not contain 75 problems')
+  assert(
+    problems.filter((problem) => problem.collections.includes('core/grind75')).length === 75,
+    'Problem summaries do not report the Grind 75 collection',
+  )
+  assert(
+    !problems
+      .find((problem) => problem.id === 'core/compact-signals')
+      ?.collections.includes('core/grind75'),
+    'An extra problem was incorrectly tagged as Grind 75',
   )
 
   const initialSettings = await evaluate('window.baseCase.settings.get()')

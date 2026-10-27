@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Three regions",
+      "body": "Intervals entirely before the new one, intervals that merge with it, and intervals entirely after it."
+    },
+    {
+      "level": 2,
+      "title": "Before and after",
+      "body": "Copy intervals whose end is smaller than the incoming start. Then absorb every interval whose start is at most the incoming end."
+    },
+    {
+      "level": 3,
+      "title": "Expand while absorbing",
+      "body": "The merged interval may grow to the right as more intervals are absorbed."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = []\ni = 0\nwhile i < len(intervals) and intervals[i][1] < incoming[0]:\n    result.append(intervals[i]); i += 1\nstart, end = incoming\nwhile i < len(intervals) and intervals[i][0] <= end:\n    start = min(start, intervals[i][0])\n    end = max(end, intervals[i][1])\n    i += 1\nresult.append([start, end])\nresult.extend(intervals[i:])\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

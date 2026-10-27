@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Most frequent task",
+      "body": "The task that appears most often determines the minimum number of gaps."
+    },
+    {
+      "level": 2,
+      "title": "Build a frame",
+      "body": "Place the most frequent task, then fill the gaps between its occurrences with other tasks or idle time."
+    },
+    {
+      "level": 3,
+      "title": "Count tied tasks",
+      "body": "Several tasks may share the maximum frequency; each needs a final slot in the last frame."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncounts = frequency of each task\nmaximum = largest frequency\ntied = number of tasks with that frequency\nframe = (maximum - 1) * (cooldown + 1) + tied\nreturn max(frame, len(tasks))\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

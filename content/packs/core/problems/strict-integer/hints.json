@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Scan in stages",
+      "body": "Skip spaces, read the sign, then consume digits. Stop as soon as a character is not a digit."
+    },
+    {
+      "level": 2,
+      "title": "No digits",
+      "body": "If the digit run is empty, the answer is zero."
+    },
+    {
+      "level": 3,
+      "title": "Clamp early",
+      "body": "Check whether the next digit would exceed the 32-bit limit before adding it."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ni = 0\nskip spaces\nsign = 1\nif text[i] is '+' or '-': set sign and advance\nvalue = 0\nwhile text[i] is a digit:\n    digit = numeric value\n    if value > (limit - digit) // 10: return clamp\n    value = value * 10 + digit\n    i += 1\nreturn sign * value\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

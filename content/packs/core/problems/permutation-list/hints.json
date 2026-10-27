@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Fix a prefix",
+      "body": "Choose one unused value for the next position, then recurse on the rest."
+    },
+    {
+      "level": 2,
+      "title": "Undo the choice",
+      "body": "Remove the chosen value after the recursive call so it is available for other branches."
+    },
+    {
+      "level": 3,
+      "title": "Lexicographic order",
+      "body": "Sort the input and always try unused values from left to right."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort nums\nbacktrack(path, used):\n    if len(path) == len(nums): record path; return\n    for i from 0 to n-1:\n        if used[i]: continue\n        used[i] = true\n        path.append(nums[i])\n        backtrack(path, used)\n        path.pop()\n        used[i] = false\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

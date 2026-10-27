@@ -172,7 +172,8 @@ The MVP is done when a new user can:
 1. Install the app on macOS or Windows.
 2. Use it fully offline.
 3. Choose Python or TypeScript.
-4. Browse 25 original coding problems across core patterns.
+4. Browse 79 original coding problems across core patterns, including a filterable
+   75-problem Grind 75 collection.
 5. Run sample tests and submit against hidden tests.
 6. See structured failure feedback: failing input, expected vs. actual, stderr, runtime, memory.
 7. Read progressive hints and a reference solution.
@@ -194,7 +195,8 @@ Do not build these in the MVP:
 - Cloud accounts, cloud sync, or a hosted service.
 - A general-purpose AI chatbot.
 - Every language. Python + TypeScript/JavaScript only.
-- Every problem. 25 good problems beat 500 mediocre ones.
+- Every problem. A curated 79 with original statements and tests beats a
+  3,000-problem catalog of copied prompts.
 - AI grading of canvas drawings.
 - Mobile or web versions.
 - App Store distribution.
@@ -241,8 +243,8 @@ Use these to judge the alpha and MVP. They are guides, not vanity targets.
 |---|---|---|---|---|
 | **Technical alpha** | Internal | 3–5 | 1–2 | Judge, editor, one track end-to-end |
 | **Public alpha** | Month 4–5 | 10 | 4 | Coding + design, FSRS, BYO AI, macOS/Windows builds |
-| **MVP / v1.0** | Month 6–8 | 25 | 8 | Importer, polish, docs, accessibility, release |
-| **Post-MVP** | After feedback | 50+ | 15+ | Apple FM, C++/Java, mock interviews, community packs |
+| **MVP / v1.0** | Month 6–8 | 79 (75 Grind 75) | 8 | Importer, polish, docs, accessibility, release |
+| **Post-MVP** | After feedback | 150+ | 15+ | Apple FM, C++/Java, mock interviews, community packs |
 
 ### 2.2 Supported platforms
 
@@ -1529,14 +1531,14 @@ Alpha (10 coding + 4 design):
 - Coding patterns: arrays/two pointers, hash maps, stacks, binary search, sliding window, linked lists, trees, BFS/DFS, heaps, DP intro.
 - Design: URL shortener, rate limiter, chat, news feed.
 
-MVP (25 coding + 8 design):
+MVP (79 coding + 8 design, including a 75-problem Grind 75 collection):
 
 - Add: intervals, backtracking, greedy, tries, union-find, more DP, graphs.
 - Design: file storage/sync, search autocomplete, payment ledger, notification system.
 
 Post-MVP:
 
-- 50+ coding, 15+ design.
+- 150+ coding, 15+ design.
 - Company-style mock sets (original content, not scraped tags).
 - Pattern pages and cheat sheets.
 - Community packs.
@@ -2857,7 +2859,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 > Reconciled with the codebase on 2026-10-25. Items checked below were already
 > delivered in Phases 2–8; they are ticked here instead of being rebuilt.
 
-- [x] Content to 25 coding + 8 design. (All 50 reference solutions pass; 15 coding and 4 designs added in Phase 9)
+- [x] Content to 79 coding + 8 design. (All 158 reference solutions pass; 54 coding problems and the Grind 75 collection added in the 2026-10-26 expansion)
 - [x] Importer (delivered in Phase 2; see `main/pack-manager.ts`):
   - [x] Pack validation/preview/install.
   - [x] Disclaimer.
@@ -2893,7 +2895,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 **Deliverables**
 
 - MVP feature-complete build.
-- 25 + 8 content pack.
+- 79 + 8 content pack.
 - Importer.
 - Updated docs.
 
@@ -3006,7 +3008,7 @@ Use these as GitHub epics. Each task should become an issue with acceptance crit
 | E10 AI tutor | Providers, context, features, guardrails, evals | 6 | P1 |
 | E11 Content alpha | 10 coding + 4 design + CLI | 7 | P0 |
 | E12 Release/CI | Packaging, installers, docs, checksums | 8, 10 | P0 |
-| E13 MVP content | 25 + 8, review | 9 | P0 |
+| E13 MVP content | 79 + 8, review | 9 | P0 |
 | E14 Importer | Pack validation/preview/install | 9 | P1 |
 | E15 Accessibility | Keyboard, screen reader, contrast, motion | 9 | P1 |
 | E16 Diagnostics | Self-test, logs, export | 8–9 | P1 |

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "core/nearest-zero",
+  "slug": "nearest-zero",
+  "title": "Nearest Zero",
+  "difficulty": "medium",
+  "patterns": ["graphs", "matrix", "breadth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "nearestZero",
+    "params": [
+      {
+        "name": "grid",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n)",
+      "space": "O(m * n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n)",
+      "space": "O(m * n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using one BFS per cell",
+    "Allowing diagonal movement",
+    "Overwriting already-final distances"
+  ],
+  "followUps": [
+    "How would you solve it if diagonal movement counted as one step?",
+    "What if zeros could be added dynamically?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

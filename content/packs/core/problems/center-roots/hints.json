@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Height is distance to the farthest leaf",
+      "body": "A root near the middle of the tree minimizes the maximum distance to any leaf."
+    },
+    {
+      "level": 2,
+      "title": "Peel leaves",
+      "body": "Remove all current leaves layer by layer, like finding the center of a tree."
+    },
+    {
+      "level": 3,
+      "title": "Last layer",
+      "body": "When at most two nodes remain, they are the centers and the answer."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif n == 1: return [0]\nbuild adjacency and degree\nleaves = all nodes with degree 1\nremaining = n\nwhile remaining > 2:\n    remaining -= len(leaves)\n    nextLeaves = []\n    for leaf in leaves:\n        for neighbor in adjacency[leaf]:\n            remove leaf from neighbor\n            if degree[neighbor] == 1: add neighbor to nextLeaves\n    leaves = nextLeaves\nreturn sorted(leaves)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

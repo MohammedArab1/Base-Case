@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Process a whole level",
+      "body": "Keep the current level's nodes together so their values can be appended as one list."
+    },
+    {
+      "level": 2,
+      "title": "Build the next level",
+      "body": "While visiting a level, collect the children of its nodes for the next pass."
+    },
+    {
+      "level": 3,
+      "title": "Queue order",
+      "body": "A queue naturally visits nodes left to right within each level."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = []\ncurrent = [root] if root else []\nwhile current is not empty:\n    values = []\n    nextLevel = []\n    for node in current:\n        values.append(node.val)\n        if node.left: nextLevel.append(node.left)\n        if node.right: nextLevel.append(node.right)\n    result.append(values)\n    current = nextLevel\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

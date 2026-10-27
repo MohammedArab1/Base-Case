@@ -1,9 +1,38 @@
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { resolveWithinRoot, validatePack } from './validate.js'
 
 const corePackDirectory = fileURLToPath(new URL('../../../content/packs/core', import.meta.url))
+
+async function withPack(
+  collections: unknown,
+  run: (directory: string) => Promise<void>,
+): Promise<void> {
+  const directory = await mkdtemp(join(tmpdir(), 'base-case-pack-'))
+
+  try {
+    await writeFile(
+      join(directory, 'pack.json'),
+      JSON.stringify({
+        schemaVersion: 1,
+        id: 'test',
+        name: 'Test pack',
+        version: '0.0.0',
+        license: 'MIT',
+        attribution: 'Test fixture.',
+        problems: [],
+        designs: [],
+        collections,
+      }),
+    )
+    await run(directory)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+}
 
 describe('validatePack', () => {
   it('accepts the bundled core pack', async () => {
@@ -13,6 +42,65 @@ describe('validatePack', () => {
     expect(result.ok).toBe(true)
     expect(result.pack?.id).toBe('core')
     expect(result.pack?.problems).toContain('pair-sum')
+  })
+
+  it('exposes the 75-problem Grind 75 collection', async () => {
+    const result = await validatePack(corePackDirectory)
+    const collection = result.pack?.collections?.find((entry) => entry.id === 'grind75')
+
+    expect(collection?.problems).toHaveLength(75)
+    expect(collection?.problems).toContain('pair-sum')
+    expect(collection?.problems).toContain('meeting-overlap')
+    expect(collection?.problems).not.toContain('compact-signals')
+    expect(collection?.url).toBe('https://www.techinterviewhandbook.org/grind75/')
+  })
+
+  it('rejects collection entries that are not pack problems', async () => {
+    await withPack(
+      [
+        {
+          id: 'grind75',
+          name: 'Grind 75',
+          description: 'Test collection.',
+          problems: ['missing-problem'],
+        },
+      ],
+      async (directory) => {
+        const result = await validatePack(directory)
+
+        expect(result.ok).toBe(false)
+        expect(
+          result.issues.some((issue) => issue.message.includes('is not listed in problems')),
+        ).toBe(true)
+      },
+    )
+  })
+
+  it('rejects duplicate collection ids', async () => {
+    await withPack(
+      [
+        {
+          id: 'grind75',
+          name: 'Grind 75',
+          description: 'First collection.',
+          problems: [],
+        },
+        {
+          id: 'grind75',
+          name: 'Duplicate',
+          description: 'Second collection.',
+          problems: [],
+        },
+      ],
+      async (directory) => {
+        const result = await validatePack(directory)
+
+        expect(result.ok).toBe(false)
+        expect(
+          result.issues.some((issue) => issue.message.includes('Duplicate collection id')),
+        ).toBe(true)
+      },
+    )
   })
 })
 

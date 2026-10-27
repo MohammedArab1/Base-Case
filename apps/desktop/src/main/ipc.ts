@@ -173,6 +173,7 @@ export function registerIpc({
   })
 
   register(channels.contentList, noInputSchema, () => content.listProblems())
+  register(channels.contentCollections, noInputSchema, () => content.listCollections())
   register(channels.contentGet, problemIdSchema, (problemId) => content.getProblem(problemId))
   register(channels.contentSearch, searchQuerySchema, (query) =>
     content.getSummaries(contentIndex.search(query)),

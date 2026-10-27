@@ -168,6 +168,18 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
     await firstPage.getByLabel('Status filter').selectOption('accepted')
     await expect(firstPage.getByRole('heading', { name: 'No matches' })).toBeVisible()
     await firstPage.getByLabel('Status filter').selectOption('all')
+    await firstPage.getByLabel('Difficulty filter').selectOption('all')
+
+    // The collection filter narrows the library to the Grind 75 subset.
+    await expect(
+      firstPage.getByRole('button', { name: /Pair Sum/ }).locator('.tag-collection'),
+    ).toHaveText('Grind 75')
+    await firstPage.getByLabel('Collection filter').selectOption('core/grind75')
+    await expect(firstPage.getByText(/A 75-problem core subset/)).toBeVisible()
+    await expect(firstPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
+    await expect(firstPage.getByRole('button', { name: /Cargo Deadline/ })).toHaveCount(0)
+    await firstPage.getByLabel('Collection filter').selectOption('all')
+    await expect(firstPage.getByRole('button', { name: /Cargo Deadline/ })).toBeVisible()
 
     await firstPage.getByRole('button', { name: /Pair Sum/ }).click()
     await expect(firstPage.getByRole('heading', { name: 'Pair Sum', level: 2 })).toBeVisible()
