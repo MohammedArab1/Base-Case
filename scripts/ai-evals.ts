@@ -5,7 +5,7 @@ import { applyGuardrails } from '../apps/desktop/src/main/ai-guardrails'
 import { MockProvider } from '../apps/desktop/src/main/ai-providers/mock'
 import { OpenAiCompatibleProvider } from '../apps/desktop/src/main/ai-providers/openai-compatible'
 import type { AiProvider } from '../apps/desktop/src/main/ai-providers/types'
-import { parseStructuredOutput } from '../apps/desktop/src/main/ai-schemas'
+import { aiJsonSchema, parseStructuredOutput } from '../apps/desktop/src/main/ai-schemas'
 import type { ContentRepository } from '../apps/desktop/src/main/content'
 import type { AiContext, AiFeature, Failure } from '../apps/desktop/src/shared/types'
 
@@ -56,6 +56,8 @@ interface EvalCase {
   readonly inputTokens: number
   readonly outputTokens: number
   readonly droppedSections: readonly string[]
+  readonly rawResponse: string
+  readonly guardedResponse: string
   readonly helpfulness: null
   readonly diagnosisCorrect: null
 }
@@ -202,7 +204,7 @@ async function main(): Promise<void> {
             messages: built.messages,
             maxOutputTokens: built.preview.maxOutputTokens,
             temperature: 0.2,
-            jsonSchema: {},
+            jsonSchema: aiJsonSchema(feature),
           },
           (chunk) => {
             raw += chunk
@@ -230,6 +232,8 @@ async function main(): Promise<void> {
           inputTokens: built.preview.estimatedTokens,
           outputTokens: estimateTokens(raw),
           droppedSections: built.preview.droppedSections,
+          rawResponse: raw,
+          guardedResponse: guarded.text,
           helpfulness: null,
           diagnosisCorrect: null,
         })
@@ -241,7 +245,9 @@ async function main(): Promise<void> {
   const labelMatches = explainCases.filter((entry) => entry.labelMatch === true).length
   const summary = {
     provider: provider.id,
-    model: provider.name,
+    model: process.env.BASE_CASE_EVAL_MODEL ?? provider.name,
+    endpoint: process.env.BASE_CASE_EVAL_BASE_URL ?? null,
+    revision: process.env.BASE_CASE_EVAL_REVISION ?? null,
     problems: zoo.problems.length,
     solutions: zoo.problems.reduce((sum, problem) => sum + problem.solutions.length, 0),
     cases: cases.length,

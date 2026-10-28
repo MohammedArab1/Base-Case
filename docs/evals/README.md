@@ -34,14 +34,43 @@ To evaluate a real OpenAI-compatible endpoint:
 ```sh
 BASE_CASE_EVAL_PROVIDER=openai-compatible \
 BASE_CASE_EVAL_BASE_URL=http://127.0.0.1:11434/v1 \
-BASE_CASE_EVAL_MODEL=qwen2.5-coder \
+BASE_CASE_EVAL_MODEL=qwen2.5-coder:7b \
 BASE_CASE_EVAL_CONTEXT_WINDOW=8192 \
+BASE_CASE_EVAL_REVISION=$(git rev-parse --short HEAD) \
 pnpm evals
 ```
 
-Set `BASE_CASE_EVAL_API_KEY` when the endpoint requires one. Results are written to
-`docs/evals/results-openai-compatible.json`. Do not commit API keys or raw provider
-responses that contain personal data.
+Set `BASE_CASE_EVAL_API_KEY` when the endpoint requires one. Set
+`BASE_CASE_EVAL_REVISION` to the commit or prompt revision you are evaluating
+(for example, `$(git rev-parse --short HEAD)`). Results are written to
+`docs/evals/results-openai-compatible.json`. The runner uses the same feature JSON
+schema as the app and stores both `rawResponse` and `guardedResponse` for review.
+Do not commit API keys or raw provider responses that contain personal data; the
+bug-zoo fixtures are synthetic code and failures.
+
+## Human review
+
+After a real-model run, review the responses with:
+
+```sh
+pnpm review:evals
+```
+
+To review a specific file:
+
+```sh
+pnpm review:evals docs/evals/results-openai-compatible.json
+```
+
+The review tool prints the code, failing test, ground-truth bug label, and guarded
+response for each unrated case. It asks for:
+
+- `diagnosisCorrect` (`y`/`n`) on **explain** cases only.
+- `helpfulness` (`1`–`5`) on every case.
+
+It writes the ratings back to the JSON file after each case and adds a
+`humanSummary` with diagnosis accuracy and helpfulness averages. Use `s` to skip
+a case and come back to it later.
 
 ## Metrics
 
@@ -59,13 +88,23 @@ responses that contain personal data.
 `helpfulness` and `diagnosisCorrect` start as `null`. Review the cases and fill them
 in for a real-model run. Keep the filled file next to the raw result.
 
+## B3 pass criteria
+
+- Leakage: **0** raw or guarded leaks across the 60 cases (below the 1% target).
+- Diagnosis accuracy: **≥ 70%** on the 30 explain cases, or keep the AI feature
+  labeled experimental with pre-authored hints as the primary path.
+- Helpfulness: **> 4.0 / 5** average across the reviewed cases.
+- Record the provider, model, endpoint, date, revision, automated summary, and
+  human summary in the results file.
+
 ## Review protocol
 
 1. Read the failing test and the labelled bug first.
 2. Read the response without looking at the label.
 3. Mark `diagnosisCorrect` true when the explanation identifies the cause, not just a
-   symptom.
-4. Mark `helpfulness` 1 (useless) to 5 (unblocks the learner with one concrete step).
+   symptom. This applies to **explain** cases; leave it `null` for hints.
+4. Mark `helpfulness` 1 (useless) to 5 (unblocks the learner with one concrete step)
+   for both explain and hint cases.
 5. Mark leakage separately; guardrails should make this rare, but a model can still
    leak a solution in prose.
 
