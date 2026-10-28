@@ -48,6 +48,21 @@ schema as the app and stores both `rawResponse` and `guardedResponse` for review
 Do not commit API keys or raw provider responses that contain personal data; the
 bug-zoo fixtures are synthetic code and failures.
 
+If the endpoint requires custom headers, pass them as a JSON object of string
+values:
+
+```sh
+BASE_CASE_EVAL_HEADERS='{"x-opencode-session":"your-session-id"}' \
+BASE_CASE_EVAL_PROVIDER=openai-compatible \
+BASE_CASE_EVAL_BASE_URL=https://your-endpoint/v1 \
+BASE_CASE_EVAL_MODEL=your-model \
+pnpm evals
+```
+
+Header values are not written to the results file; only
+`summary.customHeaders: true` is recorded. Do not commit the header value or put it
+in the eval results file.
+
 ## Human review
 
 After a real-model run, review the responses with:

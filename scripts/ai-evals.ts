@@ -64,6 +64,44 @@ interface EvalCase {
 
 const features: readonly AiFeature[] = ['explain', 'hint']
 
+function headersFromEnvironment(): Readonly<Record<string, string>> | undefined {
+  const raw = process.env.BASE_CASE_EVAL_HEADERS?.trim()
+
+  if (!raw) {
+    return undefined
+  }
+
+  let parsed: unknown
+
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    throw new Error(
+      'BASE_CASE_EVAL_HEADERS must be a JSON object whose values are strings, for example {"x-opencode-session":"..."}.',
+    )
+  }
+
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error(
+      'BASE_CASE_EVAL_HEADERS must be a JSON object of header names to string values.',
+    )
+  }
+
+  const headers: Record<string, string> = {}
+
+  for (const [name, value] of Object.entries(parsed)) {
+    if (name.trim().length === 0 || typeof value !== 'string') {
+      throw new Error(
+        'BASE_CASE_EVAL_HEADERS must contain only non-empty header names and string values.',
+      )
+    }
+
+    headers[name] = value
+  }
+
+  return headers
+}
+
 function providerFromEnvironment(): AiProvider {
   const kind = process.env.BASE_CASE_EVAL_PROVIDER ?? 'mock'
 
@@ -86,6 +124,7 @@ function providerFromEnvironment(): AiProvider {
       model,
       apiKey: process.env.BASE_CASE_EVAL_API_KEY ?? '',
       contextWindow: Number(process.env.BASE_CASE_EVAL_CONTEXT_WINDOW ?? 32768),
+      headers: headersFromEnvironment(),
     })
   }
 
@@ -248,6 +287,7 @@ async function main(): Promise<void> {
     model: process.env.BASE_CASE_EVAL_MODEL ?? provider.name,
     endpoint: process.env.BASE_CASE_EVAL_BASE_URL ?? null,
     revision: process.env.BASE_CASE_EVAL_REVISION ?? null,
+    customHeaders: Boolean(process.env.BASE_CASE_EVAL_HEADERS?.trim()),
     problems: zoo.problems.length,
     solutions: zoo.problems.reduce((sum, problem) => sum + problem.solutions.length, 0),
     cases: cases.length,
