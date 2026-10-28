@@ -1,7 +1,7 @@
 # Phase 1 technical spike report
 
 - Date: 2026-10-23
-- Status: macOS complete; Windows verified on hardware; clean-VM installs pending
+- Status: macOS complete; Windows verified on hardware; clean-OS isolation waived for the alpha (B1)
 - Decision: **Go** for Phase 2, with judge hardening continuing in Phase 3
 - Environment: macOS 27.2 (arm64), Node 24.22.0, pnpm 12.15.0, Go 1.27.2,
   Electron 45.0.0, electron-builder 26.15.3; Windows 11 Pro (build 26200, x64),
@@ -199,13 +199,22 @@ persistence, optional AI streaming, and unsigned packaging. Installer size
 (190 MB macOS, 171 MB Windows) and idle memory (~265 MB macOS, ~428 MB Windows)
 are within budget. No unknown blocker prevents Phase 2.
 
-Phase 1 cannot be marked fully complete until clean-VM installs are recorded for
+### 2026-10-27 update
+
+The Windows `0.1.0-alpha` installer was installed on physical Windows 11 and
+launched successfully. Diagnostics passed 9/9 with 79 coding problems and 8
+design scenarios; Node 24.22.0 and Python 3.12.15 were both reported as bundled,
+and Pair Sum samples passed in both languages. The owner waived clean-OS
+isolation for the alpha because no clean macOS VM was available. Clean-VM
+verification remains a v1.0 bar.
+
+Phase 1 remains incomplete for v1.0 until clean-VM installs are recorded for
 both operating systems. That is an environment/access blocker, not a design
-blocker.
+blocker; the alpha proceeds with the explicit waiver above.
 
 ## Recommended next steps
 
-1. Install the macOS DMG and Windows build on clean VMs and record the result.
+1. Clean-VM installs remain a v1.0 bar; the alpha has an owner waiver (B1) and the Windows installer was verified on hardware (B2).
 2. Start Phase 2: typed IPC envelopes, structured logging, design system,
    repository layer, FTS5, settings, and Playwright smoke tests.
 3. Carry these into Phase 3: runtime bundling decision, Seatbelt, memory
