@@ -135,15 +135,15 @@ async function main(): Promise<void> {
         `[${index + 1}/${results.cases.length}] ${found.problem.title} / ${entry.solutionId}`,
       )
       console.log(`Feature: ${entry.feature}`)
-      console.log(`Ground-truth bug label: ${entry.bugLabel}`)
-      console.log(
-        `Automated label match: ${entry.labelMatch === null ? 'n/a' : entry.labelMatch ? 'yes' : 'no'}`,
-      )
       console.log(`Warning: ${entry.warning ?? 'none'}`)
       console.log(`\nCode:\n${found.solution.code}`)
       console.log(`\nFailing test:\n${JSON.stringify(found.solution.failure, null, 2)}`)
       console.log(
         `\nModel response (guarded):\n${responseText(entry.guardedResponse ?? entry.rawResponse)}`,
+      )
+      console.log(`\nGround-truth bug label: ${entry.bugLabel}`)
+      console.log(
+        `Automated label match: ${entry.labelMatch === null ? 'n/a' : entry.labelMatch ? 'yes' : 'no'}`,
       )
 
       let diagnosis: boolean | null = null
