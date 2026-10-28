@@ -63,6 +63,14 @@ export function TodayView({ problems, onOpenProblem, onNavigate }: TodayViewProp
         </section>
 
         <section className="card">
+          <h2>Learn a concept</h2>
+          <p>Read a short lesson with diagrams, a complexity cheatsheet, and linked practice.</p>
+          <button type="button" className="text-button" onClick={() => onNavigate('learn')}>
+            Open Learn
+          </button>
+        </section>
+
+        <section className="card">
           <h2>Continue</h2>
           <p>
             {fallbackProblem

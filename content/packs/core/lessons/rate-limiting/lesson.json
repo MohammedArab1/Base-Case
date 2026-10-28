@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "core/rate-limiting",
+  "slug": "rate-limiting",
+  "title": "Rate Limiting",
+  "category": "system-design",
+  "summary": "Protect shared capacity by deciding who may do how much, and what happens when they ask for more.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 30,
+  "tags": ["system-design", "rate-limiting", "redis", "abuse", "token-bucket"],
+  "prerequisites": ["scaling-and-load-balancing", "requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Rate limiting protects capacity, fairness, and cost rather than blocking all traffic.",
+    "Token bucket allows bursts up to a bucket size while enforcing an average rate.",
+    "Fixed windows are simple but allow a burst at the boundary; sliding windows smooth it.",
+    "Distributed counters need an atomic increment or a small amount of over-admission.",
+    "Return 429 with Retry-After and make limits visible in headers."
+  ],
+  "complexity": [
+    {
+      "operation": "Token bucket check",
+      "time": "O(1)",
+      "space": "O(keys)",
+      "note": "Refill lazily from elapsed time."
+    },
+    {
+      "operation": "Fixed window counter",
+      "time": "O(1)",
+      "space": "O(keys)",
+      "note": "Cheap but bursty at boundaries."
+    },
+    {
+      "operation": "Sliding window log",
+      "time": "O(requests in window)",
+      "space": "O(requests)",
+      "note": "Precise but memory-heavy."
+    },
+    {
+      "operation": "Distributed counter update",
+      "time": "one round trip",
+      "space": "shared store",
+      "note": "Use an atomic operation."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["rate-limiter", "chat-system", "url-shortener"]
+  },
+  "commonMistakes": [
+    "Using a fixed window and allowing twice the intended rate at the boundary.",
+    "Storing a counter per node, so the effective limit is multiplied by the number of nodes.",
+    "Rejecting requests without a Retry-After or a clear error body.",
+    "Rate-limiting by IP only when users share NAT or proxies."
+  ],
+  "interviewNotes": [
+    "Ask whether the limit is per user, per IP, per API key, or per tenant.",
+    "State the burst allowance separately from the average rate.",
+    "Explain where the counter lives and what happens if it is unavailable.",
+    "Decide whether the limiter fails open or closed during a store outage."
+  ],
+  "checkYourself": [
+    {
+      "question": "How does a token bucket allow a short burst?",
+      "answer": "Tokens accumulate up to a bucket size. A burst can spend the stored tokens, while the refill rate enforces the long-term average."
+    },
+    {
+      "question": "Why is a fixed window boundary a problem?",
+      "answer": "A client can send the full quota at the end of one window and again at the start of the next, producing twice the intended rate in a short span."
+    },
+    {
+      "question": "What should the server return when a limit is exceeded?",
+      "answer": "HTTP 429 Too Many Requests, with Retry-After and useful rate-limit headers so the client can back off correctly."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "core/binary-search-trees",
+  "slug": "binary-search-trees",
+  "title": "Binary Search Trees",
+  "category": "data-structure",
+  "summary": "A binary tree with an ordering rule that turns search into a sequence of simple choices.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 14,
+  "tags": ["binary-search-tree", "trees", "search", "inorder"],
+  "prerequisites": ["trees", "binary-search"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Every value in the left subtree is smaller than the node, and every value in the right subtree is larger.",
+    "Search follows one branch per level, so it costs O(h) where h is the height.",
+    "A balanced BST has height O(log n); a skewed BST has height O(n).",
+    "Inorder traversal of a valid BST produces sorted order."
+  ],
+  "complexity": [
+    {
+      "operation": "Search",
+      "time": "O(h)",
+      "space": "O(h)",
+      "note": "Balanced h = log n; skewed h = n."
+    },
+    {
+      "operation": "Insert",
+      "time": "O(h)",
+      "space": "O(h)",
+      "note": "Find the empty slot."
+    },
+    {
+      "operation": "Delete",
+      "time": "O(h)",
+      "space": "O(h)",
+      "note": "Two children require a successor."
+    },
+    {
+      "operation": "Minimum or maximum",
+      "time": "O(h)",
+      "space": "O(1)",
+      "note": "Follow one side."
+    },
+    {
+      "operation": "Inorder traversal",
+      "time": "O(n)",
+      "space": "O(h)",
+      "note": "Sorted order for a valid BST."
+    }
+  ],
+  "exercises": {
+    "problems": ["search-tree-check", "ancestor-search", "kth-smallest-tree"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Checking only the immediate children instead of the allowed range for the whole subtree.",
+    "Assuming a BST is balanced; insertion order can make it a linked list.",
+    "Deleting a node with two children without finding a replacement from one subtree.",
+    "Using inorder traversal to verify a BST when a range check is simpler and avoids extra memory."
+  ],
+  "interviewNotes": [
+    "If the tree is a BST, mention that search can prune an entire subtree at each step.",
+    "For validation, carry low and high bounds down the recursion; comparing with the parent alone is not enough.",
+    "For kth smallest, either do an inorder walk or store subtree sizes if the tree supports rank queries."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is comparing a node only with its parent insufficient for validation?",
+      "answer": "A value deep in the left subtree can still be larger than an ancestor even if it is smaller than its local parent. The whole allowed range must be checked."
+    },
+    {
+      "question": "What is the height of a BST built from sorted ascending input?",
+      "answer": "n - 1, because every new value becomes the right child of the previous node. The tree is skewed."
+    },
+    {
+      "question": "How do you find the kth smallest value?",
+      "answer": "Walk inorder and count visits, stopping at k. Or use subtree sizes to skip whole left subtrees."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

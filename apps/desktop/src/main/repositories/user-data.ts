@@ -15,6 +15,7 @@ export const userDataTables = [
   'review_logs',
   'drafts',
   'problem_notes',
+  'lesson_progress',
   'design_scenes',
   'design_attempts',
   'ai_feedback',

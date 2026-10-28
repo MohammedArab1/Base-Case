@@ -15,6 +15,7 @@ const expectedTables = [
   'design_attempts',
   'design_scenes',
   'drafts',
+  'lesson_progress',
   'mistake_tags',
   'problem_notes',
   'review_cards',
@@ -56,6 +57,57 @@ describe('AppDatabase migrations', () => {
       try {
         expect(tableNames(database)).toEqual(expect.arrayContaining(expectedTables))
         expect(appliedVersions(database)).toEqual(migrations.map((migration) => migration.version))
+      } finally {
+        database.close()
+      }
+    })
+  })
+
+  it('upgrades a version-7 database and adds lesson progress', () => {
+    withDirectory((directory) => {
+      const databasePath = join(directory, 'app.db')
+      const previous = new DatabaseSync(databasePath)
+
+      try {
+        previous.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;')
+        previous.exec(`
+          CREATE TABLE schema_migrations (
+            version INTEGER PRIMARY KEY,
+            applied_at TEXT NOT NULL
+          );
+        `)
+
+        for (const migration of migrations.filter((entry) => entry.version <= 7)) {
+          previous.exec(migration.sql)
+          previous
+            .prepare('INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)')
+            .run(migration.version, new Date().toISOString())
+        }
+
+        previous
+          .prepare('INSERT INTO settings (key, value_json, updated_at) VALUES (?, ?, ?)')
+          .run('app', JSON.stringify({ theme: 'light' }), new Date().toISOString())
+      } finally {
+        previous.close()
+      }
+
+      const database = new AppDatabase(directory)
+
+      try {
+        expect(tableNames(database)).toContain('lesson_progress')
+        expect(appliedVersions(database)).toEqual(migrations.map((migration) => migration.version))
+
+        database.connection
+          .prepare(
+            'INSERT INTO lesson_progress (lesson_id, completed_at, last_viewed_at, updated_at) VALUES (?, ?, ?, ?)',
+          )
+          .run('core/big-o', new Date().toISOString(), null, new Date().toISOString())
+
+        const row = database.connection
+          .prepare('SELECT completed_at FROM lesson_progress WHERE lesson_id = ?')
+          .get('core/big-o') as { completed_at?: string } | undefined
+
+        expect(row?.completed_at).toEqual(expect.any(String))
       } finally {
         database.close()
       }

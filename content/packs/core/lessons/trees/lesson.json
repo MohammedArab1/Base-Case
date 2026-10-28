@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/trees",
+  "slug": "trees",
+  "title": "Trees and Traversals",
+  "category": "data-structure",
+  "summary": "A hierarchy of nodes that turns nested structure into simple recursive questions.",
+  "difficulty": "easy",
+  "estimatedMinutes": 13,
+  "order": 13,
+  "tags": ["trees", "dfs", "bfs", "recursion", "traversal"],
+  "prerequisites": ["recursion-and-backtracking", "queues-and-deques"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A tree has a root and no cycles; every non-root node has exactly one parent.",
+    "Preorder, inorder, and postorder traversals differ in when the current node is visited.",
+    "Level-order traversal uses a queue and visits nodes by depth.",
+    "Most tree problems are a recursive question about the left and right subtrees plus a decision at the current node."
+  ],
+  "complexity": [
+    {
+      "operation": "Visit every node",
+      "time": "O(n)",
+      "space": "O(h)",
+      "note": "h is the height; the stack depth."
+    },
+    {
+      "operation": "Level-order traversal",
+      "time": "O(n)",
+      "space": "O(w)",
+      "note": "w is the maximum width of a level."
+    },
+    {
+      "operation": "Search in a balanced binary tree",
+      "time": "O(log n)",
+      "space": "O(log n)",
+      "note": "Height is logarithmic."
+    },
+    {
+      "operation": "Search in a skewed tree",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "The tree behaves like a linked list."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "flip-tree",
+      "symmetric-branches",
+      "tree-depth",
+      "tree-diameter",
+      "level-lines",
+      "right-view",
+      "tree-rebuild",
+      "ancestor-tree",
+      "height-balance"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Forgetting the null base case, which causes a crash on a missing child.",
+    "Confusing depth (distance from the root) with height (distance to the deepest leaf).",
+    "Using a queue for a traversal that needs the call stack, or a stack for level order.",
+    "Returning a height and a diameter from the same recursive value without separating the two ideas."
+  ],
+  "interviewNotes": [
+    "Say whether the tree is binary, a search tree, balanced, or arbitrary. The answer changes which shortcuts are valid.",
+    "For path problems, define what the recursive function returns and what it updates globally.",
+    "Use level order when the question mentions rows, levels, or minimum depth."
+  ],
+  "checkYourself": [
+    {
+      "question": "What order does inorder traversal produce for a binary search tree?",
+      "answer": "Ascending sorted order, because it visits left subtree, current node, then right subtree."
+    },
+    {
+      "question": "Why is the space complexity of a traversal O(h) rather than O(n)?",
+      "answer": "The call stack or queue holds one path or one level, not every node at once. h is the height."
+    },
+    {
+      "question": "How do you compute a diameter?",
+      "answer": "At each node, the best path through it is left height plus right height. Return the taller child's height to the parent and keep the best sum seen so far."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

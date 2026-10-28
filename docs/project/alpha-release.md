@@ -36,7 +36,8 @@ Exit criteria from `PLAN.md`:
 - [ ] `pnpm smoke:playwright`
 - [ ] `pnpm evals` (mock provider; a real-model run is B3)
 - [ ] macOS package built and launched: `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac`
-- [ ] Windows package built through the manual `Build installers` workflow (B2)
+- [x] Windows package built through the manual `Build installers` workflow (B2: run `40607714499`; installed and launched on Windows 11)
+- [x] Clean install works on macOS and Windows (B1 closed by owner waiver for the alpha: Windows hardware install passed; clean-OS isolation was not performed and remains a v1.0 bar)
 - [ ] `CHANGELOG.md` has a dated `0.1.0-alpha` section
 - [ ] `README.md` status and `PROGRESS.md` reflect the release
 - [ ] `docs/quickstart.md`, `faq.md`, `privacy.md`, and `known-limitations.md` are
@@ -66,11 +67,12 @@ git push origin v0.1.0-alpha
 Base Case 0.1.0-alpha is a local-first coding interview and system design
 practice app for macOS (Apple Silicon and Intel) and Windows.
 
-What works: 79 original coding problems (including a 75-problem Grind 75
-collection), 8 design scenarios, a local Python and TypeScript judge, hints and
-explanations, FSRS review, a design canvas with Markdown/PNG export, data
-export/import, accessible core flows, and an optional experimental AI tutor with
-explain-back and confirmed mistake tags (off by default).
+What works: 81 original coding problems (including a 75-problem Grind 75
+collection), 8 design scenarios, 30 offline DSA and system-design lessons with
+linked practice, a local Python and TypeScript judge, hints and explanations,
+FSRS review, a design canvas with Markdown/PNG export, data export/import,
+accessible core flows, and an optional experimental AI tutor with explain-back,
+lesson clarification, and confirmed mistake tags (off by default).
 
 Install: see docs/quickstart.md. macOS builds are ad-hoc signed but not
 notarized; the first launch needs System Settings → Privacy & Security → Open

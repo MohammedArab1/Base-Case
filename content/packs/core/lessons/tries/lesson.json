@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "core/tries",
+  "slug": "tries",
+  "title": "Tries",
+  "category": "data-structure",
+  "summary": "A tree of characters that makes prefix questions and autocomplete natural.",
+  "difficulty": "medium",
+  "estimatedMinutes": 10,
+  "order": 16,
+  "tags": ["trie", "prefix", "strings", "autocomplete"],
+  "prerequisites": ["trees", "hash-maps"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Each edge in a trie represents one character; a path from the root spells a prefix.",
+    "A node can mark the end of a word or store a count of words that pass through it.",
+    "Insert, search, and prefix checks cost O(L), where L is the length of the word or prefix.",
+    "Tries share prefixes, so many words can be stored with less duplication than a list of full strings."
+  ],
+  "complexity": [
+    {
+      "operation": "Insert a word",
+      "time": "O(L)",
+      "space": "O(L)",
+      "note": "At most one new node per character."
+    },
+    {
+      "operation": "Search for a word",
+      "time": "O(L)",
+      "space": "O(1)",
+      "note": "Follow the characters, then check the end marker."
+    },
+    {
+      "operation": "Check a prefix",
+      "time": "O(L)",
+      "space": "O(1)",
+      "note": "No end marker required."
+    },
+    {
+      "operation": "List words with a prefix",
+      "time": "O(L + output)",
+      "space": "O(output)",
+      "note": "Walk the prefix, then enumerate below it."
+    },
+    {
+      "operation": "Store n words",
+      "time": "O(total characters)",
+      "space": "O(total characters)",
+      "note": "Shared prefixes are stored once."
+    }
+  ],
+  "exercises": {
+    "problems": ["prefix-ledger"],
+    "designs": ["search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Confusing a prefix match with a full-word match and forgetting the end-of-word marker.",
+    "Storing whole strings at every node instead of sharing one path per prefix.",
+    "Using a trie when a hash set of whole strings is enough; prefixes are the reason to choose a trie.",
+    "Forgetting that an empty prefix matches every stored word."
+  ],
+  "interviewNotes": [
+    "Say what each node stores: children, an end marker, and optionally a count or list of suggestions.",
+    "If the alphabet is fixed and small, an array of children can be faster than a hash map.",
+    "For autocomplete, combine the trie with a top-k list at each node or a ranking score."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is inserting a word O(L) rather than O(n) for n words?",
+      "answer": "The work depends on the length of the word being inserted, not on how many other words are already stored."
+    },
+    {
+      "question": "What does a node's count mean in Prefix Ledger?",
+      "answer": "The number of inserted words whose path passed through that node, which equals the number of words with that prefix."
+    },
+    {
+      "question": "When is a trie a better choice than a hash set?",
+      "answer": "When the questions are about prefixes, shared beginnings, or ordered suggestions rather than exact membership."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

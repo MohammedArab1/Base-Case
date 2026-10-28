@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "core/sorting",
+  "slug": "sorting",
+  "title": "Sorting",
+  "category": "algorithm",
+  "summary": "Put data in order so that comparisons, merging, and searching become simple and fast.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 7,
+  "tags": ["sorting", "divide-and-conquer", "comparators", "stability"],
+  "prerequisites": ["complexity-and-big-o", "arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Comparison sorting cannot beat O(n log n) in the general case.",
+    "Merge sort splits, sorts, and merges; it is stable and predictable at O(n log n).",
+    "Quick sort partitions around a pivot; it is fast in practice but has an O(n²) worst case.",
+    "Counting sort avoids comparisons when values come from a small integer range.",
+    "A custom comparator is often the whole solution to an interval or scheduling problem."
+  ],
+  "complexity": [
+    {
+      "operation": "Merge sort",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Stable; good for linked lists."
+    },
+    {
+      "operation": "Quick sort",
+      "time": "O(n log n) average",
+      "space": "O(log n)",
+      "note": "O(n²) worst case with bad pivots."
+    },
+    {
+      "operation": "Insertion sort",
+      "time": "O(n²)",
+      "space": "O(1)",
+      "note": "Fast for tiny or nearly sorted inputs."
+    },
+    {
+      "operation": "Counting sort",
+      "time": "O(n + k)",
+      "space": "O(k)",
+      "note": "k is the value range."
+    },
+    {
+      "operation": "Sort by a custom comparator",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Comparator must be consistent."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "merge-sorted-chains",
+      "color-sort",
+      "meeting-overlap",
+      "merge-window",
+      "merge-k-arrays",
+      "job-schedule",
+      "nearest-points",
+      "cargo-deadline",
+      "task-intervals"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Assuming the language's sort is stable when the problem depends on original order.",
+    "Writing a comparator that can return inconsistent results, such as subtracting large numbers that overflow.",
+    "Re-sorting inside a loop instead of sorting once before the loop.",
+    "Using comparison sort when a counting approach would be linear for a small fixed range."
+  ],
+  "interviewNotes": [
+    "If sorting is acceptable, say that it changes the input order, then state the new complexity.",
+    "For interval problems, sort by start or by end; the right choice depends on whether you are merging or scheduling.",
+    "For top-k problems, ask whether a heap can avoid sorting everything."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is merge sort a good fit for linked lists?",
+      "answer": "Merging two sorted lists only needs pointer changes and no random access, so the merge step is O(1) extra space per merge."
+    },
+    {
+      "question": "When is counting sort a better choice than comparison sort?",
+      "answer": "When values are integers in a small, known range, so a counter array is cheap and the O(n + k) pass beats O(n log n)."
+    },
+    {
+      "question": "Why sort by end time for the classic maximum-meetings problem?",
+      "answer": "Choosing the meeting that ends earliest leaves the most room for later meetings. Sorting by start does not give that guarantee."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

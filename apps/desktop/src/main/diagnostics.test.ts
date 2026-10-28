@@ -27,6 +27,7 @@ function dependencies(overrides: Partial<DiagnosticsDependencies> = {}): Diagnos
   const content = {
     listProblems: () => [{ id: 'core/a' }, { id: 'core/b' }],
     listDesigns: () => [{ id: 'core/design' }],
+    listLessons: () => [{ id: 'core/lesson' }],
     listPacks: () => [{ id: 'core' }],
   } as unknown as DiagnosticsDependencies['content']
 
@@ -87,7 +88,9 @@ describe('runDiagnostics', () => {
     expect(report.ok).toBe(true)
     expect(report.appVersion).toBe('0.1.0-alpha')
     expect(byId.get('database')?.status).toBe('pass')
-    expect(byId.get('content')?.detail).toContain('2 coding problems and 1 design scenarios')
+    expect(byId.get('content')?.detail).toContain(
+      '2 coding problems, 1 design scenarios, and 1 lessons',
+    )
     expect(byId.get('search-index')?.status).toBe('pass')
     expect(byId.get('judge')?.status).toBe('pass')
     expect(byId.get('runtimes')?.status).toBe('pass')

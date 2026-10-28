@@ -98,14 +98,31 @@ no application backend, no accounts, and no telemetry.
 4. App reveals the reference design and comparison checklist.
 5. Main updates the design review card.
 
+### Lesson
+
+1. Renderer requests the lesson library through `learn:list`.
+2. Main replays the file-backed pack manifest; lessons are loaded with their
+   Markdown body, key ideas, complexity rows, and resolved exercise links.
+3. Opening a lesson calls `learn:get`, which returns the lesson and records a
+   local `last_viewed_at` timestamp. The lesson body is sanitized Markdown.
+4. Completing a lesson writes only `lesson_progress` in SQLite. It does not
+   create an FSRS card and does not depend on the network.
+5. Practice links open the existing coding problem or design scenario. Their
+   normal attempts, drafts, review cards, and notes are unchanged.
+
 ### AI request
 
 1. User picks an AI action.
 2. Main builds a context pack: problem brief, user plan, relevant code slice,
-   smallest failing test, expected/actual, and prior hints.
+   smallest failing test, expected/actual, and prior hints. A lesson
+   clarification sends the lesson title, summary, key points, complexity rows,
+   the selected section excerpt, and the learner's question.
 3. Main shows a preview of exactly what will be sent.
 4. On confirmation, main calls the configured provider and streams the response.
 5. The response is schema-validated and rendered in the AI panel.
+
+Lesson self-check answers, common mistakes, and exercise solutions are never
+part of the clarification context.
 
 ## Failure handling
 

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "id": "core/dynamic-programming",
+  "slug": "dynamic-programming",
+  "title": "Dynamic Programming",
+  "category": "algorithm",
+  "summary": "Turn repeated subproblems into a table of answers, moving from exponential searching to polynomial time.",
+  "difficulty": "hard",
+  "estimatedMinutes": 16,
+  "order": 22,
+  "tags": ["dynamic-programming", "memoization", "tabulation", "edit-distance"],
+  "prerequisites": ["recursion-and-backtracking", "complexity-and-big-o"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Dynamic programming applies when a problem has overlapping subproblems and an optimal substructure.",
+    "Define the state first: what does dp[i] or dp[i][j] mean in one sentence?",
+    "Write the transition and base cases before optimizing space.",
+    "Memoization is top-down recursion with a cache; tabulation is bottom-up filling.",
+    "Many 2D tables can be reduced to one or two rows when only the previous row is needed."
+  ],
+  "complexity": [
+    {
+      "operation": "1D DP (stairs, coins)",
+      "time": "O(n * states)",
+      "space": "O(n) or O(1)",
+      "note": "Often the state count times the transition cost."
+    },
+    {
+      "operation": "0/1 knapsack",
+      "time": "O(n * capacity)",
+      "space": "O(capacity)",
+      "note": "Iterate capacity backwards for 0/1."
+    },
+    {
+      "operation": "Longest common subsequence",
+      "time": "O(n * m)",
+      "space": "O(min(n, m))",
+      "note": "Only the previous row is needed."
+    },
+    {
+      "operation": "Edit distance",
+      "time": "O(n * m)",
+      "space": "O(min(n, m))",
+      "note": "Three transitions: insert, delete, replace."
+    },
+    {
+      "operation": "Interval DP",
+      "time": "O(n³)",
+      "space": "O(n²)",
+      "note": "Try each split point in each range."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "stair-count",
+      "coin-count",
+      "best-stretch",
+      "equal-split",
+      "skip-neighbors",
+      "palindrome-build",
+      "segment-text",
+      "edit-ledger",
+      "longest-mirror",
+      "path-count"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Starting to code before defining what the state means.",
+    "Using the wrong iteration direction in a 1D knapsack and allowing an item to be reused.",
+    "Forgetting base cases, especially the empty prefix or zero capacity.",
+    "Optimizing space before the full table version is correct."
+  ],
+  "interviewNotes": [
+    "Say the state definition out loud: 'dp[i] is the minimum cost to reach position i.'",
+    "Give the recursion first, then convert it to a table if needed.",
+    "If the input is small but exponential, mention memoization as the bridge from brute force.",
+    "For string problems, ask whether the answer is a subsequence (order preserved) or a substring (contiguous)."
+  ],
+  "checkYourself": [
+    {
+      "question": "What two properties make a problem a good fit for DP?",
+      "answer": "Overlapping subproblems, where the same smaller problem is solved repeatedly, and optimal substructure, where the best answer can be built from best answers to subproblems."
+    },
+    {
+      "question": "Why does 0/1 knapsack iterate capacity backwards in a 1D table?",
+      "answer": "Backwards iteration reads the previous item's state, so each item is used at most once. Forward iteration would read values just written for the same item, allowing reuse."
+    },
+    {
+      "question": "What is the difference between top-down and bottom-up DP?",
+      "answer": "Top-down starts from the original problem and memoizes recursive calls. Bottom-up starts from the base cases and fills a table in dependency order."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

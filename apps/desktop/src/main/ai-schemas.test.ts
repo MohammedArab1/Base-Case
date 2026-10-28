@@ -86,6 +86,22 @@ describe('parseStructuredOutput', () => {
     expect(parsed.result).toMatchObject({ verdict: 'partial' })
   })
 
+  it('parses a lesson clarification', () => {
+    const parsed = parseStructuredOutput(
+      'concept',
+      JSON.stringify({
+        explanation: 'A hash map jumps to a bucket instead of scanning.',
+        analogy: 'Like a coat check ticket.',
+        example: 'Check 7 after storing 2 when the target is 9.',
+        checkQuestion: 'What does the hash function decide?',
+        relatedConcepts: ['hash function', 'collision'],
+      }),
+    )
+
+    expect(parsed.ok).toBe(true)
+    expect(parsed.result).toMatchObject({ checkQuestion: expect.stringContaining('hash') })
+  })
+
   it('returns the raw text when there is no JSON', () => {
     const parsed = parseStructuredOutput('followUp', 'Ask about caching.')
     expect(parsed.ok).toBe(false)

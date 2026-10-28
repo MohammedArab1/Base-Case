@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "core/system-design-interview",
+  "slug": "system-design-interview",
+  "title": "How a System Design Interview Works",
+  "category": "system-design",
+  "summary": "A calm, repeatable structure for turning a vague prompt into a clear design conversation.",
+  "difficulty": "easy",
+  "estimatedMinutes": 12,
+  "order": 23,
+  "tags": ["system-design", "interviews", "requirements", "trade-offs"],
+  "prerequisites": [],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A system design interview is a conversation about trade-offs, not a race to draw the most boxes.",
+    "Clarify scope, scale, and constraints before proposing components.",
+    "Cover functional requirements, non-functional requirements, API, data model, high-level design, deep dives, and failure handling.",
+    "State what you would measure and what you would do when a dependency fails.",
+    "Finish with the trade-offs you made and what you would revisit with more time."
+  ],
+  "complexity": [
+    {
+      "operation": "Clarify requirements",
+      "time": "5-8 min",
+      "space": "—",
+      "note": "Scope, users, core flows, out of scope."
+    },
+    {
+      "operation": "Estimate scale",
+      "time": "5 min",
+      "space": "QPS, storage, bandwidth",
+      "note": "Round numbers and state assumptions."
+    },
+    {
+      "operation": "Sketch the design",
+      "time": "15 min",
+      "space": "API, data model, components",
+      "note": "Keep the first diagram simple."
+    },
+    {
+      "operation": "Deep dive",
+      "time": "15 min",
+      "space": "Bottlenecks, consistency, failure",
+      "note": "Go deep on one or two areas."
+    },
+    {
+      "operation": "Wrap up",
+      "time": "5 min",
+      "space": "Trade-offs, next steps",
+      "note": "Name what you would change at 10x scale."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "news-feed", "payment-ledger"]
+  },
+  "commonMistakes": [
+    "Drawing components before understanding the user flows.",
+    "Ignoring non-functional requirements until the end, then discovering the design cannot meet them.",
+    "Naming a technology without saying what problem it solves.",
+    "Treating the first diagram as final instead of revising it as the conversation develops."
+  ],
+  "interviewNotes": [
+    "Think out loud. The interviewer is evaluating your reasoning, not just the final boxes.",
+    "When you make an assumption, write it down and say what would change if it were wrong.",
+    "Leave time for failure handling and trade-offs; those sections often distinguish a strong answer.",
+    "Use the rubric dimensions from the design scenarios as your checklist."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why clarify requirements before designing?",
+      "answer": "The same prompt can mean very different systems. Scope and scale determine whether a single database, a cache, or a partitioned service is appropriate."
+    },
+    {
+      "question": "What is a non-functional requirement?",
+      "answer": "A quality constraint such as latency, availability, durability, consistency, cost, or security. It shapes the architecture as much as the feature list."
+    },
+    {
+      "question": "How do you wrap up a design interview?",
+      "answer": "Summarize the core flows, name the main bottlenecks and trade-offs, state what you would monitor, and describe what you would change at 10x scale."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

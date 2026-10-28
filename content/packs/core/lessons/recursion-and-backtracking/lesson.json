@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "core/recursion-and-backtracking",
+  "slug": "recursion-and-backtracking",
+  "title": "Recursion and Backtracking",
+  "category": "algorithm",
+  "summary": "Solve a problem by solving a smaller copy of itself, then undo choices when you need to explore alternatives.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 12,
+  "tags": ["recursion", "backtracking", "subsets", "permutations", "pruning"],
+  "prerequisites": ["stacks", "complexity-and-big-o"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Every recursive function needs a base case and a smaller recursive case.",
+    "The call stack uses O(depth) space even when you allocate nothing explicitly.",
+    "Backtracking is choose, explore, then unchoose.",
+    "Pruning skips branches that cannot produce a valid answer, often turning an impossible search into a practical one."
+  ],
+  "complexity": [
+    {
+      "operation": "Generate all subsets",
+      "time": "O(n * 2ⁿ)",
+      "space": "O(n)",
+      "note": "There are 2ⁿ subsets; copying them costs n each."
+    },
+    {
+      "operation": "Generate all permutations",
+      "time": "O(n * n!)",
+      "space": "O(n)",
+      "note": "There are n! orderings."
+    },
+    {
+      "operation": "Depth-first search",
+      "time": "O(V + E)",
+      "space": "O(V)",
+      "note": "Stack or call-stack depth."
+    },
+    {
+      "operation": "Recursive Fibonacci (naive)",
+      "time": "O(2ⁿ)",
+      "space": "O(n)",
+      "note": "Memoization reduces time to O(n)."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "subset-list",
+      "permutation-list",
+      "sum-combinations",
+      "keypad-words",
+      "word-search"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Forgetting the base case or making the recursive input larger instead of smaller.",
+    "Mutating a shared list but forgetting to undo the change before returning.",
+    "Adding a result list directly instead of a copy, so later changes alter earlier answers.",
+    "Exploring duplicate branches without sorting or using a visited set."
+  ],
+  "interviewNotes": [
+    "State the decision at each step: include or exclude, choose this candidate or skip it.",
+    "Draw the recursion tree and point out where pruning removes branches.",
+    "Always mention the depth of the call stack in the space complexity."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does generating all subsets take O(n * 2ⁿ) time rather than O(2ⁿ)?",
+      "answer": "There are 2ⁿ subsets, and copying each subset into the result takes up to n work."
+    },
+    {
+      "question": "What does 'unchoose' mean in backtracking?",
+      "answer": "After exploring a branch, remove the choice from the current path so the next branch starts from the same state."
+    },
+    {
+      "question": "How does memoization change naive recursive Fibonacci?",
+      "answer": "Each subproblem is computed once and stored, reducing the exponential call tree to O(n) states and O(n) time."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

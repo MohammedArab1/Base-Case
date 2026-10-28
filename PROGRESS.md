@@ -1,9 +1,9 @@
 # Progress Log
 
-> Last updated: 2026-10-26
-> Current phase: Phase 9 — MVP expansion (79 + 8 content, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 79-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. External alpha blockers B1–B12 remain open
-> Next milestone: MVP release candidate once B1, B2, B10, and B11 clear, then the private alpha and `v0.1.0-alpha` tag
+> Last updated: 2026-10-27
+> Current phase: Phase 9 — MVP expansion (81 + 8 content, 30-lesson Learn library, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 30 offline lessons with linked practice, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1 and B2 are closed; B3–B12 remain (B8/B9 optional, B12 post-MVP).
+> Next milestone: MVP release candidate once B10 and B11 clear (B1 waived, B2 done), then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -13,40 +13,42 @@ This is the living status document for the project. `PLAN.md` describes the inte
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
 | Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
-| Phase 1 — Technical spike | In progress | 2026-10-23 | macOS and Windows verified end to end; only clean-VM installs remain |
+| Phase 1 — Technical spike | Done | 2026-10-27 | macOS and Windows verified end to end. Windows `0.1.0-alpha` install passed diagnostics 9/9 with bundled Node/Python; clean-OS isolation was waived by the owner for the alpha (B1). Clean-VM verification remains a v1.0 bar |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
-| Phase 7 — Content production | In progress | 2026-10-26 | Phase 9 expanded the pack to 79 coding problems (including the 75-problem Grind 75 collection) and 8 design scenarios. All 158 reference solutions pass. Second-person review and optional reference scenes remain |
-| Phase 8 — Alpha release | In progress | 2026-10-25 | Installers, checksums, diagnostics self-test, alpha docs (quickstart, FAQ, privacy, limitations), feedback form, triage/metrics runbook, and a tag-driven release job are in place. CI is green on macOS and Windows. Remaining: manual Windows workflow (B2), clean-VM installs (B1), private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-26 | Content expanded to 79 coding problems (158/158 reference solutions) plus 8 design scenarios, with a filterable 75-problem Grind 75 collection. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
+| Phase 7 — Content production | In progress | 2026-10-27 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 30 lessons. All 162 reference solutions pass. Second-person review and optional reference scenes remain |
+| Phase 8 — Alpha release | In progress | 2026-10-27 | Installers, checksums, diagnostics self-test, alpha docs, feedback form, triage/metrics runbook, and a tag-driven release job are in place. B2 is done (workflow run 40607714499); B1 is closed by owner waiver. Remaining: private beta (B10), P0/P1 fixes, and the tag |
+| Phase 9 — MVP expansion | In progress | 2026-10-27 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 30 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, and trie/deque exercises. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
 1. Run the manual accessibility checklist in `docs/project/accessibility.md` on macOS and Windows and record the result (B11).
 2. Confirm the release-candidate checksums in `docs/project/release-candidate.md` after the final rebuild, then review known issues and re-run export/import plus backup/restore one final time.
-3. Trigger the `Build installers` workflow manually and record the Windows `.exe` size and first-launch result (B2).
-4. Install the macOS DMG and Windows build on clean VMs and record the result (B1).
-5. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
-6. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-7. Get a second-person review of the 79 coding problems and 8 design scenarios (B4) and record the sign-off.
-8. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
-9. Add optional local AI history with a clear delete button (privacy default stays off).
-10. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-11. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-12. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+3. Rebuild the final 81-problem/30-lesson content state and rerun the Windows packaged smoke test before tagging.
+4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
+5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
+6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 30 lessons (B4) and record the sign-off.
+7. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
+8. Add optional local AI history with a clear delete button (privacy default stays off).
+9. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+10. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+11. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+12. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
+
+B1 is closed by owner waiver and B2 is done; see `docs/project/open-blockers.md` for the evidence and the scope of the waiver.
 
 ## Blockers
 
 See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current items:
 
-- **B1 — Clean-VM installs:** no clean macOS or Windows VM is available in this environment. The Windows build was verified on a physical Windows 11 machine and macOS on the development machine.
-- **B2 — Manual Windows installer workflow:** trigger the `Build installers` GitHub Actions workflow and record the bundled-runtime `.exe` size and first-launch result.
+- **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
+- **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run:** the bug zoo is recorded against the mock provider; a real endpoint plus human ratings is needed for the Phase 6 exit criteria.
-- **B4 — Second-person content review:** the 79 coding + 8 design set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
+- **B4 — Second-person content review:** the 81 coding + 8 design + 30 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -56,6 +58,49 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-27 — B1/B2 closure: Windows install verified, clean-OS waiver
+
+- Status: B2 done; B1 closed by owner waiver
+- Done:
+  - Triggered and completed `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) at commit `72e9b4d`. Both matrix jobs passed.
+  - Installed the Windows x64 `0.1.0-alpha` artifact on physical Windows 11. SmartScreen required **More info → Run anyway**.
+  - Diagnostics passed 9/9: 79 coding problems, 8 design scenarios, Node 24.22.0 and Python 3.12.15 both reported as `bundled`.
+  - Ran Pair Sum samples in both Python and TypeScript successfully.
+  - Recorded the Windows install path and evidence in `docs/project/open-blockers.md`.
+  - Closed B1 by owner waiver for the alpha. A clean macOS VM was not available; macOS clean-OS isolation is explicitly accepted as residual risk. Clean-VM verification remains a v1.0 bar.
+- Scope:
+  - This evidence covers the 79-problem `0.1.0-alpha` build at `72e9b4d`, not the newer 81-problem/30-lesson working tree.
+  - Rebuild the final content state and rerun the Windows packaged smoke test before tagging.
+- Verification:
+  - Workflow run 40607714499: success.
+  - Windows diagnostics: 9/9 pass, 79/8 content, bundled runtimes.
+  - Windows installer: `Base-Case-0.1.0-alpha-x64`; launch and sample runs successful.
+
+### 2026-10-27 — Learn library, lesson AI clarification, and trie/deque exercises
+
+- Status: Offline learning library, local completion, optional AI clarification, and two new exercises complete
+- Done:
+  - Added a **Learn** section with 30 original lessons: 22 DSA/foundation lessons and 8 system-design lessons. Each lesson has plain-language prose, offline ASCII diagrams, worked examples, key ideas, a complexity cheatsheet, interview notes, common mistakes, self-check questions, and linked practice. Every one of the 81 problems is linked from at least one lesson.
+  - Added the first-class `lessons` content type to the pack schema, types, validator, content loader, IPC/preload API, and pack summaries. Lesson prerequisites and exercise slugs are validated against the same pack.
+  - Added `lesson_progress` (migration 8) for completion and recency, with export/import coverage and tests from an empty database and a version-7 schema.
+  - Added 2 original exercises to close gaps: `prefix-ledger` for tries and `window-max` for deques. The core pack is now 81 problems and 162 reference solutions; the Grind 75 collection remains 75 problems.
+  - Added optional **lesson clarification** to the AI system: new `concept` feature, structured output contract, prompt, context builder, guardrails, mock response, per-feature setting, preview modal, and inline result rendering. Only the lesson brief, selected section, and question are sent.
+  - Added searchable/category-filtered lesson browsing, lesson detail layout, mark-complete control, practice links into coding/design, and deep-link support for design exercises.
+  - Wrote `docs/authoring/lesson-authoring.md`, ADR-0012, and updated README, PLAN, known limitations, quickstart, FAQ, states audit, pack-import, content policy, alpha notes, and the release-candidate historical note.
+- Verification:
+  - `pnpm content:validate` — valid; 81 problems, 8 designs, and 30 lessons; only the eight expected optional reference-scene warnings.
+  - `pnpm content:test` — 162/162 reference solutions accepted, including both new problems.
+  - `pnpm typecheck`, `pnpm lint`, and `pnpm format:check` — passed.
+  - `pnpm test` — schema, desktop, and Go suites passed (135 desktop tests, 9 schema tests).
+  - `pnpm smoke:e2e` — passed with 81 problems, 75 Grind 75 members, 30 lessons, 8 design scenarios, lesson completion, and the existing judge/import flows.
+  - `pnpm smoke:playwright` — 12/12 passed, including the new Learn flow and the seven-view accessibility gate.
+  - `pnpm evals` — mock baseline passed (60 cases, 0 raw/guarded leaks); `docs/evals/results-mock.json` refreshed for the slightly longer shared prompt.
+- Next:
+  - Continue B1/B2/B10/B11 and the second-person review; regenerate screenshots and demo media for the Learn library.
+- Notes:
+  - Lesson completion is manual and separate from FSRS. It does not schedule review cards.
+  - The recorded screenshots and demo GIF predate the Learn library; existing images remain representative of coding, design, review, and AI flows but do not show the new sidebar entry.
 
 ### 2026-10-26 — Grind 75 expansion and collection filter
 

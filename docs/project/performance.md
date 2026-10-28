@@ -44,8 +44,9 @@ recently launched; record the machine and date when comparing releases.
 - Excalidraw is the largest renderer chunk (~1.6 MB) and dominates design open
   time. It is loaded only when the design workspace opens.
 - App size stayed under budget after adding the second macOS architecture and
-  the 25 + 8 content set. Splitting or pruning Excalidraw/Mermaid chunks is the
-  main future optimization if the budget tightens.
+  the expanded content set (measured at 25 + 8, now 81 + 8 + 30 lessons).
+  Splitting or pruning Excalidraw/Mermaid chunks is the main future optimization
+  if the budget tightens.
 - Windows numbers are recorded by the manual installer workflow (B2); CI does
   not run packaged performance measurements.
 

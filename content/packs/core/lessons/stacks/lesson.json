@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "core/stacks",
+  "slug": "stacks",
+  "title": "Stacks and Monotonic Stacks",
+  "category": "data-structure",
+  "summary": "Last in, first out: the right tool for nesting, undo, expression parsing, and next-greater questions.",
+  "difficulty": "easy",
+  "estimatedMinutes": 11,
+  "order": 9,
+  "tags": ["stack", "monotonic-stack", "parsing", "next-greater"],
+  "prerequisites": ["arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A stack supports push and pop at one end, both O(1).",
+    "Use a stack whenever the most recent unfinished item must be handled first.",
+    "A monotonic stack keeps values increasing or decreasing to answer next-greater or next-smaller questions in O(n).",
+    "Expression parsing uses a stack for operators or intermediate results."
+  ],
+  "complexity": [
+    {
+      "operation": "Push",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Amortized for a dynamic array."
+    },
+    {
+      "operation": "Pop",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Removes the most recent item."
+    },
+    {
+      "operation": "Peek",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Looks without removing."
+    },
+    {
+      "operation": "Next greater element",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "Each index is pushed and popped once."
+    },
+    {
+      "operation": "Nested bracket check",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "Worst case is all opening brackets."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "bracket-balance",
+      "polish-notation",
+      "expression-calc",
+      "histogram-area",
+      "warmer-days",
+      "kth-smallest-tree"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Popping an empty stack without checking first.",
+    "Matching every closing bracket with the most recent opening bracket of any type instead of the matching type.",
+    "Using a monotonic stack but storing values instead of indices when distance is needed.",
+    "Forgetting that a stack can also model recursion and tree traversal."
+  ],
+  "interviewNotes": [
+    "Say why the most recent item is the correct one to handle next.",
+    "For monotonic stacks, explain what the stack contains after each step and why popped items need no further work.",
+    "For parsing, clarify operator precedence and whether division/multiplication is left-associative."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is a stack the natural fit for nested brackets?",
+      "answer": "The most recently opened bracket must close before any earlier one. That is exactly last-in, first-out order."
+    },
+    {
+      "question": "In a monotonic decreasing stack for next greater element, what do the indices represent?",
+      "answer": "They are values still waiting for a larger element. When a larger value arrives, it is the answer for every smaller value on the stack."
+    },
+    {
+      "question": "How does a stack help evaluate postfix notation?",
+      "answer": "Operands are pushed. When an operator appears, pop the required operands, apply the operator, and push the result."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

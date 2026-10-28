@@ -17,7 +17,7 @@ import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
 import { AiResult } from './AiResult'
 
-type CodingFeature = Exclude<AiFeature, 'designNotes' | 'followUp'>
+type CodingFeature = Exclude<AiFeature, 'designNotes' | 'followUp' | 'concept'>
 type DesignFeature = 'designNotes' | 'followUp'
 
 interface AiPanelProps {

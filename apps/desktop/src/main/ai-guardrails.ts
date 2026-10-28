@@ -9,6 +9,7 @@ const outputLimits: Record<AiFeature, number> = {
   explainBack: 1600,
   designNotes: 6000,
   followUp: 900,
+  concept: 3200,
 }
 
 const codeBlockLineLimits: Record<AiFeature, number> = {
@@ -20,6 +21,7 @@ const codeBlockLineLimits: Record<AiFeature, number> = {
   explainBack: 6,
   designNotes: 14,
   followUp: 14,
+  concept: 8,
 }
 
 export interface GuardrailOptions {

@@ -17,6 +17,7 @@ export interface AiFeatureSettings {
   readonly explainBack: boolean
   readonly designNotes: boolean
   readonly followUp: boolean
+  readonly concept: boolean
 }
 
 export const defaultAiFeatureSettings: AiFeatureSettings = {
@@ -28,6 +29,7 @@ export const defaultAiFeatureSettings: AiFeatureSettings = {
   explainBack: true,
   designNotes: true,
   followUp: true,
+  concept: true,
 }
 
 export interface AppSettings {
@@ -73,7 +75,7 @@ export const defaultAppSettings: AppSettings = {
   onboardingCompleted: false,
 }
 
-export type SectionId = 'today' | 'coding' | 'design' | 'review' | 'progress' | 'settings'
+export type SectionId = 'today' | 'learn' | 'coding' | 'design' | 'review' | 'progress' | 'settings'
 
 export interface ProblemSummary {
   readonly id: string
@@ -105,6 +107,7 @@ export interface ContentPackSummary {
   readonly source: 'bundled' | 'user'
   readonly problemCount: number
   readonly designCount: number
+  readonly lessonCount: number
   readonly path: string
 }
 
@@ -129,6 +132,74 @@ export interface Hint {
   readonly level: number
   readonly title: string
   readonly body: string
+}
+
+export type LessonCategory = 'foundation' | 'data-structure' | 'algorithm' | 'system-design'
+
+export interface LessonSummary {
+  readonly id: string
+  readonly slug: string
+  readonly title: string
+  readonly category: LessonCategory
+  readonly summary: string
+  readonly difficulty: 'easy' | 'medium' | 'hard'
+  readonly estimatedMinutes: number
+  readonly order: number
+  readonly tags: readonly string[]
+  readonly exerciseCount: number
+  readonly packId: string
+  readonly packName: string
+  readonly source: 'bundled' | 'user'
+}
+
+export interface LessonComplexityRow {
+  readonly operation: string
+  readonly time: string
+  readonly space: string
+  readonly note?: string
+}
+
+export interface LessonLink {
+  readonly id: string
+  readonly slug: string
+  readonly title: string
+}
+
+export interface LessonExercise {
+  readonly kind: 'problem' | 'design'
+  readonly id: string
+  readonly slug: string
+  readonly title: string
+  readonly difficulty: 'easy' | 'medium' | 'hard'
+  readonly subtitle: string
+}
+
+export interface LessonCheckQuestion {
+  readonly question: string
+  readonly answer: string
+}
+
+export interface LessonDetail extends LessonSummary {
+  readonly content: string
+  readonly prerequisites: readonly LessonLink[]
+  readonly keyPoints: readonly string[]
+  readonly complexity: readonly LessonComplexityRow[]
+  readonly exercises: readonly LessonExercise[]
+  readonly commonMistakes: readonly string[]
+  readonly interviewNotes: readonly string[]
+  readonly checkYourself: readonly LessonCheckQuestion[]
+}
+
+export interface LessonProgress {
+  readonly lessonId: string
+  readonly completed: boolean
+  readonly completedAt: string | null
+  readonly lastViewedAt: string | null
+}
+
+export interface SetLessonCompleteInput {
+  readonly lessonId: string
+  readonly completed: boolean
 }
 
 export interface ProblemDetail extends ProblemSummary {
@@ -679,6 +750,13 @@ export interface AiConversationTurn {
   readonly content: string
 }
 
+/** Lesson context. Only the selected lesson excerpt and question are sent. */
+export interface AiConceptContext {
+  readonly lessonId: string
+  readonly question: string
+  readonly section?: string
+}
+
 /** Design context. The reference design and checklist are never included. */
 export interface AiDesignContext {
   readonly scenarioId: string
@@ -690,12 +768,16 @@ export interface AiDesignContext {
 
 export type AiRequest =
   | {
-      readonly feature: Exclude<AiFeature, 'designNotes' | 'followUp'>
+      readonly feature: Exclude<AiFeature, 'designNotes' | 'followUp' | 'concept'>
       readonly context: AiContext
     }
   | {
       readonly feature: 'designNotes' | 'followUp'
       readonly design: AiDesignContext
+    }
+  | {
+      readonly feature: 'concept'
+      readonly concept: AiConceptContext
     }
 
 export interface AiContextSection {
@@ -782,6 +864,14 @@ export interface AiFollowUpResult {
   readonly question: string
 }
 
+export interface AiConceptResult {
+  readonly explanation: string
+  readonly analogy: string
+  readonly example: string
+  readonly checkQuestion: string
+  readonly relatedConcepts: readonly string[]
+}
+
 export type AiStructuredResult =
   | AiExplainResult
   | AiHintResult
@@ -791,6 +881,7 @@ export type AiStructuredResult =
   | AiExplainBackResult
   | AiDesignNotesResult
   | AiFollowUpResult
+  | AiConceptResult
 
 export interface AiRunOutcome {
   readonly text: string
@@ -840,6 +931,12 @@ export interface BaseCaseApi {
     collections(): Promise<ContentCollectionSummary[]>
     get(problemId: string): Promise<ProblemDetail>
     search(query: string): Promise<ProblemSummary[]>
+  }
+  readonly learn: {
+    list(): Promise<LessonSummary[]>
+    get(lessonId: string): Promise<LessonDetail>
+    progress(): Promise<LessonProgress[]>
+    setComplete(input: SetLessonCompleteInput): Promise<LessonProgress>
   }
   readonly judge: {
     run(input: RunInput): Promise<RunResult>

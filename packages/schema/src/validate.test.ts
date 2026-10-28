@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -9,6 +9,16 @@ const corePackDirectory = fileURLToPath(new URL('../../../content/packs/core', i
 
 async function withPack(
   collections: unknown,
+  run: (directory: string) => Promise<void>,
+): Promise<void> {
+  await withPackOptions({ collections }, run)
+}
+
+async function withPackOptions(
+  options: {
+    readonly collections?: unknown
+    readonly lessons?: readonly string[]
+  },
   run: (directory: string) => Promise<void>,
 ): Promise<void> {
   const directory = await mkdtemp(join(tmpdir(), 'base-case-pack-'))
@@ -25,7 +35,8 @@ async function withPack(
         attribution: 'Test fixture.',
         problems: [],
         designs: [],
-        collections,
+        lessons: options.lessons ?? [],
+        collections: options.collections,
       }),
     )
     await run(directory)
@@ -42,6 +53,54 @@ describe('validatePack', () => {
     expect(result.ok).toBe(true)
     expect(result.pack?.id).toBe('core')
     expect(result.pack?.problems).toContain('pair-sum')
+  })
+
+  it('exposes the learning library and its linked exercises', async () => {
+    const result = await validatePack(corePackDirectory)
+
+    expect(result.pack?.lessons).toHaveLength(30)
+    expect(result.pack?.lessons).toContain('complexity-and-big-o')
+    expect(result.pack?.lessons).toContain('tries')
+    expect(result.pack?.lessons).toContain('rate-limiting')
+  })
+
+  it('rejects a lesson exercise that is not in the pack', async () => {
+    await withPackOptions({ lessons: ['demo'] }, async (directory) => {
+      await mkdir(join(directory, 'lessons', 'demo'), { recursive: true })
+      await writeFile(join(directory, 'lessons', 'demo', 'lesson.md'), '# Demo\n\nText.\n')
+      await writeFile(
+        join(directory, 'lessons', 'demo', 'lesson.json'),
+        JSON.stringify({
+          schemaVersion: 1,
+          id: 'test/demo',
+          slug: 'demo',
+          title: 'Demo',
+          category: 'foundation',
+          summary: 'A demo lesson.',
+          difficulty: 'easy',
+          estimatedMinutes: 5,
+          order: 1,
+          tags: ['demo'],
+          prerequisites: [],
+          content: 'lesson.md',
+          keyPoints: ['One', 'Two', 'Three'],
+          complexity: [{ operation: 'Lookup', time: 'O(1)', space: 'O(1)' }],
+          exercises: { problems: ['missing-problem'], designs: [] },
+          commonMistakes: ['A mistake.'],
+          interviewNotes: ['A note.'],
+          checkYourself: [{ question: 'Why?', answer: 'Because.' }],
+          license: 'MIT',
+          attribution: 'Test fixture.',
+        }),
+      )
+
+      const result = await validatePack(directory)
+
+      expect(result.ok).toBe(false)
+      expect(
+        result.issues.some((issue) => issue.message.includes('is not listed in problems')),
+      ).toBe(true)
+    })
   })
 
   it('exposes the 75-problem Grind 75 collection', async () => {

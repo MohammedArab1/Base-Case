@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Look for shared beginnings",
+      "body": "Words that share a prefix share the first few characters. Which data structure lets you walk those characters once and reuse that walk for many queries?"
+    },
+    {
+      "level": 2,
+      "title": "A tree of characters",
+      "body": "A trie stores one character on each edge. Every node represents the prefix spelled by the path from the root to that node."
+    },
+    {
+      "level": 3,
+      "title": "Store counts at the nodes",
+      "body": "Insert each word one character at a time. Add one to the counter at every node you visit. Then a query walks its characters and returns the counter at the final node, or zero if a character is missing."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "Create a root node. For each word, set node = root and loop over its characters: create or follow the child, then increment that child's count. For each query, set node = root and loop over its characters: follow the child or record zero and stop. If the loop finishes, record node.count."
+    }
+  ]
+}

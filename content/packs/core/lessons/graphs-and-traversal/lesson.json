@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "core/graphs-and-traversal",
+  "slug": "graphs-and-traversal",
+  "title": "Graphs, DFS, and BFS",
+  "category": "data-structure",
+  "summary": "Model connections as nodes and edges, then explore them with a stack or a queue.",
+  "difficulty": "medium",
+  "estimatedMinutes": 14,
+  "order": 17,
+  "tags": ["graphs", "dfs", "bfs", "grids", "connected-components"],
+  "prerequisites": ["trees", "recursion-and-backtracking", "queues-and-deques"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A graph is a set of nodes and edges; it can have cycles, unlike a tree.",
+    "Adjacency lists use O(V + E) space and are the usual interview representation.",
+    "DFS follows one branch deeply; BFS explores in rings of distance.",
+    "A visited set is what prevents infinite loops in a cyclic graph.",
+    "A grid is a graph where each cell connects to its four neighbors."
+  ],
+  "complexity": [
+    {
+      "operation": "DFS or BFS",
+      "time": "O(V + E)",
+      "space": "O(V)",
+      "note": "Visited set plus stack/queue."
+    },
+    {
+      "operation": "Adjacency list lookup of neighbors",
+      "time": "O(degree)",
+      "space": "O(E)",
+      "note": "The list stores each edge once or twice."
+    },
+    {
+      "operation": "Adjacency matrix neighbor check",
+      "time": "O(1)",
+      "space": "O(V²)",
+      "note": "Better for dense graphs."
+    },
+    {
+      "operation": "Grid traversal",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols)",
+      "note": "Each cell is a node."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "island-count",
+      "network-clusters",
+      "center-roots",
+      "paint-fill",
+      "nearest-zero",
+      "orange-rot",
+      "word-chain"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Forgetting the visited set, which causes infinite loops on cycles.",
+    "Marking a node visited when it is popped instead of when it is enqueued, which adds duplicates.",
+    "Using DFS when the problem asks for the shortest number of steps; BFS is required for unweighted shortest paths.",
+    "Treating a grid boundary check as optional and indexing outside the array."
+  ],
+  "interviewNotes": [
+    "Ask whether the graph is directed, weighted, connected, or may contain cycles.",
+    "Say what the queue or stack contains and what invariant it maintains.",
+    "For a grid, describe the four (or eight) neighbor directions explicitly."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does BFS find the shortest path in an unweighted graph?",
+      "answer": "It visits all nodes at distance d before any node at distance d + 1, so the first visit to a node is through a shortest path."
+    },
+    {
+      "question": "How much space does an adjacency list use?",
+      "answer": "O(V + E), because it stores one list per node and one entry per edge."
+    },
+    {
+      "question": "How do you count connected components?",
+      "answer": "Loop over every node. When you find an unvisited node, run DFS or BFS to mark its whole component and increment the count."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

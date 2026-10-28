@@ -15,6 +15,7 @@ import { AttemptsRepository } from './repositories/attempts'
 import { ContentIndexRepository } from './repositories/content-index'
 import { DesignRepository } from './repositories/design'
 import { DraftsRepository } from './repositories/drafts'
+import { LessonProgressRepository } from './repositories/lessons'
 import { MistakesRepository } from './repositories/mistakes'
 import { ProblemNotesRepository } from './repositories/notes'
 import { ReviewRepository } from './repositories/review'
@@ -218,6 +219,7 @@ app
     const notes = new ProblemNotesRepository(database)
     const review = new ReviewRepository(database)
     const mistakes = new MistakesRepository(database)
+    const lessons = new LessonProgressRepository(database)
     const userData = new UserDataRepository(database)
     const judge = new JudgeClient()
     const ai = new AiService(
@@ -240,6 +242,7 @@ app
       notes,
       review,
       mistakes,
+      lessons,
       userData,
       judge,
       ai,

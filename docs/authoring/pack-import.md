@@ -23,17 +23,22 @@ my-pack/
 │     └─ tests/
 │        ├─ sample.jsonl
 │        └─ hidden.jsonl
-└─ designs/
-   └─ my-scenario/
-      ├─ design.json
-      ├─ prompt.md
-      ├─ rubric.json
-      └─ reference.md
+├─ designs/
+│  └─ my-scenario/
+│     ├─ design.json
+│     ├─ prompt.md
+│     ├─ rubric.json
+│     └─ reference.md
+└─ lessons/
+   └─ my-topic/
+      ├─ lesson.json
+      └─ lesson.md
 ```
 
-`designs/` is optional. Every problem or design listed in `pack.json` must
-exist. Each problem needs one reference solution per language you list; Python
-and TypeScript are expected.
+`designs/` and `lessons/` are optional. Every problem, design, or lesson listed
+in `pack.json` must exist. Each problem needs one reference solution per
+language you list; Python and TypeScript are expected. Lesson exercise and
+prerequisite slugs are checked against the same pack.
 
 ## pack.json
 
@@ -47,6 +52,7 @@ and TypeScript are expected.
   "attribution": "Original content by Your Name.",
   "problems": ["echo"],
   "designs": [],
+  "lessons": [],
   "collections": [
     {
       "id": "interview-core",
@@ -61,8 +67,10 @@ and TypeScript are expected.
 ```
 
 - `id` is a lowercase slug using letters, digits, and hyphens.
-- `problems` and `designs` contain the folder names under `problems/` and
-  `designs/`; no paths and no duplicates.
+- `problems`, `designs`, and `lessons` contain the folder names under their
+  directories; no paths and no duplicates.
+- A lesson needs `lesson.json` and a referenced Markdown file. See
+  `lesson-authoring.md`.
 - `collections` is optional. Each collection needs a unique `id`, a display
   `name`, a `description`, and a `problems` list. Collection members must also
   appear in the top-level `problems` list. Collections are exposed in the app as
@@ -127,8 +135,9 @@ fixture or the core pack layout when creating a new pack.
 The importer checks:
 
 - `pack.json` schema, ID format, version, license, and attribution;
-- every referenced problem and design, including statements, hints, tests,
-  solutions, explanations, rubrics, and references;
+- every referenced problem, design, and lesson, including statements, hints,
+  tests, solutions, explanations, rubrics, references, lesson content,
+  prerequisites, and linked exercises;
 - test counts (3–5 sample, 15–50 hidden are the targets; outside ranges produce
   warnings);
 - hint levels (unique, 3–4 entries);
@@ -144,5 +153,6 @@ attempts, notes, drafts, and review cards that reference the pack are kept.
 
 - `docs/authoring/problem-authoring.md`
 - `docs/authoring/design-authoring.md`
+- `docs/authoring/lesson-authoring.md`
 - `docs/authoring/content-policy.md`
 - `docs/adr/0003-content-as-data.md`

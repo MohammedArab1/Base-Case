@@ -67,6 +67,7 @@ function formatHumanResult(packDirectory: string, result: PackValidationResult):
       `Pack: ${result.pack.name} (${result.pack.id}) v${result.pack.version}`,
       `Problems: ${result.pack.problems.length}`,
       `Designs: ${result.pack.designs.length}`,
+      `Lessons: ${(result.pack.lessons ?? []).length}`,
     )
   }
 

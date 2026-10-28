@@ -135,7 +135,51 @@ export interface PackManifest {
   readonly attribution: string
   readonly problems: readonly string[]
   readonly designs: readonly string[]
+  readonly lessons?: readonly string[]
   readonly collections?: readonly ContentCollection[]
+}
+
+export type LessonCategory = 'foundation' | 'data-structure' | 'algorithm' | 'system-design'
+
+export interface LessonComplexityRow {
+  readonly operation: string
+  readonly time: string
+  readonly space: string
+  readonly note?: string
+}
+
+export interface LessonCheckQuestion {
+  readonly question: string
+  readonly answer: string
+}
+
+export interface LessonExerciseRefs {
+  readonly problems: readonly string[]
+  readonly designs: readonly string[]
+}
+
+export interface Lesson {
+  readonly schemaVersion: 1
+  readonly id: string
+  readonly slug: string
+  readonly title: string
+  readonly category: LessonCategory
+  readonly summary: string
+  readonly difficulty: Difficulty
+  readonly estimatedMinutes: number
+  readonly order: number
+  readonly tags: readonly string[]
+  readonly prerequisites: readonly string[]
+  readonly content: string
+  readonly keyPoints: readonly string[]
+  readonly complexity: readonly LessonComplexityRow[]
+  readonly exercises: LessonExerciseRefs
+  readonly commonMistakes: readonly string[]
+  readonly interviewNotes: readonly string[]
+  readonly checkYourself: readonly LessonCheckQuestion[]
+  readonly license: string
+  readonly attribution: string
+  readonly version?: number
 }
 
 export interface DesignRequirements {

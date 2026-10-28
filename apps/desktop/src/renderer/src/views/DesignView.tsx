@@ -55,9 +55,13 @@ function formatScale(scale: DesignScenarioDetail['scale']): string {
   return `${format(scale.writesPerDay)} writes/day · ${format(scale.readsPerDay)} reads/day · ${scale.retentionYears}-year retention`
 }
 
-export function DesignView(): JSX.Element {
+interface DesignViewProps {
+  readonly selectedScenarioId: string | null
+  readonly onSelectScenario: (scenarioId: string | null) => void
+}
+
+export function DesignView({ selectedScenarioId, onSelectScenario }: DesignViewProps): JSX.Element {
   const [scenarios, setScenarios] = useState<readonly DesignScenarioSummary[]>([])
-  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -87,12 +91,12 @@ export function DesignView(): JSX.Element {
     }
   }, [])
 
-  if (selectedId) {
+  if (selectedScenarioId) {
     return (
       <DesignWorkspace
-        key={selectedId}
-        scenarioId={selectedId}
-        onBack={() => setSelectedId(null)}
+        key={selectedScenarioId}
+        scenarioId={selectedScenarioId}
+        onBack={() => onSelectScenario(null)}
       />
     )
   }
@@ -130,7 +134,7 @@ export function DesignView(): JSX.Element {
               key={scenario.id}
               type="button"
               className="problem-row"
-              onClick={() => setSelectedId(scenario.id)}
+              onClick={() => onSelectScenario(scenario.id)}
               data-testid="design-scenario"
             >
               <span className="problem-main">

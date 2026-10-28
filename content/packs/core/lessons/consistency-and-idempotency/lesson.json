@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "core/consistency-and-idempotency",
+  "slug": "consistency-and-idempotency",
+  "title": "Consistency and Idempotency",
+  "category": "system-design",
+  "summary": "Decide what users must see immediately, and make retries safe when the network makes duplicates likely.",
+  "difficulty": "medium",
+  "estimatedMinutes": 14,
+  "order": 28,
+  "tags": ["system-design", "consistency", "cap", "idempotency", "transactions"],
+  "prerequisites": ["databases"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Consistency is a spectrum of guarantees, not a single yes/no property.",
+    "During a network partition, a system chooses between refusing some requests and serving possibly stale data.",
+    "Read-your-writes and monotonic reads are practical guarantees users notice.",
+    "An idempotency key makes a retried write safe to apply more than once.",
+    "Exactly-once delivery is usually at-least-once delivery plus a deduplicating consumer."
+  ],
+  "complexity": [
+    {
+      "operation": "Strong read",
+      "time": "higher latency or primary read",
+      "space": "quorum or primary capacity",
+      "note": "Fresh but more expensive."
+    },
+    {
+      "operation": "Eventual read",
+      "time": "low latency",
+      "space": "replica or cache",
+      "note": "Staleness window must be acceptable."
+    },
+    {
+      "operation": "Quorum read/write",
+      "time": "R + W > N",
+      "space": "N replicas",
+      "note": "Tune R and W for the workload."
+    },
+    {
+      "operation": "Idempotency check",
+      "time": "one key lookup",
+      "space": "stored keys with TTL",
+      "note": "Return the original result on retry."
+    },
+    {
+      "operation": "Distributed transaction",
+      "time": "multiple round trips",
+      "space": "coordinator state",
+      "note": "Prefer sagas or single-writer boundaries."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["payment-ledger", "seat-reservation", "chat-system"]
+  },
+  "commonMistakes": [
+    "Saying 'pick two' from CAP as if partitions are optional or consistency is free during normal operation.",
+    "Using eventual consistency for an invariant the product cannot tolerate, such as double-booking a seat.",
+    "Treating a retry as a new request and charging a customer twice.",
+    "Assuming a message queue delivers exactly once without a deduplication mechanism."
+  ],
+  "interviewNotes": [
+    "Ask what the user must see immediately after a write, not whether the whole system is strongly consistent.",
+    "Name the invariant: no double booking, no double charge, no lost message.",
+    "For a payment or booking, show the idempotency key and the uniqueness constraint that enforces it.",
+    "Prefer a single-writer boundary or a transaction over a distributed transaction when possible."
+  ],
+  "checkYourself": [
+    {
+      "question": "What does read-your-writes guarantee?",
+      "answer": "After a user writes a value, that same user's subsequent reads see the new value, even if other users may still see an older replica."
+    },
+    {
+      "question": "How does an idempotency key prevent a double charge?",
+      "answer": "The server stores the key with the result. A retry with the same key returns the stored result instead of applying the operation again."
+    },
+    {
+      "question": "Why is exactly-once delivery difficult?",
+      "answer": "A consumer can crash after processing but before acknowledging. The system must either redeliver, risking a duplicate, or risk losing the message. Deduplication makes redelivery safe."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

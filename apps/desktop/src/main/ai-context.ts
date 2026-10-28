@@ -1,6 +1,7 @@
 import { designNoteSections } from '../shared/types'
 import type {
   AiChatMessage,
+  AiConceptContext,
   AiContext,
   AiContextSection,
   AiDesignContext,
@@ -22,6 +23,7 @@ const outputBudget: Record<AiFeature, number> = {
   explainBack: 350,
   designNotes: 1100,
   followUp: 250,
+  concept: 500,
 }
 
 const sectionLabels: Record<string, string> = {
@@ -35,6 +37,8 @@ const sectionLabels: Record<string, string> = {
   learner_notes: 'Your design notes',
   learner_rubric: 'Your rubric self-assessment',
   conversation: 'Conversation',
+  lesson_brief: 'Lesson brief',
+  lesson_excerpt: 'Lesson excerpt',
 }
 
 const secretPatterns: readonly RegExp[] = [
@@ -48,7 +52,7 @@ const secretPatterns: readonly RegExp[] = [
 ]
 
 const closingTagPattern =
-  /<\/(problem_statement|user_code|failing_test|learner_plan|learner_notes|learner_rubric|learner_question|conversation)>/gi
+  /<\/(problem_statement|user_code|failing_test|learner_plan|learner_notes|learner_rubric|learner_question|lesson_brief|lesson_excerpt|conversation)>/gi
 
 interface RawSection {
   readonly id: string
@@ -275,6 +279,77 @@ function codingSections(
   return sections
 }
 
+function lessonExcerpt(
+  content: string,
+  sectionTitle: string | undefined,
+  maxChars: number,
+): string {
+  const normalized = sectionTitle
+    ?.replace(/^#+\s*/, '')
+    .trim()
+    .toLowerCase()
+
+  if (!normalized) {
+    return truncateText(content, maxChars).text
+  }
+
+  const lines = content.split(/\r?\n/)
+  let start = -1
+
+  for (const [index, line] of lines.entries()) {
+    const heading = /^##\s+(.+)$/.exec(line)
+
+    if (heading && heading[1]?.trim().toLowerCase() === normalized) {
+      start = index
+      break
+    }
+  }
+
+  if (start === -1) {
+    return truncateText(content, maxChars).text
+  }
+
+  let end = start + 1
+
+  while (end < lines.length && !/^##\s+/.test(lines[end] ?? '')) {
+    end += 1
+  }
+
+  return truncateText(lines.slice(start, end).join('\n'), maxChars).text
+}
+
+function conceptSections(
+  context: AiConceptContext,
+  content: ContentRepository,
+  counter: RedactionCounter,
+): RawSection[] {
+  const lesson = content.getLesson(context.lessonId)
+  const sections: RawSection[] = []
+  const brief = [
+    `Title: ${lesson.title}`,
+    `Category: ${lesson.category}`,
+    `Difficulty: ${lesson.difficulty}`,
+    `Summary: ${lesson.summary}`,
+    '',
+    'Key points:',
+    ...lesson.keyPoints.map((point) => `- ${point}`),
+    '',
+    'Complexity:',
+    ...lesson.complexity.map(
+      (row) =>
+        `- ${row.operation}: time ${row.time}, space ${row.space}${row.note ? ` (${row.note})` : ''}`,
+    ),
+  ].join('\n')
+
+  sections.push(section('lesson_brief', brief, counter))
+  sections.push(
+    section('lesson_excerpt', lessonExcerpt(lesson.content, context.section, 6000), counter),
+  )
+  sections.push(section('learner_question', context.question, counter))
+
+  return sections
+}
+
 function designSections(
   context: AiDesignContext,
   content: ContentRepository,
@@ -388,8 +463,8 @@ function fitSections(sections: RawSection[], budget: number, failureLine: number
     }
   }
 
-  // 3. Summarize the problem brief.
-  for (const id of ['problem_statement', 'scenario_brief']) {
+  // 3. Summarize the problem or lesson brief.
+  for (const id of ['problem_statement', 'scenario_brief', 'lesson_brief']) {
     const entry = sections.find((candidate) => candidate.id === id)
     if (entry && !entry.dropped) {
       const target = Math.max(600, (budget - (usedTokens(sections) - entry.tokens)) * 2)
@@ -410,8 +485,16 @@ function fitSections(sections: RawSection[], budget: number, failureLine: number
     }
   }
 
-  // 5. Drop optional context: question, plan, rubric self-assessment.
-  for (const id of ['learner_question', 'learner_plan', 'learner_rubric']) {
+  // 5. Trim the question, then drop optional plan and rubric context.
+  const question = sections.find((candidate) => candidate.id === 'learner_question')
+  if (question && !question.dropped) {
+    truncateSection(question, 1200)
+    if (usedTokens(sections) <= budget) {
+      return
+    }
+  }
+
+  for (const id of ['learner_plan', 'learner_rubric']) {
     const entry = sections.find((candidate) => candidate.id === id)
     if (entry && !entry.dropped) {
       entry.dropped = true
@@ -422,7 +505,14 @@ function fitSections(sections: RawSection[], budget: number, failureLine: number
   }
 
   // 6. Trim notes, then hard-cap the remaining sections from the end.
-  for (const id of ['learner_notes', 'user_code', 'problem_statement', 'scenario_brief']) {
+  for (const id of [
+    'learner_notes',
+    'user_code',
+    'problem_statement',
+    'scenario_brief',
+    'lesson_excerpt',
+    'lesson_brief',
+  ]) {
     const entry = sections.find((candidate) => candidate.id === id)
     if (entry && !entry.dropped) {
       const target = Math.max(600, (budget - (usedTokens(sections) - entry.tokens)) * 2)
@@ -454,6 +544,13 @@ function isDesignRequest(request: AiRequest): request is {
   return request.feature === 'designNotes' || request.feature === 'followUp'
 }
 
+function isConceptRequest(request: AiRequest): request is {
+  readonly feature: 'concept'
+  readonly concept: AiConceptContext
+} {
+  return request.feature === 'concept'
+}
+
 export function buildContext(request: AiRequest, options: BuildContextOptions): BuiltContext {
   const counter: RedactionCounter = { count: 0 }
   let hintLevel = 1
@@ -461,7 +558,9 @@ export function buildContext(request: AiRequest, options: BuildContextOptions): 
   let language: Language | null = null
   let sections: RawSection[]
 
-  if (isDesignRequest(request)) {
+  if (isConceptRequest(request)) {
+    sections = conceptSections(request.concept, options.content, counter)
+  } else if (isDesignRequest(request)) {
     sections = designSections(request.design, options.content, counter)
   } else {
     hintLevel = clamp(request.context.hintLevel ?? 1, 1, 4)

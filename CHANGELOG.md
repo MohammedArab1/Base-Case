@@ -8,11 +8,25 @@ semantic versioning once releases begin.
 
 ### Added
 
-- Nothing yet.
+- Offline **Learn** library with 30 lessons covering Big O, core data
+  structures, algorithms, and system-design fundamentals. Each lesson includes
+  beginner-friendly explanations, ASCII diagrams, worked examples, a complexity
+  cheatsheet, interview notes, common mistakes, self-check questions, and linked
+  coding or design practice.
+- Local lesson completion and recency tracking in SQLite, included in user-data
+  export/import.
+- Optional lesson clarification through the existing AI provider abstraction,
+  with a context preview and per-feature toggle. AI remains off by default.
+- Two original exercises: **Prefix Ledger** (tries) and **Window Max** (deques).
+  The core pack now has 81 coding problems and 162 reference solutions.
+- Lesson authoring guide and ADR-0012.
 
 ### Changed
 
-- Nothing yet.
+- The core pack now has 30 lessons listed in `pack.json`. Pack import validates
+  lesson prerequisite and exercise references.
+- The golden-pack content counts are now 81 coding problems, 8 design scenarios,
+  30 lessons, and a 75-problem Grind 75 collection.
 
 ### Fixed
 

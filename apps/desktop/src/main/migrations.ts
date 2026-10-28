@@ -201,4 +201,19 @@ export const migrations: readonly Migration[] = [
         ADD COLUMN headers_json TEXT NOT NULL DEFAULT '{}';
     `,
   },
+  {
+    version: 8,
+    sql: `
+      -- Completion is a local study signal, not a generated FSRS card. A lesson
+      -- may disappear with a content pack; its progress row stays harmless.
+      CREATE TABLE IF NOT EXISTS lesson_progress (
+        lesson_id TEXT PRIMARY KEY,
+        completed_at TEXT,
+        last_viewed_at TEXT,
+        updated_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS lesson_progress_updated
+        ON lesson_progress (updated_at);
+    `,
+  },
 ]

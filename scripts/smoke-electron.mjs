@@ -406,8 +406,8 @@ async function main() {
 
   const problems = await evaluate('window.baseCase.content.list()')
   assert(
-    Array.isArray(problems) && problems.length === 79,
-    `Expected 79 bundled problems, got ${problems.length}`,
+    Array.isArray(problems) && problems.length === 81,
+    `Expected 81 bundled problems, got ${problems.length}`,
   )
   assert(
     problems.some((problem) => problem.id === 'core/pair-sum'),
@@ -427,6 +427,36 @@ async function main() {
       .find((problem) => problem.id === 'core/compact-signals')
       ?.collections.includes('core/grind75'),
     'An extra problem was incorrectly tagged as Grind 75',
+  )
+
+  const lessons = await evaluate('window.baseCase.learn.list()')
+  assert(
+    Array.isArray(lessons) && lessons.length === 30,
+    `Expected 30 lessons, got ${lessons.length}`,
+  )
+  assert(
+    lessons.some((lesson) => lesson.id === 'core/complexity-and-big-o'),
+    'The Big O lesson is missing',
+  )
+
+  const trieLesson = await evaluate("window.baseCase.learn.get('core/tries')")
+  assert(
+    typeof trieLesson.content === 'string' && trieLesson.content.includes('prefix tree'),
+    'The trie lesson content did not load',
+  )
+  assert(
+    trieLesson.exercises.some((exercise) => exercise.id === 'core/prefix-ledger'),
+    'The trie lesson does not link its exercise',
+  )
+
+  const lessonProgress = await evaluate(
+    `window.baseCase.learn.setComplete(${JSON.stringify({ lessonId: 'core/tries', completed: true })})`,
+  )
+  assert(lessonProgress.completed === true, 'Lesson completion did not persist')
+  const savedLessonProgress = await evaluate('window.baseCase.learn.progress()')
+  assert(
+    savedLessonProgress.some((entry) => entry.lessonId === 'core/tries' && entry.completed),
+    'Lesson progress was not returned',
   )
 
   const initialSettings = await evaluate('window.baseCase.settings.get()')

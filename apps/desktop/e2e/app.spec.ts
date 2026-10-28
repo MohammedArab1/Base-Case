@@ -552,6 +552,60 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
   }
 })
 
+test('learns a lesson, asks for clarification, and opens linked practice', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-learn-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await page.getByTestId('onboarding-start').click()
+    await page.getByTestId('onboarding-language-typescript').click()
+    await page.getByTestId('onboarding-language-next').click()
+    await page.getByTestId('onboarding-goal-30').click()
+    await page.getByTestId('onboarding-goal-next').click()
+    await page.getByTestId('onboarding-ai-mock').click()
+    await page.getByTestId('onboarding-finish').click()
+    await page.getByTestId('onboarding-go-today').click()
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Learn' })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Learning library' })).toBeVisible()
+
+    await page.getByRole('searchbox', { name: 'Search lessons' }).fill('trie')
+    await page.getByRole('button', { name: /Tries/ }).click()
+    await expect(page.getByRole('heading', { name: 'Tries', level: 2 })).toBeVisible()
+    await expect(page.locator('.lesson-article')).toContainText('prefix tree')
+    await expect(page.getByText('Complexity cheatsheet')).toBeVisible()
+
+    await page.getByTestId('lesson-complete').click()
+    await expect(page.getByTestId('lesson-complete')).toContainText('Completed')
+
+    await page.getByTestId('lesson-ai-question').fill('Why do prefixes share nodes?')
+    await page.getByTestId('lesson-ai-ask').click()
+    await expect(page.getByTestId('lesson-ai-preview')).toBeVisible()
+    await expect(page.getByTestId('lesson-ai-preview')).toContainText('<lesson_excerpt>')
+    await page.getByTestId('lesson-ai-send').click()
+    await expect(page.getByTestId('ai-result-concept')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByTestId('ai-result-concept')).toContainText('hash map')
+
+    await page.getByRole('button', { name: /Prefix Ledger/ }).click()
+    await expect(page.getByRole('heading', { name: 'Prefix Ledger', level: 2 })).toBeVisible()
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Learn' })
+      .click()
+    await expect(page.getByRole('button', { name: /^Tries/ })).toContainText('Complete')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
 test('previews AI assistance, checks an explanation, and applies suggested tags', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-ai-'))
   let launched: LaunchedApp | null = null
@@ -882,6 +936,7 @@ test('has no serious accessibility violations in the main views', async () => {
 
     const views: readonly { nav: string; title: string }[] = [
       { nav: 'Today', title: 'Today' },
+      { nav: 'Learn', title: 'Learn the fundamentals' },
       { nav: 'Coding', title: 'Coding' },
       { nav: 'System Design', title: 'System Design' },
       { nav: 'Review', title: 'Review' },
@@ -897,6 +952,12 @@ test('has no serious accessibility violations in the main views', async () => {
         .click()
       await expect(page.getByRole('heading', { name: view.title, level: 1 })).toBeVisible()
       findings.push(...(await seriousAxeViolations(page, view.title)))
+
+      if (view.nav === 'Learn') {
+        await page.getByTestId('lesson-row').first().click()
+        await expect(page.locator('.lesson-article')).toBeVisible()
+        findings.push(...(await seriousAxeViolations(page, 'Lesson detail')))
+      }
 
       if (view.nav === 'System Design') {
         await page.getByTestId('design-scenario').first().click()

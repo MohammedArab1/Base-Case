@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "core/scaling-and-load-balancing",
+  "slug": "scaling-and-load-balancing",
+  "title": "Scaling and Load Balancing",
+  "category": "system-design",
+  "summary": "Add capacity without adding chaos: stateless services, smart routing, health checks, and a plan for hotspots.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 25,
+  "tags": ["system-design", "scaling", "load-balancing", "availability"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Vertical scaling makes one machine bigger; horizontal scaling adds more machines.",
+    "Horizontal scaling is easier when services are stateless and sessions live in a shared store.",
+    "Load balancers choose a backend with round robin, least connections, or hashing.",
+    "Health checks remove unhealthy backends, but a health check is not a full correctness test.",
+    "Consistent hashing limits reshuffling when the backend pool changes."
+  ],
+  "complexity": [
+    {
+      "operation": "Single request latency",
+      "time": "add one network hop",
+      "space": "—",
+      "note": "Keep the load balancer close."
+    },
+    {
+      "operation": "Horizontal capacity",
+      "time": "near-linear until a shared bottleneck",
+      "space": "N backends",
+      "note": "The database often becomes the limit."
+    },
+    {
+      "operation": "Consistent hashing rebalance",
+      "time": "O(keys / N) moved, not all keys",
+      "space": "ring metadata",
+      "note": "Adding one node moves a fraction."
+    },
+    {
+      "operation": "Health check",
+      "time": "every few seconds",
+      "space": "small",
+      "note": "Fast failure detection."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["news-feed", "chat-system", "seat-reservation"]
+  },
+  "commonMistakes": [
+    "Scaling stateless web servers while leaving a single database as the real bottleneck.",
+    "Storing session state on one server and then enabling round robin across many.",
+    "Using a health check that passes while the service is functionally broken.",
+    "Ignoring hot keys; uniform hashing does not help if one key gets most of the traffic."
+  ],
+  "interviewNotes": [
+    "Say what is stateful. The stateful parts determine how hard scaling will be.",
+    "Name the load-balancing algorithm and why it fits the workload.",
+    "For a hot key, describe a mitigation such as request coalescing, a local cache, or splitting the key."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why are stateless services easier to scale horizontally?",
+      "answer": "Any backend can serve any request, so the load balancer can distribute traffic freely and replace a failed instance without losing user state."
+    },
+    {
+      "question": "When is consistent hashing useful?",
+      "answer": "When clients or cache keys are mapped to backends and adding a backend should not remap almost every key."
+    },
+    {
+      "question": "What is a hot key?",
+      "answer": "A key that receives a disproportionate share of traffic, so the single backend responsible for it becomes overloaded even when the overall load is balanced."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

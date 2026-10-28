@@ -6,6 +6,7 @@ import type { RunResult } from '../../shared/types'
 import { AppDatabase } from '../database'
 import { AttemptsRepository } from './attempts'
 import { DraftsRepository } from './drafts'
+import { LessonProgressRepository } from './lessons'
 import { MistakesRepository } from './mistakes'
 import { ProblemNotesRepository } from './notes'
 import { ReviewRepository } from './review'
@@ -38,6 +39,7 @@ describe('UserDataRepository', () => {
       const mistakes = new MistakesRepository(source)
       const drafts = new DraftsRepository(source)
       const notes = new ProblemNotesRepository(source)
+      const lessons = new LessonProgressRepository(source)
       const review = new ReviewRepository(source)
       const userData = new UserDataRepository(source)
 
@@ -53,6 +55,8 @@ describe('UserDataRepository', () => {
       mistakes.tagAttempt(attemptId, ['off-by-one'])
       drafts.save('core/pair-sum', 'python', 'draft code', 'draft plan')
       notes.save('core/pair-sum', 'Remember the complement.')
+      lessons.touch('core/big-o')
+      lessons.setComplete('core/big-o', true)
 
       const card = review.ensureCard('problem', 'core/pair-sum')
       review.review(card.id, 'good')
@@ -64,6 +68,7 @@ describe('UserDataRepository', () => {
       expect(exported.counts.attempt_mistake_tags).toBe(1)
       expect(exported.counts.review_cards).toBe(1)
       expect(exported.counts.review_logs).toBe(1)
+      expect(exported.counts.lesson_progress).toBe(1)
     })
 
     withDatabase((destination) => {
@@ -73,6 +78,7 @@ describe('UserDataRepository', () => {
       expect(counts.attempts).toBe(1)
       expect(counts.review_cards).toBe(1)
       expect(counts.review_logs).toBe(1)
+      expect(counts.lesson_progress).toBe(1)
 
       const attempts = new AttemptsRepository(destination)
       const detail = attempts.get(attemptId)
@@ -88,6 +94,7 @@ describe('UserDataRepository', () => {
         'Remember the complement.',
       )
       expect(new ReviewRepository(destination).findCard('problem', 'core/pair-sum')?.reps).toBe(1)
+      expect(new LessonProgressRepository(destination).get('core/big-o').completed).toBe(true)
     })
   })
 

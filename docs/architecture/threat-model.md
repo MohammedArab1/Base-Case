@@ -38,20 +38,21 @@ use, and data exfiltration, not to resist a determined kernel exploit.
 
 ## Threats and mitigations
 
-| Threat                                      | Mitigation                                                                          |
-| ------------------------------------------- | ----------------------------------------------------------------------------------- |
-| User code reads/writes personal files       | Seatbelt/Job Objects, temp directory, deny home reads/writes                        |
-| User code exfiltrates data                  | Deny network in the judge; no secrets in the environment                            |
-| Fork bomb / runaway process                 | Process-group kill, 64-process sampling limit, Windows ActiveProcessLimit, watchdog |
-| Infinite output                             | Byte caps on stdout/stderr; kill on overflow                                        |
-| Memory exhaustion                           | Memory sampling, language multipliers, hard kill                                    |
-| Malicious content pack executes native code | Content is data only; no plugins; built-in checkers                                 |
-| Prompt injection in code/comments           | Delimit data, system guardrails, no tools, output schema                            |
-| API key theft                               | `safeStorage`, main-process only, never in logs or renderer                         |
-| AI provider sees sensitive data             | Explicit preview/consent, minimal context, optional redaction                       |
-| Supply-chain attack                         | Lockfiles, Dependabot, `pnpm audit`, minimal dependencies                           |
-| Unsigned app tampering                      | Checksums, release notes, signing later                                             |
-| Hidden-test extraction                      | Accept as a known limitation; hidden tests are not a security boundary              |
+| Threat                                      | Mitigation                                                                             |
+| ------------------------------------------- | -------------------------------------------------------------------------------------- |
+| User code reads/writes personal files       | Seatbelt/Job Objects, temp directory, deny home reads/writes                           |
+| User code exfiltrates data                  | Deny network in the judge; no secrets in the environment                               |
+| Fork bomb / runaway process                 | Process-group kill, 64-process sampling limit, Windows ActiveProcessLimit, watchdog    |
+| Infinite output                             | Byte caps on stdout/stderr; kill on overflow                                           |
+| Memory exhaustion                           | Memory sampling, language multipliers, hard kill                                       |
+| Malicious content pack executes native code | Content is data only; no plugins; built-in checkers                                    |
+| Malicious lesson Markdown                   | Sanitized Markdown, no raw HTML, no remote images; lessons are pack data only          |
+| Prompt injection in code/comments           | Delimit data, system guardrails, no tools, output schema                               |
+| API key theft                               | `safeStorage`, main-process only, never in logs or renderer                            |
+| AI provider sees sensitive data             | Explicit preview/consent, minimal context, optional redaction; lesson answers excluded |
+| Supply-chain attack                         | Lockfiles, Dependabot, `pnpm audit`, minimal dependencies                              |
+| Unsigned app tampering                      | Checksums, release notes, signing later                                                |
+| Hidden-test extraction                      | Accept as a known limitation; hidden tests are not a security boundary                 |
 
 ## Electron hardening
 

@@ -3,14 +3,16 @@
 > Working name. Base Case is a local-first practice app for coding interviews
 > and system design. It is not affiliated with LeetCode or any other judge.
 
-**Status:** Phase 9 MVP expansion. The app has 79 original coding problems
-(including a 75-problem Grind 75 collection), 8 system design scenarios, a real
+**Status:** Phase 9 MVP expansion. The app has 81 original coding problems
+(including a 75-problem Grind 75 collection), 8 system design scenarios, 30
+offline lessons covering DSA and system-design fundamentals, a real
 Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
 persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
-review. Manual accessibility verification, demo media, the release candidate,
-clean-VM installs, the manual Windows installer run, a second-person content
-review, a real-model AI eval run, trademark/domain, and GitHub project setup are
-pending. See `docs/project/open-blockers.md`.
+review. Manual accessibility verification, demo media, the release candidate, a
+second-person content review, a real-model AI eval run, trademark/domain, and
+GitHub project setup are pending. The Windows `0.1.0-alpha` installer passed its
+diagnostics check with bundled runtimes; clean-OS isolation was waived by the
+owner for the alpha. See `docs/project/open-blockers.md`.
 
 ![Base Case demo walkthrough](docs/assets/demo/base-case-demo.gif)
 
@@ -55,6 +57,7 @@ corepack pnpm dev
 
 Then:
 
+- Open **Learn**, read **Hash Maps and Sets**, and open its linked practice.
 - Open **Coding**, select **Pair Sum**, and run the sample tests.
 - Replace the starter code with a one-pass hash-map solution and submit.
 - Open **System Design**, draw, wait for “Saved locally,” and reload.
@@ -88,12 +91,21 @@ runtimes. See ADR-0010.
 ## What works now
 
 - Secure Electron + React + TypeScript shell with a narrow typed preload API.
-- 79 original coding problems across hash maps, two pointers, stacks, binary
+- 81 original coding problems across hash maps, two pointers, stacks, binary
   search, sliding windows, linked lists, trees/BSTs, graphs, topological sort,
-  union-find, heaps, backtracking, intervals, bit manipulation, greedy, matrix
-  traversal, and dynamic programming. Each has 3–5 sample tests, at least 15
-  hidden tests, four hints, an explanation, common mistakes, follow-ups, and
-  Python/TypeScript reference solutions.
+  union-find, heaps, tries, deques, backtracking, intervals, bit manipulation,
+  greedy, matrix traversal, and dynamic programming. Each has 3–5 sample tests,
+  at least 15 hidden tests, four hints, an explanation, common mistakes,
+  follow-ups, and Python/TypeScript reference solutions.
+- A **Learn** library with 30 offline lessons: Big O, arrays and strings, hash
+  maps, two pointers, sliding windows, prefix sums, sorting, binary search,
+  stacks, queues/deques, linked lists, recursion/backtracking, trees, BSTs,
+  heaps, tries, graphs/traversal, topological sort and union-find, greedy and
+  intervals, bit manipulation, matrix traversal, dynamic programming, and eight
+  system-design topics. Each lesson has plain-language explanations, ASCII
+  diagrams, worked examples, a complexity cheatsheet, interview notes, common
+  mistakes, self-check questions, and linked coding or design exercises.
+  Completion is stored locally, and every lesson remains readable without AI.
 - A **Grind 75** collection filter over a 75-problem core subset of the public
   Grind 75 study list. The list is maintained by Tech Interview Handbook; this
   app is not affiliated with or endorsed by it. Every statement, example, hint,
@@ -116,12 +128,12 @@ runtimes. See ADR-0010.
 - Content pack import (ZIP or folder) with schema validation, preview, an
   Unverified badge, and removal that preserves attempts.
 - Excalidraw canvas with local scene persistence and PNG export.
-- SQLite (WAL) migrations, attempts, drafts, design scenes, notes, settings,
-  AI feedback, and verified startup backups.
+- SQLite (WAL) migrations, attempts, drafts, design scenes, notes, lesson
+  progress, settings, AI feedback, and verified startup backups.
 - Optional AI: mock and OpenAI-compatible providers, token-budgeted context,
   structured outputs, guardrails, per-feature toggles, design-note review,
-  explain-back checks, user-confirmed mistake-tag suggestions, and a local
-  bug-zoo eval harness. AI is off by default.
+  explain-back checks, lesson clarification, user-confirmed mistake-tag
+  suggestions, and a local bug-zoo eval harness. AI is off by default.
 - Diagnostics self-test for the database, storage, logs, content, search index,
   judge, runtimes, and AI configuration, with a copyable report that never leaves
   the machine unless you copy it.
@@ -129,11 +141,12 @@ runtimes. See ADR-0010.
   job, plus an alpha feedback issue form.
 
 Still open: manual accessibility verification (B11), the second-person content
-review, demo GIF/video, the release candidate, optional reference Excalidraw
-scenes, local AI history, the Apple Foundation Models sidecar, clean-VM installs,
-the manual Windows installer run, a real-model AI eval, the private beta,
-trademark/domain, and GitHub milestones. See `docs/project/open-blockers.md`.
-Windows filesystem and network isolation remain best-effort.
+review, refreshed screenshots and demo media for the Learn library, the release
+candidate, optional reference Excalidraw scenes, local AI history, the Apple
+Foundation Models sidecar, a real-model AI eval, the private beta,
+trademark/domain, and GitHub milestones. B1 is closed by owner waiver and B2 is
+done; see `docs/project/open-blockers.md`. Windows filesystem and network
+isolation remain best-effort.
 
 ## Repository layout
 
@@ -142,7 +155,7 @@ apps/desktop/          Electron main, preload, React renderer
 services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate and test commands for content packs
-content/packs/core/    Bundled core pack (79 coding + 8 design; 75-problem Grind 75 collection)
+content/packs/core/    Bundled core pack (81 coding + 8 designs + 30 lessons; 75-problem Grind 75 collection)
 docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates
 scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement
@@ -172,6 +185,7 @@ docs/                  ADRs, architecture, authoring, spikes, project docs
 - `docs/architecture/threat-model.md`
 - `docs/authoring/content-policy.md`
 - `docs/authoring/problem-authoring.md`
+- `docs/authoring/lesson-authoring.md`
 - `docs/evals/README.md`
 - `docs/project/open-blockers.md`
 - `docs/project/definition-of-done.md`

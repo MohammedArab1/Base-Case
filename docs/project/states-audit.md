@@ -1,6 +1,6 @@
 # Loading, empty, and error states — Phase 9 audit
 
-Last reviewed: 2026-10-25
+Last reviewed: 2026-10-27
 
 The goal is that no view shows a blank panel while data is loading, an empty
 state explains the next action, and a failure is visible without losing the
@@ -21,6 +21,9 @@ rest of the workspace.
 | View            | Loading                                       | Empty                                                           | Error                                                       |
 | --------------- | --------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------- |
 | Today           | Metric placeholders and “Reading…” copy       | Explains the attempt → review loop and keeps Continue visible   | Page-level alert with the IPC error                         |
+| Learn library   | “Loading lessons…”                            | “No lessons yet” with pack guidance; “No matches” for filters   | Page-level alert with the content-load error                |
+| Lesson          | “Loading lesson…”                             | Missing lesson shows a back action and an explicit error        | Inline alert with a back action                             |
+| Lesson AI       | Provider check, then waiting/cancel states    | Off, not configured, and feature-off callouts explain the path  | Inline alert; the written lesson remains fully readable     |
 | Coding library  | Shell loading state                           | “No matches” plus filter/search context                         | Alert with the content-load error                           |
 | Problem         | “Loading problem…”                            | Draft/attempt empty states in the inspector                     | Alert with a retry path by reopening the problem            |
 | Judge results   | Per-test progress and a Cancel action         | Pre-run explanation of Run vs Submit                            | Status-specific alert; compile/runtime details stay visible |
@@ -46,9 +49,10 @@ rest of the workspace.
 
 ## Verification
 
-- Playwright covers onboarding, search-empty, review-empty, AI disabled, AI
-  preview, diagnostics, and the expanded content flow.
-- The accessibility gate in `apps/desktop/e2e/app.spec.ts` checks the six main
-  views after they finish loading.
+- Playwright covers onboarding, search-empty, review-empty, the Learn library
+  and lesson detail, lesson AI disabled/enabled previews, diagnostics, and the
+  expanded content flow.
+- The accessibility gate in `apps/desktop/e2e/app.spec.ts` checks the seven main
+  views after they finish loading, plus a lesson detail.
 - Manual review: navigate every view with the database closed/read-only and
   confirm the alerts remain readable. This is part of the B11 manual pass.

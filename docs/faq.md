@@ -50,12 +50,20 @@ reviews and new cards are in Settings.
 Yes. The canvas works with a mouse or trackpad. Notes and the rubric are separate
 from the drawing, so you can complete an attempt with text only.
 
+## Do the lessons need AI or a network connection?
+
+No. The 30 lessons, their diagrams, complexity tables, self-check answers, and
+linked exercises are bundled and work offline. Completing a lesson only writes a
+local progress row. AI clarification is an optional extra when a provider is
+configured.
+
 ## Is the AI tutor required?
 
 No. AI is off by default and every core feature works without it. When enabled,
 the app shows a context preview before anything leaves the machine. Pre-authored
-hints and explanations are the primary learning path; the AI panel is labeled
-Experimental.
+hints, explanations, and the offline lesson library are the primary learning
+path; the AI panel is labeled Experimental. Lesson clarification is one of the
+per-feature toggles and never replaces the written lesson.
 
 ## Which providers work?
 

@@ -84,7 +84,9 @@
     "task-intervals",
     "kth-smallest-tree",
     "meeting-overlap",
-    "center-roots"
+    "center-roots",
+    "prefix-ledger",
+    "window-max"
   ],
   "designs": [
     "url-shortener",
@@ -95,6 +97,38 @@
     "search-autocomplete",
     "file-sync",
     "payment-ledger"
+  ],
+  "lessons": [
+    "complexity-and-big-o",
+    "arrays-and-strings",
+    "hash-maps",
+    "two-pointers",
+    "sliding-window",
+    "prefix-sums",
+    "sorting",
+    "binary-search",
+    "stacks",
+    "queues-and-deques",
+    "linked-lists",
+    "recursion-and-backtracking",
+    "trees",
+    "binary-search-trees",
+    "heaps",
+    "tries",
+    "graphs-and-traversal",
+    "graph-algorithms",
+    "greedy-and-intervals",
+    "bit-manipulation",
+    "matrix-traversal",
+    "dynamic-programming",
+    "system-design-interview",
+    "requirements-and-estimation",
+    "scaling-and-load-balancing",
+    "caching-and-cdns",
+    "databases",
+    "consistency-and-idempotency",
+    "message-queues-and-observability",
+    "rate-limiting"
   ],
   "collections": [
     {

@@ -15,7 +15,10 @@ export interface DiagnosticsDependencies {
   readonly platform: string
   readonly arch: string
   readonly database: Pick<AppDatabase, 'connection' | 'path'>
-  readonly content: Pick<ContentRepository, 'listProblems' | 'listDesigns' | 'listPacks'>
+  readonly content: Pick<
+    ContentRepository,
+    'listProblems' | 'listDesigns' | 'listLessons' | 'listPacks'
+  >
   readonly contentIndex: Pick<ContentIndexRepository, 'count'>
   readonly judge: Pick<JudgeClient, 'status'>
   readonly ai: Pick<AiService, 'getStatus'>
@@ -164,6 +167,7 @@ function contentCheck(content: DiagnosticsDependencies['content']): DiagnosticCh
   try {
     const problems = content.listProblems()
     const designs = content.listDesigns()
+    const lessons = content.listLessons()
     const packs = content.listPacks()
 
     if (problems.length === 0) {
@@ -190,7 +194,7 @@ function contentCheck(content: DiagnosticsDependencies['content']): DiagnosticCh
       id: 'content',
       label: 'Content',
       status: 'pass',
-      detail: `${problems.length} coding problems and ${designs.length} design scenarios across ${packs.length} pack(s).`,
+      detail: `${problems.length} coding problems, ${designs.length} design scenarios, and ${lessons.length} lessons across ${packs.length} pack(s).`,
     }
   } catch (error) {
     return {

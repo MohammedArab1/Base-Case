@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type {
+  AiConceptContext,
   AiContext,
   AiDesignContext,
   AiFeedbackInput,
@@ -15,6 +16,7 @@ import type {
   SaveAiConfigInput,
   SaveDesignDraftInput,
   SaveDraftInput,
+  SetLessonCompleteInput,
   SettingsPatch,
   SubmitDesignInput,
   TagAttemptInput,
@@ -23,6 +25,17 @@ import type {
 export const languageSchema = z.enum(['python', 'typescript'])
 
 export const problemIdSchema = z.string().min(1).max(200)
+
+export const lessonIdSchema = z
+  .string()
+  .min(3)
+  .max(200)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*$/)
+
+export const setLessonCompleteSchema: z.ZodType<SetLessonCompleteInput> = z.object({
+  lessonId: lessonIdSchema,
+  completed: z.boolean(),
+}) as z.ZodType<SetLessonCompleteInput>
 
 export const searchQuerySchema = z.string().max(200)
 
@@ -170,6 +183,12 @@ const aiRubricAnswersSchema = z.record(
   }),
 )
 
+export const aiConceptContextSchema: z.ZodType<AiConceptContext> = z.object({
+  lessonId: lessonIdSchema,
+  question: z.string().min(1).max(2_000),
+  section: z.string().min(1).max(200).optional(),
+}) as z.ZodType<AiConceptContext>
+
 export const aiDesignContextSchema: z.ZodType<AiDesignContext> = z.object({
   scenarioId: designScenarioIdSchema,
   notes: designNotesSchema,
@@ -187,10 +206,12 @@ const codingAiFeatureSchema = z.enum([
   'explainBack',
 ])
 const designAiFeatureSchema = z.enum(['designNotes', 'followUp'])
+const conceptAiFeatureSchema = z.literal('concept')
 
 export const aiRequestSchema: z.ZodType<AiRequest> = z.union([
   z.object({ feature: codingAiFeatureSchema, context: aiContextSchema }),
   z.object({ feature: designAiFeatureSchema, design: aiDesignContextSchema }),
+  z.object({ feature: conceptAiFeatureSchema, concept: aiConceptContextSchema }),
 ]) as z.ZodType<AiRequest>
 
 export const aiFeedbackSchema: z.ZodType<AiFeedbackInput> = z.object({
@@ -203,6 +224,7 @@ export const aiFeedbackSchema: z.ZodType<AiFeedbackInput> = z.object({
     'explainBack',
     'designNotes',
     'followUp',
+    'concept',
   ]),
   reason: z.enum(['unhelpful', 'leaky', 'wrong', 'other']),
   comment: z.string().max(2_000).optional(),
@@ -242,6 +264,7 @@ const aiFeatureSettingsSchema = z.object({
   explainBack: z.boolean().default(true),
   designNotes: z.boolean().default(true),
   followUp: z.boolean().default(true),
+  concept: z.boolean().default(true),
 })
 
 export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
@@ -258,6 +281,7 @@ export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
     explainBack: true,
     designNotes: true,
     followUp: true,
+    concept: true,
   }),
   dailyGoalMinutes: z.number().int().min(5).max(480),
   reviewDailyLimit: z.number().int().min(1).max(200).default(20),
@@ -287,6 +311,7 @@ export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
       explainBack: z.boolean().optional(),
       designNotes: z.boolean().optional(),
       followUp: z.boolean().optional(),
+      concept: z.boolean().optional(),
     })
     .optional(),
   dailyGoalMinutes: z.number().int().min(5).max(480).optional(),

@@ -5,7 +5,7 @@
 > **Last updated:** 2026-10-23
 > **Owner:** Solo maintainer
 > **Target:** Open-source macOS and Windows desktop app for offline coding-interview and system-design practice
-> **Implementation status:** Phase 1 technical spike: macOS verified end to end and packaged; Windows packaging and clean-VM verification pending. See `PROGRESS.md` and `docs/spikes/phase-1-report.md`.
+> **Implementation status:** Phase 1 technical spike complete for the alpha: macOS and Windows verified end to end; the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled runtimes. Clean-OS isolation was waived by the owner for the alpha (B1) and remains a v1.0 bar. See `PROGRESS.md` and `docs/spikes/phase-1-report.md`.
 
 ---
 
@@ -172,14 +172,17 @@ The MVP is done when a new user can:
 1. Install the app on macOS or Windows.
 2. Use it fully offline.
 3. Choose Python or TypeScript.
-4. Browse 79 original coding problems across core patterns, including a filterable
-   75-problem Grind 75 collection.
+4. Learn from 30 offline DSA and system-design lessons, each with diagrams,
+   complexity notes, and linked practice, then browse 81 original coding problems
+   across core patterns, including a filterable 75-problem Grind 75 collection.
 5. Run sample tests and submit against hidden tests.
 6. See structured failure feedback: failing input, expected vs. actual, stderr, runtime, memory.
 7. Read progressive hints and a reference solution.
 8. Practice 8 system-design scenarios on a canvas with a notes template, rubric, and reference design.
 9. Review coding and design work through an FSRS-based review queue.
-10. Optionally connect an OpenAI-compatible AI provider and get failure explanations, hints, approach reviews, and design-note feedback.
+10. Optionally connect an OpenAI-compatible AI provider and get failure
+    explanations, hints, approach reviews, lesson clarification, and design-note
+    feedback.
 11. Export and import their data.
 12. Use the app without creating an account.
 
@@ -195,7 +198,7 @@ Do not build these in the MVP:
 - Cloud accounts, cloud sync, or a hosted service.
 - A general-purpose AI chatbot.
 - Every language. Python + TypeScript/JavaScript only.
-- Every problem. A curated 79 with original statements and tests beats a
+- Every problem. A curated 81 with original statements and tests beats a
   3,000-problem catalog of copied prompts.
 - AI grading of canvas drawings.
 - Mobile or web versions.
@@ -243,7 +246,7 @@ Use these to judge the alpha and MVP. They are guides, not vanity targets.
 |---|---|---|---|---|
 | **Technical alpha** | Internal | 3–5 | 1–2 | Judge, editor, one track end-to-end |
 | **Public alpha** | Month 4–5 | 10 | 4 | Coding + design, FSRS, BYO AI, macOS/Windows builds |
-| **MVP / v1.0** | Month 6–8 | 79 (75 Grind 75) | 8 | Importer, polish, docs, accessibility, release |
+| **MVP / v1.0** | Month 6–8 | 81 (75 Grind 75) | 8 | 30 lessons, importer, polish, docs, accessibility, release |
 | **Post-MVP** | After feedback | 150+ | 15+ | Apple FM, C++/Java, mock interviews, community packs |
 
 ### 2.2 Supported platforms
@@ -291,6 +294,8 @@ Each new language is a separate adapter + harness + conformance suite + runtime 
 | Structured failures | Yes | Yes | Yes |
 | Hints + solutions | Yes | Yes | Yes |
 | FSRS review | Yes | Yes | Yes |
+| Offline learning library | Yes | Yes | More lessons |
+| Lesson AI clarification | Yes | Yes | Yes |
 | Mistake tags | Basic | Yes | AI-assisted |
 | System design canvas | 4 scenarios | 8 scenarios | 15+ |
 | Rubric self-assessment | Yes | Yes | Yes |
@@ -539,6 +544,7 @@ Bundled content lives read-only in the app resources. On first launch, copy the 
 | `review_cards` | FSRS state for a problem or design scenario |
 | `design_scenarios` | System design prompt and rubric metadata |
 | `design_attempts` | Canvas JSON, notes JSON, rubric JSON, status |
+| `lesson_progress` | Local lesson completion and last-viewed timestamp |
 | `settings` | App preferences; no secrets |
 | `ai_provider_configs` | Provider metadata; key reference only |
 | `schema_migrations` | Migration history |
@@ -552,9 +558,9 @@ This is a shape, not final DDL. Use `TEXT` IDs (stable slugs for content, UUIDs 
 > **Implementation note (2026-10-24):** ADR-0011 narrows this outline. Pack
 > content stays file-backed; SQLite stores user state and the search index.
 > Migration 3 creates `attempt_events`, `mistake_tags`, `attempt_mistake_tags`,
-> `review_cards`, and `design_attempts`; migration 4 adds `problem_notes`. The
-> content tables below are deferred until a concrete query or export need
-> exists.
+> `review_cards`, and `design_attempts`; migration 4 adds `problem_notes`;
+> migration 8 adds `lesson_progress`. The content tables below are deferred
+> until a concrete query or export need exists.
 
 **content_packs**
 
@@ -746,13 +752,17 @@ content/packs/core/
 │     └─ tests/
 │        ├─ sample.jsonl
 │        └─ hidden.jsonl
-└─ designs/
-   └─ url-shortener/
-      ├─ design.json
-      ├─ prompt.md
-      ├─ reference.md
-      ├─ reference.excalidraw.json
-      └─ rubric.json
+├─ designs/
+│  └─ url-shortener/
+│     ├─ design.json
+│     ├─ prompt.md
+│     ├─ reference.md
+│     ├─ reference.excalidraw.json
+│     └─ rubric.json
+└─ lessons/
+   └─ hash-maps/
+      ├─ lesson.json
+      └─ lesson.md
 ```
 
 **pack.json**
@@ -766,7 +776,9 @@ content/packs/core/
   "license": "CC-BY-SA-4.0",
   "attribution": "Original problems by the Base Case contributors.",
   "problems": ["pair-sum"],
-  "designs": ["url-shortener"]
+  "designs": ["url-shortener"],
+  "lessons": ["hash-maps"],
+  "collections": []
 }
 ```
 
@@ -875,6 +887,38 @@ One test per line, so large files stream and diff cleanly.
   "attribution": "Original scenario by the Base Case contributors."
 }
 ```
+
+**Lesson JSON**
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "core/hash-maps",
+  "slug": "hash-maps",
+  "title": "Hash Maps and Sets",
+  "category": "data-structure",
+  "summary": "Turn a slow search into a fast lookup.",
+  "difficulty": "easy",
+  "estimatedMinutes": 11,
+  "order": 3,
+  "tags": ["hash-map", "counting"],
+  "prerequisites": ["arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": ["Average O(1) lookup.", "Store what you have seen.", "Check before insert."],
+  "complexity": [{ "operation": "Lookup", "time": "O(1)", "space": "O(n)" }],
+  "exercises": { "problems": ["pair-sum"], "designs": [] },
+  "commonMistakes": ["Pairing a value with itself."],
+  "interviewNotes": ["Say the average case."],
+  "checkYourself": [{ "question": "Why O(1)?", "answer": "The hash finds a bucket." }],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors."
+}
+```
+
+Lessons are listed in `pack.json` under `lessons`. Prerequisites and exercise
+references use pack slugs and are validated against the same pack. Lesson
+completion is user state and lives in SQLite (`lesson_progress`), not in the
+pack.
 
 ### 4.5 Schema and versioning
 
@@ -1531,16 +1575,19 @@ Alpha (10 coding + 4 design):
 - Coding patterns: arrays/two pointers, hash maps, stacks, binary search, sliding window, linked lists, trees, BFS/DFS, heaps, DP intro.
 - Design: URL shortener, rate limiter, chat, news feed.
 
-MVP (79 coding + 8 design, including a 75-problem Grind 75 collection):
+MVP (81 coding + 8 design + 30 lessons, including a 75-problem Grind 75
+collection):
 
-- Add: intervals, backtracking, greedy, tries, union-find, more DP, graphs.
+- Coding add: intervals, backtracking, greedy, tries, deques, union-find, more DP, graphs.
 - Design: file storage/sync, search autocomplete, payment ledger, notification system.
+- Learning library: 22 DSA lessons and 8 system-design lessons, each with original
+  explanations, diagrams, complexity tables, interview notes, and linked practice.
 
 Post-MVP:
 
-- 150+ coding, 15+ design.
+- 150+ coding, 15+ design, and a larger lesson library.
 - Company-style mock sets (original content, not scraped tags).
-- Pattern pages and cheat sheets.
+- Additional diagrams, interactive visualizations, and lesson review scheduling.
 - Community packs.
 
 ---
@@ -1874,6 +1921,7 @@ Optional, notes-only in MVP:
 Top-level navigation:
 
 - **Today** — due reviews, continue where you left off, daily goal.
+- **Learn** — searchable DSA and system-design lessons, linked practice, completion.
 - **Coding** — problem lists, search, filters, progress.
 - **System Design** — scenario lists, attempts, progress.
 - **Review** — unified queue for coding and design.
@@ -1903,6 +1951,15 @@ Global:
 - Daily goal progress.
 - Suggested new problem based on patterns not yet practiced.
 - No streak guilt; streak is optional.
+
+**Learn library**
+
+- Search and category filters across foundations, data structures, algorithms,
+  and system design.
+- Lesson reader with offline Markdown, diagrams, worked examples, key ideas, a
+  complexity cheatsheet, interview notes, and self-check questions.
+- Linked coding or design practice, local completion, and an optional AI
+  clarification with a context preview.
 
 **Coding list**
 
@@ -2409,7 +2466,7 @@ The schedule assumes full-time work. Durations are targets, not promises. Each p
 
 6. **macOS and Windows packaging**
    - [x] GitHub Actions builds macOS and Windows artifacts.
-   - [ ] Install and launch on at least one clean VM per OS.
+   - [x] Install and launch on at least one clean VM per OS. (Waived by owner for the alpha on 2026-10-27: Windows hardware install passed with bundled runtimes; clean-OS isolation remains a v1.0 bar.)
    - [x] Document unsigned install steps.
 
 **Deliverables**
@@ -2844,7 +2901,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - No data loss.
 - P0 bugs fixed or documented.
 
-> Status 2026-10-25: diagnostics, the alpha documentation set, the feedback form, SHA-256 checksums, and the tag-driven release job are in place; the version is `0.1.0-alpha`. Remaining: the manual Windows workflow (B2), clean-VM installs (B1), the private beta (B10), P0/P1 fixes, and the `v0.1.0-alpha` tag.
+> Status 2026-10-27: diagnostics, the alpha documentation set, the feedback form, SHA-256 checksums, and the tag-driven release job are in place; the version is `0.1.0-alpha`. Remaining: the private beta (B10), P0/P1 fixes, and the `v0.1.0-alpha` tag. B2 is done (run 40607714499) and B1 is closed by owner waiver; rebuild after the current Learn/content changes before tagging.
 
 ---
 
@@ -2859,7 +2916,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 > Reconciled with the codebase on 2026-10-25. Items checked below were already
 > delivered in Phases 2–8; they are ticked here instead of being rebuilt.
 
-- [x] Content to 79 coding + 8 design. (All 158 reference solutions pass; 54 coding problems and the Grind 75 collection added in the 2026-10-26 expansion)
+- [x] Content to 81 coding + 8 design + 30 lessons. (All 162 reference solutions pass; the Grind 75 collection, trie/deque exercises, and the learning library were added in the 2026-10-26/27 expansions)
 - [x] Importer (delivered in Phase 2; see `main/pack-manager.ts`):
   - [x] Pack validation/preview/install.
   - [x] Disclaimer.
@@ -2889,19 +2946,20 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Electron checklist. (`docs/project/security-review.md`)
   - [x] Judge limitations. (Documented in ADR-0009 and `docs/architecture/threat-model.md`)
   - [x] Dependency audit. (`pnpm audit --prod` clean after targeted transitive overrides)
+- [x] Learning library. (30 offline lessons, lesson progress in SQLite, linked coding/design exercises for every one of the 81 problems, and an optional AI clarification feature)
 - [x] Docs, screenshots, GIF, demo video. (Docs, generated screenshots, and a 10-second GIF/MP4 walkthrough exist)
 - [ ] Release candidate. (MVP build candidate and checksums recorded; tagging waits on B1, B2, B10, and B11)
 
 **Deliverables**
 
 - MVP feature-complete build.
-- 79 + 8 content pack.
+- 81 + 8 + 30-lesson content pack.
 - Importer.
 - Updated docs.
 
 **Exit criteria**
 
-- All MVP definition items work.
+- All MVP definition items work, including the learning library and its linked exercises.
 - Accessibility checklist passes.
 - No P0/P1 bugs.
 - Performance budgets met or documented.
@@ -2985,6 +3043,10 @@ This is an aggressive 31-week plan (~7 months). With strong overlap and prior ex
 | Testing/CI/release | 100–140 h |
 | **Total** | **~740–1,060 h** |
 
+This estimate predates the 79/81-problem and 30-lesson expansions; treat it as
+original planning history, not a current content inventory. See `PROGRESS.md`
+for delivered scope.
+
 At 40 focused hours/week, that is 18–26 weeks of pure work; calendar time is longer because of content review, packaging, bug fixing, and life. Plan for 6–8 months.
 
 ---
@@ -3008,7 +3070,7 @@ Use these as GitHub epics. Each task should become an issue with acceptance crit
 | E10 AI tutor | Providers, context, features, guardrails, evals | 6 | P1 |
 | E11 Content alpha | 10 coding + 4 design + CLI | 7 | P0 |
 | E12 Release/CI | Packaging, installers, docs, checksums | 8, 10 | P0 |
-| E13 MVP content | 79 + 8, review | 9 | P0 |
+| E13 MVP content | 81 + 8 + 30 lessons, review | 9 | P0 |
 | E14 Importer | Pack validation/preview/install | 9 | P1 |
 | E15 Accessibility | Keyboard, screen reader, contrast, motion | 9 | P1 |
 | E16 Diagnostics | Self-test, logs, export | 8–9 | P1 |

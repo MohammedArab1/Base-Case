@@ -51,7 +51,7 @@ export function toIpcError(error: unknown): IpcError {
       return { code: 'judge_unavailable', message }
     }
 
-    if (/^Unknown problem/i.test(message)) {
+    if (/^Unknown (?:problem|lesson)/i.test(message)) {
       return { code: 'not_found', message }
     }
 

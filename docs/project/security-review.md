@@ -23,6 +23,8 @@ configuration, and production dependencies.
 | Logging                     | Pass   | Logs exclude API keys, user code, notes, prompts, and responses; the diagnostics report is redacted.      |
 | File dialogs                | Pass   | Pack import and export use native dialogs; user-controlled paths are never interpolated into shell calls. |
 | Remote content              | Pass   | Bundled content is local. Imported packs are data files; no native code or custom checker execution.      |
+| Lesson content              | Pass   | Lesson Markdown is sanitized and rendered without raw HTML; lesson progress is local SQLite state only.   |
+| Lesson AI context           | Pass   | Only the lesson brief, selected section excerpt, and question are sent after an explicit context preview. |
 | Auto-update                 | N/A    | No updater in the MVP.                                                                                    |
 | Code signing / notarization | N/A    | Unsigned alpha builds are documented; SmartScreen/Gatekeeper caveats are in `install.md`.                 |
 
@@ -73,8 +75,9 @@ reviewed before a release.
 ## Residual risks
 
 - Unsigned installers trigger Gatekeeper/SmartScreen warnings.
-- Clean-VM installation and Windows first-launch verification remain external
-  blockers B1 and B2.
+- Clean-OS isolation was waived for the alpha (B1). The Windows installer and
+  first-launch flow were verified on hardware (B2); clean-VM verification remains
+  a v1.0 bar.
 - Manual screen-reader and high-contrast verification remain in
   `docs/project/accessibility.md`.
 - Legal review of content, licenses, and AI/privacy disclosures remains B7.

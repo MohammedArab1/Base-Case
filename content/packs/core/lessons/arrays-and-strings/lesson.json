@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "id": "core/arrays-and-strings",
+  "slug": "arrays-and-strings",
+  "title": "Arrays and Strings",
+  "category": "data-structure",
+  "summary": "The two most common containers in interviews: boxes in a row, and text built from those boxes.",
+  "difficulty": "easy",
+  "estimatedMinutes": 12,
+  "order": 2,
+  "tags": ["arrays", "strings", "in-place", "complexity"],
+  "prerequisites": ["complexity-and-big-o"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "An array stores items in contiguous slots, so reading by index is O(1).",
+    "Inserting or deleting near the front shifts the remaining items, which costs O(n).",
+    "Python strings and JavaScript strings are immutable; each change creates a new string unless you collect pieces first.",
+    "Many array problems become simpler with a pass that counts, marks, or collects instead of repeatedly searching."
+  ],
+  "complexity": [
+    {
+      "operation": "Read or write by index",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "The slot address is computed directly."
+    },
+    {
+      "operation": "Append to a dynamic array",
+      "time": "O(1) amortized",
+      "space": "O(1)",
+      "note": "Occasional resizing copies the array."
+    },
+    {
+      "operation": "Insert or delete in the middle",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Later items must shift."
+    },
+    {
+      "operation": "Search an unsorted array",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Every item may need a check."
+    },
+    {
+      "operation": "Sort an array",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "The bound depends on the sorting algorithm."
+    },
+    {
+      "operation": "Concatenate a string in a loop",
+      "time": "O(n²)",
+      "space": "O(n)",
+      "note": "Each concatenation may copy the whole string."
+    },
+    {
+      "operation": "Join collected string pieces",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "Build once at the end."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "compact-signals",
+      "product-except",
+      "letter-tally",
+      "mirrored-text",
+      "strict-integer",
+      "color-sort"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Assuming string concatenation is free inside a loop; collect characters and join once.",
+    "Shifting the whole array for every removal instead of using a write index.",
+    "Forgetting that a string can contain punctuation, digits, spaces, or Unicode code points that are not single bytes."
+  ],
+  "interviewNotes": [
+    "Say whether the input may be modified. If it may, an in-place solution can save O(n) memory.",
+    "Ask whether the string is ASCII or Unicode before indexing it by character; the answer affects the approach.",
+    "When a result is built piece by piece, mention the final join explicitly so the complexity is not accidentally quadratic."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is inserting at the front of an array O(n)?",
+      "answer": "Every existing item must move one slot to the right to make room, so the work grows with the number of items."
+    },
+    {
+      "question": "Why is `result += ch` inside a loop risky for long strings?",
+      "answer": "Each concatenation may copy the entire current result. Collecting pieces in a list and joining once avoids repeated copying."
+    },
+    {
+      "question": "How can you remove duplicates from a sorted array in place?",
+      "answer": "Keep a write index for the next unique value. Scan with a read index and copy only new values forward."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

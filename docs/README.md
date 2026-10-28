@@ -22,7 +22,7 @@ Start here:
 - `architecture/overview.md` — process model and data flows.
 - `architecture/judge-protocol.md` — JSONL protocol draft.
 - `architecture/threat-model.md` — assets, actors, threats, mitigations.
-- `adr/` — architecture decision records 0001–0011.
+- `adr/` — architecture decision records 0001–0012.
 
 ## Spikes
 
@@ -35,6 +35,8 @@ Start here:
 - `authoring/problem-authoring.md` — problem schema, tests, hints, solutions.
 - `authoring/design-authoring.md` — design scenarios and the seven-dimension
   rubric.
+- `authoring/lesson-authoring.md` — offline lesson schema, tone, diagrams,
+  complexity tables, and linked exercises.
 - `authoring/pack-import.md` — folder/ZIP structure and a complete example pack.
 
 ## Project
@@ -44,7 +46,7 @@ Start here:
 - `project/accessibility.md` — automated gate and manual assistive-tech checklist.
 - `project/states-audit.md` — loading, empty, and error behavior per view.
 - `project/performance.md` — packaged startup, editor, canvas, judge, and memory numbers.
-- `project/open-blockers.md` — canonical external blockers B1–B11.
+- `project/open-blockers.md` — canonical external blockers (B1/B2 closed; B3–B12 tracked).
 - `project/definition-of-done.md`
 - `project/code-review-checklist.md`
 - `project/wireframes.md`

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { AiContext, DesignScenarioDetail } from '../shared/types'
+import type { AiContext, DesignScenarioDetail, LessonDetail } from '../shared/types'
 import {
   buildContext,
   defuseTags,
@@ -55,9 +55,44 @@ const design = {
   commonMistakes: [],
 } as unknown as DesignScenarioDetail
 
+const lesson = {
+  id: 'core/hash-maps',
+  slug: 'hash-maps',
+  title: 'Hash Maps and Sets',
+  category: 'data-structure',
+  summary: 'Turn a slow search into a fast lookup.',
+  difficulty: 'easy',
+  estimatedMinutes: 10,
+  order: 3,
+  tags: ['hash-map'],
+  exerciseCount: 2,
+  packId: 'core',
+  packName: 'Core',
+  source: 'bundled',
+  content: [
+    '# Hash Maps',
+    '',
+    '## The complement trick',
+    '',
+    'Check before insert so a value does not pair with itself.',
+    '',
+    '## Collisions',
+    '',
+    'Two keys can share a bucket.',
+  ].join('\n'),
+  prerequisites: [],
+  keyPoints: ['Average O(1) lookup.', 'Store what you have seen.', 'Check before insert.'],
+  complexity: [{ operation: 'Lookup', time: 'O(1)', space: 'O(1)' }],
+  exercises: [],
+  commonMistakes: ['SECRET MISTAKE'],
+  interviewNotes: ['State the average case.'],
+  checkYourself: [{ question: 'Why?', answer: 'SECRET ANSWER' }],
+} as unknown as LessonDetail
+
 const content = {
   getProblem: () => problem,
   getDesign: () => design,
+  getLesson: () => lesson,
 } as unknown as ContentRepository
 
 const failure = {
@@ -175,6 +210,28 @@ describe('buildContext', () => {
 
     expect(built.preview.estimatedTokens).toBeLessThanOrEqual(built.preview.budgetTokens)
     expect(built.preview.droppedSections).toContain('Prior hints')
+  })
+
+  it('sends only the selected lesson excerpt and question', () => {
+    const built = buildContext(
+      {
+        feature: 'concept',
+        concept: {
+          lessonId: 'core/hash-maps',
+          section: 'The complement trick',
+          question: 'Why check before inserting?',
+        },
+      },
+      { content, contextWindow: 32768 },
+    )
+
+    expect(built.preview.text).toContain('<lesson_brief>')
+    expect(built.preview.text).toContain('<lesson_excerpt>')
+    expect(built.preview.text).toContain('<learner_question>')
+    expect(built.preview.text).toContain('Check before insert')
+    expect(built.preview.text).not.toContain('Two keys can share a bucket')
+    expect(built.preview.text).not.toContain('SECRET MISTAKE')
+    expect(built.preview.text).not.toContain('SECRET ANSWER')
   })
 
   it('never includes the reference design or checklist', () => {

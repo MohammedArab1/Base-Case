@@ -5,6 +5,10 @@ Captured automatically from the Playwright suite with
 The screenshots use a fresh local profile and the mock AI provider; no real
 account, network service, or personal data is involved.
 
+> These images predate the Learn library. They remain representative of the
+> coding, design, review, and AI flows, but the sidebar now also includes
+> **Learn**. Regenerate after the next UI capture pass.
+
 ## Coding workspace
 
 The inspector can sit beside the statement and editor on wide windows, or stack

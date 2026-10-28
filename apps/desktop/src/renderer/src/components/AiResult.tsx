@@ -2,6 +2,7 @@ import type { JSX } from 'react'
 import type {
   AiApproachResult,
   AiComplexityResult,
+  AiConceptResult,
   AiDesignNotesResult,
   AiExplainBackResult,
   AiExplainResult,
@@ -207,6 +208,38 @@ export function AiResult({ feature, result, rawText }: AiResultProps): JSX.Eleme
           items={data.followUpQuestions}
           testId="ai-design-followups"
         />
+      </div>
+    )
+  }
+
+  if (feature === 'concept') {
+    const data = result as AiConceptResult
+
+    return (
+      <div className="mt-3" data-testid="ai-result-concept">
+        <p className="m-0 text-sm leading-relaxed text-bc-text">{data.explanation}</p>
+        <div className="mt-3 rounded-lg border border-bc-border bg-bc-surface-muted p-2.5">
+          <h4 className="m-0 text-xs font-semibold uppercase tracking-wide text-bc-muted">
+            Analogy
+          </h4>
+          <p className="m-0 mt-1 text-sm leading-relaxed text-bc-text">{data.analogy}</p>
+        </div>
+        <div className="mt-2 rounded-lg border border-bc-border bg-bc-surface-muted p-2.5">
+          <h4 className="m-0 text-xs font-semibold uppercase tracking-wide text-bc-muted">
+            Tiny example
+          </h4>
+          <p className="m-0 mt-1 text-sm leading-relaxed text-bc-text">{data.example}</p>
+        </div>
+        <p className="m-0 mt-3 rounded-lg border border-bc-border bg-bc-surface-muted p-2.5 text-sm leading-relaxed text-bc-text">
+          {data.checkQuestion}
+        </p>
+        {data.relatedConcepts.length > 0 ? (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {data.relatedConcepts.map((concept) => (
+              <Badge key={concept}>{concept}</Badge>
+            ))}
+          </div>
+        ) : null}
       </div>
     )
   }

@@ -83,6 +83,14 @@ const followUpSchema = z.object({
   question: z.string().min(1).max(1000),
 })
 
+const conceptSchema = z.object({
+  explanation: paragraph,
+  analogy: z.string().min(1).max(1200),
+  example: paragraph,
+  checkQuestion: shortText,
+  relatedConcepts: z.array(z.string().min(1).max(120)).max(6),
+})
+
 export const aiOutputSchemas = {
   explain: explainSchema,
   hint: hintSchema,
@@ -92,6 +100,7 @@ export const aiOutputSchemas = {
   explainBack: explainBackSchema,
   designNotes: designNotesSchema,
   followUp: followUpSchema,
+  concept: conceptSchema,
 } satisfies Record<AiFeature, z.ZodTypeAny>
 
 /** JSON Schema for providers that implement structured outputs. */

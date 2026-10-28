@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Windows overlap",
+      "body": "Neighboring windows share most of their elements. Can you keep the useful candidates from the previous window instead of scanning every value again?"
+    },
+    {
+      "level": 2,
+      "title": "A deque of candidates",
+      "body": "Keep indices in a deque whose values decrease from front to back. The front is always the maximum of the current window."
+    },
+    {
+      "level": 3,
+      "title": "Maintain the decreasing order",
+      "body": "Before adding a new index, remove indices from the back while their values are no larger than the new value; they can never be the maximum again. Then remove the front index if it has fallen out of the window."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "For each index i: pop back while the deque is non-empty and nums[back] <= nums[i]; push i. If the front index is <= i - k, pop it. Once i >= k - 1, append nums[front]."
+    }
+  ]
+}

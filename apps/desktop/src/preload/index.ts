@@ -27,6 +27,9 @@ import type {
   GradeReviewResult,
   JudgeRunEvent,
   JudgeStatus,
+  LessonDetail,
+  LessonProgress,
+  LessonSummary,
   MistakeTag,
   PackImportKind,
   PackPreviewResult,
@@ -44,6 +47,7 @@ import type {
   SaveDraftInput,
   SaveProblemNoteInput,
   ContentCollectionSummary,
+  SetLessonCompleteInput,
   SettingsPatch,
   Stats,
   SubmitDesignInput,
@@ -86,6 +90,13 @@ const api: BaseCaseApi = {
     collections: () => invoke<ContentCollectionSummary[]>(channels.contentCollections),
     get: (problemId: string) => invoke<ProblemDetail>(channels.contentGet, problemId),
     search: (query: string) => invoke<ProblemSummary[]>(channels.contentSearch, query),
+  },
+  learn: {
+    list: () => invoke<LessonSummary[]>(channels.learnList),
+    get: (lessonId: string) => invoke<LessonDetail>(channels.learnGet, lessonId),
+    progress: () => invoke<LessonProgress[]>(channels.learnProgress),
+    setComplete: (input: SetLessonCompleteInput) =>
+      invoke<LessonProgress>(channels.learnSetComplete, input),
   },
   judge: {
     run: (input: RunInput) => invoke<RunResult>(channels.judgeRun, input),

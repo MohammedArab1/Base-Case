@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { emptyDesignNotes } from '../shared/types'
-import { aiRequestSchema } from './ipc-schemas'
+import { aiRequestSchema, setLessonCompleteSchema } from './ipc-schemas'
 
 const design = {
   scenarioId: 'core/url-shortener',
@@ -48,6 +48,37 @@ describe('aiRequestSchema', () => {
     })
 
     expect(result.success).toBe(false)
+  })
+
+  it('accepts a lesson clarification with a focus section', () => {
+    const result = aiRequestSchema.safeParse({
+      feature: 'concept',
+      concept: {
+        lessonId: 'core/hash-maps',
+        section: 'The complement trick',
+        question: 'Why check before inserting?',
+      },
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects a lesson clarification without a question', () => {
+    const result = aiRequestSchema.safeParse({
+      feature: 'concept',
+      concept: { lessonId: 'core/hash-maps', question: '' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('validates lesson completion payloads', () => {
+    expect(
+      setLessonCompleteSchema.safeParse({ lessonId: 'core/big-o', completed: true }).success,
+    ).toBe(true)
+    expect(
+      setLessonCompleteSchema.safeParse({ lessonId: 'not-namespaced', completed: true }).success,
+    ).toBe(false)
   })
 
   it('rejects a design feature carrying a coding context', () => {

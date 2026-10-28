@@ -1,0 +1,4 @@
+{"input":{"words":["apple","app","apricot","banana"],"queries":["ap","app","ban","z"]},"expected":[3,2,1,0]}
+{"input":{"words":["a","a","ab"],"queries":["a","ab","abc"]},"expected":[3,1,0]}
+{"input":{"words":["code","coder","coding","dog"],"queries":["co","cod","code","d"]},"expected":[3,3,2,1]}
+{"input":{"words":["x"],"queries":["x"]},"expected":[1]}

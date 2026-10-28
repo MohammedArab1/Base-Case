@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "core/requirements-and-estimation",
+  "slug": "requirements-and-estimation",
+  "title": "Requirements and Back-of-Envelope Estimation",
+  "category": "system-design",
+  "summary": "Turn a vague prompt into numbers you can design against, without pretending the estimates are exact.",
+  "difficulty": "easy",
+  "estimatedMinutes": 12,
+  "order": 24,
+  "tags": ["system-design", "requirements", "capacity", "estimation"],
+  "prerequisites": ["system-design-interview"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Functional requirements define what the system does; non-functional requirements define how well it must do it.",
+    "Estimate reads, writes, storage, and bandwidth from daily users and per-user actions.",
+    "Average QPS is not peak QPS; peak is often 2-5x average for consumer systems.",
+    "State assumptions and round aggressively. The goal is the right order of magnitude.",
+    "Availability and latency targets determine replication, caching, and timeout budgets."
+  ],
+  "complexity": [
+    {
+      "operation": "Daily active users to QPS",
+      "time": "divide by 86,400",
+      "space": "peak = 2-5x average",
+      "note": "Use seconds per day for requests."
+    },
+    {
+      "operation": "Storage per year",
+      "time": "daily writes * bytes * 365",
+      "space": "add replication and indexes",
+      "note": "Replication multiplies raw storage."
+    },
+    {
+      "operation": "Bandwidth",
+      "time": "QPS * payload size",
+      "space": "ingress and egress",
+      "note": "Convert bytes/s to Mbps."
+    },
+    {
+      "operation": "Availability",
+      "time": "99.9% = ~43 min/month",
+      "space": "99.99% = ~4.3 min/month",
+      "note": "Each nine is expensive."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "rate-limiter", "search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Designing for average QPS without a peak estimate.",
+    "Forgetting replication and index overhead when estimating storage.",
+    "Treating an availability target as free; each additional nine adds complexity and cost.",
+    "Changing the assumptions halfway through without updating the numbers."
+  ],
+  "interviewNotes": [
+    "Write the formula, not just the result, so the interviewer can follow your reasoning.",
+    "Ask whether the read-to-write ratio is known; it changes the caching and replication strategy.",
+    "If you are unsure, give a range and say which end you would design for."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is peak QPS more important than average QPS for capacity planning?",
+      "answer": "The system must survive the busiest moment. Provisioning for the average leaves it overloaded during peaks."
+    },
+    {
+      "question": "How many seconds are in a day, rounded for estimation?",
+      "answer": "About 86,400. Round to 100,000 when a rough estimate is enough."
+    },
+    {
+      "question": "What does 99.9% availability mean in downtime per month?",
+      "answer": "About 43 minutes per month, assuming a 30-day month."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

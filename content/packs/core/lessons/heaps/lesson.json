@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "core/heaps",
+  "slug": "heaps",
+  "title": "Heaps and Priority Queues",
+  "category": "data-structure",
+  "summary": "Keep the smallest or largest item available without keeping the whole collection sorted.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 15,
+  "tags": ["heap", "priority-queue", "top-k", "streaming"],
+  "prerequisites": ["trees", "arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A min-heap keeps the smallest item at the root; a max-heap keeps the largest.",
+    "Push and pop are O(log n); peek is O(1).",
+    "A heap is a complete binary tree stored in an array, so it needs no node objects.",
+    "A size-k heap is the standard way to find the top k items in O(n log k) time."
+  ],
+  "complexity": [
+    {
+      "operation": "Peek the best item",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "The root is always the extreme."
+    },
+    {
+      "operation": "Push",
+      "time": "O(log n)",
+      "space": "O(1)",
+      "note": "Bubble up from the last slot."
+    },
+    {
+      "operation": "Pop",
+      "time": "O(log n)",
+      "space": "O(1)",
+      "note": "Move the last item to the root, bubble down."
+    },
+    {
+      "operation": "Build a heap from n items",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Heapify from the bottom up."
+    },
+    {
+      "operation": "Top k from n items",
+      "time": "O(n log k)",
+      "space": "O(k)",
+      "note": "Keep a size-k heap."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "kth-largest",
+      "nearest-points",
+      "merge-k-arrays",
+      "task-intervals",
+      "join-sticks"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Sorting the whole input when only the top k items are needed.",
+    "Using the wrong heap direction: a min-heap of size k keeps the k largest values, with the smallest of them on top.",
+    "Forgetting that Python's `heapq` is a min-heap, so max-heap problems need negated values.",
+    "Mutating an item already inside a heap without reheapifying it."
+  ],
+  "interviewNotes": [
+    "Say why a heap is better than sorting: O(n log k) versus O(n log n) when k is much smaller than n.",
+    "For merging k sorted lists, put the head of each list in a min-heap and pop the smallest repeatedly.",
+    "For scheduling, clarify whether the heap stores start times, end times, or remaining work."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does a size-k min-heap give the k largest values?",
+      "answer": "Keep the heap at size k. When a new value is larger than the smallest value in the heap, replace that smallest value. The heap ends up holding the k largest values seen."
+    },
+    {
+      "question": "Why is building a heap O(n) rather than O(n log n)?",
+      "answer": "Bottom-up heapify performs less work for most nodes. The total number of swaps is bounded by a constant times n."
+    },
+    {
+      "question": "How do you merge k sorted arrays with a heap?",
+      "answer": "Put the first value from each array into a min-heap with its array index. Pop the smallest, append it, and push the next value from that same array."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -5,6 +5,7 @@ import addFormats from 'ajv-formats'
 import {
   designSchema,
   hintsSchema,
+  lessonSchema,
   packSchema,
   problemSchema,
   rubricSchema,
@@ -13,6 +14,7 @@ import {
 import type {
   DesignScenario,
   HintFile,
+  Lesson,
   PackManifest,
   Problem,
   ProblemLanguage,
@@ -51,6 +53,7 @@ addFormats(ajv)
 const validatePackManifest = ajv.compile(packSchema)
 const validateProblemManifest = ajv.compile(problemSchema)
 const validateDesignManifest = ajv.compile(designSchema)
+const validateLessonManifest = ajv.compile(lessonSchema)
 const validateHints = ajv.compile(hintsSchema)
 const validateRubric = ajv.compile(rubricSchema)
 const validateTestCase = ajv.compile(testCaseSchema)
@@ -477,6 +480,113 @@ async function validateDesign(
   }
 }
 
+async function validateLesson(
+  root: string,
+  manifest: PackManifest,
+  slug: string,
+  seenIds: Set<string>,
+  issues: ValidationIssue[],
+  warnings: string[],
+): Promise<void> {
+  const manifestPath = `lessons/${slug}/lesson.json`
+  const lessonDirectory = resolveWithinRoot(root, `lessons/${slug}`)
+
+  if (!lessonDirectory) {
+    issues.push({ code: 'unsafe-path', path: manifestPath, message: 'Unsafe lesson path' })
+    return
+  }
+
+  const rawLesson = await readJsonFile(join(lessonDirectory, 'lesson.json'), manifestPath, issues)
+
+  if (
+    rawLesson === undefined ||
+    !applyValidator(validateLessonManifest, rawLesson, manifestPath, issues)
+  ) {
+    return
+  }
+
+  const lesson = rawLesson as Lesson
+  const expectedId = `${manifest.id}/${slug}`
+
+  if (lesson.slug !== slug) {
+    issues.push({
+      code: 'schema',
+      path: manifestPath,
+      message: `Lesson slug "${lesson.slug}" does not match pack entry "${slug}"`,
+    })
+  }
+
+  if (lesson.id !== expectedId) {
+    issues.push({
+      code: 'schema',
+      path: manifestPath,
+      message: `Lesson id "${lesson.id}" does not match "${expectedId}"`,
+    })
+  }
+
+  if (seenIds.has(lesson.id)) {
+    issues.push({
+      code: 'duplicate-id',
+      path: manifestPath,
+      message: `Duplicate content id "${lesson.id}"`,
+    })
+  }
+
+  seenIds.add(lesson.id)
+
+  const lessonRelative = `lessons/${slug}`
+  await checkReferencedFile(
+    root,
+    `${lessonRelative}/${lesson.content}`,
+    `${lessonRelative}/${lesson.content}`,
+    issues,
+  )
+
+  const lessonSlugs = new Set(manifest.lessons ?? [])
+
+  for (const prerequisite of lesson.prerequisites) {
+    if (!lessonSlugs.has(prerequisite)) {
+      issues.push({
+        code: 'schema',
+        path: manifestPath,
+        message: `Prerequisite "${prerequisite}" is not listed in lessons`,
+      })
+    }
+
+    if (prerequisite === slug) {
+      issues.push({
+        code: 'schema',
+        path: manifestPath,
+        message: 'A lesson cannot list itself as a prerequisite',
+      })
+    }
+  }
+
+  for (const problem of lesson.exercises.problems) {
+    if (!manifest.problems.includes(problem)) {
+      issues.push({
+        code: 'schema',
+        path: manifestPath,
+        message: `Exercise problem "${problem}" is not listed in problems`,
+      })
+    }
+  }
+
+  for (const design of lesson.exercises.designs) {
+    if (!manifest.designs.includes(design)) {
+      issues.push({
+        code: 'schema',
+        path: manifestPath,
+        message: `Exercise design "${design}" is not listed in designs`,
+      })
+    }
+  }
+
+  if (lesson.exercises.problems.length === 0 && lesson.exercises.designs.length === 0) {
+    warnings.push(`${lesson.id} has no linked practice exercises.`)
+  }
+}
+
 export async function validatePack(packDirectory: string): Promise<PackValidationResult> {
   const root = resolve(packDirectory)
   const issues: ValidationIssue[] = []
@@ -501,6 +611,33 @@ export async function validatePack(packDirectory: string): Promise<PackValidatio
 
   for (const slug of manifest.designs) {
     await validateDesign(root, manifest, slug, seenIds, issues, warnings)
+  }
+
+  for (const slug of manifest.lessons ?? []) {
+    await validateLesson(root, manifest, slug, seenIds, issues, warnings)
+  }
+
+  const lessonOrders = new Set<number>()
+
+  for (const slug of manifest.lessons ?? []) {
+    const lessonDirectory = resolveWithinRoot(root, `lessons/${slug}`)
+    if (!lessonDirectory) {
+      continue
+    }
+
+    try {
+      const lesson = JSON.parse(
+        await readFile(join(lessonDirectory, 'lesson.json'), 'utf8'),
+      ) as Lesson
+      if (typeof lesson.order === 'number') {
+        if (lessonOrders.has(lesson.order)) {
+          warnings.push(`Lesson order ${lesson.order} is used more than once.`)
+        }
+        lessonOrders.add(lesson.order)
+      }
+    } catch {
+      // Invalid lessons are reported with detailed issues above.
+    }
   }
 
   const collectionIds = new Set<string>()
@@ -543,8 +680,12 @@ export async function validatePack(packDirectory: string): Promise<PackValidatio
     }
   }
 
-  if (manifest.problems.length === 0 && manifest.designs.length === 0) {
-    warnings.push('Pack contains no problems or designs.')
+  if (
+    manifest.problems.length === 0 &&
+    manifest.designs.length === 0 &&
+    (manifest.lessons ?? []).length === 0
+  ) {
+    warnings.push('Pack contains no problems, designs, or lessons.')
   }
 
   if (!['CC-BY-SA-4.0', 'CC-BY-4.0', 'MIT'].includes(manifest.license)) {

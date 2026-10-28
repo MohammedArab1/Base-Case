@@ -42,6 +42,7 @@ const featureLabels: Record<AiFeature, string> = {
   explainBack: 'Explain-back check',
   designNotes: 'Design notes review',
   followUp: 'Follow-up interviewer',
+  concept: 'Lesson clarification',
 }
 
 const reservedHeaders = new Set([

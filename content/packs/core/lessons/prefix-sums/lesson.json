@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "core/prefix-sums",
+  "slug": "prefix-sums",
+  "title": "Prefix Sums and Prefix Products",
+  "category": "algorithm",
+  "summary": "Precompute running totals so any range sum becomes a subtraction instead of a scan.",
+  "difficulty": "medium",
+  "estimatedMinutes": 10,
+  "order": 6,
+  "tags": ["prefix-sum", "prefix-product", "arrays", "subarrays"],
+  "prerequisites": ["arrays-and-strings", "hash-maps"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A prefix array stores the total of everything before each index.",
+    "The sum of a range is prefix[right] - prefix[left], which is O(1) after O(n) preprocessing.",
+    "A prefix sum plus a hash map counts subarrays with a target sum in one pass.",
+    "Prefix and suffix products can replace division when zeroes make division unsafe."
+  ],
+  "complexity": [
+    {
+      "operation": "Build prefix sums",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "One extra entry for the empty prefix."
+    },
+    {
+      "operation": "Range sum query",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "After preprocessing."
+    },
+    {
+      "operation": "Count target subarrays",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "Prefix sum plus a frequency map."
+    },
+    {
+      "operation": "Prefix and suffix products",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "Output can use O(1) extra if allowed."
+    }
+  ],
+  "exercises": {
+    "problems": ["target-totals", "product-except", "trapped-water", "path-count"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Using prefix[right] - prefix[left] when the range should include the left endpoint.",
+    "Forgetting the empty prefix in the frequency map, which misses subarrays that start at index 0.",
+    "Dividing by zero in a prefix-product problem when the input contains zeroes.",
+    "Building prefix sums but then scanning the range again anyway."
+  ],
+  "interviewNotes": [
+    "Define the prefix array clearly: `prefix[i]` is the sum of the first i items, or the sum before index i. Mixing conventions causes off-by-one bugs.",
+    "If the problem asks for many range queries, mention that O(n) preprocessing buys O(1) queries.",
+    "For subarray counts, explain why the map stores frequencies rather than indices."
+  ],
+  "checkYourself": [
+    {
+      "question": "What is prefix[4] if prefix[0] is the empty sum?",
+      "answer": "It is the sum of the first four items, at indices 0 through 3."
+    },
+    {
+      "question": "Why does the subarray-counting map start with {0: 1}?",
+      "answer": "The empty prefix has sum 0. Counting it lets a subarray that starts at index 0 be found when the current prefix sum equals the target."
+    },
+    {
+      "question": "Why use prefix and suffix products instead of dividing the total product?",
+      "answer": "Division fails when a value is zero, and may be inaccurate for some numeric types. A prefix and suffix pass avoids division entirely."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

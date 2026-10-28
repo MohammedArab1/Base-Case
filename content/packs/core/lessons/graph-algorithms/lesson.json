@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "core/graph-algorithms",
+  "slug": "graph-algorithms",
+  "title": "Topological Sort and Union-Find",
+  "category": "algorithm",
+  "summary": "Two ways to reason about order and connectivity: one for dependencies, one for merging groups.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 18,
+  "tags": ["topological-sort", "union-find", "graphs", "dependencies"],
+  "prerequisites": ["graphs-and-traversal"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Topological sort orders a directed acyclic graph so every edge points forward.",
+    "Kahn's algorithm repeatedly removes nodes with no remaining prerequisites.",
+    "Union-find tracks disjoint groups with near-constant amortized operations.",
+    "Path compression and union by rank keep union-find fast."
+  ],
+  "complexity": [
+    {
+      "operation": "Topological sort (Kahn)",
+      "time": "O(V + E)",
+      "space": "O(V)",
+      "note": "Queue of zero-indegree nodes."
+    },
+    {
+      "operation": "Cycle check with topological sort",
+      "time": "O(V + E)",
+      "space": "O(V)",
+      "note": "A cycle leaves nodes unprocessed."
+    },
+    {
+      "operation": "Union-find operation",
+      "time": "O(α(n)) amortized",
+      "space": "O(n)",
+      "note": "α is the inverse Ackermann function."
+    },
+    {
+      "operation": "Kruskal's minimum spanning tree",
+      "time": "O(E log E)",
+      "space": "O(V)",
+      "note": "Sort edges, then union endpoints."
+    }
+  ],
+  "exercises": {
+    "problems": ["build-order", "network-clusters", "island-count", "center-roots"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Running topological sort on a graph with a cycle and expecting every node to appear.",
+    "Forgetting to decrease a neighbor's indegree after removing a node.",
+    "Using union-find for shortest paths; it tracks connectivity, not distance.",
+    "Skipping path compression and then wondering why repeated finds are slow."
+  ],
+  "interviewNotes": [
+    "If the problem says prerequisites, build order, or dependencies, say topological sort.",
+    "If the problem says clusters, connected groups, or merging accounts, say union-find.",
+    "For union-find, explain path compression and union by rank in one sentence each."
+  ],
+  "checkYourself": [
+    {
+      "question": "How do you know a directed graph has a cycle after Kahn's algorithm?",
+      "answer": "If fewer than V nodes were removed, the remaining nodes have a cycle among them."
+    },
+    {
+      "question": "Why is union-find good for incremental connectivity?",
+      "answer": "Each union merges two groups in near-constant time, and find tells whether two nodes are already in the same group."
+    },
+    {
+      "question": "What does path compression do?",
+      "answer": "It points nodes directly at the group root during find, flattening the tree for future queries."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

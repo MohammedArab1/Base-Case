@@ -6,6 +6,7 @@ import { validatePack } from '@base-case/schema'
 import type {
   DesignScenario,
   HintFile,
+  Lesson,
   PackManifest,
   Problem,
   Rubric,
@@ -17,6 +18,9 @@ import type {
   DesignScenarioDetail,
   DesignScenarioSummary,
   Language,
+  LessonDetail,
+  LessonExercise,
+  LessonSummary,
   ProblemDetail,
   ProblemSummary,
 } from '../shared/types'
@@ -50,6 +54,14 @@ interface LoadedDesign {
   readonly packId: string
   readonly packName: string
   readonly source: DesignScenarioSummary['source']
+}
+
+interface LoadedLesson {
+  readonly manifest: Lesson
+  readonly content: string
+  readonly packId: string
+  readonly packName: string
+  readonly source: LessonSummary['source']
 }
 
 export interface ProblemSearchDocument {
@@ -273,11 +285,13 @@ function languageTemplates(signature: Signature): Record<Language, string> {
 export class ContentRepository {
   private readonly problems = new Map<string, LoadedProblem>()
   private readonly designs = new Map<string, LoadedDesign>()
+  private readonly lessons = new Map<string, LoadedLesson>()
   private readonly packs = new Map<string, LoadedPack>()
 
   async initialize(userDataPath?: string): Promise<void> {
     this.problems.clear()
     this.designs.clear()
+    this.lessons.clear()
     this.packs.clear()
 
     const bundledRoot = join(contentRoot(), 'packs')
@@ -325,6 +339,71 @@ export class ContentRepository {
     return [...this.designs.values()].map((design) => this.designSummary(design))
   }
 
+  hasLesson(lessonId: string): boolean {
+    return this.lessons.has(lessonId)
+  }
+
+  listLessons(): LessonSummary[] {
+    return [...this.lessons.values()]
+      .map((lesson) => this.lessonSummary(lesson))
+      .sort((left, right) => left.order - right.order || left.title.localeCompare(right.title))
+  }
+
+  getLesson(lessonId: string): LessonDetail {
+    const lesson = this.lessons.get(lessonId)
+
+    if (!lesson) {
+      throw new Error(`Unknown lesson: ${lessonId}`)
+    }
+
+    const packId = lesson.packId
+    const prerequisites = lesson.manifest.prerequisites
+      .map((slug) => this.lessons.get(`${packId}/${slug}`))
+      .filter((entry): entry is LoadedLesson => entry !== undefined)
+      .map((entry) => ({
+        id: entry.manifest.id,
+        slug: entry.manifest.slug,
+        title: entry.manifest.title,
+      }))
+
+    const exercises: LessonExercise[] = [
+      ...lesson.manifest.exercises.problems
+        .map((slug) => this.problems.get(`${packId}/${slug}`))
+        .filter((entry): entry is LoadedProblem => entry !== undefined)
+        .map((entry) => ({
+          kind: 'problem' as const,
+          id: entry.manifest.id,
+          slug: entry.manifest.slug,
+          title: entry.manifest.title,
+          difficulty: entry.manifest.difficulty,
+          subtitle: entry.manifest.patterns.join(', '),
+        })),
+      ...lesson.manifest.exercises.designs
+        .map((slug) => this.designs.get(`${packId}/${slug}`))
+        .filter((entry): entry is LoadedDesign => entry !== undefined)
+        .map((entry) => ({
+          kind: 'design' as const,
+          id: entry.manifest.id,
+          slug: entry.manifest.slug,
+          title: entry.manifest.title,
+          difficulty: entry.manifest.difficulty,
+          subtitle: entry.manifest.tags.join(', '),
+        })),
+    ]
+
+    return {
+      ...this.lessonSummary(lesson),
+      content: lesson.content,
+      prerequisites,
+      keyPoints: lesson.manifest.keyPoints,
+      complexity: lesson.manifest.complexity,
+      exercises,
+      commonMistakes: lesson.manifest.commonMistakes,
+      interviewNotes: lesson.manifest.interviewNotes,
+      checkYourself: lesson.manifest.checkYourself,
+    }
+  }
+
   getDesign(scenarioId: string): DesignScenarioDetail {
     const design = this.designs.get(scenarioId)
 
@@ -358,6 +437,7 @@ export class ContentRepository {
       source: pack.source,
       problemCount: pack.manifest.problems.length,
       designCount: pack.manifest.designs.length,
+      lessonCount: (pack.manifest.lessons ?? []).length,
       path: pack.directory,
     }))
   }
@@ -523,6 +603,22 @@ export class ContentRepository {
         })
       }
     }
+
+    for (const slug of validation.pack.lessons ?? []) {
+      try {
+        await this.loadLesson(directory, validation.pack, slug, source)
+      } catch (error) {
+        if (required) {
+          throw error
+        }
+
+        getLogger('content').warn('lesson.skipped', {
+          pack: validation.pack.id,
+          slug,
+          message: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
   }
 
   private async loadProblem(
@@ -626,6 +722,53 @@ export class ContentRepository {
       packId: design.packId,
       packName: design.packName,
       source: design.source,
+    }
+  }
+
+  private async loadLesson(
+    packDirectory: string,
+    pack: PackManifest,
+    slug: string,
+    source: LessonSummary['source'],
+  ): Promise<void> {
+    const directory = join(packDirectory, 'lessons', slug)
+    const manifest = await readJson<Lesson>(join(directory, 'lesson.json'))
+
+    if (manifest.id !== `${pack.id}/${slug}`) {
+      throw new Error(`Lesson ${slug} has an unexpected id: ${manifest.id}`)
+    }
+
+    if (this.lessons.has(manifest.id)) {
+      throw new Error(`Duplicate lesson id "${manifest.id}" from ${packDirectory}`)
+    }
+
+    const content = await readFile(join(directory, manifest.content), 'utf8')
+
+    this.lessons.set(manifest.id, {
+      manifest,
+      content,
+      packId: pack.id,
+      packName: pack.name,
+      source,
+    })
+  }
+
+  private lessonSummary(lesson: LoadedLesson): LessonSummary {
+    return {
+      id: lesson.manifest.id,
+      slug: lesson.manifest.slug,
+      title: lesson.manifest.title,
+      category: lesson.manifest.category,
+      summary: lesson.manifest.summary,
+      difficulty: lesson.manifest.difficulty,
+      estimatedMinutes: lesson.manifest.estimatedMinutes,
+      order: lesson.manifest.order,
+      tags: lesson.manifest.tags,
+      exerciseCount:
+        lesson.manifest.exercises.problems.length + lesson.manifest.exercises.designs.length,
+      packId: lesson.packId,
+      packName: lesson.packName,
+      source: lesson.source,
     }
   }
 }

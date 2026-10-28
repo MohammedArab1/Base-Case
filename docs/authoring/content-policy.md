@@ -5,7 +5,8 @@ These rules are non-negotiable for a public open-source project.
 ## Originality
 
 1. Do not copy LeetCode statements, examples, constraints, test cases, or
-   editorial prose.
+   editorial prose. The same rule applies to lessons: write your own
+   explanations, analogies, diagrams, and worked examples.
 2. Do not scrape LeetCode. No browser extension, automated fetch, or bundled
    scraped data.
 3. Do not use LeetCode, NeetCode, Blind 75, or other trademarks in the app name,
@@ -14,13 +15,15 @@ These rules are non-negotiable for a public open-source project.
    copyrightable; the expression is. Use different framing, examples, and tests.
 5. Do not copy test cases from another judge. Generate your own and validate
    them with independent solutions.
-6. Attribute open-license sources. If you adapt an Exercism or other MIT/CC
+6. Lesson diagrams and worked examples are content. Do not trace or reproduce
+   another course's diagrams, even if the underlying algorithm is the same.
+7. Attribute open-license sources. If you adapt an Exercism or other MIT/CC
    problem, follow its license and attribution requirements.
-7. Contributors must attest ownership through the DCO sign-off and the content
+8. Contributors must attest ownership through the DCO sign-off and the content
    PR checklist.
-8. Keep the importer disclaimer: users are responsible for content they import.
-9. Consult a lawyer before commercial launch. This document is not legal
-   advice.
+9. Keep the importer disclaimer: users are responsible for content they import.
+10. Consult a lawyer before commercial launch. This document is not legal
+    advice.
 
 ## Trademark-safe naming
 
@@ -68,6 +71,7 @@ Every content PR needs:
 ## Review checklist
 
 - [ ] Statement is original and self-contained.
+- [ ] Lesson prose, diagrams, and worked examples are original.
 - [ ] Examples match the tests.
 - [ ] Constraints are sufficient.
 - [ ] Signature matches the reference solutions.
@@ -76,6 +80,7 @@ Every content PR needs:
 - [ ] Performance tests are calibrated.
 - [ ] Hints do not leak full code before level 4.
 - [ ] Explanation is correct.
+- [ ] Lesson links at least one existing exercise.
 - [ ] License/attribution present.
 - [ ] No LeetCode text or test data.
 

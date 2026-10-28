@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/greedy-and-intervals",
+  "slug": "greedy-and-intervals",
+  "title": "Greedy Algorithms and Intervals",
+  "category": "algorithm",
+  "summary": "Make the locally best choice and prove it is safe; sort intervals so overlaps become adjacent.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 19,
+  "tags": ["greedy", "intervals", "sorting", "scheduling"],
+  "prerequisites": ["sorting", "two-pointers"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A greedy algorithm takes the best local choice and never reconsiders it.",
+    "Greedy is only correct when an exchange argument shows the local choice can be part of an optimal solution.",
+    "Sorting intervals by start makes merging easy; sorting by end makes maximum scheduling easy.",
+    "For interval overlap, compare the next start with the current end."
+  ],
+  "complexity": [
+    {
+      "operation": "Sort intervals",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Usually the dominant cost."
+    },
+    {
+      "operation": "Merge overlapping intervals",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Sort, then one pass."
+    },
+    {
+      "operation": "Maximum non-overlapping meetings",
+      "time": "O(n log n)",
+      "space": "O(1)",
+      "note": "Sort by end time."
+    },
+    {
+      "operation": "Minimum rooms for intervals",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Sort starts and ends, or use a heap."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "stock-peaks",
+      "majority-value",
+      "job-schedule",
+      "fuel-circuit",
+      "join-sticks",
+      "meeting-overlap",
+      "merge-window",
+      "task-intervals",
+      "shift-merge",
+      "palindrome-build"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Assuming every greedy choice is correct without a proof or a counterexample check.",
+    "Sorting by start when the scheduling rule needs the earliest end.",
+    "Treating touching intervals as overlapping when the problem defines them as separate.",
+    "Forgetting that a later greedy choice may depend on the state left by the previous one."
+  ],
+  "interviewNotes": [
+    "State the greedy choice, then give the exchange argument in one or two sentences.",
+    "If you cannot prove the greedy choice, say so and consider sorting plus DP.",
+    "For interval problems, clarify whether endpoints are inclusive and whether zero-length intervals are allowed."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does choosing the meeting that ends earliest maximize the number of meetings?",
+      "answer": "It leaves at least as much room for every later meeting as any other choice. Replacing the first meeting in an optimal schedule with the earliest-ending one cannot reduce the number of meetings."
+    },
+    {
+      "question": "How do you merge overlapping intervals after sorting by start?",
+      "answer": "Keep the current merged interval. If the next start is at or before the current end, extend the end to the maximum of both ends. Otherwise, emit the current interval and start a new one."
+    },
+    {
+      "question": "Why is greedy not always correct for the 0/1 knapsack problem?",
+      "answer": "Taking the best value-to-weight item first can block a combination of two items with a better total value. The choice affects future capacity, so a local optimum is not guaranteed to be global."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

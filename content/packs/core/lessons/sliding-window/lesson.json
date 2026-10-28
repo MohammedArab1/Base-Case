@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "core/sliding-window",
+  "slug": "sliding-window",
+  "title": "Sliding Windows",
+  "category": "algorithm",
+  "summary": "Reuse work between overlapping ranges so each item enters and leaves the window once.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 5,
+  "tags": ["sliding-window", "strings", "hash-map", "deque"],
+  "prerequisites": ["two-pointers", "hash-maps"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A fixed window adds one item and removes one item per step, avoiding a full rescan.",
+    "A variable window expands the right edge and shrinks the left edge until a condition holds again.",
+    "Maintain only the state the condition needs: a sum, a count, or a frequency table.",
+    "Every index enters and leaves the window at most once, so the total work is O(n)."
+  ],
+  "complexity": [
+    {
+      "operation": "Fixed-size window scan",
+      "time": "O(n)",
+      "space": "O(1) or O(k)",
+      "note": "k is the window size when state is stored."
+    },
+    {
+      "operation": "Variable-size window scan",
+      "time": "O(n)",
+      "space": "O(k)",
+      "note": "Each item enters and leaves once."
+    },
+    {
+      "operation": "Character frequency update",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Alphabet size is fixed."
+    },
+    {
+      "operation": "Window maximum with a deque",
+      "time": "O(n)",
+      "space": "O(k)",
+      "note": "Monotonic deque of candidate indices."
+    }
+  ],
+  "exercises": {
+    "problems": ["longest-unique-stretch", "anagram-windows", "min-window", "window-max"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Rebuilding the window state from scratch after each move, which defeats the purpose.",
+    "Shrinking the window with an `if` when the condition may require several removals; use `while`.",
+    "Forgetting to remove the element that leaves a fixed window.",
+    "Tracking counts but never checking when a count becomes invalid."
+  ],
+  "interviewNotes": [
+    "Say what the window represents in words: 'the longest substring that still has unique characters'.",
+    "State the expand and shrink rules before writing code.",
+    "If the window needs both ends, mention whether a deque is required for O(1) updates."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is a variable sliding window O(n) even though it has a nested-looking loop?",
+      "answer": "The right pointer visits each index once, and the left pointer also moves forward only. Each index is added and removed at most once, so the total pointer movement is O(n)."
+    },
+    {
+      "question": "What should happen when the window condition becomes invalid?",
+      "answer": "Move the left edge forward, updating the state, until the condition is valid again. Use a while loop because one move may not be enough."
+    },
+    {
+      "question": "When do you need a deque instead of a simple counter?",
+      "answer": "When the window needs an order-sensitive answer such as a maximum or minimum, and you must remove expired candidates from both ends."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -1,14 +1,15 @@
 # Accessibility review — Phase 9
 
-Last reviewed: 2026-10-25
+Last reviewed: 2026-10-27
 Target: WCAG 2.1 A/AA for the core desktop workflow.
 
 ## Automated gate
 
-`apps/desktop/e2e/app.spec.ts` runs axe-core against six main views — Today,
-Coding, System Design (including an open scenario and the Excalidraw canvas),
-Review, Progress, and Settings — and a second test covers onboarding, the
-command palette, forced-colors mode, and reduced motion. The tests fail on any
+`apps/desktop/e2e/app.spec.ts` runs axe-core against seven main views — Today,
+Learn (including an open lesson), Coding, System Design (including an open
+scenario and the Excalidraw canvas), Review, Progress, and Settings — and a
+second test covers onboarding, the command palette, forced-colors mode, and
+reduced motion. The tests fail on any
 `serious` or `critical` violation for the `wcag2a`, `wcag2aa`, `wcag21a`, and
 `wcag21aa` rule sets.
 
@@ -18,7 +19,8 @@ pnpm --filter @base-case/desktop exec playwright test -g "accessibility|forced c
 ```
 
 Current result: **pass**, including the keyboard skip link, the design canvas,
-forced-colors emulation, and the reduced-motion transition check.
+the lesson reader and practice links, forced-colors emulation, and the
+reduced-motion transition check.
 
 ## Implemented controls
 
@@ -51,10 +53,11 @@ forced-colors emulation, and the reduced-motion transition check.
 These require a human at a real desktop and are not covered by the automated
 gate:
 
-- [ ] VoiceOver on macOS: complete onboarding, run a sample, open hints, submit,
-      grade a review, and import a pack without a mouse.
-- [ ] NVDA on Windows: same flow, including the Excalidraw canvas toolbar and
-      dialogs.
+- [ ] VoiceOver on macOS: complete onboarding, open a lesson, reach its linked
+      practice, run a sample, open hints, submit, grade a review, and import a
+      pack without a mouse.
+- [ ] NVDA on Windows: same flow, including the lesson AI preview, the
+      Excalidraw canvas toolbar, and dialogs.
 - [ ] 200% OS zoom and the app's minimum 1024×700 window: no clipped controls or
       unreachable actions.
 - [ ] High-contrast / forced-colors mode: focus indicators, badges, charts, and

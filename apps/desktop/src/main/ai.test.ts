@@ -58,9 +58,24 @@ const design = {
   commonMistakes: [],
 } as unknown as DesignScenarioDetail
 
+const lesson = {
+  id: 'core/hash-maps',
+  title: 'Hash Maps and Sets',
+  category: 'data-structure',
+  difficulty: 'easy',
+  summary: 'Turn a slow search into a fast lookup.',
+  content: '## The idea\n\nRemember what you have seen.',
+  keyPoints: ['Average O(1) lookup.', 'Store what you have seen.', 'Check before insert.'],
+  complexity: [{ operation: 'Lookup', time: 'O(1)', space: 'O(1)' }],
+  commonMistakes: [],
+  interviewNotes: [],
+  checkYourself: [],
+}
+
 const content = {
   getProblem: () => problem,
   getDesign: () => design,
+  getLesson: () => lesson,
 } as unknown as ContentRepository
 
 const context: AiContext = {
@@ -188,6 +203,26 @@ describe('AiService', () => {
         headers: { 'x-opencode-session': 'session-1' },
       }),
     )
+  })
+
+  it('clarifies a lesson with the concept contract', async () => {
+    const outcome = await service.run(
+      {
+        feature: 'concept',
+        concept: {
+          lessonId: 'core/hash-maps',
+          section: 'The idea',
+          question: 'Why is a lookup fast?',
+        },
+      },
+      'req-concept',
+      () => undefined,
+    )
+
+    expect(outcome.result).toMatchObject({
+      explanation: expect.any(String),
+      relatedConcepts: expect.any(Array),
+    })
   })
 
   it('evaluates an explain-back response', async () => {

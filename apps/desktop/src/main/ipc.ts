@@ -11,7 +11,7 @@ import type { AiService } from './ai'
 import type { ContentRepository } from './content'
 import type { AppDatabase } from './database'
 import { renderDesignAttemptMarkdown } from './design-export'
-import { toIpcError } from './ipc-errors'
+import { AppError, toIpcError } from './ipc-errors'
 import {
   aiConfigSchema,
   aiFeedbackSchema,
@@ -23,6 +23,7 @@ import {
   draftInputSchema,
   exportDesignAttemptSchema,
   gradeReviewSchema,
+  lessonIdSchema,
   noInputSchema,
   packIdSchema,
   packImportKindSchema,
@@ -37,6 +38,7 @@ import {
   saveDraftSchema,
   sceneJsonSchema,
   searchQuerySchema,
+  setLessonCompleteSchema,
   settingsPatchSchema,
   submitDesignSchema,
   tagAttemptSchema,
@@ -50,6 +52,7 @@ import type { AttemptsRepository } from './repositories/attempts'
 import type { ContentIndexRepository } from './repositories/content-index'
 import type { DesignRepository } from './repositories/design'
 import type { DraftsRepository } from './repositories/drafts'
+import type { LessonProgressRepository } from './repositories/lessons'
 import type { MistakesRepository } from './repositories/mistakes'
 import type { ProblemNotesRepository } from './repositories/notes'
 import type { ReviewRepository } from './repositories/review'
@@ -66,6 +69,7 @@ interface Services {
   readonly notes: ProblemNotesRepository
   readonly review: ReviewRepository
   readonly mistakes: MistakesRepository
+  readonly lessons: LessonProgressRepository
   readonly userData: UserDataRepository
   readonly judge: JudgeClient
   readonly ai: AiService
@@ -130,6 +134,7 @@ export function registerIpc({
   notes,
   review,
   mistakes,
+  lessons,
   userData,
   judge,
   ai,
@@ -178,6 +183,31 @@ export function registerIpc({
   register(channels.contentSearch, searchQuerySchema, (query) =>
     content.getSummaries(contentIndex.search(query)),
   )
+
+  register(channels.learnList, noInputSchema, () => content.listLessons())
+  register(channels.learnGet, lessonIdSchema, (lessonId) => {
+    const lesson = content.getLesson(lessonId)
+
+    try {
+      lessons.touch(lessonId)
+    } catch (error) {
+      // A recency write must never hide a readable lesson.
+      getLogger('learn').warn('progress.touch_failed', {
+        lessonId,
+        message: error instanceof Error ? error.message : String(error),
+      })
+    }
+
+    return lesson
+  })
+  register(channels.learnProgress, noInputSchema, () => lessons.list())
+  register(channels.learnSetComplete, setLessonCompleteSchema, (input) => {
+    if (!content.hasLesson(input.lessonId)) {
+      throw new AppError('not_found', `Unknown lesson: ${input.lessonId}`)
+    }
+
+    return lessons.setComplete(input.lessonId, input.completed)
+  })
 
   register(channels.judgeStatus, noInputSchema, () => judge.status())
 

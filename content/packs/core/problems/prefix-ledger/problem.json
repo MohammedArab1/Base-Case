@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "core/prefix-ledger",
+  "slug": "prefix-ledger",
+  "title": "Prefix Ledger",
+  "difficulty": "medium",
+  "patterns": ["tries", "strings", "hash-map"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "prefixCounts",
+    "params": [
+      { "name": "words", "type": "string[]" },
+      { "name": "queries", "type": "string[]" }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2500,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(total characters)",
+      "space": "O(total characters)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(total characters)",
+      "space": "O(total characters)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting only whole words instead of every word that starts with the prefix",
+    "Forgetting that duplicate words count separately",
+    "Rebuilding the word list for every query, which makes the solution too slow"
+  ],
+  "followUps": [
+    "How would you support removing a word after it has been inserted?",
+    "How much memory does the trie use compared with a sorted list of words?",
+    "What changes if queries can contain uppercase letters?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

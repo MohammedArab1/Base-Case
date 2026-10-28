@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "core/bit-manipulation",
+  "slug": "bit-manipulation",
+  "title": "Bit Manipulation",
+  "category": "algorithm",
+  "summary": "Work directly with the 0s and 1s inside a number to save space and solve pairing puzzles.",
+  "difficulty": "medium",
+  "estimatedMinutes": 10,
+  "order": 20,
+  "tags": ["bit-manipulation", "xor", "binary", "masks"],
+  "prerequisites": ["arrays-and-strings", "complexity-and-big-o"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A bit is 0 or 1; an integer is a row of bits with place values 1, 2, 4, 8, and so on.",
+    "XOR returns 1 only when the bits differ, and `x ^ x = 0`, `x ^ 0 = x`.",
+    "AND masks select bits; OR sets bits; shifts move bits left or right.",
+    "XOR is the standard trick for finding the one value that appears an odd number of times."
+  ],
+  "complexity": [
+    {
+      "operation": "Bitwise AND, OR, XOR",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Fixed-width operation."
+    },
+    {
+      "operation": "Left or right shift",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Moves every bit."
+    },
+    {
+      "operation": "Check bit i",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "`(x >> i) & 1`."
+    },
+    {
+      "operation": "Count set bits (Brian Kernighan)",
+      "time": "O(number of 1 bits)",
+      "space": "O(1)",
+      "note": "`x &= x - 1` clears the lowest set bit."
+    },
+    {
+      "operation": "Find the single unpaired value",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "XOR every value."
+    }
+  ],
+  "exercises": {
+    "problems": ["lone-beacon", "binary-sum", "color-sort"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Using XOR to pair values when more than one value appears an odd number of times.",
+    "Confusing logical `&&` with bitwise `&`, or `||` with `|`.",
+    "Assuming JavaScript bitwise operators work on integers wider than 32 bits; they do not.",
+    "Forgetting operator precedence and writing a mask expression without parentheses."
+  ],
+  "interviewNotes": [
+    "Say how many bits the values use and whether the language's bitwise operators are fixed-width.",
+    "For XOR problems, state the cancellation rule and why the remaining value is the answer.",
+    "For masks, name the purpose of each bit instead of using unexplained magic numbers."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does XORing every value find the one unpaired value?",
+      "answer": "Every pair cancels to zero. The unpaired value remains because zero XOR the value is the value."
+    },
+    {
+      "question": "What does `x & (x - 1)` do?",
+      "answer": "It clears the lowest set bit of x. Repeating it counts set bits in time proportional to the number of 1s."
+    },
+    {
+      "question": "How do you check whether bit i is set?",
+      "answer": "Shift the bit down and mask it: `(x >> i) & 1`. The result is 0 or 1."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -10,6 +10,9 @@ import { Button } from './ui/Button'
 import { Tooltip } from './ui/Tooltip'
 import { OnboardingView } from './views/OnboardingView'
 
+const LearnView = lazy(() =>
+  import('./views/LearnView').then((module) => ({ default: module.LearnView })),
+)
 const CodingView = lazy(() =>
   import('./views/CodingView').then((module) => ({ default: module.CodingView })),
 )
@@ -42,6 +45,12 @@ const sections: readonly Section[] = [
     label: 'Today',
     title: 'Today',
     description: 'Reviews, a place to continue, and one useful next step.',
+  },
+  {
+    id: 'learn',
+    label: 'Learn',
+    title: 'Learn the fundamentals',
+    description: 'Short, beginner-friendly lessons with diagrams and linked practice.',
   },
   {
     id: 'coding',
@@ -81,6 +90,7 @@ function App(): JSX.Element {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [problems, setProblems] = useState<readonly ProblemSummary[]>([])
   const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null)
+  const [selectedDesignId, setSelectedDesignId] = useState<string | null>(null)
   const [reviewCardId, setReviewCardId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -241,7 +251,7 @@ function App(): JSX.Element {
         return
       }
 
-      const index = ['1', '2', '3', '4', '5', '6'].findIndex((key) =>
+      const index = ['1', '2', '3', '4', '5', '6', '7'].findIndex((key) =>
         matchesShortcut(event, { key, meta: true }),
       )
       const target = index >= 0 ? sections[index] : undefined
@@ -292,6 +302,16 @@ function App(): JSX.Element {
     }
 
     switch (section) {
+      case 'learn':
+        return (
+          <LearnView
+            onOpenProblem={openProblem}
+            onOpenDesign={(designId) => {
+              setSelectedDesignId(designId)
+              setSection('design')
+            }}
+          />
+        )
       case 'coding':
         return (
           <CodingView
@@ -304,7 +324,12 @@ function App(): JSX.Element {
           />
         )
       case 'design':
-        return <DesignView />
+        return (
+          <DesignView
+            selectedScenarioId={selectedDesignId}
+            onSelectScenario={setSelectedDesignId}
+          />
+        )
       case 'settings':
         return <SettingsView />
       case 'today':

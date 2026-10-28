@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "core/matrix-traversal",
+  "slug": "matrix-traversal",
+  "title": "Matrix Traversal",
+  "category": "algorithm",
+  "summary": "Move through a grid without falling off the edge, revisiting cells, or losing track of the boundaries.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 21,
+  "tags": ["matrix", "simulation", "grids", "bfs", "dfs"],
+  "prerequisites": ["graphs-and-traversal", "arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A matrix is a list of rows; `grid[row][column]` is the usual order.",
+    "Most grid traversals need bounds checks before accessing a neighbor.",
+    "Direction arrays turn four-neighbor movement into a short loop.",
+    "Spiral traversal uses four shrinking boundaries: top, bottom, left, and right."
+  ],
+  "complexity": [
+    {
+      "operation": "Visit every cell",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols)",
+      "note": "Visited set or queue."
+    },
+    {
+      "operation": "Spiral traversal",
+      "time": "O(rows * cols)",
+      "space": "O(1)",
+      "note": "Four boundaries shrink inward."
+    },
+    {
+      "operation": "Grid BFS",
+      "time": "O(rows * cols)",
+      "space": "O(rows * cols)",
+      "note": "Worst case is every cell."
+    },
+    {
+      "operation": "Grid DP",
+      "time": "O(rows * cols)",
+      "space": "O(cols)",
+      "note": "Keep one row of previous values."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "spiral-walk",
+      "nearest-zero",
+      "orange-rot",
+      "path-count",
+      "word-search",
+      "paint-fill"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Swapping row and column when indexing a rectangular matrix.",
+    "Forgetting to check bounds before reading a neighbor.",
+    "Marking a cell visited after enqueueing it, so the same cell enters the queue many times.",
+    "Losing the last row or column when writing a spiral traversal with shrinking boundaries."
+  ],
+  "interviewNotes": [
+    "Ask whether the grid is square or rectangular. Square-only assumptions are a common bug.",
+    "State whether movement is four-directional or eight-directional.",
+    "For spiral order, write the four boundary updates explicitly and test a single-row and single-column grid."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why can grid traversal be modeled as a graph problem?",
+      "answer": "Each cell is a node, and each legal move to a neighboring cell is an edge. BFS or DFS then applies directly."
+    },
+    {
+      "question": "How do direction arrays simplify neighbor checks?",
+      "answer": "Store row and column offsets such as (1,0), (-1,0), (0,1), (0,-1). Loop over them and check bounds once."
+    },
+    {
+      "question": "What are the four boundaries in spiral traversal?",
+      "answer": "Top row, right column, bottom row, and left column. After each side is emitted, move that boundary inward."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

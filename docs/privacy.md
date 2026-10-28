@@ -9,7 +9,7 @@ All of the following live in the platform application-data folder shown in
 Settings → Data and environment:
 
 - The SQLite database: attempts, drafts, notes, review cards and history,
-  mistake tags, design scenes, settings, and AI feedback.
+  mistake tags, design scenes, lesson completion, settings, and AI feedback.
 - Design scene JSON and any PNG you export.
 - Logs in `logs/app.log`.
 - Up to seven verified database backups in `backups/`.
@@ -24,8 +24,10 @@ Only two actions can send data off the machine:
 
 1. **A configured cloud AI provider.** When you enable AI and run a feature, the
    app builds a context from the current problem, code, failing test, and recent
-   attempt metadata. The context preview shows the exact text before the request
-   is sent. You can copy the preview, cancel, or disable AI entirely.
+   attempt metadata. Lesson clarification sends only the lesson title, summary,
+   key points, complexity rows, the selected section excerpt, and your question.
+   The context preview shows the exact text before the request is sent. You can
+   copy the preview, cancel, or disable AI entirely.
 2. **Opening an external link.** Links open in the system browser. No app data is
    attached.
 
@@ -49,10 +51,10 @@ the machine.
 
 ## AI guardrails
 
-- AI is disabled by default. Eight per-feature toggles let you turn off
+- AI is disabled by default. Nine per-feature toggles let you turn off
   explanations, hints, approach review, complexity review, mistake-tag
-  suggestions, explain-back checks, design-note review, or the follow-up
-  interviewer independently.
+  suggestions, explain-back checks, design-note review, the follow-up
+  interviewer, or lesson clarification independently.
 - Requests are rate-limited to eight per minute.
 - The context builder enforces a token budget (75% of the configured window) and
   redacts obvious secrets before sending.

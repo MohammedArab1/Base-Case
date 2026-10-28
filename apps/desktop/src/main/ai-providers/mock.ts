@@ -64,6 +64,15 @@ const cannedResponses: Record<AiFeature, string> = {
   followUp: JSON.stringify({
     question: 'What happens when two writers update the same key at once?',
   }),
+  concept: JSON.stringify({
+    explanation:
+      'A hash map turns a key into a location, much like a coat check turns a ticket number into one hanging coat.',
+    analogy: 'Think of labelled drawers: you go straight to the drawer with the right label.',
+    example:
+      'With the list [2, 7, 11], a target of 9 finds 2, then checks whether 7 is already in the map.',
+    checkQuestion: 'Why does a hash map usually make a lookup cost O(1) instead of O(n)?',
+    relatedConcepts: ['hash function', 'collision', 'space trade-off'],
+  }),
 }
 
 const mockDelayMs = 15

@@ -1,0 +1,16 @@
+{"input":{"words":[],"queries":["a"]},"expected":[0]}
+{"input":{"words":["aa","aa","aa","aa","aa"],"queries":["a","aa","aaa"]},"expected":[5,5,0]}
+{"input":{"words":["abc"],"queries":["abcd"]},"expected":[0]}
+{"input":{"words":["cat","dog"],"queries":["bird","c"]},"expected":[0,1]}
+{"input":{"words":["car","cart","carpet","card","care","dog"],"queries":["car","card","ca","d"]},"expected":[5,1,5,1]}
+{"input":{"words":["a","b","c"],"queries":["a","b","c"]},"expected":[1,1,1]}
+{"input":{"words":["aaaaab","aaaaac","aaaaad"],"queries":["aaaaa","aaaaab","aaaa"]},"expected":[3,1,3]}
+{"input":{"words":["go","go","going"],"queries":["go","going","goi"]},"expected":[3,1,1]}
+{"input":{"words":[],"queries":["a","b"]},"expected":[0,0]}
+{"input":{"words":["zebra"],"queries":["z","ze","zeb","zebr","zebra","zebras"]},"expected":[1,1,1,1,1,0]}
+{"input":{"words":["ab","abc","abcd","abcde"],"queries":["ab","abc","abcd","abcde","abcdef"]},"expected":[4,3,2,1,0]}
+{"input":{"words":["mango","mangrove","man","many","mandate"],"queries":["man","mand","mango","x"]},"expected":[5,1,1,0]}
+{"input":{"words":["a","b"],"queries":[""]},"expected":[2]}
+{"input":{"words":["a","ab","abc","abcd","abcde"],"queries":["a","ab","abc","abcd","abcde","abcdef"]},"expected":[5,4,3,2,1,0]}
+{"input":{"words":["alpha","alpine","altar","beta","bet","be"],"queries":["al","alp","alt","be","bet","z"]},"expected":[3,2,1,3,2,0]}
+{"input":{"words":["a","b"],"queries":["a","b","c"]},"expected":[1,1,0]}

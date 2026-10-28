@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "core/linked-lists",
+  "slug": "linked-lists",
+  "title": "Linked Lists",
+  "category": "data-structure",
+  "summary": "Nodes connected by pointers: cheap to rearrange, expensive to index, and full of pointer-update traps.",
+  "difficulty": "easy",
+  "estimatedMinutes": 12,
+  "order": 11,
+  "tags": ["linked-list", "pointers", "two-pointers", "dummy-node"],
+  "prerequisites": ["arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Each node stores a value and a pointer to the next node; there is no index arithmetic.",
+    "Finding a node by position is O(n), but inserting or removing after a known node is O(1).",
+    "A dummy head removes special cases when the first node may change.",
+    "Fast and slow pointers find the middle and detect cycles without extra memory."
+  ],
+  "complexity": [
+    {
+      "operation": "Access by index",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Walk from the head."
+    },
+    {
+      "operation": "Insert after a known node",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Change two pointers."
+    },
+    {
+      "operation": "Delete after a known node",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Bypass the removed node."
+    },
+    {
+      "operation": "Reverse a list",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Three pointers: previous, current, next."
+    },
+    {
+      "operation": "Merge two sorted lists",
+      "time": "O(n + m)",
+      "space": "O(1)",
+      "note": "Relink existing nodes."
+    },
+    {
+      "operation": "Detect a cycle",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Floyd's fast and slow pointers."
+    }
+  ],
+  "exercises": {
+    "problems": ["reverse-chain", "merge-sorted-chains", "mid-node", "loop-detect"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Losing the rest of the list by overwriting `current.next` before saving it.",
+    "Forgetting to update the tail pointer or to set the last node's next to null.",
+    "Using a dummy node but forgetting to return `dummy.next` instead of `dummy`.",
+    "Dereferencing `current.next` without checking whether `current` is null."
+  ],
+  "interviewNotes": [
+    "Draw the nodes and pointer arrows before coding. It is faster than debugging pointer changes later.",
+    "State which node each pointer references and the order of the assignments.",
+    "If the head can change, mention a dummy node as the way to avoid a special first case."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is reversing a linked list O(1) extra space?",
+      "answer": "Only the next pointers are changed, one node at a time. No new nodes or arrays are needed."
+    },
+    {
+      "question": "How does a dummy node simplify deletion?",
+      "answer": "It gives the first real node a predecessor, so the same pointer update works whether the removed node is first or later."
+    },
+    {
+      "question": "What happens if two pointers meet in a linked list?",
+      "answer": "A cycle exists. The fast pointer cannot reach the end because it is looping."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

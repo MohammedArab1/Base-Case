@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "id": "core/hash-maps",
+  "slug": "hash-maps",
+  "title": "Hash Maps and Sets",
+  "category": "data-structure",
+  "summary": "How to turn a slow search into a fast lookup by remembering what you have already seen.",
+  "difficulty": "easy",
+  "estimatedMinutes": 11,
+  "order": 3,
+  "tags": ["hash-map", "hash-set", "counting", "lookup"],
+  "prerequisites": ["arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A hash map stores key-value pairs and usually gives average O(1) lookup, insert, and delete.",
+    "A hash set is a hash map that only remembers keys; use it for membership questions.",
+    "The worst case is O(n) when many keys collide, but well-distributed keys make that rare.",
+    "The common interview move is to store each value as you scan so you never need to scan backwards."
+  ],
+  "complexity": [
+    {
+      "operation": "Insert a key",
+      "time": "O(1) average",
+      "space": "O(1)",
+      "note": "O(n) worst case with collisions."
+    },
+    {
+      "operation": "Look up a key",
+      "time": "O(1) average",
+      "space": "O(1)",
+      "note": "The hash function finds the bucket."
+    },
+    {
+      "operation": "Delete a key",
+      "time": "O(1) average",
+      "space": "O(1)",
+      "note": "The table may shrink."
+    },
+    {
+      "operation": "Check membership in a set",
+      "time": "O(1) average",
+      "space": "O(1)",
+      "note": "Same lookup as a map."
+    },
+    {
+      "operation": "Visit every entry",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "The order is not guaranteed."
+    },
+    {
+      "operation": "Store n keys",
+      "time": "O(n)",
+      "space": "O(n)",
+      "note": "The table holds every key."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "pair-sum",
+      "duplicate-check",
+      "note-check",
+      "longest-unique-stretch",
+      "target-totals",
+      "majority-value"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Inserting the current value before checking for its complement, which can pair an element with itself.",
+    "Using a list to test membership inside a loop, which turns O(n) into O(n²).",
+    "Forgetting that hash-map iteration order is not sorted and may differ between languages.",
+    "Storing a count when you only need a boolean, or storing an index when you only need a count."
+  ],
+  "interviewNotes": [
+    "Name the exact thing you are trading: O(n) extra space for O(1) average lookups.",
+    "State that the O(1) bound is average case; collisions can make it worse.",
+    "If the input is sorted, ask whether two pointers can replace the map and save memory."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does a hash set make duplicate detection O(n) instead of O(n²)?",
+      "answer": "Each value is checked and inserted in average O(1), so one pass over n values is O(n). A list membership check is O(n), making the nested work O(n²)."
+    },
+    {
+      "question": "What does a hash function do?",
+      "answer": "It converts a key into a bucket index, so the table can jump close to the key's location instead of scanning every entry."
+    },
+    {
+      "question": "When is a hash map the wrong choice?",
+      "answer": "When you need sorted order, range queries, or very tight memory. A sorted array, tree, or two-pointer approach may fit better."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

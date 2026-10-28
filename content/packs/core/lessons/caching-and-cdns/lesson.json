@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "core/caching-and-cdns",
+  "slug": "caching-and-cdns",
+  "title": "Caching and CDNs",
+  "category": "system-design",
+  "summary": "Keep frequently used data close to the reader, and decide honestly when stale data is acceptable.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 26,
+  "tags": ["system-design", "caching", "cdn", "invalidation"],
+  "prerequisites": ["scaling-and-load-balancing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A cache trades memory and freshness for lower latency and less database load.",
+    "Cache-aside is the default pattern: check the cache, load on a miss, then populate.",
+    "Every cache needs an eviction policy and a maximum size.",
+    "Invalidation is the hard part; TTLs bound staleness but do not make data instantly fresh.",
+    "A CDN is a cache at the edge, close to users, usually for static or cacheable content."
+  ],
+  "complexity": [
+    {
+      "operation": "Cache hit",
+      "time": "sub-millisecond to a few ms",
+      "space": "cache memory",
+      "note": "No database round trip."
+    },
+    {
+      "operation": "Cache miss",
+      "time": "database latency + populate",
+      "space": "cache memory",
+      "note": "The first reader pays."
+    },
+    {
+      "operation": "LRU eviction",
+      "time": "O(1)",
+      "space": "O(capacity)",
+      "note": "Hash map plus linked list."
+    },
+    {
+      "operation": "CDN edge hit",
+      "time": "tens of ms",
+      "space": "edge storage",
+      "note": "Varies by distance and cache policy."
+    },
+    {
+      "operation": "Invalidation",
+      "time": "depends on fan-out",
+      "space": "version or tag metadata",
+      "note": "Often harder than population."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["news-feed", "search-autocomplete", "file-sync", "url-shortener"]
+  },
+  "commonMistakes": [
+    "Adding a cache without deciding what happens when it is cold, full, or wrong.",
+    "Using a long TTL for data that must be immediately consistent.",
+    "Forgetting the thundering-herd problem when a popular key expires.",
+    "Caching personalized content at a shared edge without varying by user or authorization."
+  ],
+  "interviewNotes": [
+    "State the consistency requirement before choosing a cache strategy.",
+    "Name the eviction policy and the maximum stale window.",
+    "For a cache stampede, mention request coalescing, locks, or jittered TTLs.",
+    "For CDNs, distinguish public cacheable assets from private user data."
+  ],
+  "checkYourself": [
+    {
+      "question": "What is cache-aside?",
+      "answer": "The application checks the cache first. On a miss, it reads the source, stores the result in the cache, and returns it."
+    },
+    {
+      "question": "Why can a TTL alone be insufficient?",
+      "answer": "It bounds how long stale data can live, but it does not invalidate data immediately after a write. The user may still see an old value until the TTL expires."
+    },
+    {
+      "question": "When is a CDN a poor fit?",
+      "answer": "For highly personalized or rapidly changing private data, unless the cache can vary safely by user and authorization."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

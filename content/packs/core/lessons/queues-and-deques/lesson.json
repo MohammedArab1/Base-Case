@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "core/queues-and-deques",
+  "slug": "queues-and-deques",
+  "title": "Queues and Deques",
+  "category": "data-structure",
+  "summary": "First in, first out for fair ordering and breadth-first search; two-ended access for window extremes.",
+  "difficulty": "easy",
+  "estimatedMinutes": 10,
+  "order": 10,
+  "tags": ["queue", "deque", "bfs", "sliding-window"],
+  "prerequisites": ["arrays-and-strings", "sliding-window"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A queue adds at the back and removes from the front, so the earliest item is handled first.",
+    "Breadth-first search uses a queue to visit nodes in order of distance.",
+    "A deque supports push and pop at both ends in O(1).",
+    "A monotonic deque keeps window maxima or minima without rescanning."
+  ],
+  "complexity": [
+    {
+      "operation": "Enqueue",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Add at the back."
+    },
+    {
+      "operation": "Dequeue",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Remove from the front."
+    },
+    {
+      "operation": "Peek front",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "Does not remove."
+    },
+    {
+      "operation": "Push or pop either end of a deque",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "All four operations are constant time."
+    },
+    {
+      "operation": "Breadth-first search",
+      "time": "O(V + E)",
+      "space": "O(V)",
+      "note": "V vertices and E edges."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "level-lines",
+      "build-order",
+      "orange-rot",
+      "nearest-zero",
+      "window-max",
+      "right-view"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Using array shift on a large list in a loop; many languages implement it as an O(n) copy.",
+    "Using a stack for breadth-first search, which turns the traversal into depth-first order.",
+    "Forgetting to mark a node as visited when it is enqueued, so it is added many times.",
+    "Popping from a monotonic deque without checking whether the front is still inside the window."
+  ],
+  "interviewNotes": [
+    "For BFS, say what the queue contains: all nodes at the same distance, waiting to expand.",
+    "If you need level-by-level processing, record the queue size before the inner loop.",
+    "For a window extreme, mention that a deque gives O(1) updates at both ends."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does BFS find the shortest path in an unweighted graph?",
+      "answer": "The queue visits every node at distance d before any node at distance d + 1, so the first time a node is reached is through a shortest path."
+    },
+    {
+      "question": "When is a deque better than a queue?",
+      "answer": "When you need to add or remove at both ends, such as evicting an expired window maximum from the front while removing smaller candidates from the back."
+    },
+    {
+      "question": "How do you process a tree level by level?",
+      "answer": "Before each level, record the current queue length. Process exactly that many nodes, adding their children to the back for the next level."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "core/complexity-and-big-o",
+  "slug": "complexity-and-big-o",
+  "title": "Complexity and Big O",
+  "category": "foundation",
+  "summary": "A plain-language way to compare how algorithms grow, so you can choose an approach before you write it.",
+  "difficulty": "easy",
+  "estimatedMinutes": 10,
+  "order": 1,
+  "tags": ["big-o", "complexity", "interviews", "analysis"],
+  "prerequisites": [],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Big O describes how work grows as the input grows, not how many milliseconds a specific machine takes.",
+    "Drop constant factors and lower-order terms because they stop mattering at large input sizes.",
+    "A loop over n items is O(n); a loop inside another loop over n items is usually O(n²).",
+    "Space complexity counts extra memory you allocate, not the input itself."
+  ],
+  "complexity": [
+    {
+      "operation": "Array index",
+      "time": "O(1)",
+      "space": "O(1)",
+      "note": "The address is computed directly."
+    },
+    {
+      "operation": "Hash map lookup (average)",
+      "time": "O(1)",
+      "space": "O(n)",
+      "note": "The table itself uses linear memory."
+    },
+    {
+      "operation": "Binary search",
+      "time": "O(log n)",
+      "space": "O(1)",
+      "note": "The search range halves each step."
+    },
+    {
+      "operation": "One pass over n items",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Memory can grow if you store results."
+    },
+    {
+      "operation": "Comparison sort",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Merge sort is the usual example."
+    },
+    {
+      "operation": "Nested loops over n items",
+      "time": "O(n²)",
+      "space": "O(1)",
+      "note": "Common in brute-force pair checks."
+    },
+    {
+      "operation": "All subsets",
+      "time": "O(2ⁿ)",
+      "space": "O(n)",
+      "note": "Each item is either in or out."
+    }
+  ],
+  "exercises": {
+    "problems": ["pair-sum", "duplicate-check", "ordered-search", "island-count"],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Looking only at the loop count and ignoring what happens inside the loop, such as a sort or a full array copy.",
+    "Saying an algorithm is O(n) because it ran quickly on one small test.",
+    "Forgetting that recursion and the call stack also use space."
+  ],
+  "interviewNotes": [
+    "Say the complexity out loud before coding and again after coding. Interviewers listen for whether you can revise your estimate.",
+    "Name the dominant term only: O(n² + n) becomes O(n²). Mention constants separately if they matter for the actual limits.",
+    "If the input is tiny, a simple O(n²) solution can be the right engineering choice. State that trade-off instead of hiding it."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is a single loop that does three operations per item still O(n)?",
+      "answer": "The three operations are constant work per item. Constant factors are dropped, so the growth is linear."
+    },
+    {
+      "question": "What is the difference between time and space complexity?",
+      "answer": "Time complexity counts how the number of steps grows. Space complexity counts how extra memory grows. Both describe growth, not exact seconds or bytes."
+    },
+    {
+      "question": "A function scans the array, then scans it again. What is the complexity?",
+      "answer": "O(n). Two separate passes are O(2n), and constant factors are dropped."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

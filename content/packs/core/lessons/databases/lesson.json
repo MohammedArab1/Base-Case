@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "core/databases",
+  "slug": "databases",
+  "title": "Databases, Indexes, Replication, and Sharding",
+  "category": "system-design",
+  "summary": "Choose storage from access patterns, then make reads, writes, and growth fit the shape of the data.",
+  "difficulty": "medium",
+  "estimatedMinutes": 15,
+  "order": 27,
+  "tags": ["system-design", "databases", "indexes", "replication", "sharding"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Choose a database from the access pattern: point lookups, ranges, joins, transactions, or blobs.",
+    "An index speeds reads but costs write time and storage.",
+    "Replication improves read scale and availability but introduces lag.",
+    "Sharding splits data across nodes; the partition key decides which queries are cheap.",
+    "Transactions protect multi-record invariants; distributed transactions add latency and failure modes."
+  ],
+  "complexity": [
+    {
+      "operation": "Primary-key lookup",
+      "time": "O(log n) or O(1)",
+      "space": "index storage",
+      "note": "B-tree or hash index."
+    },
+    {
+      "operation": "Range query with an index",
+      "time": "O(log n + results)",
+      "space": "index storage",
+      "note": "The index keeps values ordered."
+    },
+    {
+      "operation": "Full table scan",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Avoid on large tables."
+    },
+    {
+      "operation": "Replica read",
+      "time": "replication lag",
+      "space": "full copy",
+      "note": "Asynchronous replicas can be stale."
+    },
+    {
+      "operation": "Shard lookup",
+      "time": "one shard if keyed well",
+      "space": "data / shards",
+      "note": "Cross-shard queries fan out."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "payment-ledger", "seat-reservation", "file-sync"]
+  },
+  "commonMistakes": [
+    "Choosing a database by reputation instead of by access pattern.",
+    "Adding indexes without considering write amplification and storage.",
+    "Sharding on a key that does not match the most common query, causing fan-out.",
+    "Assuming asynchronous replication gives read-after-write consistency."
+  ],
+  "interviewNotes": [
+    "Name the main queries first, then the storage.",
+    "For each index, say which query it serves.",
+    "When you shard, state the partition key and the queries that become expensive.",
+    "Use transactions for multi-record invariants; say what isolation level you need."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why can an index make writes slower?",
+      "answer": "Every insert, update, or delete must also update the index structure, which costs time and storage."
+    },
+    {
+      "question": "What is replication lag?",
+      "answer": "The delay between a write on the primary and that write becoming visible on a replica. Reads from the replica can return stale data during the lag."
+    },
+    {
+      "question": "What makes a good shard key?",
+      "answer": "High cardinality, even distribution, and alignment with the most common query so requests touch one shard. Avoid keys that create hot shards or force fan-out."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

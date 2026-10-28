@@ -26,7 +26,19 @@ For the operating-system warnings on unsigned builds and checksum steps, see
    configure a provider later.
 5. Choose **Finish**, then **Go to Today**.
 
-## 3. Solve the sample problem
+## 3. Learn a concept first
+
+1. Open **Learn** and choose **Hash Maps and Sets** (or search for a topic).
+2. Read the plain-language explanation, the diagram, and the complexity
+   cheatsheet. The lesson works fully offline.
+3. Open one of the linked exercises under **Practice this idea**. The coding
+   workspace opens on that problem with your normal draft and review state.
+4. Choose **Mark as complete** when the idea makes sense. Completion is stored
+   locally and can be undone.
+5. If AI is enabled, you can select a section and ask for a clarification. The
+   app shows the exact lesson excerpt and question before sending anything.
+
+## 4. Solve the sample problem
 
 1. Open **Coding** and select **Pair Sum**.
 2. Read the statement and the examples. If you are stuck, reveal **Hint 1**
@@ -41,7 +53,7 @@ For the operating-system warnings on unsigned builds and checksum steps, see
 The first submission creates a review card. Later submissions update the card
 automatically. Runs from Review mode never auto-grade.
 
-## 4. Try a system design scenario
+## 5. Try a system design scenario
 
 1. Open **System Design** and select **URL Shortener**.
 2. Read the prompt, requirements, and scale targets.
@@ -49,13 +61,13 @@ automatically. Runs from Review mode never auto-grade.
 4. Fill in the notes for each rubric dimension and submit the attempt.
 5. Compare with the reference design and the expected-topic checklist.
 
-## 5. Review what you learned
+## 6. Review what you learned
 
 Open **Review** and grade the due card. If nothing is due, the Today view shows
 when the next card becomes available. The review queue is driven by FSRS, not a
 fixed calendar.
 
-## 6. Check the installation
+## 7. Check the installation
 
 Open **Settings → Diagnostics** and choose **Run self-test**. A healthy release
 build shows PASS for Application, Database, Storage, Logs, Content, Search index,
@@ -69,6 +81,7 @@ keys.
 
 Disconnect from the network, restart the app, and run the Pair Sum sample tests
 again. Everything above except a configured cloud AI provider works offline.
+Lessons, linked practice, and lesson completion never need a provider.
 
 ## Where your data lives
 

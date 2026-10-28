@@ -373,6 +373,7 @@ export class PackManager {
       source,
       problemCount: manifest.problems.length,
       designCount: manifest.designs.length,
+      lessonCount: (manifest.lessons ?? []).length,
       path: directory,
     }
   }

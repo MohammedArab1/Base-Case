@@ -7,6 +7,9 @@ visual designs. The minimum window is 1024×700.
 
 ```text
 Today
+Learn
+  ├─ Lesson library
+  └─ Lesson detail + linked practice
 Coding
   ├─ Problem list
   └─ Coding workspace
@@ -42,6 +45,36 @@ status indicator.
 │ Local mode   │ Daily goal                                               │
 │ No account   │ Set a goal in onboarding.                                │
 └──────────────┴──────────────────────────────────────────────────────────┘
+```
+
+## Learn library
+
+```text
+┌──────────────┬──────────────────────────────────────────────────────────┐
+│ Base Case    │ Learn the fundamentals            [Search lessons]       │
+│              ├──────────────────────────────────────────────────────────┤
+│ Today        │ 30 lessons · 6 complete · offline                        │
+│ Learn      ● │ [All topics] [Foundations] [Data structures] [Algorithms]│
+│ Coding       │                                                          │
+│ System Design│ Data structures                                          │
+│ Review       │ Tries             prefix, autocomplete   10 min  Complete│
+│ Progress     │ Heaps             top-k, priority queue   12 min          │
+│ Settings     │                                                          │
+└──────────────┴──────────────────────────────────────────────────────────┘
+```
+
+## Lesson detail
+
+```text
+┌──────────────┬──────────────────────────────────┬───────────────────────┐
+│ Navigation   │ Tries                            │ Key ideas             │
+│              │ [Data structures] [10 min] [easy]│ Complexity cheatsheet │
+│              │                                  │ Practice this idea    │
+│              │ # Tries                          │ Interview notes       │
+│              │ A trie stores words one char...  │ Common mistakes       │
+│              │                                  │ Ask AI to clarify     │
+│              │ [Mark as complete]               │                       │
+└──────────────┴──────────────────────────────────┴───────────────────────┘
 ```
 
 ## Coding list

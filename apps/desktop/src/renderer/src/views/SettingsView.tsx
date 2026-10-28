@@ -83,6 +83,7 @@ const aiFeatureOptions: readonly {
   { id: 'explainBack', label: 'Explain-back check' },
   { id: 'designNotes', label: 'Design notes review' },
   { id: 'followUp', label: 'Follow-up interviewer' },
+  { id: 'concept', label: 'Lesson clarification' },
 ]
 
 interface SettingsToast {
@@ -482,7 +483,9 @@ export function SettingsView(): JSX.Element {
                   {pendingPreview?.problemCount ?? 0}{' '}
                   {pendingPreview?.problemCount === 1 ? 'problem' : 'problems'} ·{' '}
                   {pendingPreview?.designCount ?? 0}{' '}
-                  {pendingPreview?.designCount === 1 ? 'design' : 'designs'}
+                  {pendingPreview?.designCount === 1 ? 'design' : 'designs'} ·{' '}
+                  {pendingPreview?.lessonCount ?? 0}{' '}
+                  {pendingPreview?.lessonCount === 1 ? 'lesson' : 'lessons'}
                 </dd>
                 <dt className="m-0 text-bc-muted">License</dt>
                 <dd className="m-0 text-bc-text">{pendingPreview?.license}</dd>
@@ -803,6 +806,7 @@ export function SettingsView(): JSX.Element {
                 <p className="m-0 mt-1 text-xs text-bc-muted">
                   {pack.problemCount} {pack.problemCount === 1 ? 'problem' : 'problems'} ·{' '}
                   {pack.designCount} {pack.designCount === 1 ? 'design' : 'designs'} ·{' '}
+                  {pack.lessonCount} {pack.lessonCount === 1 ? 'lesson' : 'lessons'} ·{' '}
                   {pack.license}
                 </p>
                 <p className="m-0 mt-0.5 text-xs text-bc-muted">{pack.attribution}</p>

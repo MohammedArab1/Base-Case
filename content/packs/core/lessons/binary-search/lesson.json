@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "core/binary-search",
+  "slug": "binary-search",
+  "title": "Binary Search",
+  "category": "algorithm",
+  "summary": "Halve the search range at every step, whether you are looking through a sorted array or through a range of possible answers.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 8,
+  "tags": ["binary-search", "sorted", "search-space", "off-by-one"],
+  "prerequisites": ["sorting", "complexity-and-big-o"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Binary search needs a range where one side is definitely wrong and the other may contain the answer.",
+    "Use a half-open range [low, high) or a closed range [low, high], and keep the same convention throughout.",
+    "Compute the midpoint without overflowing in fixed-width languages.",
+    "The same pattern can search for a threshold answer, not just an index."
+  ],
+  "complexity": [
+    {
+      "operation": "Search a sorted array",
+      "time": "O(log n)",
+      "space": "O(1)",
+      "note": "Iterative version."
+    },
+    {
+      "operation": "Recursive binary search",
+      "time": "O(log n)",
+      "space": "O(log n)",
+      "note": "Call stack depth."
+    },
+    {
+      "operation": "Lower bound",
+      "time": "O(log n)",
+      "space": "O(1)",
+      "note": "First index with value >= target."
+    },
+    {
+      "operation": "Binary search on an answer range",
+      "time": "O(log R * check)",
+      "space": "O(1)",
+      "note": "R is the numeric range."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "ordered-search",
+      "rotated-search",
+      "rotation-minimum",
+      "cargo-deadline",
+      "job-schedule"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Using the wrong loop condition or returning the wrong endpoint for a half-open range.",
+    "Computing `(low + high) / 2` when the sum can overflow a fixed-width integer.",
+    "Forgetting that a rotated sorted array still has one sorted half at every midpoint.",
+    "Binary-searching when the data is not actually sorted or monotonic."
+  ],
+  "interviewNotes": [
+    "Write down the invariant before the loop: what is guaranteed about everything left of low and right of high?",
+    "For a lower-bound search, decide whether equal elements should stop the search or continue left.",
+    "When the search space is numeric, explain how a candidate answer can be checked in O(n)."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does binary search take O(log n) steps?",
+      "answer": "Each step throws away about half of the remaining range. After k steps at most n / 2^k items remain, so about log₂(n) steps are enough."
+    },
+    {
+      "question": "In a rotated sorted array, how do you decide which half is sorted?",
+      "answer": "Compare nums[low] with nums[mid]. If nums[low] <= nums[mid], the left half is sorted; otherwise the right half is sorted. Then check whether the target falls inside that sorted half."
+    },
+    {
+      "question": "What does a lower-bound search return when the target appears several times?",
+      "answer": "The index of the first occurrence, or the insertion point if the target is absent."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -32,11 +32,19 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## Content
 
-- The pack has 79 coding problems and 8 design scenarios. The Grind 75
-  collection is a curated 75-problem subset of a public study list that currently
-  contains more entries; it is not the complete list. Every statement, example,
-  hint, and test is original to Base Case. See the collection attribution in the
-  app and `content/packs/core/pack.json`.
+- The pack has 81 coding problems, 8 design scenarios, and 30 lessons. The
+  Grind 75 collection is a curated 75-problem subset of a public study list that
+  currently contains more entries; it is not the complete list. Every statement,
+  example, hint, and test is original to Base Case. See the collection
+  attribution in the app and `content/packs/core/pack.json`.
+- Lessons are a curated core curriculum, not an exhaustive encyclopedia. They
+  cover every pattern used by the bundled problems and the main system-design
+  concepts, but some advanced topics (for example advanced graph shortest-path
+  algorithms and concurrent data structures) are not included yet.
+- Lesson diagrams are offline ASCII diagrams. They render consistently and
+  require no network, but they are not interactive.
+- Lesson completion is manual. Reading a lesson does not automatically mark it
+  complete, and lessons are not scheduled by FSRS.
 - The content has automated validation and passing reference solutions, but the
   second-person editorial review is still pending (B4).
 - The eight design scenarios do not yet ship reference Excalidraw scenes. The
@@ -51,10 +59,14 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - AI is optional, off by default, and labeled Experimental.
 - Only the mock provider and OpenAI-compatible endpoints are supported. Provider
   behavior, latency, and quality vary.
+- Lesson clarification is an extra explanation layer. It can be wrong or
+  incomplete even when the lesson is correct; the offline lesson remains the
+  source of truth.
 - The bug-zoo evaluation is recorded against the mock provider. A real-model run
   with human ratings is still pending (B3).
 - There is no local AI conversation history yet. Feedback is stored locally, but
-  full transcripts are not.
+  full transcripts are not. Lesson clarification is a single question/answer,
+  not a running chat.
 - The Apple Foundation Models sidecar is a stretch goal and is not implemented
   (B9).
 
@@ -78,14 +90,20 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - The interface is English-only.
 - Very large design scenes and very long problem statements have not been stress
   tested on low-memory machines.
+- The recorded screenshots and demo GIF predate the Learn library; they are
+  still representative of coding, design, review, and AI flows but do not show
+  the new sidebar entry or lesson view.
 
 ## Process
 
-- Clean-VM installs on macOS and Windows are not yet recorded (B1). The Windows
-  build was verified on a physical Windows 11 machine; macOS on the development
-  machine.
-- The manual Windows installer workflow has not been run from the GitHub Actions
-  UI yet (B2).
+- Clean-OS installs were not exercised for the alpha. The Windows
+  `0.1.0-alpha` installer was installed on physical Windows 11 and passed
+  diagnostics 9/9 with Node and Python reported as bundled; macOS was verified on
+  the development Mac and through packaging/CI. The owner accepted the clean-OS
+  isolation risk for this alpha (B1 closed by waiver). Clean-VM verification
+  remains a v1.0 bar.
+- The manual Windows installer workflow was run for build `40607714499`; the
+  packaged app installed and launched successfully (B2 done).
 - The project board, milestones, and labels are not configured (B6).
 - The name "Base Case" is a working name; trademark and domain checks are pending
   (B5). Legal review is required before any commercial launch (B7).

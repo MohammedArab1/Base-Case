@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "core/window-max",
+  "slug": "window-max",
+  "title": "Window Max",
+  "difficulty": "hard",
+  "patterns": ["queues", "sliding-window", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "windowMax",
+    "params": [
+      { "name": "nums", "type": "int[]" },
+      { "name": "k", "type": "int" }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2500,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(k)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(k)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Scanning each window from scratch, which gives O(n * k) time",
+    "Removing only the current maximum and losing the next-best candidate",
+    "Using the array value instead of the index to detect when an element leaves the window"
+  ],
+  "followUps": [
+    "How would you return the minimum of every window instead?",
+    "What changes if k is larger than the array?",
+    "Can you adapt the same idea to a stream where elements arrive one at a time?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

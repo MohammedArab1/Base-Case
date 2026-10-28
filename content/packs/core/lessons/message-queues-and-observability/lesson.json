@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "core/message-queues-and-observability",
+  "slug": "message-queues-and-observability",
+  "title": "Message Queues and Observability",
+  "category": "system-design",
+  "summary": "Move slow work out of the request path, then make the whole system visible when something goes wrong.",
+  "difficulty": "medium",
+  "estimatedMinutes": 14,
+  "order": 29,
+  "tags": ["system-design", "queues", "async", "retries", "monitoring"],
+  "prerequisites": ["consistency-and-idempotency"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A queue decouples producers from consumers and absorbs bursts.",
+    "At-least-once delivery is the practical default; consumers must handle duplicates.",
+    "Retries need backoff, a maximum attempt count, and a dead-letter queue.",
+    "Backpressure protects consumers when work arrives faster than it can be processed.",
+    "Observability needs metrics, logs, and traces tied together by a request or trace ID."
+  ],
+  "complexity": [
+    {
+      "operation": "Enqueue a message",
+      "time": "single-digit ms",
+      "space": "message + broker storage",
+      "note": "Usually asynchronous."
+    },
+    {
+      "operation": "Consumer retry",
+      "time": "backoff + attempt",
+      "space": "retry metadata",
+      "note": "Cap attempts and use jitter."
+    },
+    {
+      "operation": "Dead-letter queue",
+      "time": "same as consume",
+      "space": "failed payloads",
+      "note": "Inspect and replay deliberately."
+    },
+    {
+      "operation": "Trace a request",
+      "time": "sampled overhead",
+      "space": "trace storage",
+      "note": "Sample high-volume paths."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["news-feed", "chat-system", "file-sync", "payment-ledger"]
+  },
+  "commonMistakes": [
+    "Assuming a queue guarantees exactly-once processing without deduplication.",
+    "Retrying immediately and forever, which amplifies an outage.",
+    "Letting a queue grow without a plan for backpressure or consumer scaling.",
+    "Adding dashboards without alert thresholds or a clear owner."
+  ],
+  "interviewNotes": [
+    "Say which work can be asynchronous and which must be synchronous.",
+    "For each consumer, state the delivery guarantee and the duplicate-handling strategy.",
+    "Name the metrics that would tell you the system is unhealthy, not just busy.",
+    "Explain what happens to a failed message after the last retry."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is at-least-once delivery common?",
+      "answer": "A consumer can fail after processing but before acknowledging. Redelivery is safer than losing the message, and deduplication handles the duplicate."
+    },
+    {
+      "question": "What is a dead-letter queue for?",
+      "answer": "It stores messages that exhausted their retries so they can be inspected, fixed, and replayed without blocking the main queue."
+    },
+    {
+      "question": "What is the difference between a metric and a trace?",
+      "answer": "A metric is an aggregated number over time, such as request rate or error rate. A trace follows one request across services and shows where time was spent."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

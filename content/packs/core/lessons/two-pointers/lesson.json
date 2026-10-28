@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "core/two-pointers",
+  "slug": "two-pointers",
+  "title": "Two Pointers",
+  "category": "algorithm",
+  "summary": "Walk a sequence from both ends, or with two different speeds, to avoid a nested loop.",
+  "difficulty": "easy",
+  "estimatedMinutes": 10,
+  "order": 4,
+  "tags": ["two-pointers", "arrays", "strings", "linked-list"],
+  "prerequisites": ["arrays-and-strings"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Two pointers replace a nested search when moving each pointer can safely discard part of the input.",
+    "Opposite-end pointers work well on sorted data or when comparing mirrored positions.",
+    "Fast and slow pointers detect cycles and find the middle of a linked list without extra memory.",
+    "The hard part is proving that a discarded region can never contain the answer."
+  ],
+  "complexity": [
+    {
+      "operation": "Opposite-end scan",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Each pointer moves inward only."
+    },
+    {
+      "operation": "Fast and slow scan",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "The fast pointer moves two steps."
+    },
+    {
+      "operation": "Three-sum with sorting",
+      "time": "O(n²)",
+      "space": "O(1) or O(n)",
+      "note": "One outer index plus an inner two-pointer scan."
+    },
+    {
+      "operation": "Trapping rain water",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Track the best wall seen from each side."
+    }
+  ],
+  "exercises": {
+    "problems": [
+      "water-between-walls",
+      "trapped-water",
+      "triplet-sum",
+      "mirrored-text",
+      "compact-signals",
+      "color-sort",
+      "mid-node",
+      "loop-detect"
+    ],
+    "designs": []
+  },
+  "commonMistakes": [
+    "Using two pointers on unsorted data without sorting first, when the logic depends on order.",
+    "Moving both pointers at once and skipping a possible answer.",
+    "Forgetting to move at least one pointer, which creates an infinite loop.",
+    "Using the value instead of the index when a problem asks for positions."
+  ],
+  "interviewNotes": [
+    "Explain what the region between the pointers means at every step.",
+    "If the input must stay unchanged, say whether sorting a copy is acceptable.",
+    "When a two-pointer argument is subtle, state the invariant: what have you ruled out?"
+  ],
+  "checkYourself": [
+    {
+      "question": "Why can two pointers find the best pair in a sorted array in O(n)?",
+      "answer": "If the current sum is too small, the smaller side cannot help with any larger value, so it can move inward. If the sum is too large, the larger side can move inward. Each item is abandoned at most once."
+    },
+    {
+      "question": "How does a fast and slow pointer find the middle of a list?",
+      "answer": "The fast pointer moves two nodes for every one node the slow pointer moves. When fast reaches the end, slow is at the middle."
+    },
+    {
+      "question": "What is the invariant in trapping rain water?",
+      "answer": "The water above a position depends on the smaller of the tallest wall on its left and right. Processing the side with the smaller known wall lets you finalize that position."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}
