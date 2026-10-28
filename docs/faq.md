@@ -52,7 +52,7 @@ from the drawing, so you can complete an attempt with text only.
 
 ## Do the lessons need AI or a network connection?
 
-No. The 30 lessons, their diagrams, complexity tables, self-check answers, and
+No. The 39 lessons, their diagrams, complexity tables, self-check answers, and
 linked exercises are bundled and work offline. Completing a lesson only writes a
 local progress row. AI clarification is an optional extra when a provider is
 configured.

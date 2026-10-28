@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -58,10 +58,37 @@ describe('validatePack', () => {
   it('exposes the learning library and its linked exercises', async () => {
     const result = await validatePack(corePackDirectory)
 
-    expect(result.pack?.lessons).toHaveLength(30)
+    expect(result.pack?.lessons).toHaveLength(39)
     expect(result.pack?.lessons).toContain('complexity-and-big-o')
     expect(result.pack?.lessons).toContain('tries')
     expect(result.pack?.lessons).toContain('rate-limiting')
+    expect(result.pack?.lessons).toContain('dns-and-reverse-proxies')
+    expect(result.pack?.lessons).toContain('system-design-reference')
+    expect(result.pack?.lessons).toContain('real-world-architectures')
+  })
+
+  it('links every design scenario from a system-design lesson', async () => {
+    const result = await validatePack(corePackDirectory)
+    const linkedDesigns = new Set<string>()
+
+    for (const slug of result.pack?.lessons ?? []) {
+      const lesson = JSON.parse(
+        await readFile(join(corePackDirectory, 'lessons', slug, 'lesson.json'), 'utf8'),
+      ) as {
+        readonly category: string
+        readonly exercises: { readonly designs: readonly string[] }
+      }
+
+      if (lesson.category === 'system-design') {
+        for (const design of lesson.exercises.designs) {
+          linkedDesigns.add(design)
+        }
+      }
+    }
+
+    for (const design of result.pack?.designs ?? []) {
+      expect(linkedDesigns.has(design)).toBe(true)
+    }
   })
 
   it('rejects a lesson exercise that is not in the pack', async () => {

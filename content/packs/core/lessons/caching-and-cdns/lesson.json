@@ -14,9 +14,10 @@
   "keyPoints": [
     "A cache trades memory and freshness for lower latency and less database load.",
     "Cache-aside is the default pattern: check the cache, load on a miss, then populate.",
-    "Every cache needs an eviction policy and a maximum size.",
+    "Caches exist at the client, CDN, reverse proxy, application, and database layers.",
+    "Every cache needs an eviction policy, a maximum size, and an invalidation rule.",
     "Invalidation is the hard part; TTLs bound staleness but do not make data instantly fresh.",
-    "A CDN is a cache at the edge, close to users, usually for static or cacheable content."
+    "A CDN is a cache at the edge; push CDNs receive uploads, pull CDNs fetch from the origin."
   ],
   "complexity": [
     {
@@ -48,6 +49,24 @@
       "time": "depends on fan-out",
       "space": "version or tag metadata",
       "note": "Often harder than population."
+    },
+    {
+      "operation": "Write-through",
+      "time": "cache write plus database write",
+      "space": "cache entry",
+      "note": "Fresh, but slower on the write path."
+    },
+    {
+      "operation": "Write-behind",
+      "time": "fast write acknowledgement",
+      "space": "pending writes",
+      "note": "A crash can lose recent writes."
+    },
+    {
+      "operation": "Refresh-ahead",
+      "time": "background refresh before expiry",
+      "space": "cache entry",
+      "note": "Helps predictable hot keys; wastes work when prediction is wrong."
     }
   ],
   "exercises": {
@@ -58,13 +77,16 @@
     "Adding a cache without deciding what happens when it is cold, full, or wrong.",
     "Using a long TTL for data that must be immediately consistent.",
     "Forgetting the thundering-herd problem when a popular key expires.",
-    "Caching personalized content at a shared edge without varying by user or authorization."
+    "Caching personalized content at a shared edge without varying by user or authorization.",
+    "Caching whole query results without a plan to invalidate every query that touched a changed row.",
+    "Assuming the database's internal cache means no application cache is needed."
   ],
   "interviewNotes": [
     "State the consistency requirement before choosing a cache strategy.",
     "Name the eviction policy and the maximum stale window.",
     "For a cache stampede, mention request coalescing, locks, or jittered TTLs.",
-    "For CDNs, distinguish public cacheable assets from private user data."
+    "For CDNs, distinguish public cacheable assets from private user data, and say whether the edge pushes or pulls.",
+    "Name the cache layer you are adding and why; a browser cache and an application cache solve different problems."
   ],
   "checkYourself": [
     {

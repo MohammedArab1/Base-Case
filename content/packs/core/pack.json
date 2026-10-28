@@ -128,7 +128,16 @@
     "databases",
     "consistency-and-idempotency",
     "message-queues-and-observability",
-    "rate-limiting"
+    "rate-limiting",
+    "performance-scalability-latency",
+    "availability-and-failover",
+    "dns-and-reverse-proxies",
+    "application-architecture",
+    "nosql-and-storage-selection",
+    "network-protocols",
+    "security-basics",
+    "system-design-reference",
+    "real-world-architectures"
   ],
   "collections": [
     {

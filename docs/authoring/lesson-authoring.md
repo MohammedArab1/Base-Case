@@ -125,7 +125,27 @@ Example:
   tries.
 - `algorithm`: pointers, windows, sorting, search, traversal, DP.
 - `system-design`: requirements, scaling, caching, databases, consistency,
-  queues, rate limiting.
+  queues, rate limiting, and the wider set of distributed-system topics.
+
+## System-design track
+
+The core pack has 17 system-design lessons. They cover requirements and
+estimation, scaling and load balancing, caching and CDNs, databases, consistency
+and idempotency, queues and observability, rate limiting, performance and
+scalability, availability and failover, DNS and reverse proxies, application
+architecture, NoSQL and storage selection, network protocols, security,
+estimation references, and reading real-world architectures.
+
+Coverage follows the public [System Design Primer](https://github.com/donnemartin/system-design-primer)
+topic index (CC BY 4.0) as a checklist. It is not a text source: write original
+prose, diagrams, examples, and tables. Do not reproduce the primer's wording,
+its tables, or its diagrams. When a lesson references the index, use a
+descriptive attribution note and a link, and do not imply affiliation.
+
+Every design scenario must be linked from at least one system-design lesson.
+The schema test checks this so a new scenario cannot be added without practice
+context. Object-oriented design questions are a separate interview format and
+are explicitly out of scope for the system-design track.
 
 ## Linking practice
 

@@ -172,7 +172,7 @@ The MVP is done when a new user can:
 1. Install the app on macOS or Windows.
 2. Use it fully offline.
 3. Choose Python or TypeScript.
-4. Learn from 30 offline DSA and system-design lessons, each with diagrams,
+4. Learn from 39 offline DSA and system-design lessons, each with diagrams,
    complexity notes, and linked practice, then browse 81 original coding problems
    across core patterns, including a filterable 75-problem Grind 75 collection.
 5. Run sample tests and submit against hidden tests.
@@ -246,7 +246,7 @@ Use these to judge the alpha and MVP. They are guides, not vanity targets.
 |---|---|---|---|---|
 | **Technical alpha** | Internal | 3–5 | 1–2 | Judge, editor, one track end-to-end |
 | **Public alpha** | Month 4–5 | 10 | 4 | Coding + design, FSRS, BYO AI, macOS/Windows builds |
-| **MVP / v1.0** | Month 6–8 | 81 (75 Grind 75) | 8 | 30 lessons, importer, polish, docs, accessibility, release |
+| **MVP / v1.0** | Month 6–8 | 81 (75 Grind 75) | 8 | 39 lessons, importer, polish, docs, accessibility, release |
 | **Post-MVP** | After feedback | 150+ | 15+ | Apple FM, C++/Java, mock interviews, community packs |
 
 ### 2.2 Supported platforms
@@ -1575,13 +1575,15 @@ Alpha (10 coding + 4 design):
 - Coding patterns: arrays/two pointers, hash maps, stacks, binary search, sliding window, linked lists, trees, BFS/DFS, heaps, DP intro.
 - Design: URL shortener, rate limiter, chat, news feed.
 
-MVP (81 coding + 8 design + 30 lessons, including a 75-problem Grind 75
+MVP (81 coding + 8 design + 39 lessons, including a 75-problem Grind 75
 collection):
 
 - Coding add: intervals, backtracking, greedy, tries, deques, union-find, more DP, graphs.
 - Design: file storage/sync, search autocomplete, payment ledger, notification system.
-- Learning library: 22 DSA lessons and 8 system-design lessons, each with original
+- Learning library: 22 DSA lessons and 17 system-design lessons, each with original
   explanations, diagrams, complexity tables, interview notes, and linked practice.
+  The system-design track covers the core topic index of the public System Design
+  Primer (CC BY 4.0); all prose, diagrams, and examples are original to Base Case.
 
 Post-MVP:
 
@@ -2916,7 +2918,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 > Reconciled with the codebase on 2026-10-25. Items checked below were already
 > delivered in Phases 2–8; they are ticked here instead of being rebuilt.
 
-- [x] Content to 81 coding + 8 design + 30 lessons. (All 162 reference solutions pass; the Grind 75 collection, trie/deque exercises, and the learning library were added in the 2026-10-26/27 expansions)
+- [x] Content to 81 coding + 8 design + 39 lessons. (All 162 reference solutions pass; the Grind 75 collection, trie/deque exercises, and the learning library were added in the 2026-10-26/27 expansions; the system-design track was expanded to 17 lessons on 2026-10-28)
 - [x] Importer (delivered in Phase 2; see `main/pack-manager.ts`):
   - [x] Pack validation/preview/install.
   - [x] Disclaimer.
@@ -2946,14 +2948,14 @@ re-verified. Clean-VM installation remains pending for both OSes. See
   - [x] Electron checklist. (`docs/project/security-review.md`)
   - [x] Judge limitations. (Documented in ADR-0009 and `docs/architecture/threat-model.md`)
   - [x] Dependency audit. (`pnpm audit --prod` clean after targeted transitive overrides)
-- [x] Learning library. (30 offline lessons, lesson progress in SQLite, linked coding/design exercises for every one of the 81 problems, and an optional AI clarification feature)
+- [x] Learning library. (39 offline lessons, lesson progress in SQLite, linked coding/design exercises for every one of the 81 problems, and an optional AI clarification feature)
 - [x] Docs, screenshots, GIF, demo video. (Docs, generated screenshots, and a 10-second GIF/MP4 walkthrough exist)
 - [ ] Release candidate. (MVP build candidate and checksums recorded; tagging waits on B1, B2, B10, and B11)
 
 **Deliverables**
 
 - MVP feature-complete build.
-- 81 + 8 + 30-lesson content pack.
+- 81 + 8 + 39-lesson content pack.
 - Importer.
 - Updated docs.
 
@@ -3043,7 +3045,7 @@ This is an aggressive 31-week plan (~7 months). With strong overlap and prior ex
 | Testing/CI/release | 100–140 h |
 | **Total** | **~740–1,060 h** |
 
-This estimate predates the 79/81-problem and 30-lesson expansions; treat it as
+This estimate predates the 79/81-problem and 39-lesson expansions; treat it as
 original planning history, not a current content inventory. See `PROGRESS.md`
 for delivered scope.
 
@@ -3070,7 +3072,7 @@ Use these as GitHub epics. Each task should become an issue with acceptance crit
 | E10 AI tutor | Providers, context, features, guardrails, evals | 6 | P1 |
 | E11 Content alpha | 10 coding + 4 design + CLI | 7 | P0 |
 | E12 Release/CI | Packaging, installers, docs, checksums | 8, 10 | P0 |
-| E13 MVP content | 81 + 8 + 30 lessons, review | 9 | P0 |
+| E13 MVP content | 81 + 8 + 39 lessons, review | 9 | P0 |
 | E14 Importer | Pack validation/preview/install | 9 | P1 |
 | E15 Accessibility | Keyboard, screen reader, contrast, motion | 9 | P1 |
 | E16 Diagnostics | Self-test, logs, export | 8–9 | P1 |

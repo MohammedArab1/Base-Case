@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "core/dns-and-reverse-proxies",
+  "slug": "dns-and-reverse-proxies",
+  "title": "DNS and Reverse Proxies",
+  "category": "system-design",
+  "summary": "How a name becomes an address, and how one front door hides and protects many backends.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 33,
+  "tags": ["system-design", "dns", "reverse-proxy", "load-balancing", "tls"],
+  "prerequisites": ["scaling-and-load-balancing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "DNS resolves names through a hierarchy of caches and authoritative servers.",
+    "TTL controls how long an answer is cached, so it also controls how fast changes spread.",
+    "DNS routing can be weighted, latency-based, geographic, or failover-based.",
+    "A reverse proxy terminates TLS, routes requests, compresses responses, and hides backends.",
+    "A load balancer spreads traffic across similar servers; a reverse proxy presents one front door."
+  ],
+  "complexity": [
+    {
+      "operation": "DNS cache hit",
+      "time": "near zero",
+      "space": "local cache",
+      "note": "The common case after the first lookup."
+    },
+    {
+      "operation": "Recursive DNS lookup",
+      "time": "tens of milliseconds",
+      "space": "resolver cache",
+      "note": "Distance and cache misses add latency."
+    },
+    {
+      "operation": "TLS handshake",
+      "time": "one to two round trips",
+      "space": "certificate and session state",
+      "note": "Resumption reduces the cost."
+    },
+    {
+      "operation": "Reverse proxy hop",
+      "time": "about 1-5 ms added",
+      "space": "connection state",
+      "note": "Keep the proxy close to the app."
+    },
+    {
+      "operation": "Layer 7 routing",
+      "time": "parse headers and path",
+      "space": "per-request state",
+      "note": "More flexible and more expensive than layer 4."
+    },
+    {
+      "operation": "Layer 4 forwarding",
+      "time": "minimal",
+      "space": "connection table",
+      "note": "No content awareness."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "file-sync", "search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Assuming a DNS change is instant instead of waiting for cached answers to expire.",
+    "Relying on DNS failover as if it reacted as quickly as a load balancer.",
+    "Caching personalized responses at a shared edge without varying by user and authorization.",
+    "Treating a reverse proxy as a security boundary while leaving backends reachable from the internet."
+  ],
+  "interviewNotes": [
+    "State the TTL and what it means for failover and migration time.",
+    "Separate the name-resolution path from the request path; they fail differently.",
+    "Explain why TLS terminates at the edge and whether traffic is re-encrypted internally.",
+    "Choose layer 4 or layer 7 explicitly and justify the cost."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does a low DNS TTL help during failover?",
+      "answer": "Caches discard the old address sooner, so clients are more likely to ask for the new one. The trade is more lookup traffic and slightly more latency."
+    },
+    {
+      "question": "What does a reverse proxy do that a simple load balancer may not?",
+      "answer": "It can present one front door for routing, TLS termination, compression, caching, static files, and request limits, even when there is only one backend."
+    },
+    {
+      "question": "When is layer 4 a better choice than layer 7?",
+      "answer": "When you only need to forward TCP or UDP traffic and do not need to inspect or route by application content. It is simpler and cheaper per byte."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

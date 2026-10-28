@@ -32,15 +32,21 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## Content
 
-- The pack has 81 coding problems, 8 design scenarios, and 30 lessons. The
+- The pack has 81 coding problems, 8 design scenarios, and 39 lessons. The
   Grind 75 collection is a curated 75-problem subset of a public study list that
   currently contains more entries; it is not the complete list. Every statement,
   example, hint, and test is original to Base Case. See the collection
   attribution in the app and `content/packs/core/pack.json`.
 - Lessons are a curated core curriculum, not an exhaustive encyclopedia. They
-  cover every pattern used by the bundled problems and the main system-design
-  concepts, but some advanced topics (for example advanced graph shortest-path
-  algorithms and concurrent data structures) are not included yet.
+  cover every pattern used by the bundled problems and the core topic index of
+  the public System Design Primer, but some advanced topics (for example advanced
+  graph shortest-path algorithms and concurrent data structures) are not included
+  yet.
+- The system-design track does not cover object-oriented design interview
+  questions such as a parking lot, call center, deck of cards, or chat server
+  class model. Those are a separate interview format. The primer's topics marked
+  under development (MapReduce, consistent hashing, and scatter-gather) are
+  introduced conceptually, without a distributed batch-processing implementation.
 - Lesson diagrams are offline ASCII diagrams. They render consistently and
   require no network, but they are not interactive.
 - Lesson completion is manual. Reading a lesson does not automatically mark it

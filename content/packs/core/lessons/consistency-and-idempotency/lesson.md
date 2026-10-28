@@ -9,6 +9,14 @@ Two questions shape most distributed designs:
 
 Strong consistency means every read sees the latest completed write. Eventual consistency means replicas converge after some delay.
 
+It helps to name three common patterns.
+
+- **Weak consistency**: after a write, a read may or may not see it. The system makes a best effort. This is acceptable for live presence, voice and video, and multiplayer state where a dropped update is replaced by the next frame.
+- **Eventual consistency**: after a write stops, replicas converge, usually within a bounded delay. DNS, email delivery, and feed counters are common examples. The user may see an old value for a moment, but the system heals.
+- **Strong consistency**: after a write completes, later reads see it. Transactions and file systems often provide this. It usually costs coordination, latency, or availability during a partition.
+
+None of these labels is a moral ranking. The product decides which one each operation needs.
+
 Between them are practical guarantees:
 
 - **Read-your-writes**: after I write, my own reads see it.
@@ -30,7 +38,16 @@ choice B: serve reads that may be stale
 
 Most systems are not "CP" or "AP" all the time. They make different choices per operation. A payment ledger may refuse a write it cannot confirm. A feed may serve a slightly old timeline.
 
+Availability here has a precise meaning: every request receives a response, not necessarily a correct or fresh one. A system that returns an error is not being available in the CAP sense. A system that serves stale data is.
+
 Say which operation needs which guarantee. "The system is strongly consistent" is too broad to be useful.
+
+```text
+inventory count      -> strong or refuse the write
+view counter         -> eventual or weak
+user's own new post  -> read-your-writes
+presence indicator   -> weak
+```
 
 ## Quorums
 

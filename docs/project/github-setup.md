@@ -19,7 +19,7 @@ Create one milestone per phase:
 | Phase 6 — AI tutor                    | Providers, context, features, guardrails, evals           |
 | Phase 7 — Content production          | 10 coding + 4 design for alpha                            |
 | Phase 8 — Alpha release               | Installers, docs, beta                                    |
-| Phase 9 — MVP expansion               | 81 + 8 content, 30 lessons, importer, polish              |
+| Phase 9 — MVP expansion               | 81 + 8 content, 39 lessons, importer, polish              |
 | Phase 10 — v1.0 release               | Stable release and community                              |
 
 ## Labels

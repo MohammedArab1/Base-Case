@@ -13,6 +13,7 @@
   "content": "lesson.md",
   "keyPoints": [
     "A queue decouples producers from consumers and absorbs bursts.",
+    "A message queue moves events; a task queue adds scheduling and result tracking for background jobs.",
     "At-least-once delivery is the practical default; consumers must handle duplicates.",
     "Retries need backoff, a maximum attempt count, and a dead-letter queue.",
     "Backpressure protects consumers when work arrives faster than it can be processed.",
@@ -24,6 +25,12 @@
       "time": "single-digit ms",
       "space": "message + broker storage",
       "note": "Usually asynchronous."
+    },
+    {
+      "operation": "Queued task",
+      "time": "queue delay + processing",
+      "space": "task payload + result",
+      "note": "Task queues add scheduling and result tracking."
     },
     {
       "operation": "Consumer retry",

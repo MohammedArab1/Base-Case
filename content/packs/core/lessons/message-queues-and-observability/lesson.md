@@ -22,6 +22,14 @@ Bad candidates:
 - an operation whose result must be known before the next step;
 - work that must be strongly ordered with a synchronous read.
 
+## Message queues and task queues
+
+A **message queue** receives events and delivers them to consumers. It is a good fit when one part of the system needs to tell another part that something happened.
+
+A **task queue** is a specialized queue for background jobs. It usually adds scheduling, retries, priorities, and a way to fetch a result. It is a good fit for work such as generating a report, resizing an image, or sending a batch of notifications.
+
+The boundary is not strict. Many brokers can do both. The question is whether you need to move an event or to run a job and track its outcome.
+
 ## Delivery guarantees
 
 - **At-most-once**: send and forget. A crash can lose the message.

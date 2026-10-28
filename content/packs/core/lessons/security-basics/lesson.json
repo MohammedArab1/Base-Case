@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "core/security-basics",
+  "slug": "security-basics",
+  "title": "Security Basics for System Design",
+  "category": "system-design",
+  "summary": "Protect data in transit and at rest, give every actor the least access, and trust nothing the client sends.",
+  "difficulty": "medium",
+  "estimatedMinutes": 14,
+  "order": 37,
+  "tags": [
+    "system-design",
+    "security",
+    "tls",
+    "authentication",
+    "authorization",
+    "input-validation"
+  ],
+  "prerequisites": ["network-protocols"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A threat model names the asset, the attacker, the path, and the impact.",
+    "Encrypt in transit with TLS and at rest with managed keys and rotation.",
+    "Authentication identifies an actor; authorization decides what that actor may do.",
+    "Parameterized queries, allowlisted input, and context-aware output encoding stop common injection attacks.",
+    "Least privilege, secret management, rate limits, and audit logs limit the damage of a mistake."
+  ],
+  "complexity": [
+    {
+      "operation": "TLS handshake",
+      "time": "one to two round trips",
+      "space": "certificate and session state",
+      "note": "Session resumption reduces repeat cost."
+    },
+    {
+      "operation": "Password hash",
+      "time": "tens to hundreds of ms by design",
+      "space": "salt and hash",
+      "note": "Slow hashing makes guessing expensive."
+    },
+    {
+      "operation": "Token verification",
+      "time": "microseconds to a few ms",
+      "space": "key or session lookup",
+      "note": "Revocation is harder for stateless tokens."
+    },
+    {
+      "operation": "Encryption at rest",
+      "time": "per read and write",
+      "space": "ciphertext plus key metadata",
+      "note": "Protects stored media, not a compromised app."
+    },
+    {
+      "operation": "Audit write",
+      "time": "usually asynchronous",
+      "space": "append-only log",
+      "note": "Never record secrets or full user code."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["payment-ledger", "file-sync", "url-shortener"]
+  },
+  "commonMistakes": [
+    "Putting authorization checks only in the UI while the API accepts any request.",
+    "Building SQL with string concatenation instead of parameterized queries.",
+    "Logging tokens, passwords, or full request bodies that contain personal data.",
+    "Giving every service the same database administrator credentials.",
+    "Encrypting data at rest but leaving it readable through an unrestricted internal API."
+  ],
+  "interviewNotes": [
+    "Name the asset and the trust boundary before listing controls.",
+    "Separate authentication from authorization and say where each is enforced.",
+    "Mention parameterized queries and output encoding explicitly for injection risks.",
+    "State how secrets are stored, scoped, and rotated.",
+    "Include audit logging and rate limiting as part of the security design."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is encryption at rest not enough on its own?",
+      "answer": "The application must decrypt data to use it. If an attacker compromises the application or its credentials, encryption at rest does not stop the read. Access control and least privilege are still required."
+    },
+    {
+      "question": "How do parameterized queries prevent SQL injection?",
+      "answer": "The query structure is fixed before user values are supplied. The database treats the values as data, not as SQL syntax, so they cannot change the query."
+    },
+    {
+      "question": "What does least privilege mean for a service account?",
+      "answer": "It has only the permissions needed for its job, on only the resources it needs, for only as long as it needs them. A compromised service then causes less damage."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

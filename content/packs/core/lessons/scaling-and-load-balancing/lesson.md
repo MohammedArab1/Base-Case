@@ -58,9 +58,48 @@ Common strategies:
 
 Health checks tell the balancer which backends are alive. A shallow check might only verify that the process responds. A deeper check verifies a critical dependency. Too deep a check can cause cascading removals when a shared dependency wobbles; choose the check deliberately.
 
+### Active-passive and active-active
+
+The load balancer itself must not be a single point of failure. Two common arrangements:
+
+```text
+active-passive:
+  [ balancer A ]  <-- heartbeats -->  [ balancer B ]
+       active                           standby
+
+active-active:
+  [ balancer A ]  <-- traffic -->  [ balancer B ]
+       active                         active
+```
+
+Active-passive is simpler because only one balancer takes traffic. Failover takes time and the standby must be ready. Active-active uses both, but clients need a way to reach either address, and both must agree on backend health and routing.
+
+At the backend tier, the same words describe the servers. Active-passive backend pairs have one serving and one waiting; active-active pairs both serve. Active-active is easier for reads than for writes.
+
+### Layer 4 and layer 7
+
+A load balancer can make decisions at different levels.
+
+```text
+layer 4:  source IP, destination IP, port
+layer 7:  HTTP method, path, host, header, cookie
+```
+
+**Layer 4** forwards connections quickly and does not inspect application content. **Layer 7** reads the request, can route by path or header, and can terminate TLS. Layer 7 is more flexible and uses more CPU. Choose layer 4 for simple high-throughput forwarding and layer 7 when routing depends on the request content.
+
+### TLS termination
+
+TLS termination decrypts the client connection at the balancer or reverse proxy. Backends receive plain HTTP inside the private network.
+
+```text
+client --TLS--> [ load balancer ] --HTTP--> [ app ]
+```
+
+This centralizes certificates, simplifies backend configuration, and lets the balancer inspect the request for layer 7 routing. It also means traffic after the balancer is unencrypted unless you re-encrypt it. For sensitive data, terminate at the edge and re-encrypt to the backend, or pass the connection through and terminate at the backend.
+
 ## Sticky sessions
 
-If the service does keep per-user state, the balancer can route the same user to the same backend. That is a **sticky session**.
+If the service does keep per-user state, the balancer can route the same user to the same backend. That is **sticky session**, or **session persistence**.
 
 It works, but it makes scaling and failure recovery harder. When a backend dies, its users lose their sessions. Prefer shared state or signed tokens when possible.
 
@@ -98,6 +137,6 @@ Mitigations:
 
 ## The sentence to say
 
-> "The API tier is stateless and scales horizontally behind a least-connections load balancer. The database is the shared bottleneck, so reads go through a cache and replicas, and writes are partitioned by user ID."
+> "The API tier is stateless and scales horizontally behind an active-active pair of layer 7 load balancers. TLS terminates at the edge and is re-encrypted to the app for sensitive routes. The database is the shared bottleneck, so reads go through a cache and replicas, and writes are partitioned by user ID."
 
 That tells the interviewer what scales, what does not, and why.

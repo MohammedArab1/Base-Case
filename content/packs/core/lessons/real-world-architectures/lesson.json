@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "core/real-world-architectures",
+  "slug": "real-world-architectures",
+  "title": "Reading Real-World Architectures",
+  "category": "system-design",
+  "summary": "Turn architecture write-ups into reusable patterns, and map interview prompts to practice.",
+  "difficulty": "medium",
+  "estimatedMinutes": 15,
+  "order": 39,
+  "tags": [
+    "system-design",
+    "architecture",
+    "patterns",
+    "fan-out",
+    "mapreduce",
+    "consistent-hashing"
+  ],
+  "prerequisites": [
+    "requirements-and-estimation",
+    "scaling-and-load-balancing",
+    "databases",
+    "message-queues-and-observability"
+  ],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Read an architecture post for user flows, data, bottlenecks, and trade-offs, not brand names.",
+    "Most large systems share an edge, stateless application, cache, database, queue, and worker skeleton.",
+    "Fan-out, consistent hashing, scatter-gather, and MapReduce solve different shapes of scale.",
+    "The seven rubric dimensions turn any architecture into a repeatable design conversation.",
+    "Object-oriented design questions are a separate interview format and are not covered here."
+  ],
+  "complexity": [
+    {
+      "operation": "Read an architecture post",
+      "time": "20-30 minutes",
+      "space": "one user flow",
+      "note": "Trace one path before studying every box."
+    },
+    {
+      "operation": "Trace one request",
+      "time": "one end-to-end path",
+      "space": "state at each hop",
+      "note": "Find where the request waits."
+    },
+    {
+      "operation": "Fan-out write",
+      "time": "one write becomes many rows",
+      "space": "one row per follower",
+      "note": "Fast reads, expensive writes."
+    },
+    {
+      "operation": "Scatter-gather",
+      "time": "slowest shard",
+      "space": "merged result set",
+      "note": "Tail latency dominates."
+    },
+    {
+      "operation": "MapReduce batch",
+      "time": "minutes to hours",
+      "space": "input plus intermediate data",
+      "note": "For offline jobs, not interactive requests."
+    },
+    {
+      "operation": "Design practice",
+      "time": "45 minutes",
+      "space": "seven rubric dimensions",
+      "note": "Use the scenario checklist to review."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["news-feed", "file-sync", "chat-system", "search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Copying a company's diagram without its constraints, traffic profile, or trade-offs.",
+    "Memorizing product names instead of the problem each component solves.",
+    "Treating a fan-out write as free; it can turn one post into millions of writes.",
+    "Assuming scatter-gather is always faster without accounting for the slowest shard.",
+    "Claiming object-oriented design coverage because a scenario mentions classes."
+  ],
+  "interviewNotes": [
+    "Open with one user flow and the read/write ratio.",
+    "Name the stateful components; they define the hard parts.",
+    "Map each component to a pattern and state its trade-off.",
+    "End with monitoring and what you would change at 10x.",
+    "Be explicit about topics you are not covering rather than bluffing."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does consistent hashing reduce cache misses when nodes change?",
+      "answer": "Keys are mapped onto a ring, so adding or removing a node moves only the keys near that node instead of remapping nearly every key."
+    },
+    {
+      "question": "When is fan-out on write a poor choice?",
+      "answer": "When one account has a very large number of followers. One write can become millions of feed writes, so a hybrid that merges celebrity posts at read time is often better."
+    },
+    {
+      "question": "What is the main latency risk in scatter-gather?",
+      "answer": "The response waits for the slowest shard. A single slow or unavailable shard can dominate the tail latency."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors. Coverage topics follow the public System Design Primer topic index (CC BY 4.0). All explanations, diagrams, and examples are original to Base Case; no primer text or diagrams are reproduced.",
+  "version": 1
+}

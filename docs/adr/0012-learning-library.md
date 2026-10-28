@@ -71,9 +71,18 @@ Negative:
   cost and unnecessarily includes self-check answers. The selected excerpt is
   enough.
 
+## Update — 2026-10-28
+
+The library grew to 39 lessons, including a 17-lesson system-design track that
+uses the public System Design Primer topic index as a coverage checklist. The
+decisions above are unchanged. The prerequisite graph now includes lessons with
+multiple prerequisites. Cycle detection is still a follow-up: the validator
+checks that referenced lesson slugs exist and that a lesson does not list
+itself, but it does not yet reject a longer cycle.
+
 ## Follow-up
 
-- Consider prerequisite cycle detection if the lesson graph grows beyond the
-  curated core path.
+- Add prerequisite cycle detection now that the lesson graph has multi-parent
+  paths.
 - Consider a lesson review mode with its own scheduling, separate from FSRS
   problem cards.

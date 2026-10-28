@@ -8,7 +8,7 @@ semantic versioning once releases begin.
 
 ### Added
 
-- Offline **Learn** library with 30 lessons covering Big O, core data
+- Offline **Learn** library with 39 lessons covering Big O, core data
   structures, algorithms, and system-design fundamentals. Each lesson includes
   beginner-friendly explanations, ASCII diagrams, worked examples, a complexity
   cheatsheet, interview notes, common mistakes, self-check questions, and linked
@@ -19,14 +19,20 @@ semantic versioning once releases begin.
   with a context preview and per-feature toggle. AI remains off by default.
 - Two original exercises: **Prefix Ledger** (tries) and **Window Max** (deques).
   The core pack now has 81 coding problems and 162 reference solutions.
+- Expanded the system-design track from 8 to 17 lessons, covering the core topic
+  index of the public System Design Primer: performance and scalability,
+  latency and throughput, availability and failover, DNS, reverse proxies,
+  application architecture, NoSQL and storage selection, network protocols,
+  security, estimation references, and real-world architecture patterns. All
+  explanations, diagrams, and examples are original to Base Case.
 - Lesson authoring guide and ADR-0012.
 
 ### Changed
 
-- The core pack now has 30 lessons listed in `pack.json`. Pack import validates
+- The core pack now has 39 lessons listed in `pack.json`. Pack import validates
   lesson prerequisite and exercise references.
 - The golden-pack content counts are now 81 coding problems, 8 design scenarios,
-  30 lessons, and a 75-problem Grind 75 collection.
+  39 lessons, and a 75-problem Grind 75 collection.
 
 ### Fixed
 

@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "core/nosql-and-storage-selection",
+  "slug": "nosql-and-storage-selection",
+  "title": "NoSQL and Choosing a Store",
+  "category": "system-design",
+  "summary": "Pick storage by access pattern, then decide what to duplicate, partition, and keep transactional.",
+  "difficulty": "medium",
+  "estimatedMinutes": 15,
+  "order": 35,
+  "tags": ["system-design", "nosql", "databases", "denormalization", "sharding", "sql-tuning"],
+  "prerequisites": ["databases"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Start with the queries and their volume, not with a database brand.",
+    "Key-value, document, wide-column, graph, search, and object stores solve different shapes of access.",
+    "Denormalization makes reads cheaper by duplicating data, and makes writes and consistency harder.",
+    "Replication copies data, federation splits by function, and sharding splits one data set by key.",
+    "NoSQL does not remove partitioning or failure planning; it moves more of that work into the application."
+  ],
+  "complexity": [
+    {
+      "operation": "Key-value lookup",
+      "time": "O(1) average",
+      "space": "key plus value",
+      "note": "No rich query support."
+    },
+    {
+      "operation": "Document fetch by id",
+      "time": "O(1) average",
+      "space": "whole document",
+      "note": "Atomicity is usually per document."
+    },
+    {
+      "operation": "Wide-column range scan",
+      "time": "O(results)",
+      "space": "sorted columns",
+      "note": "Efficient when the row key and sort order match the query."
+    },
+    {
+      "operation": "Graph traversal",
+      "time": "O(edges visited)",
+      "space": "visited set",
+      "note": "Deep traversals still need limits."
+    },
+    {
+      "operation": "Relational join",
+      "time": "O(n log n) or worse",
+      "space": "working set",
+      "note": "Denormalize only when measurement justifies it."
+    },
+    {
+      "operation": "Denormalized read",
+      "time": "O(1)",
+      "space": "duplicated fields",
+      "note": "Every copy must be updated or repaired."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "payment-ledger", "seat-reservation", "news-feed"]
+  },
+  "commonMistakes": [
+    "Choosing a NoSQL store for a workload that needs multi-row transactions and then rebuilding them in application code.",
+    "Sharding before measuring whether one primary plus replicas and indexes can meet the target.",
+    "Denormalizing a fact in several places without assigning one owner or a repair path.",
+    "Using a graph database for simple lookups that an indexed relational table handles well."
+  ],
+  "interviewNotes": [
+    "List the top queries with their shape, rate, and consistency requirement.",
+    "Name the invariant, then the store and constraint that protects it.",
+    "Explain federation versus sharding with a concrete example.",
+    "For denormalization, say which copy is authoritative and how drift is repaired."
+  ],
+  "checkYourself": [
+    {
+      "question": "How is federation different from sharding?",
+      "answer": "Federation splits databases by business function, such as users and billing. Sharding splits one data set by a partition key. Both reduce per-database load, but only sharding distributes one logical table."
+    },
+    {
+      "question": "Why can denormalization make writes slower?",
+      "answer": "A change may need to update several duplicated copies, and those copies may live in different tables or services. Reads get cheaper at the cost of write work and consistency risk."
+    },
+    {
+      "question": "When should a graph database be considered?",
+      "answer": "When relationship traversal is the main query, such as friend-of-friend or permission chains. For simple lookups, an indexed relational table is usually simpler."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

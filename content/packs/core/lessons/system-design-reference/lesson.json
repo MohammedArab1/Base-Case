@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "core/system-design-reference",
+  "slug": "system-design-reference",
+  "title": "System Design Cheat Sheet",
+  "category": "system-design",
+  "summary": "The conversions, latency numbers, and capacity formulas to keep beside you during an estimate.",
+  "difficulty": "easy",
+  "estimatedMinutes": 10,
+  "order": 38,
+  "tags": ["system-design", "estimation", "latency", "capacity", "reference"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Round aggressively and state every assumption; the goal is the right order of magnitude.",
+    "1 KB × 1 million is about 1 GB, and 1 MB/s is about 86 GB/day.",
+    "Average QPS is daily actions divided by 86,400; peak is a stated multiple of average.",
+    "Keep latency, throughput, storage, and bandwidth estimates in consistent units.",
+    "Capacity planning needs headroom for bursts, failures, deploys, and growth."
+  ],
+  "complexity": [
+    {
+      "operation": "1 KB × 1 million",
+      "time": "—",
+      "space": "about 1 GB",
+      "note": "Useful for storage estimates."
+    },
+    {
+      "operation": "1 MB/s for one day",
+      "time": "86,400 seconds",
+      "space": "about 86 GB",
+      "note": "Remember the day conversion."
+    },
+    {
+      "operation": "Daily actions to QPS",
+      "time": "divide by 86,400",
+      "space": "—",
+      "note": "Then multiply by a peak factor."
+    },
+    {
+      "operation": "Peak capacity",
+      "time": "2-5x average as a starting point",
+      "space": "—",
+      "note": "State the factor instead of hiding it."
+    },
+    {
+      "operation": "Three replicas",
+      "time": "—",
+      "space": "3x storage",
+      "note": "Indexes and backups add more."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "news-feed"]
+  },
+  "commonMistakes": [
+    "Confusing bytes with bits when converting bandwidth.",
+    "Forgetting replication, indexes, and backups when estimating storage.",
+    "Providing seven significant digits from a two-significant-digit assumption.",
+    "Leaving DNS, TLS, retries, and queueing out of a latency budget."
+  ],
+  "interviewNotes": [
+    "Say the assumptions before the arithmetic.",
+    "Use round numbers and move on; the interviewer cares about the conclusion.",
+    "Translate each estimate into a component choice.",
+    "Name the headroom assumption and what would change at 10x."
+  ],
+  "checkYourself": [
+    {
+      "question": "How much data does 1 MB/s produce in a day?",
+      "answer": "About 86 GB. 1 MB/s × 86,400 seconds is 86,400 MB, which is roughly 86 GB in decimal units."
+    },
+    {
+      "question": "Why multiply average QPS by a peak factor?",
+      "answer": "Traffic is not uniform. Provisioning for the average leaves the system overloaded during daily or event-driven peaks."
+    },
+    {
+      "question": "Why is a single cross-region call expensive in a latency budget?",
+      "answer": "A round trip across an ocean is roughly 150 ms before application work. Several sequential calls multiply that delay."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors. Order-of-magnitude figures are widely published engineering rules of thumb; hardware and networks vary.",
+  "version": 1
+}

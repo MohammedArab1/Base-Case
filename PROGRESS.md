@@ -1,8 +1,8 @@
 # Progress Log
 
-> Last updated: 2026-10-27
-> Current phase: Phase 9 — MVP expansion (81 + 8 content, 30-lesson Learn library, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 30 offline lessons with linked practice, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1 and B2 are closed; B3–B12 remain (B8/B9 optional, B12 post-MVP).
+> Last updated: 2026-10-28
+> Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1 and B2 are closed; B3–B12 remain (B8/B9 optional, B12 post-MVP).
 > Next milestone: MVP release candidate once B10 and B11 clear (B1 waived, B2 done), then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
@@ -19,19 +19,19 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
-| Phase 7 — Content production | In progress | 2026-10-27 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 30 lessons. All 162 reference solutions pass. Second-person review and optional reference scenes remain |
+| Phase 7 — Content production | In progress | 2026-10-28 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 39 lessons, including a 17-lesson system-design track that covers the public System Design Primer's core topic index. All 162 reference solutions pass. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-27 | Installers, checksums, diagnostics self-test, alpha docs, feedback form, triage/metrics runbook, and a tag-driven release job are in place. B2 is done (workflow run 40607714499); B1 is closed by owner waiver. Remaining: private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-27 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 30 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, and trie/deque exercises. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
+| Phase 9 — MVP expansion | In progress | 2026-10-28 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 39 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, trie/deque exercises, and a 17-lesson system-design track covering the System Design Primer topic index. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
 1. Run the manual accessibility checklist in `docs/project/accessibility.md` on macOS and Windows and record the result (B11).
 2. Confirm the release-candidate checksums in `docs/project/release-candidate.md` after the final rebuild, then review known issues and re-run export/import plus backup/restore one final time.
-3. Rebuild the final 81-problem/30-lesson content state and rerun the Windows packaged smoke test before tagging.
+3. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
 4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
 5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 30 lessons (B4) and record the sign-off.
+6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 39 lessons (B4) and record the sign-off.
 7. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
 8. Add optional local AI history with a clear delete button (privacy default stays off).
 9. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
@@ -48,7 +48,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run:** the bug zoo is recorded against the mock provider; a real endpoint plus human ratings is needed for the Phase 6 exit criteria.
-- **B4 — Second-person content review:** the 81 coding + 8 design + 30 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
+- **B4 — Second-person content review:** the 81 coding + 8 design + 39 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -58,6 +58,33 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-28 — Complete system-design topic coverage in the Learn library
+
+- Status: System-design learning track complete; 39 offline lessons
+- Done:
+  - Audited the 8 existing system-design lessons against the public [System Design Primer](https://github.com/donnemartin/system-design-primer) topic index and confirmed that performance/scalability, latency/throughput, availability/failover, DNS, reverse proxies, application architecture, NoSQL, network protocols, security, estimation references, and real-world architecture patterns were missing or incomplete.
+  - Added 9 original lessons: performance-scalability-latency, availability-and-failover, dns-and-reverse-proxies, application-architecture, nosql-and-storage-selection, network-protocols, security-basics, system-design-reference, and real-world-architectures. Each has beginner-first prose, offline ASCII diagrams, worked examples, complexity/reference tables, interview notes, common mistakes, self-check questions, and linked design practice.
+  - Extended 4 existing lessons: caching and CDNs (cache layers, query-level versus object-level caching, write-through, write-behind, refresh-ahead, push versus pull CDNs, TTL jitter); databases (master-master replication, federation, denormalization, SQL tuning); consistency (explicit weak, eventual, and strong patterns plus the availability framing of CAP); scaling (active-passive versus active-active, layer 4 versus layer 7, TLS termination, session persistence); and message queues (task queues).
+  - Added a system-design question map that links public interview themes to the 8 bundled design scenarios, states that object-oriented design questions are out of scope, and introduces the primer's under-development topics (MapReduce, consistent hashing, scatter-gather) at a conceptual level.
+  - Every design scenario is now linked from at least one system-design lesson, and a schema test enforces that coverage. The core pack is 39 lessons: 22 DSA/foundation and 17 system-design. Problem, design, Grind 75, and reference-solution counts are unchanged at 81, 8, 75, and 162.
+  - Updated `pack.json`, the schema and smoke-test lesson counts, README, PLAN, CHANGELOG, FAQ, known limitations, alpha notes, GitHub setup, open blockers, performance notes, the release-candidate record, wireframes, the architecture overview, the authoring guides, content policy, and ADR-0012.
+  - All added prose, diagrams, tables, and examples are original to Base Case. The primer is used only as a topic checklist with a descriptive CC BY 4.0 attribution note; no primer text or diagrams are reproduced.
+- Verification:
+  - `pnpm content:validate` — valid; 81 problems, 8 designs, and 39 lessons; only the eight expected optional reference-scene warnings.
+  - `pnpm content:test` — 162/162 reference solutions accepted.
+  - `pnpm typecheck`, `pnpm lint`, and `pnpm format:check` — passed.
+  - `pnpm test` — schema, desktop, and Go suites passed (10 schema tests including the new design-linkage check, 135 desktop tests).
+  - `pnpm smoke:e2e` — passed with 81 problems, 39 lessons, 8 design scenarios, 75 Grind 75 members, lesson completion, and the existing judge/import flows.
+  - `pnpm smoke:playwright` — 12/12 passed, including the Learn flow and the seven-view accessibility gate.
+  - `pnpm evals` — not run; this change does not touch AI prompts, schemas, context builders, or guardrails.
+- Next:
+  - Fold the 39-lesson set into the second-person content review (B4).
+  - Rebuild the installer and rerun the packaged Windows smoke test before tagging.
+- Notes:
+  - Object-oriented design interview questions (parking lot, call center, deck of cards, chat server classes, circular array) remain out of scope for the system-design track; hash map and LRU cache are covered as DSA lessons.
+  - Prerequisite cycle detection remains a follow-up now that the lesson graph has multi-parent paths; see the 2026-10-28 update in ADR-0012.
+  - Earlier work-log entries keep their historical 30-lesson counts.
 
 ### 2026-10-27 — B1/B2 closure: Windows install verified, clean-OS waiver
 

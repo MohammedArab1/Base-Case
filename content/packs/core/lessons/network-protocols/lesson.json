@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "core/network-protocols",
+  "slug": "network-protocols",
+  "title": "Network Protocols for System Design",
+  "category": "system-design",
+  "summary": "HTTP, TCP, UDP, and RPC: what each one promises, what it costs, and how to fail safely.",
+  "difficulty": "medium",
+  "estimatedMinutes": 15,
+  "order": 36,
+  "tags": ["system-design", "http", "tcp", "udp", "rpc", "rest", "timeouts"],
+  "prerequisites": ["scaling-and-load-balancing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "HTTP is a stateless request/response protocol; method semantics decide what is safe to retry.",
+    "TCP gives an ordered, reliable byte stream at the cost of handshakes and head-of-line blocking.",
+    "UDP gives low overhead and no delivery guarantee; use it when late data is worse than lost data.",
+    "RPC fits controlled internal calls; REST fits stable resource-oriented public APIs.",
+    "Every network call needs a deadline, and every retry needs a limit and an idempotency plan."
+  ],
+  "complexity": [
+    {
+      "operation": "Loopback round trip",
+      "time": "well under 1 ms",
+      "space": "—",
+      "note": "Useful as a lower bound, not a production estimate."
+    },
+    {
+      "operation": "Same-datacenter round trip",
+      "time": "about 0.5 ms",
+      "space": "—",
+      "note": "Adds up across chatty calls."
+    },
+    {
+      "operation": "Cross-continent round trip",
+      "time": "about 150 ms",
+      "space": "—",
+      "note": "Physics and routing dominate."
+    },
+    {
+      "operation": "TCP handshake",
+      "time": "one round trip before data",
+      "space": "connection state",
+      "note": "Connection reuse avoids repeating it."
+    },
+    {
+      "operation": "TLS handshake",
+      "time": "one to two round trips",
+      "space": "certificate and session state",
+      "note": "Session resumption reduces the cost."
+    },
+    {
+      "operation": "HTTP/2 stream",
+      "time": "multiplexed on one connection",
+      "space": "per-stream state",
+      "note": "Does not remove TCP head-of-line blocking."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["rate-limiter", "chat-system", "search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Retrying a POST without an idempotency key and creating duplicate work.",
+    "Setting a timeout only on the client while internal calls wait forever.",
+    "Using UDP for data that must arrive completely and in order without building that layer.",
+    "Assuming HTTP/2 removes every head-of-line blocking problem.",
+    "Using a chatty RPC design that turns one page load into dozens of sequential round trips."
+  ],
+  "interviewNotes": [
+    "State the protocol at each boundary and why it fits.",
+    "Give deadlines in milliseconds, not the word 'fast'.",
+    "Say which operations are idempotent and how writes are protected.",
+    "Mention connection pooling and keep-alive when connection setup is a meaningful cost."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is PUT idempotent but POST usually not?",
+      "answer": "A PUT replaces a resource at a known address, so repeating it produces the same state. A POST usually creates a new resource or triggers work, so repeating it can create a duplicate."
+    },
+    {
+      "question": "When would you choose UDP over TCP?",
+      "answer": "When low latency matters more than guaranteed delivery, such as real-time voice, video, or games, and when the application can tolerate or repair loss."
+    },
+    {
+      "question": "What does a deadline protect?",
+      "answer": "It bounds how long a caller waits, freeing connections and threads. Without one, a slow dependency can exhaust the caller's capacity."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

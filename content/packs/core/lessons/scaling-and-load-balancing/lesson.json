@@ -15,6 +15,8 @@
     "Vertical scaling makes one machine bigger; horizontal scaling adds more machines.",
     "Horizontal scaling is easier when services are stateless and sessions live in a shared store.",
     "Load balancers choose a backend with round robin, least connections, or hashing.",
+    "Layer 4 balances by address and port; layer 7 routes by request content.",
+    "TLS termination centralizes certificates but moves trust to the internal network.",
     "Health checks remove unhealthy backends, but a health check is not a full correctness test.",
     "Consistent hashing limits reshuffling when the backend pool changes."
   ],
@@ -42,6 +44,24 @@
       "time": "every few seconds",
       "space": "small",
       "note": "Fast failure detection."
+    },
+    {
+      "operation": "TLS termination",
+      "time": "handshake at the edge",
+      "space": "certificate and session state",
+      "note": "Backends avoid per-connection TLS work."
+    },
+    {
+      "operation": "Layer 7 routing",
+      "time": "parse the request",
+      "space": "per-request state",
+      "note": "More flexible and more expensive than layer 4."
+    },
+    {
+      "operation": "Layer 4 forwarding",
+      "time": "minimal",
+      "space": "connection table",
+      "note": "No visibility into HTTP content."
     }
   ],
   "exercises": {
@@ -52,11 +72,15 @@
     "Scaling stateless web servers while leaving a single database as the real bottleneck.",
     "Storing session state on one server and then enabling round robin across many.",
     "Using a health check that passes while the service is functionally broken.",
-    "Ignoring hot keys; uniform hashing does not help if one key gets most of the traffic."
+    "Ignoring hot keys; uniform hashing does not help if one key gets most of the traffic.",
+    "Making a single load balancer the new single point of failure.",
+    "Terminating TLS at the edge and leaving sensitive internal traffic unencrypted without saying so."
   ],
   "interviewNotes": [
     "Say what is stateful. The stateful parts determine how hard scaling will be.",
     "Name the load-balancing algorithm and why it fits the workload.",
+    "Say whether the balancer is layer 4 or layer 7, and where TLS terminates.",
+    "If the design uses sticky sessions, name the failure mode when a backend dies.",
     "For a hot key, describe a mitigation such as request coalescing, a local cache, or splitting the key."
   ],
   "checkYourself": [

@@ -19,6 +19,12 @@ These rules are non-negotiable for a public open-source project.
    another course's diagrams, even if the underlying algorithm is the same.
 7. Attribute open-license sources. If you adapt an Exercism or other MIT/CC
    problem, follow its license and attribution requirements.
+
+Topic indexes and study lists (for example the System Design Primer) may be
+referenced descriptively with attribution as a coverage checklist. Covering a
+topic is not permission to reproduce another author's prose, tables, diagrams,
+or examples. Write the explanation yourself and link to the source.
+
 8. Contributors must attest ownership through the DCO sign-off and the content
    PR checklist.
 9. Keep the importer disclaimer: users are responsible for content they import.

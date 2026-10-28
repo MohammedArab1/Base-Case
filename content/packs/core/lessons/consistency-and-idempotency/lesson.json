@@ -13,6 +13,7 @@
   "content": "lesson.md",
   "keyPoints": [
     "Consistency is a spectrum of guarantees, not a single yes/no property.",
+    "Weak, eventual, and strong consistency make different promises after a write.",
     "During a network partition, a system chooses between refusing some requests and serving possibly stale data.",
     "Read-your-writes and monotonic reads are practical guarantees users notice.",
     "An idempotency key makes a retried write safe to apply more than once.",
@@ -30,6 +31,12 @@
       "time": "low latency",
       "space": "replica or cache",
       "note": "Staleness window must be acceptable."
+    },
+    {
+      "operation": "Weak read",
+      "time": "best effort",
+      "space": "local state",
+      "note": "No promise that the write is visible."
     },
     {
       "operation": "Quorum read/write",
@@ -58,10 +65,13 @@
     "Saying 'pick two' from CAP as if partitions are optional or consistency is free during normal operation.",
     "Using eventual consistency for an invariant the product cannot tolerate, such as double-booking a seat.",
     "Treating a retry as a new request and charging a customer twice.",
-    "Assuming a message queue delivers exactly once without a deduplication mechanism."
+    "Assuming a message queue delivers exactly once without a deduplication mechanism.",
+    "Using weak consistency for a value the user expects to read back immediately after writing."
   ],
   "interviewNotes": [
     "Ask what the user must see immediately after a write, not whether the whole system is strongly consistent.",
+    "Name the consistency pattern: weak, eventual, or strong, and the staleness window you accept.",
+    "During a partition, say which operations stay available and which refuse rather than guess.",
     "Name the invariant: no double booking, no double charge, no lost message.",
     "For a payment or booking, show the idempotency key and the uniqueness constraint that enforces it.",
     "Prefer a single-writer boundary or a transaction over a distributed transaction when possible."

@@ -110,6 +110,13 @@ no application backend, no accounts, and no telemetry.
 5. Practice links open the existing coding problem or design scenario. Their
    normal attempts, drafts, review cards, and notes are unchanged.
 
+The bundled library has 39 lessons: 22 DSA/foundation lessons and 17
+system-design lessons. The system-design track uses the public System Design
+Primer topic index as a coverage checklist; all lesson prose, diagrams, and
+examples are original to Base Case. Lesson prerequisites and exercise links are
+validated when the pack loads, and a schema test checks that every design
+scenario is linked from at least one system-design lesson.
+
 ### AI request
 
 1. User picks an AI action.

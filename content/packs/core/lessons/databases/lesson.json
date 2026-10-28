@@ -16,7 +16,9 @@
     "An index speeds reads but costs write time and storage.",
     "Replication improves read scale and availability but introduces lag.",
     "Sharding splits data across nodes; the partition key decides which queries are cheap.",
-    "Transactions protect multi-record invariants; distributed transactions add latency and failure modes."
+    "Transactions protect multi-record invariants; distributed transactions add latency and failure modes.",
+    "Federation splits databases by function, while sharding splits one data set by key.",
+    "Denormalization speeds reads by duplicating data, at the cost of write work and consistency risk."
   ],
   "complexity": [
     {
@@ -48,6 +50,24 @@
       "time": "one shard if keyed well",
       "space": "data / shards",
       "note": "Cross-shard queries fan out."
+    },
+    {
+      "operation": "Master-master write",
+      "time": "conflict resolution or added latency",
+      "space": "multiple writers",
+      "note": "Requires a conflict rule."
+    },
+    {
+      "operation": "Federated query",
+      "time": "one database per function",
+      "space": "smaller data sets",
+      "note": "Cross-function joins become application work."
+    },
+    {
+      "operation": "Denormalized read",
+      "time": "no join",
+      "space": "duplicated fields",
+      "note": "Every copy must be updated or repaired."
     }
   ],
   "exercises": {
@@ -58,13 +78,17 @@
     "Choosing a database by reputation instead of by access pattern.",
     "Adding indexes without considering write amplification and storage.",
     "Sharding on a key that does not match the most common query, causing fan-out.",
-    "Assuming asynchronous replication gives read-after-write consistency."
+    "Assuming asynchronous replication gives read-after-write consistency.",
+    "Using master-master replication without deciding how concurrent writes are resolved.",
+    "Denormalizing before measuring the read path, then struggling to repair every copy."
   ],
   "interviewNotes": [
     "Name the main queries first, then the storage.",
     "For each index, say which query it serves.",
     "When you shard, state the partition key and the queries that become expensive.",
-    "Use transactions for multi-record invariants; say what isolation level you need."
+    "Use transactions for multi-record invariants; say what isolation level you need.",
+    "Distinguish federation (split by function) from sharding (split one data set by key).",
+    "When you denormalize, name the authoritative copy and how drift is repaired."
   ],
   "checkYourself": [
     {

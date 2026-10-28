@@ -13,16 +13,20 @@ complete.
 
 > **Historical record.** This candidate predates the 79-problem and learning-
 > library expansions. The artifacts and checksums below are not release
-> candidates for the current 81-problem, 30-lesson build. Do not rebuild or
+> candidates for the current 81-problem, 39-lesson build. Do not rebuild or
 > publish from this record without a new candidate entry and fresh checksums.
 >
 > **2026-10-27 update.** A newer 79-problem build at `72e9b4d` was produced by
 > [Build installers run 40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499).
 > The Windows installer passed diagnostics 9/9 with bundled Node/Python,
 > closing B2. B1 was closed by owner waiver because no clean macOS VM was
-> available. The current working tree adds the Learn library (81 problems and 30
+> available. The current working tree adds the Learn library (81 problems and 39
 > lessons) and still needs a fresh build, checksums, and packaged smoke test
 > before tagging.
+>
+> **2026-10-28 update.** The system-design track expanded from 8 to 17 lessons,
+> for a total of 39 lessons. No installer was rebuilt for this content change;
+> a fresh candidate record and packaged smoke test are still required.
 
 ## Artifacts
 

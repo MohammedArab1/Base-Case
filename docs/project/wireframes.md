@@ -53,7 +53,7 @@ status indicator.
 ┌──────────────┬──────────────────────────────────────────────────────────┐
 │ Base Case    │ Learn the fundamentals            [Search lessons]       │
 │              ├──────────────────────────────────────────────────────────┤
-│ Today        │ 30 lessons · 6 complete · offline                        │
+│ Today        │ 39 lessons · 6 complete · offline                        │
 │ Learn      ● │ [All topics] [Foundations] [Data structures] [Algorithms]│
 │ Coding       │                                                          │
 │ System Design│ Data structures                                          │

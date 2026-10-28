@@ -68,7 +68,7 @@ Base Case 0.1.0-alpha is a local-first coding interview and system design
 practice app for macOS (Apple Silicon and Intel) and Windows.
 
 What works: 81 original coding problems (including a 75-problem Grind 75
-collection), 8 design scenarios, 30 offline DSA and system-design lessons with
+collection), 8 design scenarios, 39 offline DSA and system-design lessons with
 linked practice, a local Python and TypeScript judge, hints and explanations,
 FSRS review, a design canvas with Markdown/PNG export, data export/import,
 accessible core flows, and an optional experimental AI tutor with explain-back,

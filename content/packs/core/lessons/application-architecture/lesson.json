@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "core/application-architecture",
+  "slug": "application-architecture",
+  "title": "Application Architecture: Web, Workers, and Services",
+  "category": "system-design",
+  "summary": "Split the system into layers that can grow, deploy, and fail independently.",
+  "difficulty": "medium",
+  "estimatedMinutes": 14,
+  "order": 34,
+  "tags": [
+    "system-design",
+    "application-layer",
+    "microservices",
+    "service-discovery",
+    "api-gateway"
+  ],
+  "prerequisites": ["scaling-and-load-balancing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Separate the edge, application, worker, and data layers so each can scale and fail independently.",
+    "Stateless application instances are easy to scale, replace, and deploy.",
+    "A modular monolith is a valid default; microservices trade operational simplicity for independent ownership.",
+    "Service discovery maps names to healthy instances, and health checks decide what is in rotation.",
+    "Every synchronous call needs a deadline, and every retried write needs idempotency."
+  ],
+  "complexity": [
+    {
+      "operation": "Monolith deploy",
+      "time": "one artifact",
+      "space": "one process",
+      "note": "Simple, but releases are coupled."
+    },
+    {
+      "operation": "Service call",
+      "time": "adds a network hop",
+      "space": "connection state",
+      "note": "Can fail independently of local code."
+    },
+    {
+      "operation": "Discovery lookup",
+      "time": "cached, usually milliseconds",
+      "space": "registry entry",
+      "note": "Stale entries need health checks."
+    },
+    {
+      "operation": "API gateway hop",
+      "time": "about 1-10 ms added",
+      "space": "per-request state",
+      "note": "Keep business logic out of the gateway."
+    },
+    {
+      "operation": "Worker queue latency",
+      "time": "queue delay plus processing",
+      "space": "queued messages",
+      "note": "Good for slow work, not for the response the user waits on."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["search-autocomplete", "chat-system", "file-sync"]
+  },
+  "commonMistakes": [
+    "Adopting microservices without a concrete scaling, ownership, or release constraint.",
+    "Calling services independently but sharing one database schema, which preserves hidden coupling.",
+    "Putting business rules in the API gateway or load balancer.",
+    "Adding retries to every call without a deadline, a limit, or an idempotency key."
+  ],
+  "interviewNotes": [
+    "Name the layers and what each one owns before naming technologies.",
+    "Say what is stateful; that is what makes scaling hard.",
+    "Justify a monolith or microservices from constraints, not fashion.",
+    "Describe the timeout, retry, and idempotency behavior at every network boundary."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is a stateless application tier easier to scale?",
+      "answer": "Any instance can serve any request, so traffic can be spread freely and a failed instance can be replaced without losing user state."
+    },
+    {
+      "question": "What is a modular monolith?",
+      "answer": "One deployable application with clear internal module boundaries and interfaces. It keeps deployment simple while reducing the cost of future extraction."
+    },
+    {
+      "question": "What should a service discovery health check verify?",
+      "answer": "Enough to tell whether the instance can serve traffic, without depending on every shared dependency. A check that fails for a shared outage can remove every healthy instance at once."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

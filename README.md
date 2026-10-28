@@ -4,7 +4,7 @@
 > and system design. It is not affiliated with LeetCode or any other judge.
 
 **Status:** Phase 9 MVP expansion. The app has 81 original coding problems
-(including a 75-problem Grind 75 collection), 8 system design scenarios, 30
+(including a 75-problem Grind 75 collection), 8 system design scenarios, 39
 offline lessons covering DSA and system-design fundamentals, a real
 Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
 persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
@@ -97,15 +97,21 @@ runtimes. See ADR-0010.
   greedy, matrix traversal, and dynamic programming. Each has 3–5 sample tests,
   at least 15 hidden tests, four hints, an explanation, common mistakes,
   follow-ups, and Python/TypeScript reference solutions.
-- A **Learn** library with 30 offline lessons: Big O, arrays and strings, hash
+- A **Learn** library with 39 offline lessons: 22 DSA/foundation lessons and 17
+  system-design lessons. The DSA track covers Big O, arrays and strings, hash
   maps, two pointers, sliding windows, prefix sums, sorting, binary search,
   stacks, queues/deques, linked lists, recursion/backtracking, trees, BSTs,
   heaps, tries, graphs/traversal, topological sort and union-find, greedy and
-  intervals, bit manipulation, matrix traversal, dynamic programming, and eight
-  system-design topics. Each lesson has plain-language explanations, ASCII
-  diagrams, worked examples, a complexity cheatsheet, interview notes, common
-  mistakes, self-check questions, and linked coding or design exercises.
-  Completion is stored locally, and every lesson remains readable without AI.
+  intervals, bit manipulation, matrix traversal, and dynamic programming. The
+  system-design track covers the core topic index of the public System Design
+  Primer (CC BY 4.0), from performance and availability through DNS, reverse
+  proxies, application architecture, storage selection, network protocols,
+  security, estimation references, and reading real architectures. All
+  explanations, diagrams, and examples are original to Base Case. Each lesson
+  has plain-language explanations, ASCII diagrams, worked examples, a complexity
+  cheatsheet, interview notes, common mistakes, self-check questions, and linked
+  coding or design exercises. Completion is stored locally, and every lesson
+  remains readable without AI.
 - A **Grind 75** collection filter over a 75-problem core subset of the public
   Grind 75 study list. The list is maintained by Tech Interview Handbook; this
   app is not affiliated with or endorsed by it. Every statement, example, hint,
@@ -155,7 +161,7 @@ apps/desktop/          Electron main, preload, React renderer
 services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate and test commands for content packs
-content/packs/core/    Bundled core pack (81 coding + 8 designs + 30 lessons; 75-problem Grind 75 collection)
+content/packs/core/    Bundled core pack (81 coding + 8 designs + 39 lessons; 75-problem Grind 75 collection)
 docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates
 scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement

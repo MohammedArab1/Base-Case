@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "core/availability-and-failover",
+  "slug": "availability-and-failover",
+  "title": "Availability, Failover, and Replication",
+  "category": "system-design",
+  "summary": "Keep serving useful requests when a machine, a zone, or a dependency goes away.",
+  "difficulty": "medium",
+  "estimatedMinutes": 14,
+  "order": 32,
+  "tags": ["system-design", "availability", "failover", "replication", "slo", "disaster-recovery"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Availability is the fraction of time useful requests succeed, not whether a process is running.",
+    "Availability in sequence multiplies; independent components in parallel improve it.",
+    "Active-passive is simpler; active-active adds capacity but needs conflict handling.",
+    "Replication improves read scale and failover, but asynchronous replicas can lose recent writes.",
+    "State RPO and RTO for recovery, and define what the system should degrade to during an outage."
+  ],
+  "complexity": [
+    {
+      "operation": "Single instance",
+      "time": "99.9% is about 43 minutes/month",
+      "space": "one failure domain",
+      "note": "A single node is a single point of failure."
+    },
+    {
+      "operation": "Two in sequence",
+      "time": "99.8%",
+      "space": "two hops",
+      "note": "Multiply the availabilities."
+    },
+    {
+      "operation": "Two independent in parallel",
+      "time": "99.9999%",
+      "space": "two copies",
+      "note": "Shared dependencies defeat the gain."
+    },
+    {
+      "operation": "Hot standby failover",
+      "time": "seconds to minutes",
+      "space": "duplicate capacity",
+      "note": "Detection and promotion take time."
+    },
+    {
+      "operation": "Cross-region failover",
+      "time": "minutes, possible data loss",
+      "space": "second region",
+      "note": "Bound the loss with an RPO."
+    },
+    {
+      "operation": "Backup restore",
+      "time": "hours",
+      "space": "backup storage",
+      "note": "The RPO is the backup interval."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["payment-ledger", "chat-system", "seat-reservation"]
+  },
+  "commonMistakes": [
+    "Counting two replicas as independent when they share a rack, a network, or a configuration service.",
+    "Promoting a standby without a quorum, lease, or fencing token, which invites split brain.",
+    "Quoting backup frequency as an availability guarantee without an RTO.",
+    "Retrying every failed request immediately, which turns a small outage into a retry storm."
+  ],
+  "interviewNotes": [
+    "Say whether each component is active-passive or active-active and why.",
+    "Name the failure detector and the time it takes to notice a failure.",
+    "Give an RPO and RTO, not just the word 'replicated'.",
+    "Describe what the product does while a dependency is down; graceful degradation is part of availability."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why are two 99.9% services in sequence less available than either one alone?",
+      "answer": "The request must succeed through both. Multiplying 0.999 by 0.999 gives 0.998, or about 99.8%."
+    },
+    {
+      "question": "When does active-active failover need conflict resolution?",
+      "answer": "When both sides can accept writes to the same record. Reads can be shared freely, but concurrent writes need partitioning or a rule for merging versions."
+    },
+    {
+      "question": "What is the difference between RPO and RTO?",
+      "answer": "RPO is how much recent data may be lost, measured in time. RTO is how long recovery may take before service is restored."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "core/performance-scalability-latency",
+  "slug": "performance-scalability-latency",
+  "title": "Performance, Scalability, and Latency",
+  "category": "system-design",
+  "summary": "Tell the difference between a system that is slow for one person and one that cannot keep up with many.",
+  "difficulty": "easy",
+  "estimatedMinutes": 12,
+  "order": 31,
+  "tags": ["system-design", "performance", "scalability", "latency", "throughput", "percentiles"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Performance is how fast one request feels; scalability is how well the system handles more work.",
+    "Latency is time per action; throughput is actions per unit of time.",
+    "Concurrency, throughput, and latency are linked: concurrency ≈ throughput × latency.",
+    "Averages hide slow users, so track p50, p95, and p99.",
+    "Scale up for a quick ceiling, and scale out for long-run growth and failure tolerance."
+  ],
+  "complexity": [
+    {
+      "operation": "One request",
+      "time": "latency budget",
+      "space": "—",
+      "note": "What a single user feels."
+    },
+    {
+      "operation": "Capacity per instance",
+      "time": "measured throughput",
+      "space": "CPU and memory",
+      "note": "Measure the real workload, not a tiny benchmark."
+    },
+    {
+      "operation": "Little's Law",
+      "time": "concurrency = throughput × latency",
+      "space": "—",
+      "note": "Keep the units consistent."
+    },
+    {
+      "operation": "Tail latency",
+      "time": "p95 or p99",
+      "space": "—",
+      "note": "The average hides the slowest requests."
+    },
+    {
+      "operation": "Scale out",
+      "time": "near-linear until a shared bottleneck",
+      "space": "N instances",
+      "note": "The database often becomes the limit first."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "news-feed"]
+  },
+  "commonMistakes": [
+    "Calling every slowdown a scalability problem without checking whether a single request is already slow.",
+    "Reporting only the average latency and missing a long p99 tail.",
+    "Adding application servers when the shared database is the bottleneck.",
+    "Sizing a connection pool from average traffic while ignoring bursts and slow queries."
+  ],
+  "interviewNotes": [
+    "State whether the symptom appears for one user or only under load; the fix differs.",
+    "Put a number on the target: for example, p95 under 200 ms at 3x expected peak.",
+    "Use Little's Law out loud to justify worker and connection-pool sizes.",
+    "Name the first shared bottleneck you expect and how you would protect it."
+  ],
+  "checkYourself": [
+    {
+      "question": "What is the difference between a performance problem and a scalability problem?",
+      "answer": "A performance problem is slow for one user. A scalability problem is acceptable for one user but gets slow as load grows, because capacity does not grow with demand."
+    },
+    {
+      "question": "Why can a page have a much worse p99 than every service it calls?",
+      "answer": "The page waits for the slowest dependency. Even a small chance of a slow response in each service becomes a larger chance that at least one call is slow."
+    },
+    {
+      "question": "How many requests are in flight at 500 requests per second with a 200 ms response time?",
+      "answer": "500 × 0.2 = 100 requests in flight on average. Size pools for the peak, not only the average."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}
