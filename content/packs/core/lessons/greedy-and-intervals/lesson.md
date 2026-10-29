@@ -78,7 +78,7 @@ A min-heap of end times is an alternative: reuse the earliest-ending room whenev
 
 ## Greedy choices that work
 
-- **Stock Peaks**: add every upward price change; each local rise is safe because you can sell before the next drop.
+- **Stock Peaks**: keep the cheapest earlier price; the best sale ending today uses that minimum, and scanning once considers every buy-before-sell pair.
 - **Majority Value**: Boyer-Moore cancels pairs of different values. The majority survives because it cannot be fully cancelled.
 - **Fuel Circuit**: if the total fuel is sufficient, starting after the last point where the running fuel went negative works.
 - **Join Sticks**: always join the two shortest sticks; the smallest costs are paid the most times.

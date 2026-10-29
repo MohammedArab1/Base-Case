@@ -22,18 +22,20 @@ The minimum number of single-character operations.
 **Example 1**
 
 ```
-Input: source = "horse", target = "ros"
-Output: 3
+Input: source = "planet", target = "plant"
+Output: 1
 ```
 
-Replace `h` with `r`, delete `r`, and delete `e`.
+Delete the `e`.
 
 **Example 2**
 
 ```
-Input: source = "intention", target = "execution"
-Output: 5
+Input: source = "stream", target = "steam"
+Output: 1
 ```
+
+Delete the `r`.
 
 **Example 3**
 
@@ -45,16 +47,16 @@ Output: 0
 **Example 4**
 
 ```
-Input: source = "abc", target = ""
-Output: 3
+Input: source = "orbit", target = ""
+Output: 5
 ```
 
-All three characters must be deleted.
+All five characters must be deleted.
 
 **Example 5**
 
 ```
-Input: source = "kitten", target = "sitting"
+Input: source = "garden", target = "guard"
 Output: 3
 ```
 

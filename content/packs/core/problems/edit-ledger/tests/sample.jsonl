@@ -1,5 +1,5 @@
-{"input":{"source":"horse","target":"ros"},"expected":3}
-{"input":{"source":"intention","target":"execution"},"expected":5}
+{"input":{"source":"planet","target":"plant"},"expected":1}
+{"input":{"source":"stream","target":"steam"},"expected":1}
 {"input":{"source":"","target":""},"expected":0}
-{"input":{"source":"abc","target":""},"expected":3}
-{"input":{"source":"kitten","target":"sitting"},"expected":3}
+{"input":{"source":"orbit","target":""},"expected":5}
+{"input":{"source":"garden","target":"guard"},"expected":3}

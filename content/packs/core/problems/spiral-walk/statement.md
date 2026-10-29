@@ -17,29 +17,29 @@ A flat array of every value in clockwise spiral order. An empty grid returns an 
 **Example 1**
 
 ```
-Input: grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-Output: [1, 2, 3, 6, 9, 8, 7, 4, 5]
+Input: grid = [[4, 9, 2], [7, 1, 6], [5, 8, 3]]
+Output: [4, 9, 2, 6, 3, 8, 5, 7, 1]
 ```
 
 **Example 2**
 
 ```
-Input: grid = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]
-Output: [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7]
+Input: grid = [[11, 12, 13, 14], [20, 21, 22, 15], [19, 18, 17, 16]]
+Output: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
 ```
 
 **Example 3**
 
 ```
-Input: grid = [[1]]
-Output: [1]
+Input: grid = [[8]]
+Output: [8]
 ```
 
 **Example 4**
 
 ```
-Input: grid = [[1, 2]]
-Output: [1, 2]
+Input: grid = [[3, 5, 7]]
+Output: [3, 5, 7]
 ```
 
 A single row is visited once, left to right.
@@ -47,8 +47,8 @@ A single row is visited once, left to right.
 **Example 5**
 
 ```
-Input: grid = [[1], [2], [3]]
-Output: [1, 2, 3]
+Input: grid = [[6], [4], [2]]
+Output: [6, 4, 2]
 ```
 
 A single column is visited once, top to bottom.

@@ -6,7 +6,7 @@ If total fuel is less than total cost, no start can work. Otherwise, a valid sta
 
 ## Why skipping failed stations is safe
 
-Suppose a run starts at `s` and runs out of fuel between `k - 1` and `k`. Consider any station `j` with `s < j <= k - 1`. Starting at `j`, the tank at `j` is what remained after starting at `s` and passing through `j - 1`, which was non-negative, minus the fuel already used. The run from `j` has no more fuel than the remainder of the failed run and therefore also fails before returning. So the next possible start is `k`.
+Suppose a run starts at `s` and first runs out of fuel on the leg from station `k - 1` to station `k`. That means the tank before adding station `k` was non-negative, but adding `gas[k] - cost[k]` made it negative. Consider any station `j` with `s < j <= k`. The run from `s` reached `j` with a non-negative tank, so starting at `j` with an empty tank has no more fuel than the remaining part of the failed run. It therefore also fails before completing the circuit. The next possible start is `k + 1`.
 
 ## Algorithm
 
@@ -30,4 +30,4 @@ When `total >= 0`, the last candidate starts a suffix whose running balance neve
 - Simulating each start, which is `O(n^2)`.
 - Returning the candidate without checking the total balance.
 - Resetting `total` along with `balance`.
-- Using the station after the failure instead of the station where the failure occurred.
+- Using the failing station `i` instead of `i + 1` as the next candidate.

@@ -1,3 +1,5 @@
-{"input":{"first":"anagram","second":"nagaram"},"expected":true}
-{"input":{"first":"rat","second":"car"},"expected":false}
+{"input":{"first":"garden","second":"danger"},"expected":true}
+{"input":{"first":"stone","second":"notes"},"expected":true}
+{"input":{"first":"apple","second":"paper"},"expected":false}
 {"input":{"first":"","second":""},"expected":true}
+{"input":{"first":"a","second":"a"},"expected":true}

@@ -1,5 +1,6 @@
 class Solution {
   floodFill(image: number[][], row: number, column: number, color: number): number[][] {
+    image = image.map((current) => [...current])
     const old = image[row][column]
 
     if (old === color) {

@@ -1,3 +1,5 @@
-{"input":{"prices":[7,1,5,3,6,4]},"expected":5}
-{"input":{"prices":[7,6,4,3,1]},"expected":0}
-{"input":{"prices":[1,2]},"expected":1}
+{"input":{"prices":[9,2,11,4,8,1,10]},"expected":9}
+{"input":{"prices":[6,5,4,3,2]},"expected":0}
+{"input":{"prices":[3,8]},"expected":5}
+{"input":{"prices":[5,3,7,1,6]},"expected":5}
+{"input":{"prices":[4,4,4]},"expected":0}

@@ -17,14 +17,16 @@ Decide whether `text` is mirrored.
 **Example 1**
 
 ```
-Input: text = "A man, a plan, a canal: Panama"
+Input: text = "Taco cat"
 Output: true
 ```
+
+Ignoring case and the space gives `"tacocat"`.
 
 **Example 2**
 
 ```
-Input: text = "race a car"
+Input: text = "Rust is fun"
 Output: false
 ```
 
@@ -36,6 +38,24 @@ Output: true
 ```
 
 An empty normalized string is a palindrome.
+
+**Example 4**
+
+```
+Input: text = "12, 21"
+Output: true
+```
+
+Digits count as characters; punctuation and spaces do not.
+
+**Example 5**
+
+```
+Input: text = "Zz"
+Output: true
+```
+
+Case is ignored.
 
 ## Constraints
 

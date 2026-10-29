@@ -20,16 +20,16 @@ The zero-based index of the unique valid starting station, or `-1`.
 **Example 1**
 
 ```
-Input: gas = [1, 2, 3, 4, 5], cost = [3, 4, 5, 1, 2]
-Output: 3
+Input: gas = [4, 6, 2, 8, 5], cost = [5, 3, 4, 6, 7]
+Output: 1
 ```
 
-Starting at station 3 gives enough fuel to finish the loop.
+Starting at station 1 completes the circuit.
 
 **Example 2**
 
 ```
-Input: gas = [2, 3, 4], cost = [3, 4, 3]
+Input: gas = [3, 3, 3], cost = [4, 4, 4]
 Output: -1
 ```
 
@@ -38,27 +38,27 @@ The total fuel is less than the total cost.
 **Example 3**
 
 ```
-Input: gas = [5], cost = [4]
+Input: gas = [9], cost = [9]
 Output: 0
 ```
 
-The only station covers its own leg.
+The only station covers its own leg exactly.
 
 **Example 4**
 
 ```
-Input: gas = [4], cost = [5]
+Input: gas = [2], cost = [3]
 Output: -1
 ```
 
 **Example 5**
 
 ```
-Input: gas = [2, 4, 1, 3], cost = [3, 1, 2, 4]
-Output: 1
+Input: gas = [5, 2, 7, 1, 4], cost = [4, 5, 3, 6, 1]
+Output: 4
 ```
 
-Starting at station 1 completes the loop with an empty tank at the end.
+Starting at station 4 completes the loop with an empty tank.
 
 ## Constraints
 

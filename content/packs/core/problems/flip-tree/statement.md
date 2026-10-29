@@ -17,8 +17,8 @@ The root of the mirrored tree.
 **Example 1**
 
 ```
-Input: root = [4, 2, 7, 1, 3, 6, 9]
-Output: [4, 7, 2, 9, 6, 3, 1]
+Input: root = [9, 4, 13, 2, 6, 11, 15]
+Output: [9, 13, 4, 15, 11, 6, 2]
 ```
 
 **Example 2**
@@ -31,8 +31,22 @@ Output: []
 **Example 3**
 
 ```
-Input: root = [1, 2]
-Output: [1, null, 2]
+Input: root = [5, 3]
+Output: [5, null, 3]
+```
+
+**Example 4**
+
+```
+Input: root = [1, 2, 3, 4, 5]
+Output: [1, 3, 2, null, null, 5, 4]
+```
+
+**Example 5**
+
+```
+Input: root = [7]
+Output: [7]
 ```
 
 ## Constraints

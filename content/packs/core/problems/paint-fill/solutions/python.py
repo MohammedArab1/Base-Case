@@ -3,6 +3,7 @@ from typing import List
 
 class Solution:
     def floodFill(self, image: List[List[int]], row: int, column: int, color: int) -> List[List[int]]:
+        image = [current[:] for current in image]
         old = image[row][column]
 
         if old == color:

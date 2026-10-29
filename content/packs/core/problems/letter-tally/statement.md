@@ -18,18 +18,36 @@ Return whether `first` and `second` are tally matches.
 **Example 1**
 
 ```
-Input: first = "anagram", second = "nagaram"
+Input: first = "garden", second = "danger"
 Output: true
 ```
+
+Both words contain one `g`, one `a`, one `r`, one `d`, one `e`, and one `n`.
 
 **Example 2**
 
 ```
-Input: first = "rat", second = "car"
-Output: false
+Input: first = "stone", second = "notes"
+Output: true
 ```
 
 **Example 3**
+
+```
+Input: first = "apple", second = "paper"
+Output: false
+```
+
+The letter counts differ.
+
+**Example 4**
+
+```
+Input: first = "", second = ""
+Output: true
+```
+
+**Example 5**
 
 ```
 Input: first = "a", second = "a"

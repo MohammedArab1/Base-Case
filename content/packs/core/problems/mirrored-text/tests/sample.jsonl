@@ -1,3 +1,5 @@
-{"input":{"text":"A man, a plan, a canal: Panama"},"expected":true}
-{"input":{"text":"race a car"},"expected":false}
+{"input":{"text":"Taco cat"},"expected":true}
+{"input":{"text":"Rust is fun"},"expected":false}
 {"input":{"text":""},"expected":true}
+{"input":{"text":"12, 21"},"expected":true}
+{"input":{"text":"Zz"},"expected":true}

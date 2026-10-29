@@ -16,22 +16,36 @@ The zero-based index of `target`, or `-1`.
 **Example 1**
 
 ```
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+Input: nums = [2, 5, 8, 12, 17, 21], target = 17
 Output: 4
 ```
 
 **Example 2**
 
 ```
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 2
+Input: nums = [2, 5, 8, 12, 17, 21], target = 6
 Output: -1
 ```
 
 **Example 3**
 
 ```
-Input: nums = [5], target = 5
+Input: nums = [4], target = 4
 Output: 0
+```
+
+**Example 4**
+
+```
+Input: nums = [1, 3, 5, 7], target = 1
+Output: 0
+```
+
+**Example 5**
+
+```
+Input: nums = [2, 4, 6, 8, 10], target = 10
+Output: 4
 ```
 
 ## Constraints

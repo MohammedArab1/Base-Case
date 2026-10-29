@@ -19,15 +19,15 @@ The image after the connected region is repainted.
 **Example 1**
 
 ```
-Input: image = [[1,1,1],[1,1,0],[1,0,1]], row = 1, column = 1, color = 2
-Output: [[2,2,2],[2,2,0],[2,0,1]]
+Input: image = [[4,4,4],[4,4,1],[4,1,4]], row = 1, column = 1, color = 9
+Output: [[9,9,9],[9,9,1],[9,1,4]]
 ```
 
 **Example 2**
 
 ```
-Input: image = [[0,0,0],[0,0,0]], row = 0, column = 0, color = 0
-Output: [[0,0,0],[0,0,0]]
+Input: image = [[2,2,2],[2,2,2]], row = 0, column = 0, color = 2
+Output: [[2,2,2],[2,2,2]]
 ```
 
 The new color equals the old color, so nothing changes.
@@ -35,9 +35,25 @@ The new color equals the old color, so nothing changes.
 **Example 3**
 
 ```
-Input: image = [[1]], row = 0, column = 0, color = 2
-Output: [[2]]
+Input: image = [[7]], row = 0, column = 0, color = 3
+Output: [[3]]
 ```
+
+**Example 4**
+
+```
+Input: image = [[1,2],[3,4]], row = 0, column = 0, color = 8
+Output: [[8,2],[3,4]]
+```
+
+**Example 5**
+
+```
+Input: image = [[5,5,5],[5,0,5],[5,5,5]], row = 0, column = 0, color = 6
+Output: [[6,6,6],[6,0,6],[6,6,6]]
+```
+
+The center `0` is not connected to the outer ring.
 
 ## Constraints
 
