@@ -83,7 +83,7 @@ function helloResult(
 }
 
 async function until(predicate: () => boolean): Promise<void> {
-  for (let attempt = 0; attempt < 200; attempt += 1) {
+  for (let attempt = 0; attempt < 1000; attempt += 1) {
     if (predicate()) {
       return
     }

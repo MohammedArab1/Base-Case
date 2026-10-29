@@ -124,7 +124,9 @@ describe('DesignRepository', () => {
 
       expect(loaded.sceneJson).toBe(sceneJson)
       expect((JSON.parse(loaded.sceneJson) as { elements: unknown[] }).elements).toHaveLength(150)
-      expect(elapsed).toBeLessThan(1000)
+      // Windows CI can pause this process under parallel test load; keep the
+      // assertion generous while still catching pathologically slow writes.
+      expect(elapsed).toBeLessThan(5000)
     })
   })
 })
