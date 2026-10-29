@@ -17,22 +17,36 @@ Nothing. `nums` must be sorted in place.
 **Example 1**
 
 ```
-Input: nums = [2,0,2,1,1,0]
+Input: nums = [1,2,0,1,2,0]
 Output: [0,0,1,1,2,2]
 ```
 
 **Example 2**
 
 ```
-Input: nums = [2,0,1]
-Output: [0,1,2]
+Input: nums = [2,2,1,1,0,0]
+Output: [0,0,1,1,2,2]
 ```
 
 **Example 3**
 
 ```
-Input: nums = [0]
-Output: [0]
+Input: nums = [0,2,1,0,2]
+Output: [0,0,1,2,2]
+```
+
+**Example 4**
+
+```
+Input: nums = [2]
+Output: [2]
+```
+
+**Example 5**
+
+```
+Input: nums = []
+Output: []
 ```
 
 ## Constraints

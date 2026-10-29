@@ -1,3 +1,5 @@
-{"input":{"text":"leetcode","words":["leet","code"]},"expected":true}
-{"input":{"text":"applepenapple","words":["apple","pen"]},"expected":true}
-{"input":{"text":"catsandog","words":["cats","dog","sand","and","cat"]},"expected":false}
+{"input":{"text":"sunrise","words":["sun","rise"]},"expected":true}
+{"input":{"text":"sunriserise","words":["sun","rise"]},"expected":true}
+{"input":{"text":"grapes","words":["grape","grapes","pe"]},"expected":true}
+{"input":{"text":"grapes","words":["grape","grap"]},"expected":false}
+{"input":{"text":"","words":[]},"expected":true}

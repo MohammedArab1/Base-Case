@@ -17,23 +17,37 @@ The number of edges on the longest path. An empty tree or a single node has diam
 **Example 1**
 
 ```
-Input: root = [1,2,3,4,5]
-Output: 3
+Input: root = [4,2,6,1,3,null,7]
+Output: 4
 ```
 
-A longest path is `4 -> 2 -> 1 -> 3`.
+A longest path is `1 -> 2 -> 4 -> 6 -> 7`.
 
 **Example 2**
 
 ```
-Input: root = [1,2]
-Output: 1
+Input: root = [8,3,10,1,6,null,14]
+Output: 4
 ```
 
 **Example 3**
 
 ```
-Input: root = [1]
+Input: root = [5,1]
+Output: 1
+```
+
+**Example 4**
+
+```
+Input: root = [9]
+Output: 0
+```
+
+**Example 5**
+
+```
+Input: root = []
 Output: 0
 ```
 

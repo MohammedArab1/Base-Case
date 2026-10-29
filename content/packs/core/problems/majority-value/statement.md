@@ -17,22 +17,36 @@ The value appearing more than `floor(n / 2)` times.
 **Example 1**
 
 ```
-Input: nums = [3,2,3]
-Output: 3
+Input: nums = [4,4,2,4,2,4]
+Output: 4
 ```
 
 **Example 2**
 
 ```
-Input: nums = [2,2,1,1,1,2,2]
-Output: 2
+Input: nums = [7,7,7,2,2]
+Output: 7
 ```
 
 **Example 3**
 
 ```
-Input: nums = [1]
-Output: 1
+Input: nums = [-3,-3,1]
+Output: -3
+```
+
+**Example 4**
+
+```
+Input: nums = [9]
+Output: 9
+```
+
+**Example 5**
+
+```
+Input: nums = [2,1,2,2,1,2]
+Output: 2
 ```
 
 ## Constraints

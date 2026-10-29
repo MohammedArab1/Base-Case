@@ -17,18 +17,34 @@ The visible values from top to bottom.
 **Example 1**
 
 ```
-Input: root = [1,2,3,null,5,null,4]
-Output: [1,3,4]
+Input: root = [5,2,9,1,4,8,10]
+Output: [5,9,10]
 ```
 
 **Example 2**
 
 ```
-Input: root = [1,null,3]
-Output: [1,3]
+Input: root = [5,2,9,null,4]
+Output: [5,9,4]
 ```
 
+The node `4` is visible below the right child `9`.
+
 **Example 3**
+
+```
+Input: root = [5,null,9]
+Output: [5,9]
+```
+
+**Example 4**
+
+```
+Input: root = [5]
+Output: [5]
+```
+
+**Example 5**
 
 ```
 Input: root = []

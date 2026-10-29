@@ -24,30 +24,43 @@ The parsed and clamped integer.
 **Example 1**
 
 ```
-Input: text = "42"
-Output: 42
+Input: text = "   +37"
+Output: 37
 ```
 
 **Example 2**
 
 ```
-Input: text = "   -042"
+Input: text = "  -0042"
 Output: -42
 ```
 
 **Example 3**
 
 ```
-Input: text = "4193 with words"
-Output: 4193
+Input: text = "9009abc"
+Output: 9009
 ```
+
+Parsing stops at the first non-digit.
 
 **Example 4**
 
 ```
-Input: text = "words and 987"
+Input: text = "abc9009"
 Output: 0
 ```
+
+The text does not begin with a number.
+
+**Example 5**
+
+```
+Input: text = "2147483648"
+Output: 2147483647
+```
+
+The value is clamped to the signed 32-bit maximum.
 
 ## Constraints
 

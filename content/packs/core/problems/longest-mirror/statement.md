@@ -17,25 +17,39 @@ The longest palindromic substring.
 **Example 1**
 
 ```
-Input: text = "babad"
-Output: "bab"
+Input: text = "levelup"
+Output: "level"
 ```
-
-Both `"bab"` and `"aba"` have length three; `"bab"` starts earlier.
 
 **Example 2**
 
 ```
-Input: text = "cbbd"
-Output: "bb"
+Input: text = "abaxyz"
+Output: "aba"
 ```
 
 **Example 3**
 
 ```
-Input: text = "a"
-Output: "a"
+Input: text = "civic"
+Output: "civic"
 ```
+
+**Example 4**
+
+```
+Input: text = "aabbaa"
+Output: "aabbaa"
+```
+
+**Example 5**
+
+```
+Input: text = "xyz"
+Output: "x"
+```
+
+Every substring is length `1`, so the earliest one wins.
 
 ## Constraints
 

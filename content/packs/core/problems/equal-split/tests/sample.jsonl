@@ -1,3 +1,5 @@
-{"input":{"nums":[1,5,11,5]},"expected":true}
-{"input":{"nums":[1,2,3,5]},"expected":false}
-{"input":{"nums":[2,2]},"expected":true}
+{"input":{"nums":[3,1,4,2]},"expected":true}
+{"input":{"nums":[2,3,5,7]},"expected":false}
+{"input":{"nums":[6,6]},"expected":true}
+{"input":{"nums":[1,1,1]},"expected":false}
+{"input":{"nums":[2,2,4,4]},"expected":true}

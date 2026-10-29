@@ -2,6 +2,8 @@
 
 Given a text and a list of dictionary words, decide whether the text can be split into a sequence of dictionary words. Each word may be reused any number of times.
 
+An empty text is segmented by zero words, so it is always segmentable.
+
 ## Input
 
 - `text`: the string to segment.
@@ -16,24 +18,40 @@ Given a text and a list of dictionary words, decide whether the text can be spli
 **Example 1**
 
 ```
-Input: text = "leetcode", words = ["leet","code"]
+Input: text = "sunrise", words = ["sun","rise"]
 Output: true
 ```
 
 **Example 2**
 
 ```
-Input: text = "applepenapple", words = ["apple","pen"]
+Input: text = "sunriserise", words = ["sun","rise"]
 Output: true
 ```
 
-The word `"apple"` is reused.
+The word `"rise"` is reused.
 
 **Example 3**
 
 ```
-Input: text = "catsandog", words = ["cats","dog","sand","and","cat"]
+Input: text = "grapes", words = ["grape","grapes","pe"]
+Output: true
+```
+
+**Example 4**
+
+```
+Input: text = "grapes", words = ["grape","grap"]
 Output: false
+```
+
+Neither dictionary word helps segment the final `"es"`.
+
+**Example 5**
+
+```
+Input: text = "", words = []
+Output: true
 ```
 
 ## Constraints

@@ -1,3 +1,5 @@
-{"input":{"text":"babad"},"expected":"bab"}
-{"input":{"text":"cbbd"},"expected":"bb"}
-{"input":{"text":"a"},"expected":"a"}
+{"input":{"text":"levelup"},"expected":"level"}
+{"input":{"text":"abaxyz"},"expected":"aba"}
+{"input":{"text":"civic"},"expected":"civic"}
+{"input":{"text":"aabbaa"},"expected":"aabbaa"}
+{"input":{"text":"xyz"},"expected":"x"}

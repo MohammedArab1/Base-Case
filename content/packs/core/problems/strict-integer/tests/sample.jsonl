@@ -1,4 +1,5 @@
-{"input":{"text":"42"},"expected":42}
-{"input":{"text":"   -042"},"expected":-42}
-{"input":{"text":"4193 with words"},"expected":4193}
-{"input":{"text":"words and 987"},"expected":0}
+{"input":{"text":"   +37"},"expected":37}
+{"input":{"text":"  -0042"},"expected":-42}
+{"input":{"text":"9009abc"},"expected":9009}
+{"input":{"text":"abc9009"},"expected":0}
+{"input":{"text":"2147483648"},"expected":2147483647}

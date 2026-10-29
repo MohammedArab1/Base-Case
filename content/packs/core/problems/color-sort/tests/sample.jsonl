@@ -1,3 +1,5 @@
-{"input":{"nums":[2,0,2,1,1,0]},"expected":{"returnValue":null,"mutated":{"nums":[0,0,1,1,2,2]}}}
-{"input":{"nums":[2,0,1]},"expected":{"returnValue":null,"mutated":{"nums":[0,1,2]}}}
-{"input":{"nums":[0]},"expected":{"returnValue":null,"mutated":{"nums":[0]}}}
+{"input":{"nums":[1,2,0,1,2,0]},"expected":{"returnValue":null,"mutated":{"nums":[0,0,1,1,2,2]}}}
+{"input":{"nums":[2,2,1,1,0,0]},"expected":{"returnValue":null,"mutated":{"nums":[0,0,1,1,2,2]}}}
+{"input":{"nums":[0,2,1,0,2]},"expected":{"returnValue":null,"mutated":{"nums":[0,0,1,2,2]}}}
+{"input":{"nums":[2]},"expected":{"returnValue":null,"mutated":{"nums":[2]}}}
+{"input":{"nums":[]},"expected":{"returnValue":null,"mutated":{"nums":[]}}}

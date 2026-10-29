@@ -1,3 +1,5 @@
-{"input":{"first":"11","second":"1"},"expected":"100"}
-{"input":{"first":"1010","second":"1011"},"expected":"10101"}
+{"input":{"first":"110","second":"11"},"expected":"1001"}
+{"input":{"first":"1011","second":"101"},"expected":"10000"}
 {"input":{"first":"0","second":"0"},"expected":"0"}
+{"input":{"first":"1","second":"0"},"expected":"1"}
+{"input":{"first":"111","second":"1"},"expected":"1000"}

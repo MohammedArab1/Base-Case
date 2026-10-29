@@ -15,16 +15,20 @@ Their sum as a binary string without leading zeros.
 **Example 1**
 
 ```
-Input: first = "11", second = "1"
-Output: "100"
+Input: first = "110", second = "11"
+Output: "1001"
 ```
+
+`6 + 3 = 9`.
 
 **Example 2**
 
 ```
-Input: first = "1010", second = "1011"
-Output: "10101"
+Input: first = "1011", second = "101"
+Output: "10000"
 ```
+
+`11 + 5 = 16`.
 
 **Example 3**
 
@@ -32,6 +36,22 @@ Output: "10101"
 Input: first = "0", second = "0"
 Output: "0"
 ```
+
+**Example 4**
+
+```
+Input: first = "1", second = "0"
+Output: "1"
+```
+
+**Example 5**
+
+```
+Input: first = "111", second = "1"
+Output: "1000"
+```
+
+Adding one to three ones carries through every column.
 
 ## Constraints
 

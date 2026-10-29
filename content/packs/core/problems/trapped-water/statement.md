@@ -17,25 +17,43 @@ The total trapped water.
 **Example 1**
 
 ```
-Input: heights = [0,1,0,2,1,0,1,3,2,1,2,1]
-Output: 6
+Input: heights = [3,0,2,0,4]
+Output: 7
 ```
+
+Water collects above the two zeros and the bar of height `2`.
 
 **Example 2**
 
 ```
-Input: heights = [4,2,0,3,2,5]
-Output: 9
+Input: heights = [2,0,0,1]
+Output: 2
 ```
+
+The two empty cells between the bars each hold one unit.
 
 **Example 3**
 
 ```
-Input: heights = [1,2,3]
+Input: heights = [1,3,0,2,4]
+Output: 4
+```
+
+**Example 4**
+
+```
+Input: heights = [5,4,3,2]
 Output: 0
 ```
 
-The bars only rise, so no water is trapped.
+The bars only descend, so no water is trapped.
+
+**Example 5**
+
+```
+Input: heights = []
+Output: 0
+```
 
 ## Constraints
 

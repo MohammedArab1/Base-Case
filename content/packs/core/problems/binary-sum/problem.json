@@ -45,14 +45,14 @@
       "language": "python",
       "path": "solutions/python.py",
       "time": "O(n + m)",
-      "space": "O(1)",
+      "space": "O(n + m)",
       "isCanonical": true
     },
     {
       "language": "typescript",
       "path": "solutions/typescript.ts",
       "time": "O(n + m)",
-      "space": "O(1)"
+      "space": "O(n + m)"
     }
   ],
   "explanation": "explanation.md",
