@@ -1,6 +1,6 @@
 class Solution {
   combinationSum(candidates: number[], target: number): number[][] {
-    candidates.sort((left, right) => left - right)
+    candidates = [...candidates].sort((left, right) => left - right)
     const result: number[][] = []
     const path: number[] = []
 

@@ -17,25 +17,45 @@ The maximum palindrome length.
 **Example 1**
 
 ```
-Input: letters = "abccccdd"
+Input: letters = "aabbccd"
 Output: 7
 ```
 
-One longest palindrome is `"dccaccd"`.
+A longest palindrome is `"abcdcba"`.
 
 **Example 2**
 
 ```
-Input: letters = "a"
-Output: 1
+Input: letters = "zzxy"
+Output: 3
 ```
+
+The pair of `z`s surrounds either the `x` or the `y`.
 
 **Example 3**
 
 ```
-Input: letters = "aa"
-Output: 2
+Input: letters = "qwerty"
+Output: 1
 ```
+
+Every letter appears once, so the palindrome has one character.
+
+**Example 4**
+
+```
+Input: letters = ""
+Output: 0
+```
+
+**Example 5**
+
+```
+Input: letters = "aaaaabbbbb"
+Output: 9
+```
+
+Four pairs of `a`, four pairs of `b`, and one center letter.
 
 ## Constraints
 

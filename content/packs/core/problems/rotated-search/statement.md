@@ -1,8 +1,8 @@
 # Rotated Search
 
-A list of distinct integers was sorted in ascending order and then rotated at an unknown pivot. For example, `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`.
+A list of distinct integers was sorted in ascending order and then possibly rotated at an unknown pivot. A rotation of zero is allowed, so the list may still be fully sorted. For example, `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`.
 
-Find the index of `target` in the rotated list, or return `-1` if it is absent.
+Find the index of `target` in the list, or return `-1` if it is absent.
 
 ## Input
 
@@ -18,21 +18,37 @@ The zero-based index of `target`, or `-1`.
 **Example 1**
 
 ```
-Input: nums = [4,5,6,7,0,1,2], target = 0
-Output: 4
+Input: nums = [7,9,12,2,4,5], target = 12
+Output: 2
 ```
 
 **Example 2**
 
 ```
-Input: nums = [4,5,6,7,0,1,2], target = 3
+Input: nums = [7,9,12,2,4,5], target = 3
 Output: -1
 ```
 
 **Example 3**
 
 ```
-Input: nums = [1], target = 1
+Input: nums = [10,20,30,40], target = 40
+Output: 3
+```
+
+The rotation is zero, so the list is already fully sorted.
+
+**Example 4**
+
+```
+Input: nums = [5,1,3], target = 1
+Output: 1
+```
+
+**Example 5**
+
+```
+Input: nums = [2], target = 2
 Output: 0
 ```
 

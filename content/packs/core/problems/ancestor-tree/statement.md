@@ -18,22 +18,38 @@ The value of the lowest common ancestor.
 **Example 1**
 
 ```
-Input: root = [3,5,1,6,2,0,8,null,null,7,4], first = 5, second = 1
+Input: root = [7,3,11,1,5,9,13], first = 1, second = 5
 Output: 3
 ```
 
 **Example 2**
 
 ```
-Input: root = [3,5,1,6,2,0,8,null,null,7,4], first = 5, second = 4
-Output: 5
+Input: root = [7,3,11,1,5,9,13], first = 3, second = 13
+Output: 7
 ```
 
 **Example 3**
 
 ```
-Input: root = [1,2], first = 1, second = 2
+Input: root = [10,4,14,2,6,12,16], first = 2, second = 6
+Output: 4
+```
+
+**Example 4**
+
+```
+Input: root = [1], first = 1, second = 1
 Output: 1
+```
+
+A node is its own ancestor.
+
+**Example 5**
+
+```
+Input: root = [20,8,22,4,12,null,24], first = 12, second = 24
+Output: 20
 ```
 
 ## Constraints

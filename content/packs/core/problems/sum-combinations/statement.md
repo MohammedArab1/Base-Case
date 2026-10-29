@@ -18,22 +18,36 @@ All unique combinations in the required order.
 **Example 1**
 
 ```
-Input: candidates = [2,3,6,7], target = 7
-Output: [[2,2,3],[7]]
+Input: candidates = [2,5,7], target = 9
+Output: [[2,2,5],[2,7]]
 ```
 
 **Example 2**
 
 ```
-Input: candidates = [2,3,5], target = 8
-Output: [[2,2,2,2],[2,3,3],[3,5]]
+Input: candidates = [3,4,6], target = 10
+Output: [[3,3,4],[4,6]]
 ```
 
 **Example 3**
 
 ```
-Input: candidates = [2], target = 1
+Input: candidates = [5], target = 4
 Output: []
+```
+
+**Example 4**
+
+```
+Input: candidates = [1,2,4], target = 6
+Output: [[1,1,1,1,1,1],[1,1,1,1,2],[1,1,2,2],[1,1,4],[2,2,2],[2,4]]
+```
+
+**Example 5**
+
+```
+Input: candidates = [2,3], target = 6
+Output: [[2,2,2],[3,3]]
 ```
 
 ## Constraints

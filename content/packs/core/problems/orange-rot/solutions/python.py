@@ -4,6 +4,7 @@ from collections import deque
 
 class Solution:
     def rottenMinutes(self, grid: List[List[int]]) -> int:
+        grid = [row[:] for row in grid]
         rows = len(grid)
         columns = len(grid[0])
         queue = deque()

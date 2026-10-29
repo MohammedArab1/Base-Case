@@ -16,27 +16,47 @@ The minimum number of coins, or `-1`.
 **Example 1**
 
 ```
-Input: coins = [1,2,5], amount = 11
+Input: coins = [2,4,7], amount = 13
 Output: 3
 ```
 
-`5 + 5 + 1 = 11`.
+`7 + 4 + 2 = 13`.
 
 **Example 2**
 
 ```
-Input: coins = [2], amount = 3
-Output: -1
+Input: coins = [3,5], amount = 11
+Output: 3
 ```
+
+`5 + 3 + 3 = 11`.
 
 **Example 3**
 
 ```
-Input: coins = [1], amount = 0
+Input: coins = [4,6], amount = 9
+Output: -1
+```
+
+Every combination of `4` and `6` misses `9`.
+
+**Example 4**
+
+```
+Input: coins = [7], amount = 0
 Output: 0
 ```
 
 No coins are needed for zero.
+
+**Example 5**
+
+```
+Input: coins = [1,3,4], amount = 6
+Output: 2
+```
+
+`3 + 3 = 6` uses fewer coins than `4 + 1 + 1`.
 
 ## Constraints
 

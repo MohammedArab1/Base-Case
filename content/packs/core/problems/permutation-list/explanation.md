@@ -23,7 +23,7 @@ At each depth, the recursion tries every value that has not already been used, s
 ## Common mistakes
 
 - Forgetting to unmark a value after recursion.
-- Sorting only the output instead of the choices, which can disturb generation order.
+- Relying on input order without sorting the choices or the final output.
 - Recording the path by reference and later mutating it.
 
 ## Related pattern

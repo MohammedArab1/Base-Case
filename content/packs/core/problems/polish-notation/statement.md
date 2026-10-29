@@ -17,27 +17,47 @@ The integer value of the expression.
 **Example 1**
 
 ```
-Input: tokens = ["2","1","+","3","*"]
-Output: 9
+Input: tokens = ["5","3","+","2","*"]
+Output: 16
 ```
 
-`(2 + 1) * 3 = 9`.
+`(5 + 3) * 2 = 16`.
 
 **Example 2**
 
 ```
-Input: tokens = ["4","13","5","/","+"]
-Output: 6
+Input: tokens = ["9","2","-","4","/"]
+Output: 1
 ```
 
-`13 / 5` truncates to `2`, then `4 + 2 = 6`.
+`9 - 2 = 7`, and `7 / 4` truncates to `1`.
 
 **Example 3**
 
 ```
-Input: tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
-Output: 22
+Input: tokens = ["6","2","/","3","+"]
+Output: 6
 ```
+
+`6 / 2 = 3`, then `3 + 3 = 6`.
+
+**Example 4**
+
+```
+Input: tokens = ["-8","3","/"]
+Output: -2
+```
+
+Division truncates toward zero, so `-8 / 3` becomes `-2`, not `-3`.
+
+**Example 5**
+
+```
+Input: tokens = ["4","5","*","6","-"]
+Output: 14
+```
+
+`4 * 5 = 20`, then `20 - 6 = 14`.
 
 ## Constraints
 

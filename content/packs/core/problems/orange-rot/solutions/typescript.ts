@@ -1,5 +1,6 @@
 class Solution {
   rottenMinutes(grid: number[][]): number {
+    grid = grid.map((row) => [...row])
     const rows = grid.length
     const columns = grid[0].length
     const queue: Array<[number, number]> = []
@@ -16,12 +17,14 @@ class Solution {
     }
 
     let minutes = 0
+    let head = 0
 
-    while (queue.length > 0 && fresh > 0) {
-      const waveSize = queue.length
+    while (head < queue.length && fresh > 0) {
+      const waveSize = queue.length - head
 
       for (let index = 0; index < waveSize; index += 1) {
-        const [r, c] = queue.shift() as [number, number]
+        const [r, c] = queue[head] as [number, number]
+        head += 1
         const neighbors: Array<[number, number]> = [
           [r + 1, c],
           [r - 1, c],

@@ -24,7 +24,7 @@ The mirrored structure of a palindrome requires characters to be consumed in pai
 
 - Adding one for every odd count instead of at most one.
 - Forgetting that an odd count still contributes its pairs.
-- Returning zero for an empty string incorrectly when the problem allows it.
+- Assuming the input is non-empty and mishandling an empty string.
 
 ## Related pattern
 

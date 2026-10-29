@@ -47,7 +47,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
-- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 are fixed; P0-01 example/test remediation is at Batch 4/8. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
+- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 are fixed; P0-01 example/test remediation is at Batch 5/8. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -57,6 +57,24 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-29 — B4 remediation Batch 5: notation, coins, grids, and windows
+
+- Status: Batch 5 examples/samples and hidden tests complete; remaining performance cases pending
+- Done:
+  - Rewrote statement examples, sample tests, and hidden tests for `polish-notation`, `coin-count`, `product-except`, `palindrome-build`, `orange-rot`, `rotated-search`, `sum-combinations`, `permutation-list`, `ancestor-tree`, and `min-window`.
+  - Replaced the copied `coin-count` hidden case (`[186,419,83,408]`, `6249`) with an original case that expects `11`.
+  - Fixed P1-07: the TypeScript `orange-rot` reference uses an index cursor instead of `queue.shift()`, and a 200×200 performance-marked case was added.
+  - Fixed P1-08: `product-except` now guarantees every output value fits in a signed 32-bit integer, with a 31-value boundary case.
+  - Fixed P1-09: `rotated-search` now states that the rotation may be zero and describes at most two sorted runs.
+  - Fixed P1-10: `min-window` explicitly defines the empty-target result as `""`.
+  - Fixed P2-01 for `sum-combinations` and `orange-rot` by copying inputs before sorting or marking cells, so `mutates: []` is accurate across all five affected problems.
+  - Fixed P2-06: `permutation-list` no longer calls sorting the final output a correctness mistake.
+- Verification:
+  - `pnpm content:validate` — valid; 81 problems, 8 designs, 39 lessons.
+  - `pnpm content:test` — 162/162 reference solutions accepted.
+- Next:
+  - Batch 6: `trapped-water`, `majority-value`, `binary-sum`, `tree-diameter`, `color-sort`, `segment-text`, `equal-split`, `strict-integer`, `right-view`, `longest-mirror`.
 
 ### 2026-10-29 — B4 remediation Batch 4: arrays, trees, and intervals
 

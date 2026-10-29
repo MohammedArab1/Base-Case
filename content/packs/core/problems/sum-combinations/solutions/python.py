@@ -3,7 +3,7 @@ from typing import List
 
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
-        candidates.sort()
+        candidates = sorted(candidates)
         result: List[List[int]] = []
         path: List[int] = []
 

@@ -1,3 +1,5 @@
-{"input":{"source":"adobecodebanc","target":"abc"},"expected":"banc"}
-{"input":{"source":"a","target":"a"},"expected":"a"}
+{"input":{"source":"xbaxyzab","target":"ab"},"expected":"ba"}
+{"input":{"source":"qwertyuiop","target":"ty"},"expected":"ty"}
+{"input":{"source":"aaabbbccc","target":"abc"},"expected":"abbbc"}
 {"input":{"source":"a","target":"aa"},"expected":""}
+{"input":{"source":"mangoesandkiwis","target":"aei"},"expected":"esandki"}

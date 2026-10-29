@@ -2,7 +2,7 @@
 
 ## Key insight
 
-A rotated sorted list is made of two sorted runs. At any midpoint, at least one side is fully sorted, and the target's value range tells us whether it belongs there.
+A rotated sorted list is made of at most two sorted runs. At any midpoint, at least one side is fully sorted, and the target's value range tells us whether it belongs there.
 
 ## Algorithm
 
@@ -25,7 +25,7 @@ The sorted half contains a contiguous range of values. If the target lies in tha
 
 - Comparing values without first identifying the sorted half.
 - Using strict or non-strict inequalities inconsistently at the boundaries.
-- Assuming the list is not rotated.
+- Forgetting that the list may already be sorted, so the rotation can be zero.
 
 ## Related pattern
 

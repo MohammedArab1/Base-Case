@@ -55,7 +55,7 @@
   "commonMistakes": [
     "Not undoing the used flag",
     "Recording the path without copying it",
-    "Trying values in unsorted order"
+    "Trying values in input order without sorting the output"
   ],
   "followUps": [
     "How would you handle duplicate values?",

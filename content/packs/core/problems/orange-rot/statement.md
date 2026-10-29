@@ -21,11 +21,29 @@ The number of minutes, or `-1`.
 **Example 1**
 
 ```
-Input: grid = [[2,1,1],[1,1,0],[0,1,1]]
-Output: 4
+Input: grid = [[2,1,0],[1,1,1],[0,1,2]]
+Output: 2
 ```
 
+The center orange is the last fresh one to rot.
+
 **Example 2**
+
+```
+Input: grid = [[1,2]]
+Output: 1
+```
+
+**Example 3**
+
+```
+Input: grid = [[1,1],[1,1]]
+Output: -1
+```
+
+No orange is rotten, so nothing can spread.
+
+**Example 4**
 
 ```
 Input: grid = [[2,1,1],[0,1,1],[1,0,1]]
@@ -34,14 +52,14 @@ Output: -1
 
 The bottom-left orange is isolated.
 
-**Example 3**
+**Example 5**
 
 ```
-Input: grid = [[0,2]]
-Output: 0
+Input: grid = [[1,1],[1,2]]
+Output: 2
 ```
 
-There are no fresh oranges.
+The far corner takes two minutes to rot.
 
 ## Constraints
 
