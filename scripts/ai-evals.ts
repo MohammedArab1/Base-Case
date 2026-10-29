@@ -82,6 +82,25 @@ function maxOutputTokensFromEnvironment(fallback: number): number {
   return value
 }
 
+function onlyFromEnvironment(): ReadonlySet<string> {
+  const raw = process.env.BASE_CASE_EVAL_ONLY?.trim()
+
+  if (!raw) {
+    return new Set()
+  }
+
+  const ids = raw
+    .split(',')
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0)
+
+  if (ids.length === 0) {
+    throw new Error('BASE_CASE_EVAL_ONLY must contain at least one solution id.')
+  }
+
+  return new Set(ids)
+}
+
 function headersFromEnvironment(): Readonly<Record<string, string>> | undefined {
   const raw = process.env.BASE_CASE_EVAL_HEADERS?.trim()
 
@@ -231,12 +250,18 @@ async function main(): Promise<void> {
   const root = process.cwd()
   const zoo = JSON.parse(await readFile(join(root, 'docs/evals/bug-zoo.json'), 'utf8')) as BugZoo
   const provider = providerFromEnvironment()
+  const only = onlyFromEnvironment()
   const cases: EvalCase[] = []
+  let selectedCases = 0
 
   for (const problem of zoo.problems) {
     const content = contentFor(problem)
 
     for (const solution of problem.solutions) {
+      if (only.size > 0 && !only.has(solution.id)) {
+        continue
+      }
+
       for (const feature of features) {
         const context: AiContext = {
           problemId: problem.id,
@@ -297,8 +322,13 @@ async function main(): Promise<void> {
           helpfulness: null,
           diagnosisCorrect: null,
         })
+        selectedCases += 1
       }
     }
+  }
+
+  if (selectedCases === 0) {
+    throw new Error('BASE_CASE_EVAL_ONLY did not match any bug-zoo solutions.')
   }
 
   const explainCases = cases.filter((entry) => entry.feature === 'explain')
@@ -313,6 +343,7 @@ async function main(): Promise<void> {
     revision: process.env.BASE_CASE_EVAL_REVISION ?? null,
     customHeaders: Boolean(process.env.BASE_CASE_EVAL_HEADERS?.trim()),
     maxOutputTokensOverride,
+    only: only.size > 0 ? [...only] : null,
     problems: zoo.problems.length,
     solutions: zoo.problems.reduce((sum, problem) => sum + problem.solutions.length, 0),
     cases: cases.length,
@@ -334,7 +365,10 @@ async function main(): Promise<void> {
     summary,
     cases,
   }
-  const target = join(root, `docs/evals/results-${provider.id}.json`)
+  const target = join(
+    root,
+    `docs/evals/results-${provider.id}${only.size > 0 ? '-retry' : ''}.json`,
+  )
 
   await writeFile(target, `${JSON.stringify(output, null, 2)}\n`, 'utf8')
 

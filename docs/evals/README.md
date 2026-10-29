@@ -74,6 +74,18 @@ The app keeps its own per-feature budgets; this override is for diagnosing wheth
 a model needs more room. `summary.parseFailures` and `summary.emptyResponses`
 should both be `0` before human review.
 
+If only a few cases fail, retry just their solutions:
+
+```sh
+BASE_CASE_EVAL_ONLY=merge-intervals-descending-sort,linked-list-cycle-null-deref \
+BASE_CASE_EVAL_MAX_OUTPUT_TOKENS=1200 \
+... pnpm evals
+```
+
+A targeted run writes `docs/evals/results-openai-compatible-retry.json`. Merge the
+retried cases into the full results file before reviewing; the retry file alone is
+not the final eval record.
+
 ## Human review
 
 After a real-model run, review the responses with:
