@@ -18,42 +18,42 @@ The minimum integer capacity that ships all packages within `days` days while pr
 **Example 1**
 
 ```
-Input: weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], days = 5
-Output: 15
+Input: weights = [4, 7, 2, 5, 8], days = 3
+Output: 11
 ```
 
-With capacity 15, the loads are `[1,2,3,4,5]`, `[6,7]`, `[8]`, `[9]`, and `[10]` — five days.
+Capacity 11 gives the loads `[4, 7]`, `[2, 5]`, and `[8]`.
 
 **Example 2**
 
 ```
-Input: weights = [3, 2, 2, 4, 1, 4], days = 3
+Input: weights = [6, 5, 4, 3, 2, 1], days = 4
 Output: 6
 ```
 
-Capacity 6 gives the loads `[3,2]`, `[2,4]`, and `[1,4]`.
+Capacity 6 gives the loads `[6]`, `[5]`, `[4]`, and `[3, 2, 1]`.
 
 **Example 3**
 
 ```
-Input: weights = [1, 2, 3, 1, 1], days = 4
-Output: 3
+Input: weights = [3, 3, 3, 3], days = 2
+Output: 6
 ```
 
-Capacity 2 would need five days because the `3` cannot share a ship.
+Capacity 6 gives the loads `[3, 3]` and `[3, 3]`.
 
 **Example 4**
 
 ```
-Input: weights = [10], days = 1
-Output: 10
+Input: weights = [9], days = 1
+Output: 9
 ```
 
 **Example 5**
 
 ```
-Input: weights = [1, 1, 1, 1, 1], days = 5
-Output: 1
+Input: weights = [2, 2, 2], days = 3
+Output: 2
 ```
 
 Each ship carries one package.

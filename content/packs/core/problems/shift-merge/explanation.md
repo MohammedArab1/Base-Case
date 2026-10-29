@@ -25,6 +25,6 @@ After sorting, consider the last block in the result. If the next shift starts a
 ## Common mistakes
 
 - Comparing only with the previous original interval rather than the current merged block.
-- Treating `[1, 4]` and `[4, 5]` as disjoint even though they touch.
+- Treating `[1, 2]` and `[2, 3]` as disjoint even though they touch.
 - Mutating the input array while merging and confusing later comparisons.
 - Appending the final block inside and after the loop, which duplicates it.

@@ -17,36 +17,44 @@ The number of distinct values. The mutated `signals` array must be shortened to 
 **Example 1**
 
 ```
-Input: signals = [1, 1, 2]
-Output: 2
-Mutated signals: [1, 2]
+Input: signals = [2, 2, 5, 5, 5, 9]
+Output: 3
+Mutated signals: [2, 5, 9]
 ```
 
 **Example 2**
 
 ```
-Input: signals = [0, 0, 0, 0]
+Input: signals = [-4, -4, -4]
 Output: 1
-Mutated signals: [0]
+Mutated signals: [-4]
 ```
 
 **Example 3**
 
 ```
-Input: signals = [-2, -1, -1, 0, 2, 2]
+Input: signals = [1, 2, 3, 4]
 Output: 4
-Mutated signals: [-2, -1, 0, 2]
+Mutated signals: [1, 2, 3, 4]
 ```
+
+No duplicates, so nothing moves.
 
 **Example 4**
 
 ```
-Input: signals = [1, 2, 3]
+Input: signals = [0, 0, 0, 1, 1, 2, 2, 2]
 Output: 3
-Mutated signals: [1, 2, 3]
+Mutated signals: [0, 1, 2]
 ```
 
-No duplicates, so nothing moves.
+**Example 5**
+
+```
+Input: signals = []
+Output: 0
+Mutated signals: []
+```
 
 ## Constraints
 

@@ -18,20 +18,20 @@ Determine whether every module can be built. The prerequisites may contain dupli
 **Example 1**
 
 ```
-Input: numModules = 2, prerequisites = [[1, 0]]
+Input: numModules = 4, prerequisites = [[1, 0], [2, 0], [3, 1], [3, 2]]
 Output: true
 ```
 
-Build module `0`, then module `1`.
+Build `0`, then `1` and `2`, then `3`.
 
 **Example 2**
 
 ```
-Input: numModules = 2, prerequisites = [[1, 0], [0, 1]]
+Input: numModules = 3, prerequisites = [[0, 1], [1, 2], [2, 0]]
 Output: false
 ```
 
-Each module waits for the other.
+The three modules form a cycle.
 
 **Example 3**
 
@@ -43,20 +43,20 @@ Output: true
 **Example 4**
 
 ```
-Input: numModules = 4, prerequisites = [[1, 0], [2, 1], [3, 2]]
+Input: numModules = 3, prerequisites = [[1, 0], [1, 0]]
 Output: true
 ```
 
-The chain builds from `0` to `3`.
+The duplicate prerequisite does not create a second dependency.
 
 **Example 5**
 
 ```
-Input: numModules = 3, prerequisites = [[0, 1], [1, 2], [2, 0]]
+Input: numModules = 3, prerequisites = [[1, 0], [2, 1], [0, 2]]
 Output: false
 ```
 
-The three modules form a cycle.
+The dependencies form a cycle.
 
 ## Constraints
 

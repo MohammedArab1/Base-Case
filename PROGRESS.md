@@ -47,7 +47,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
-- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 are fixed; P0-01 example/test remediation is at Batch 1/8. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
+- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 are fixed; P0-01 example/test remediation is at Batch 2/8. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -57,6 +57,22 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-29 — B4 remediation Batch 2: contracts and original examples
+
+- Status: Batch 2 examples/samples complete; performance cases and full hidden audit pending
+- Done:
+  - Rewrote statement examples and sample tests for `shift-merge`, `lone-beacon`, `compact-signals`, `warmer-days`, `reverse-chain`, `search-tree-check`, `build-order`, `network-clusters`, `keypad-words`, and `cargo-deadline`.
+  - Replaced known copied hidden cases in `shift-merge`, `keypad-words`, and `cargo-deadline`.
+  - Fixed P1-03: `cargo-deadline` now uses feasible example loads instead of the impossible capacity-2 example.
+  - Fixed P1-04: both `search-tree-check` references are iterative; added a 10,000-node performance case.
+  - Fixed P1-11: added duplicate-prerequisite tests to `build-order`.
+  - Updated `search-tree-check` explanation for the iterative traversal and corrected its duplicate-handling mistake text.
+- Verification:
+  - `pnpm content:validate` — valid; 81 problems, 8 designs, 39 lessons.
+  - `pnpm content:test` — 162/162 reference solutions accepted.
+- Next:
+  - Batch 3: `spiral-walk`, `fuel-circuit`, `join-sticks`, `edit-ledger`, `stock-peaks`, `mirrored-text`, `flip-tree`, `letter-tally`, `ordered-search`, `paint-fill`.
 
 ### 2026-10-29 — B4 remediation Batch 1: original examples and samples
 

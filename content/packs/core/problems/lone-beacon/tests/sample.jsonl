@@ -1,5 +1,5 @@
-{"input":{"signals":[2,2,1]},"expected":1}
-{"input":{"signals":[4,1,2,1,2]},"expected":4}
-{"input":{"signals":[7]},"expected":7}
-{"input":{"signals":[1,0,1]},"expected":0}
-{"input":{"signals":[-3,-3,9]},"expected":9}
+{"input":{"signals":[6,4,6]},"expected":4}
+{"input":{"signals":[9,9,-2,-2,5]},"expected":5}
+{"input":{"signals":[-7]},"expected":-7}
+{"input":{"signals":[0,3,3]},"expected":0}
+{"input":{"signals":[12,1,12,5,1]},"expected":5}

@@ -8,19 +8,23 @@ This is the maintainer's remediation tracker. It does not change the reviewer's 
 
 ## Status summary
 
-| Area                                                   | Status                                                |
-| ------------------------------------------------------ | ----------------------------------------------------- |
-| P0-01 — example/test provenance                        | **Open** — Batch 1/8 rewritten; 66 problems remaining |
-| P0-02 — `search-tree-check` out-of-range hidden values | Fixed in `e31a2b8`; pending recheck                   |
-| P0-03 — `tree-rebuild` invalid traversal pair          | Fixed in `e31a2b8`; pending recheck                   |
-| P0-04 — `expression-calc` unary-minus grammar          | Fixed in `e31a2b8`; pending recheck                   |
-| P0-05 — `heaps` pop example                            | Fixed in `e31a2b8`; pending recheck                   |
-| P0-06 — `dynamic-programming` edit-distance table      | Fixed in `e31a2b8`; pending recheck                   |
-| P0-07 — `trees` traversal-space answer                 | Fixed in `e31a2b8`; pending recheck                   |
-| P1-13 — trees balanced-BST wording                     | Fixed in `e31a2b8`; pending recheck                   |
-| P1-19 — trees reconstruction exercise                  | Fixed in `e31a2b8`; pending recheck                   |
-| Remaining P1-01–P1-23                                  | Open                                                  |
-| P2-01–P2-19                                            | Open; polish pass after P0/P1                         |
+| Area                                                          | Status                                                |
+| ------------------------------------------------------------- | ----------------------------------------------------- |
+| P0-01 — example/test provenance                               | **Open** — Batch 2/8 rewritten; 56 problems remaining |
+| P0-02 — `search-tree-check` out-of-range hidden values        | Fixed in `e31a2b8`; pending recheck                   |
+| P0-03 — `tree-rebuild` invalid traversal pair                 | Fixed in `e31a2b8`; pending recheck                   |
+| P0-04 — `expression-calc` unary-minus grammar                 | Fixed in `e31a2b8`; pending recheck                   |
+| P0-05 — `heaps` pop example                                   | Fixed in `e31a2b8`; pending recheck                   |
+| P0-06 — `dynamic-programming` edit-distance table             | Fixed in `e31a2b8`; pending recheck                   |
+| P0-07 — `trees` traversal-space answer                        | Fixed in `e31a2b8`; pending recheck                   |
+| P1-03 — `cargo-deadline` impossible example                   | Fixed in Batch 2; pending recheck                     |
+| P1-04 — `search-tree-check` recursion depth                   | Fixed in Batch 2 (iterative + 10k-node test)          |
+| P1-11 — `build-order` duplicate prerequisites                 | Fixed in Batch 2 (duplicate tests added)              |
+| P1-12 — performance-marked tests                              | In progress; one case added for `search-tree-check`   |
+| P1-13 — trees balanced-BST wording                            | Fixed in `e31a2b8`; pending recheck                   |
+| P1-19 — trees reconstruction exercise                         | Fixed in `e31a2b8`; pending recheck                   |
+| Remaining P1-01, P1-02, P1-05–P1-10, P1-14–P1-18, P1-20–P1-23 | Open                                                  |
+| P2-01–P2-19                                                   | Open; polish pass after P0/P1                         |
 
 ## P0-01 remediation
 
@@ -45,7 +49,7 @@ For every affected problem:
 | Batch | Problems                                                                                                                                                                                       | Status                                                                                 |
 | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | 1     | `pair-sum`, `water-between-walls`, `rotation-minimum`, `longest-unique-stretch`, `merge-sorted-chains`, `symmetric-branches`, `island-count`, `kth-largest`, `skip-neighbors`, `target-totals` | **Examples/samples done 2026-10-29** — performance cases and full hidden audit pending |
-| 2     | `shift-merge`, `lone-beacon`, `compact-signals`, `warmer-days`, `reverse-chain`, `search-tree-check`, `build-order`, `network-clusters`, `keypad-words`, `cargo-deadline`                      | Open                                                                                   |
+| 2     | `shift-merge`, `lone-beacon`, `compact-signals`, `warmer-days`, `reverse-chain`, `search-tree-check`, `build-order`, `network-clusters`, `keypad-words`, `cargo-deadline`                      | **Examples/samples done 2026-10-29** — performance cases and full hidden audit pending |
 | 3     | `spiral-walk`, `fuel-circuit`, `join-sticks`, `edit-ledger`, `stock-peaks`, `mirrored-text`, `flip-tree`, `letter-tally`, `ordered-search`, `paint-fill`                                       | Open                                                                                   |
 | 4     | `best-stretch`, `ancestor-search`, `merge-window`, `nearest-zero`, `nearest-points`, `height-balance`, `loop-detect`, `note-check`, `triplet-sum`, `level-lines`                               | Open                                                                                   |
 | 5     | `polish-notation`, `coin-count`, `product-except`, `palindrome-build`, `orange-rot`, `rotated-search`, `sum-combinations`, `permutation-list`, `ancestor-tree`, `min-window`                   | Open                                                                                   |

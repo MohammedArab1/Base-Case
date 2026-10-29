@@ -6,11 +6,11 @@
 {"input":{"digits":"7"},"expected":["p","q","r","s"]}
 {"input":{"digits":"8"},"expected":["t","u","v"]}
 {"input":{"digits":"9"},"expected":["w","x","y","z"]}
-{"input":{"digits":"23"},"expected":["ad","ae","af","bd","be","bf","cd","ce","cf"]}
+{"input":{"digits":"36"},"expected":["dm","dn","do","em","en","eo","fm","fn","fo"]}
 {"input":{"digits":"32"},"expected":["da","db","dc","ea","eb","ec","fa","fb","fc"]}
-{"input":{"digits":"22"},"expected":["aa","ab","ac","ba","bb","bc","ca","cb","cc"]}
+{"input":{"digits":"44"},"expected":["gg","gh","gi","hg","hh","hi","ig","ih","ii"]}
 {"input":{"digits":"99"},"expected":["ww","wx","wy","wz","xw","xx","xy","xz","yw","yx","yy","yz","zw","zx","zy","zz"]}
-{"input":{"digits":"79"},"expected":["pw","px","py","pz","qw","qx","qy","qz","rw","rx","ry","rz","sw","sx","sy","sz"]}
+{"input":{"digits":"82"},"expected":["ta","tb","tc","ua","ub","uc","va","vb","vc"]}
 {"input":{"digits":"97"},"expected":["wp","wq","wr","ws","xp","xq","xr","xs","yp","yq","yr","ys","zp","zq","zr","zs"]}
 {"input":{"digits":"234"},"expected":["adg","adh","adi","aeg","aeh","aei","afg","afh","afi","bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi","cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"]}
 {"input":{"digits":"567"},"expected":["jmp","jmq","jmr","jms","jnp","jnq","jnr","jns","jop","joq","jor","jos","kmp","kmq","kmr","kms","knp","knq","knr","kns","kop","koq","kor","kos","lmp","lmq","lmr","lms","lnp","lnq","lnr","lns","lop","loq","lor","los"]}

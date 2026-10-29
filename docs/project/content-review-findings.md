@@ -8,7 +8,7 @@
 
 This document accompanies the completed `docs/project/content-review-form.md` and is the detailed finding log referenced from that form.
 
-> **Maintainer update 2026-10-29:** P0-02–P0-07 and P1-13/P1-19 are fixed in `e31a2b8`. P0-01 example/test remediation is at Batch 1/8. See `docs/project/content-remediation.md` for live status. The findings below remain the reviewer's original record; they are not rewritten.
+> **Maintainer update 2026-10-29:** P0-02–P0-07 and P1-03, P1-04, P1-11, P1-13, P1-19 are fixed; P0-01 example/test remediation is at Batch 2/8 and P1-12 performance tests are in progress. See `docs/project/content-remediation.md` for live status. The findings below remain the reviewer's original record; they are not rewritten.
 
 ## Automated checks
 

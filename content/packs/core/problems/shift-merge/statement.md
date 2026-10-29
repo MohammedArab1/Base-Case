@@ -17,38 +17,45 @@ A list of merged `[start, end]` pairs, sorted by start time. Each block covers e
 **Example 1**
 
 ```
-Input: shifts = [[1, 3], [2, 6], [8, 10], [15, 18]]
-Output: [[1, 6], [8, 10], [15, 18]]
+Input: shifts = [[7, 10], [2, 4], [15, 16], [3, 8]]
+Output: [[2, 10], [15, 16]]
 ```
 
-The first two shifts overlap, while the last two are separate.
+After sorting, the first three shifts form one block; the last is separate.
 
 **Example 2**
 
 ```
-Input: shifts = [[1, 4], [4, 5]]
-Output: [[1, 5]]
+Input: shifts = [[5, 6], [1, 2], [2, 3]]
+Output: [[1, 3], [5, 6]]
 ```
 
-Touching shifts are merged.
+The first two shifts touch at `2`, so they merge.
 
 **Example 3**
 
 ```
-Input: shifts = [[5, 7], [1, 2]]
-Output: [[1, 2], [5, 7]]
+Input: shifts = [[10, 12], [1, 2], [3, 4]]
+Output: [[1, 2], [3, 4], [10, 12]]
 ```
 
-The input is unsorted, and the shifts do not overlap.
+The input is unsorted and no shifts overlap.
 
 **Example 4**
 
 ```
-Input: shifts = [[1, 10], [2, 3], [4, 8]]
-Output: [[1, 10]]
+Input: shifts = [[-5, -2], [-4, 0], [1, 2]]
+Output: [[-5, 0], [1, 2]]
 ```
 
-A long shift can contain shorter shifts that arrive later.
+Negative times are allowed.
+
+**Example 5**
+
+```
+Input: shifts = []
+Output: []
+```
 
 ## Constraints
 

@@ -1,5 +1,5 @@
-{"input":{"signals":[1,1,2]},"expected":{"returnValue":2,"mutated":{"signals":[1,2]}}}
-{"input":{"signals":[0,0,0,0]},"expected":{"returnValue":1,"mutated":{"signals":[0]}}}
-{"input":{"signals":[-2,-1,-1,0,2,2]},"expected":{"returnValue":4,"mutated":{"signals":[-2,-1,0,2]}}}
-{"input":{"signals":[7]},"expected":{"returnValue":1,"mutated":{"signals":[7]}}}
-{"input":{"signals":[1,2,3]},"expected":{"returnValue":3,"mutated":{"signals":[1,2,3]}}}
+{"input":{"signals":[2,2,5,5,5,9]},"expected":{"returnValue":3,"mutated":{"signals":[2,5,9]}}}
+{"input":{"signals":[-4,-4,-4]},"expected":{"returnValue":1,"mutated":{"signals":[-4]}}}
+{"input":{"signals":[1,2,3,4]},"expected":{"returnValue":4,"mutated":{"signals":[1,2,3,4]}}}
+{"input":{"signals":[0,0,0,1,1,2,2,2]},"expected":{"returnValue":3,"mutated":{"signals":[0,1,2]}}}
+{"input":{"signals":[]},"expected":{"returnValue":0,"mutated":{"signals":[]}}}

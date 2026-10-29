@@ -17,29 +17,27 @@ The number of connected clusters.
 **Example 1**
 
 ```
-Input: connected = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
+Input: connected = [[1, 1, 0, 0], [1, 1, 1, 0], [0, 1, 1, 0], [0, 0, 0, 1]]
 Output: 2
 ```
 
-Computers 0 and 1 form one cluster; computer 2 is alone.
+Computers 0, 1, and 2 form one cluster; computer 3 is alone.
 
 **Example 2**
 
 ```
-Input: connected = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-Output: 3
+Input: connected = [[1, 0, 0], [0, 1, 1], [0, 1, 1]]
+Output: 2
 ```
 
-No computer is linked to another.
+Computers 1 and 2 form a cluster, while 0 is alone.
 
 **Example 3**
 
 ```
-Input: connected = [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
+Input: connected = [[1, 1], [1, 1]]
 Output: 1
 ```
-
-Every computer is linked to every other.
 
 **Example 4**
 
@@ -53,11 +51,11 @@ A single computer is one cluster.
 **Example 5**
 
 ```
-Input: connected = [[1, 0, 1], [0, 1, 0], [1, 0, 1]]
-Output: 2
+Input: connected = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+Output: 4
 ```
 
-Computers 0 and 2 are directly linked, while 1 is separate.
+No computer is linked to another.
 
 ## Constraints
 

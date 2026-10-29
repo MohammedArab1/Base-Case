@@ -28,31 +28,38 @@ All possible letter strings, with one letter chosen for each digit. The order of
 **Example 1**
 
 ```
-Input: digits = "23"
-Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
+Input: digits = "26"
+Output: ["am", "an", "ao", "bm", "bn", "bo", "cm", "cn", "co"]
 ```
 
 **Example 2**
 
 ```
-Input: digits = "2"
-Output: ["a", "b", "c"]
+Input: digits = "47"
+Output: ["gp", "gq", "gr", "gs", "hp", "hq", "hr", "hs", "ip", "iq", "ir", "is"]
 ```
+
+Digit `4` has three letters and digit `7` has four.
 
 **Example 3**
 
 ```
-Input: digits = "79"
-Output: 16 words from "pw" through "sz"
+Input: digits = "58"
+Output: ["jt", "ju", "jv", "kt", "ku", "kv", "lt", "lu", "lv"]
 ```
-
-Digit `7` has four letters and digit `9` has four letters.
 
 **Example 4**
 
 ```
-Input: digits = "22"
-Output: ["aa", "ab", "ac", "ba", "bb", "bc", "ca", "cb", "cc"]
+Input: digits = "9"
+Output: ["w", "x", "y", "z"]
+```
+
+**Example 5**
+
+```
+Input: digits = "33"
+Output: ["dd", "de", "df", "ed", "ee", "ef", "fd", "fe", "ff"]
 ```
 
 Repeating a digit repeats its letter set.

@@ -21,18 +21,18 @@ Given the root of a binary tree, decide whether it is a strict binary search tre
 **Example 1**
 
 ```
-Input: root = [2, 1, 3]
+Input: root = [6, 3, 9, 1, 5, 8, 11]
 Output: true
 ```
 
 **Example 2**
 
 ```
-Input: root = [5, 1, 4, null, null, 3, 6]
+Input: root = [6, 3, 9, 1, 5, 7, 8]
 Output: false
 ```
 
-The value `3` is less than the root `5`, but it sits in the root's right subtree.
+The `8` sits in the right subtree of `9`, where every value must be greater than `9`.
 
 **Example 3**
 
@@ -46,7 +46,7 @@ An empty tree has no violations.
 **Example 4**
 
 ```
-Input: root = [1, 1]
+Input: root = [4, 2, 2]
 Output: false
 ```
 
@@ -55,11 +55,9 @@ Equal values are not allowed.
 **Example 5**
 
 ```
-Input: root = [10, 5, 15, null, null, 6, 20]
-Output: false
+Input: root = [20, 10, 30, 5, 15, 25, 35]
+Output: true
 ```
-
-Every direct parent-child comparison passes, but `6` is in the right subtree of `10`.
 
 ## Constraints
 

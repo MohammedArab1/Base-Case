@@ -17,31 +17,38 @@ The first node of the reversed list, or `null` when the input is empty.
 **Example 1**
 
 ```
-Input: head = [1, 2, 3, 4, 5]
-Output: [5, 4, 3, 2, 1]
+Input: head = [3, 6, 9, 12]
+Output: [12, 9, 6, 3]
 ```
 
 **Example 2**
+
+```
+Input: head = [-2, -1, 0, 1]
+Output: [1, 0, -1, -2]
+```
+
+**Example 3**
 
 ```
 Input: head = []
 Output: []
 ```
 
-**Example 3**
+**Example 4**
 
 ```
-Input: head = [1]
-Output: [1]
+Input: head = [7]
+Output: [7]
 ```
 
 A single node is already reversed.
 
-**Example 4**
+**Example 5**
 
 ```
-Input: head = [1, 2]
-Output: [2, 1]
+Input: head = [4, 4, 1]
+Output: [1, 4, 4]
 ```
 
 ## Constraints

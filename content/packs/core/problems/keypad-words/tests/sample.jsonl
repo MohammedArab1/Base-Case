@@ -1,5 +1,5 @@
-{"input":{"digits":"23"},"expected":["ad","ae","af","bd","be","bf","cd","ce","cf"]}
-{"input":{"digits":"2"},"expected":["a","b","c"]}
-{"input":{"digits":"79"},"expected":["pw","px","py","pz","qw","qx","qy","qz","rw","rx","ry","rz","sw","sx","sy","sz"]}
-{"input":{"digits":"22"},"expected":["aa","ab","ac","ba","bb","bc","ca","cb","cc"]}
+{"input":{"digits":"26"},"expected":["am","an","ao","bm","bn","bo","cm","cn","co"]}
+{"input":{"digits":"47"},"expected":["gp","gq","gr","gs","hp","hq","hr","hs","ip","iq","ir","is"]}
+{"input":{"digits":"58"},"expected":["jt","ju","jv","kt","ku","kv","lt","lu","lv"]}
 {"input":{"digits":"9"},"expected":["w","x","y","z"]}
+{"input":{"digits":"33"},"expected":["dd","de","df","ed","ee","ef","fd","fe","ff"]}

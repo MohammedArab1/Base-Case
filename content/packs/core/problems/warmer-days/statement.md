@@ -17,25 +17,25 @@ An array of the same length where index `i` contains the number of days until th
 **Example 1**
 
 ```
-Input: temperatures = [73, 74, 75, 71, 69, 72, 76, 73]
-Output: [1, 1, 4, 2, 1, 1, 0, 0]
+Input: temperatures = [64, 66, 63, 68, 61, 70]
+Output: [1, 2, 1, 2, 1, 0]
 ```
 
-Day 2 reaches 76 four days later, while day 6 never sees a warmer day.
+Day 1 waits two days for `68`; day 3 waits two days for `70`.
 
 **Example 2**
 
 ```
-Input: temperatures = [30, 40, 50, 60]
-Output: [1, 1, 1, 0]
+Input: temperatures = [55, 55, 56, 54]
+Output: [2, 1, 0, 0]
 ```
 
-Every day warms up immediately until the last day.
+Equal temperatures do not count, so day 0 waits for the `56`.
 
 **Example 3**
 
 ```
-Input: temperatures = [90, 80, 70]
+Input: temperatures = [80, 79, 78]
 Output: [0, 0, 0]
 ```
 
@@ -44,11 +44,16 @@ The temperature only falls.
 **Example 4**
 
 ```
-Input: temperatures = [50, 50, 51]
-Output: [2, 1, 0]
+Input: temperatures = [41, 43, 42, 44]
+Output: [1, 2, 1, 0]
 ```
 
-An equal temperature does not count, so day 0 waits for the `51`.
+**Example 5**
+
+```
+Input: temperatures = [70]
+Output: [0]
+```
 
 ## Constraints
 

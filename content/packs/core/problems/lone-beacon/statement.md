@@ -17,22 +17,22 @@ The value that appears exactly once.
 **Example 1**
 
 ```
-Input: signals = [2, 2, 1]
-Output: 1
+Input: signals = [6, 4, 6]
+Output: 4
 ```
 
 **Example 2**
 
 ```
-Input: signals = [4, 1, 2, 1, 2]
-Output: 4
+Input: signals = [9, 9, -2, -2, 5]
+Output: 5
 ```
 
 **Example 3**
 
 ```
-Input: signals = [7]
-Output: 7
+Input: signals = [-7]
+Output: -7
 ```
 
 A single signal is trivially the lone one.
@@ -40,11 +40,18 @@ A single signal is trivially the lone one.
 **Example 4**
 
 ```
-Input: signals = [1, 0, 1]
+Input: signals = [0, 3, 3]
 Output: 0
 ```
 
 The answer may be zero.
+
+**Example 5**
+
+```
+Input: signals = [12, 1, 12, 5, 1]
+Output: 5
+```
 
 ## Constraints
 
