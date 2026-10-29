@@ -20,6 +20,7 @@ This is the maintainer's remediation tracker. It does not change the reviewer's 
 | P1-01 — `loop-detect` space claim                              | Fixed in Batch 4; pending recheck                     |
 | P1-03 — `cargo-deadline` impossible example                    | Fixed in Batch 2; pending recheck                     |
 | P1-04 — `search-tree-check` recursion depth                    | Fixed in Batch 2 (iterative + 10k-node test)          |
+| P1-05 — `segment-text` empty text rule                         | Fixed in Batch 6; pending recheck                     |
 | P1-07 — `orange-rot` TypeScript queue cost                     | Fixed in Batch 5 (cursor + performance case)          |
 | P1-08 — `product-except` output bound                          | Fixed in Batch 5; pending recheck                     |
 | P1-09 — `rotated-search` zero rotation                         | Fixed in Batch 5; pending recheck                     |
@@ -29,7 +30,6 @@ This is the maintainer's remediation tracker. It does not change the reviewer's 
 | P1-17 — greedy lesson exercise mismatch                        | Partial — Stock Peaks paragraph fixed in Batch 3      |
 | P1-13 — trees balanced-BST wording                             | Fixed in `e31a2b8`; pending recheck                   |
 | P1-19 — trees reconstruction exercise                          | Fixed in `e31a2b8`; pending recheck                   |
-| P1-05 — `segment-text` empty text rule                         | Fixed in Batch 6; pending recheck                     |
 | Remaining P1-02, P1-06, P1-14–P1-16, P1-18, P1-20–P1-23        | Open                                                  |
 | P2-01, P2-03, P2-04, P2-06, P2-07, P2-09, P2-13, P2-15         | Fixed in Batches 1–6; pending recheck                 |
 | Remaining P2-02, P2-05, P2-08, P2-10–P2-12, P2-14, P2-16–P2-19 | Open; polish pass after P0/P1                         |
