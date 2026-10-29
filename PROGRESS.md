@@ -2,8 +2,8 @@
 
 > Last updated: 2026-10-28
 > Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1 and B2 are closed; B3–B12 remain (B8/B9 optional, B12 post-MVP).
-> Next milestone: MVP release candidate once B10 and B11 clear (B1 waived, B2 done), then the private alpha and `v0.1.0-alpha` tag
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B3 are closed; B4–B12 remain (B8/B9 optional, B12 post-MVP).
+> Next milestone: MVP release candidate once B10 and B11 clear (B1 waived; B2/B3 done), then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -18,7 +18,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
-| Phase 6 — AI tutor | In progress | 2026-10-25 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Remaining: optional local history and human-rated real-model evals |
+| Phase 6 — AI tutor | Done | 2026-10-28 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Real-model eval: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented. Optional local history remains post-MVP |
 | Phase 7 — Content production | In progress | 2026-10-28 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 39 lessons, including a 17-lesson system-design track that covers the public System Design Primer's core topic index. All 162 reference solutions pass. Second-person review and optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-27 | Installers, checksums, diagnostics self-test, alpha docs, feedback form, triage/metrics runbook, and a tag-driven release job are in place. B2 is done (workflow run 40607714499); B1 is closed by owner waiver. Remaining: private beta (B10), P0/P1 fixes, and the tag |
 | Phase 9 — MVP expansion | In progress | 2026-10-28 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 39 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, trie/deque exercises, and a 17-lesson system-design track covering the System Design Primer topic index. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
@@ -32,14 +32,13 @@ This is the living status document for the project. `PLAN.md` describes the inte
 4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
 5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
 6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 39 lessons (B4) and record the sign-off.
-7. Run the bug zoo against a real provider and fill in human-rated diagnosis correctness and helpfulness in `docs/evals/` (B3).
-8. Add optional local AI history with a clear delete button (privacy default stays off).
-9. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-10. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-11. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
-12. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
+7. Add optional local AI history with a clear delete button (privacy default stays off).
+8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
+10. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+11. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
 
-B1 is closed by owner waiver and B2 is done; see `docs/project/open-blockers.md` for the evidence and the scope of the waiver.
+B1 is closed by owner waiver, B2 is done, and B3 is closed with 59/60 cases reviewed; see `docs/project/open-blockers.md` for the evidence and exceptions.
 
 ## Blockers
 
@@ -47,7 +46,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
-- **B3 — Real-model AI eval run:** the bug zoo is recorded against the mock provider; a real endpoint plus human ratings is needed for the Phase 6 exit criteria.
+- **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
 - **B4 — Second-person content review:** the 81 coding + 8 design + 39 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
@@ -58,6 +57,23 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-28 — B3 closed: real-model AI eval and human review
+
+- Status: Real-model bug-zoo eval complete; 59/60 cases reviewed; B3 closed
+- Done:
+  - Added `BASE_CASE_EVAL_ONLY` for targeted retries, per-case parse/output-budget fields, and `parseFailures`/`emptyResponses` counters.
+  - Ran `deepseek-v4.1-flash` through the 60-case bug zoo. The first run exposed truncated structured responses; targeted retries completed 59 cases.
+  - Human review: 30/30 explain diagnoses correct, 59/60 cases rated, helpfulness 4.9/5 (explain 5.0, hint 4.79).
+  - 0 raw leaks, 0 guarded leaks, 0 warnings. Automated exact-label accuracy is 0 because the model emits more specific `bugType` names; human diagnosis is the B3 signal.
+  - Documented one remaining provider failure: `linked-list-cycle-null-deref` hint was truncated at both 1200 and 2000 output tokens. It is left unreviewed rather than marked correct.
+  - Recorded the full results, raw/guarded responses, ratings, and review metadata in `docs/evals/results-openai-compatible.json`.
+- Verification:
+  - `pnpm evals` with `BASE_CASE_EVAL_MAX_OUTPUT_TOKENS=1200` and a targeted 2000-token retry.
+  - Review summary: 59 reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness.
+- Notes:
+  - Review method: AI-assisted review at the maintainer’s request, with the maintainer spot-checking a sample.
+  - Phase 6 is now done; optional local AI history remains post-MVP.
 
 ### 2026-10-28 — Complete system-design topic coverage in the Learn library
 

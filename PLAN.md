@@ -2806,7 +2806,7 @@ re-verified. Clean-VM installation remains pending for both OSes. See
 - Leakage rate < 1% on the bug zoo.
 - At least 70% diagnosis accuracy on the bug zoo, or the feature is labeled "experimental" and pre-authored hints remain primary.
 
-> Status 2026-10-25: all tasks except the real-provider manual test and the optional Apple FM sidecar are implemented. The mock bug-zoo baseline is recorded, but the leakage and diagnosis-accuracy exit criteria require a real-model run and human ratings. Until then, the AI panel is labeled as an optional assistant and pre-authored hints remain primary.
+> Status 2026-10-28: real-model bug-zoo eval complete with `deepseek-v4.1-flash`: 59/60 cases reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness, 0 leaks, and one provider-truncated hint documented as unreviewed. The review was AI-assisted at the maintainer's request with a spot-check. The AI panel remains an optional assistant and pre-authored hints remain primary.
 
 ---
 

@@ -34,7 +34,7 @@ Exit criteria from `PLAN.md`:
 - [ ] `pnpm content:validate && pnpm content:test`
 - [ ] `pnpm judge:build && pnpm build && pnpm smoke:e2e`
 - [ ] `pnpm smoke:playwright`
-- [ ] `pnpm evals` (mock provider; a real-model run is B3)
+- [x] `pnpm evals` (mock baseline plus real-model B3 run: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented)
 - [ ] macOS package built and launched: `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac`
 - [x] Windows package built through the manual `Build installers` workflow (B2: run `40607714499`; installed and launched on Windows 11)
 - [x] Clean install works on macOS and Windows (B1 closed by owner waiver for the alpha: Windows hardware install passed; clean-OS isolation was not performed and remains a v1.0 bar)

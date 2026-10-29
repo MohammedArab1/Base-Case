@@ -68,8 +68,15 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - Lesson clarification is an extra explanation layer. It can be wrong or
   incomplete even when the lesson is correct; the offline lesson remains the
   source of truth.
-- The bug-zoo evaluation is recorded against the mock provider. A real-model run
-  with human ratings is still pending (B3).
+- The real-model bug-zoo run is recorded in
+  `docs/evals/results-openai-compatible.json`: `deepseek-v4.1-flash`, 59/60
+  cases reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness, and 0
+  leaks. One hint was truncated by the provider and is left unreviewed. The
+  review was AI-assisted at the maintainer's request with a spot-check, not an
+  independent second-person review.
+- Automated exact-label accuracy is not meaningful for the current model because
+  it emits more specific `bugType` names than the bug-zoo taxonomy; use the
+  human diagnosis ratings.
 - There is no local AI conversation history yet. Feedback is stored locally, but
   full transcripts are not. Lesson clarification is a single question/answer,
   not a running chat.

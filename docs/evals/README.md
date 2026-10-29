@@ -148,6 +148,19 @@ in for a real-model run. Keep the filled file next to the raw result.
 5. Mark leakage separately; guardrails should make this rare, but a model can still
    leak a solution in prose.
 
+## Recorded real-model result (2026-10-28)
+
+- Model: `deepseek-v4.1-flash` via an OpenAI-compatible endpoint.
+- Cases: 60, 59 reviewed.
+- Explain diagnosis: 30/30 correct (100%).
+- Helpfulness: 4.9/5 overall (explain 5.0, hint 4.79).
+- Leakage: 0 raw, 0 guarded.
+- One provider failure: `linked-list-cycle-null-deref` hint was truncated after
+  1200- and 2000-token retries; it is left unreviewed rather than marked correct.
+- Review method: AI-assisted at the maintainer's request, with a maintainer
+  spot-check. This is not an independent second-person review.
+- Full record: `docs/evals/results-openai-compatible.json`.
+
 ## When to re-run
 
 - Any change to `apps/desktop/src/main/ai-prompts.ts`.
