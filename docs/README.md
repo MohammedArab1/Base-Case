@@ -50,6 +50,8 @@ Start here:
 - `project/content-review-packet.md` — B4 second-reviewer handoff packet.
 - `project/content-review-inventory.md` — tiered checklist for all 128 content items.
 - `project/content-review-form.md` — reviewer sign-off template.
+- `project/content-review-findings.md` — completed Full-tier review findings.
+- `project/content-remediation.md` — maintainer remediation tracker and batch plan.
 - `project/definition-of-done.md`
 - `project/code-review-checklist.md`
 - `project/wireframes.md`
