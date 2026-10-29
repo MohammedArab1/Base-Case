@@ -31,7 +31,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 3. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
 4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
 5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 39 lessons (B4) and record the sign-off. Use `docs/project/content-review-packet.md`; the packet includes a tiered sampling plan and sign-off form.
+6. Remediate the B4 review: fix P0-01 (example/test provenance), P0-02–P0-07, and P1-01–P1-23; then request a recheck and human second-person sign-off. Evidence: `docs/project/content-review-findings.md`.
 7. Add optional local AI history with a clear delete button (privacy default stays off).
 8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
 9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
@@ -47,7 +47,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
-- **B4 — Second-person content review (packet ready):** the 81 coding + 8 design + 39 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off. Handoff packet: `docs/project/content-review-packet.md`; inventory: `docs/project/content-review-inventory.md`; form: `docs/project/content-review-form.md`.
+- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. The P0s block sign-off: copied example/test provenance, two invalid test suites, the `expression-calc` grammar, and three lesson errors. Evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -57,6 +57,22 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-29 — B4 Full review returned changes requested
+
+- Status: B4 open; 7 P0, 23 P1, 19 P2 findings
+- Done:
+  - Reviewer completed a Full-tier 128-item review. Automated validation, 162/162 reference tests, and typecheck pass, but the review found content gaps that automation cannot detect.
+  - P0-01: at least 76 of 81 coding problems reuse LeetCode example inputs/outputs or test data; the pack’s originality claims are being corrected while the content is audited.
+  - Confirmed and fixed P0-02 (`search-tree-check` out-of-range hidden values), P0-03 (`tree-rebuild` invalid traversal pair), P0-04 (`expression-calc` unary-minus grammar), P0-05 (`heaps` pop example), P0-06 (`dynamic-programming` edit-distance table), and P0-07 (`trees` traversal-space self-check).
+  - Fixed P1-13 and P1-19 in the trees lesson while there.
+  - Added the completed form, 49-finding log, and checked inventory to the repository.
+- Next:
+  - Rewrite copied examples/sample tests and audit hidden tests for P0-01.
+  - Work through P1-01–P1-23, then request a recheck and human sign-off.
+- Verification:
+  - Reviewer’s automated run: validate valid (81/8/39), 162/162 reference solutions, typecheck passed.
+  - Content tests will be re-run after the remediation batch.
 
 ### 2026-10-28 — B4 second-reviewer packet prepared
 
