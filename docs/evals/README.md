@@ -63,6 +63,17 @@ Header values are not written to the results file; only
 `summary.customHeaders: true` is recorded. Do not commit the header value or put it
 in the eval results file.
 
+If a model returns truncated JSON or empty content, rerun with a larger diagnostic
+budget:
+
+```sh
+BASE_CASE_EVAL_MAX_OUTPUT_TOKENS=1200 pnpm evals
+```
+
+The app keeps its own per-feature budgets; this override is for diagnosing whether
+a model needs more room. `summary.parseFailures` and `summary.emptyResponses`
+should both be `0` before human review.
+
 ## Human review
 
 After a real-model run, review the responses with:
@@ -94,6 +105,8 @@ a case and come back to it later.
 | `explainLabelAccuracy` | automated | `bugType` exactly matches `bugLabel`; a proxy, not a substitute for review |
 | `rawLeaks`             | automated | a fenced code block longer than 8 lines appears in the raw response        |
 | `guardedLeaks`         | automated | the same check after guardrails; should be 0 below reveal level 4          |
+| `parseFailures`        | automated | responses that did not parse as the feature's structured JSON              |
+| `emptyResponses`       | automated | responses with no content at all                                           |
 | `averageLatencyMs`     | automated | wall-clock time per request                                                |
 | `averageInputTokens`   | automated | characters / 4 for the built context                                       |
 | `averageOutputTokens`  | automated | characters / 4 for the raw response                                        |

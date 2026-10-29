@@ -56,6 +56,8 @@ interface EvalCase {
   readonly inputTokens: number
   readonly outputTokens: number
   readonly droppedSections: readonly string[]
+  readonly maxOutputTokens: number
+  readonly parseOk: boolean
   readonly rawResponse: string
   readonly guardedResponse: string
   readonly helpfulness: null
@@ -63,6 +65,22 @@ interface EvalCase {
 }
 
 const features: readonly AiFeature[] = ['explain', 'hint']
+
+function maxOutputTokensFromEnvironment(fallback: number): number {
+  const raw = process.env.BASE_CASE_EVAL_MAX_OUTPUT_TOKENS?.trim()
+
+  if (!raw) {
+    return fallback
+  }
+
+  const value = Number(raw)
+
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error('BASE_CASE_EVAL_MAX_OUTPUT_TOKENS must be a positive integer.')
+  }
+
+  return value
+}
 
 function headersFromEnvironment(): Readonly<Record<string, string>> | undefined {
   const raw = process.env.BASE_CASE_EVAL_HEADERS?.trim()
@@ -234,6 +252,7 @@ async function main(): Promise<void> {
 
         const started = performance.now()
         let raw = ''
+        const maxOutputTokens = maxOutputTokensFromEnvironment(built.preview.maxOutputTokens)
 
         await provider.stream(
           {
@@ -241,7 +260,7 @@ async function main(): Promise<void> {
             feature,
             system: built.system,
             messages: built.messages,
-            maxOutputTokens: built.preview.maxOutputTokens,
+            maxOutputTokens,
             temperature: 0.2,
             jsonSchema: aiJsonSchema(feature),
           },
@@ -271,6 +290,8 @@ async function main(): Promise<void> {
           inputTokens: built.preview.estimatedTokens,
           outputTokens: estimateTokens(raw),
           droppedSections: built.preview.droppedSections,
+          maxOutputTokens,
+          parseOk: parsed.ok,
           rawResponse: raw,
           guardedResponse: guarded.text,
           helpfulness: null,
@@ -282,12 +303,16 @@ async function main(): Promise<void> {
 
   const explainCases = cases.filter((entry) => entry.feature === 'explain')
   const labelMatches = explainCases.filter((entry) => entry.labelMatch === true).length
+  const maxOutputTokensOverride = process.env.BASE_CASE_EVAL_MAX_OUTPUT_TOKENS?.trim()
+    ? Number(process.env.BASE_CASE_EVAL_MAX_OUTPUT_TOKENS)
+    : null
   const summary = {
     provider: provider.id,
     model: process.env.BASE_CASE_EVAL_MODEL ?? provider.name,
     endpoint: process.env.BASE_CASE_EVAL_BASE_URL ?? null,
     revision: process.env.BASE_CASE_EVAL_REVISION ?? null,
     customHeaders: Boolean(process.env.BASE_CASE_EVAL_HEADERS?.trim()),
+    maxOutputTokensOverride,
     problems: zoo.problems.length,
     solutions: zoo.problems.reduce((sum, problem) => sum + problem.solutions.length, 0),
     cases: cases.length,
@@ -296,6 +321,8 @@ async function main(): Promise<void> {
     rawLeaks: cases.filter((entry) => entry.rawLeak).length,
     guardedLeaks: cases.filter((entry) => entry.guardedLeak).length,
     warnings: cases.filter((entry) => entry.warning !== null).length,
+    parseFailures: cases.filter((entry) => !entry.parseOk).length,
+    emptyResponses: cases.filter((entry) => entry.rawResponse.length === 0).length,
     averageLatencyMs: average(cases.map((entry) => entry.latencyMs)),
     averageInputTokens: average(cases.map((entry) => entry.inputTokens)),
     averageOutputTokens: average(cases.map((entry) => entry.outputTokens)),

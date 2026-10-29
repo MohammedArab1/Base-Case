@@ -48,6 +48,8 @@ interface EvalCase {
   readonly inputTokens: number
   readonly outputTokens: number
   readonly droppedSections: readonly string[]
+  readonly maxOutputTokens?: number
+  readonly parseOk?: boolean
   readonly rawResponse?: string
   readonly guardedResponse?: string
   helpfulness: number | null
@@ -94,10 +96,49 @@ function average(values: readonly number[]): number | null {
   return Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 10) / 10
 }
 
+function responseParses(entry: EvalCase): boolean {
+  if (typeof entry.parseOk === 'boolean') {
+    return entry.parseOk
+  }
+
+  const text = entry.guardedResponse ?? entry.rawResponse ?? ''
+
+  if (text.trim().length === 0) {
+    return false
+  }
+
+  try {
+    JSON.parse(text)
+    return true
+  } catch {
+    return false
+  }
+}
+
 async function main(): Promise<void> {
   const target = process.argv[2] ?? 'docs/evals/results-openai-compatible.json'
   const zoo = JSON.parse(await readFile('docs/evals/bug-zoo.json', 'utf8')) as BugZoo
   const results = JSON.parse(await readFile(target, 'utf8')) as EvalResults
+  const parseFailures =
+    typeof results.summary.parseFailures === 'number'
+      ? results.summary.parseFailures
+      : results.cases.filter((entry) => !responseParses(entry)).length
+  const emptyResponses =
+    typeof results.summary.emptyResponses === 'number'
+      ? results.summary.emptyResponses
+      : results.cases.filter((entry) => (entry.rawResponse ?? '').trim().length === 0).length
+
+  if (parseFailures > 0 || emptyResponses > 0) {
+    console.error(
+      `Cannot review ${target}: ${parseFailures} parse failure(s) and ${emptyResponses} empty response(s).`,
+    )
+    console.error(
+      'Rerun the eval with BASE_CASE_EVAL_MAX_OUTPUT_TOKENS=1200 (or a model with more output room) first.',
+    )
+    process.exitCode = 1
+    return
+  }
+
   const solutions = new Map<string, { problem: ZooProblem; solution: ZooSolution }>()
 
   for (const problem of zoo.problems) {
