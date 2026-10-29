@@ -78,7 +78,7 @@ The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 - B3 — done (real-model eval: 59/60 reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks).
 - B11 — manual VoiceOver/NVDA, high-contrast, zoom, and canvas keyboard pass.
 - B10 — private beta with no open P0/P1 bugs.
-- B4 — second-person review of the current 81 + 8 + 30 content set.
+- B4 — second-person review of the current 81 + 8 + 39 content set. Handoff packet: `docs/project/content-review-packet.md`.
 - Legal/name/domain checks (B5, B7) before public branding.
 
 Do not tag or publish this build until those gates are resolved.

@@ -31,7 +31,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 3. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
 4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
 5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 39 lessons (B4) and record the sign-off.
+6. Get a second-person review of the 81 coding problems, 8 design scenarios, and 39 lessons (B4) and record the sign-off. Use `docs/project/content-review-packet.md`; the packet includes a tiered sampling plan and sign-off form.
 7. Add optional local AI history with a clear delete button (privacy default stays off).
 8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
 9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
@@ -47,7 +47,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
-- **B4 — Second-person content review:** the 81 coding + 8 design + 39 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off.
+- **B4 — Second-person content review (packet ready):** the 81 coding + 8 design + 39 lesson set is authored and automatically validated, but Phase 7 requires a second reviewer sign-off. Handoff packet: `docs/project/content-review-packet.md`; inventory: `docs/project/content-review-inventory.md`; form: `docs/project/content-review-form.md`.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -57,6 +57,18 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-28 — B4 second-reviewer packet prepared
+
+- Status: B4 handoff materials ready; review still open
+- Done:
+  - Added `docs/project/content-review-packet.md`: reviewer brief, three review tiers, automated checks, coding/design/lesson checklists, severity definitions, finding template, sign-off criteria, and handoff message.
+  - Added `docs/project/content-review-inventory.md`: all 81 coding problems, 8 designs, and 39 lessons marked T1, T2, or Full. T1 is 37 items (~2.5–3 hours); T2 is 61 items (~4–5 hours); Full is 128 items.
+  - Added `docs/project/content-review-form.md`: fillable sign-off, findings table, originality/license attestations, and maintainer follow-up.
+  - Linked the packet from the docs index, progress log, and blocker table.
+- Notes:
+  - B4 remains open until an independent reviewer completes a tier and signs off.
+  - The packet is explicit that a T1/T2 sign-off is not a full review.
 
 ### 2026-10-28 — B3 closed: real-model AI eval and human review
 
