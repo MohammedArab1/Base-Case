@@ -102,10 +102,25 @@ func guardProcess(pid int, limits processLimits) processGuard {
 	return processGuard{job: job}
 }
 
-func (g processGuard) release() {
+func (g *processGuard) release() {
 	if g.job != 0 {
 		_ = windows.CloseHandle(g.job)
+		g.job = 0
 	}
+}
+
+// terminate closes the Job Object, which kills the entire process tree
+// immediately. Closing the handle is much faster and more reliable than
+// shelling out to taskkill while a timed-out child still holds its pipes open.
+func (g *processGuard) terminate(pid int) {
+	if g.job != 0 {
+		_ = windows.TerminateJobObject(g.job, 1)
+		_ = windows.CloseHandle(g.job)
+		g.job = 0
+		return
+	}
+
+	killProcessGroup(pid)
 }
 
 // peak reports the job's peak committed memory. The job handle stays open until

@@ -421,6 +421,10 @@ const stderrWrite = process.stderr.write.bind(process.stderr)
 const userStdout = []
 const userStderr = []
 
+function finish(payload) {
+  protocolWrite(payload + '\n', () => process.exit(0))
+}
+
 process.stdout.write = (chunk, encoding, callback) => {
   userStdout.push(typeof chunk === 'string' ? chunk : chunk.toString())
   return stderrWrite(chunk, encoding, callback)
@@ -452,14 +456,14 @@ try {
     }
   }
   const durationMs = performance.now() - started
-  protocolWrite(JSON.stringify({
+  finish(JSON.stringify({
     ok: true,
     result: encode(RETURN_TYPE, result),
     mutated,
     userStdout: userStdout.join(''),
     userStderr: userStderr.join(''),
     durationMs: Number(durationMs.toFixed(3)),
-  }) + '\n')
+  }))
 } catch (error) {
   const durationMs = performance.now() - started
   const type = error && error.name ? String(error.name) : 'Error'
@@ -470,7 +474,7 @@ try {
     .filter((line) => !line.includes('harness.mjs'))
     .join('\n')
   const location = rawStack.match(/solution\.(?:ts|mjs|js):(\d+):(\d+)/)
-  protocolWrite(JSON.stringify({
+  finish(JSON.stringify({
     ok: false,
     error: {
       type,
@@ -481,7 +485,7 @@ try {
     userStdout: userStdout.join(''),
     userStderr: userStderr.join(''),
     durationMs: Number(durationMs.toFixed(3)),
-  }) + '\n')
+  }))
 }
 `
 

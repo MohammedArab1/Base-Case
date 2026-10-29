@@ -414,7 +414,7 @@ func (r *Runner) runTest(
 	select {
 	case waitError = <-waitChannel:
 	case <-testContext.Done():
-		killProcessGroup(command.Process.Pid)
+		guard.terminate(command.Process.Pid)
 		waitError = <-waitChannel
 		if errors.Is(testContext.Err(), context.DeadlineExceeded) {
 			forcedStatus = StatusTimeLimitExceeded
@@ -422,19 +422,19 @@ func (r *Runner) runTest(
 			forcedStatus = StatusCancelled
 		}
 	case <-stdoutOverflow:
-		killProcessGroup(command.Process.Pid)
+		guard.terminate(command.Process.Pid)
 		waitError = <-waitChannel
 		forcedStatus = StatusOutputLimitExceeded
 	case <-stderrOverflow:
-		killProcessGroup(command.Process.Pid)
+		guard.terminate(command.Process.Pid)
 		waitError = <-waitChannel
 		forcedStatus = StatusOutputLimitExceeded
 	case <-memoryExceeded:
-		killProcessGroup(command.Process.Pid)
+		guard.terminate(command.Process.Pid)
 		waitError = <-waitChannel
 		forcedStatus = StatusMemoryLimitExceeded
 	case <-processExceeded:
-		killProcessGroup(command.Process.Pid)
+		guard.terminate(command.Process.Pid)
 		waitError = <-waitChannel
 		forcedStatus = StatusRuntimeError
 		forcedMessage = fmt.Sprintf("Execution exceeded its process limit (%d).", maxProcessCount)

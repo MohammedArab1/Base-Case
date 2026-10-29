@@ -32,6 +32,10 @@ func guardProcess(pid int, limits processLimits) processGuard {
 
 func (g processGuard) release() {}
 
+func (g processGuard) terminate(pid int) {
+	killProcessGroup(pid)
+}
+
 // peak reports the kernel's high-water mark for the child. On macOS Maxrss is
 // already in bytes; on Linux and most BSDs it is in kilobytes.
 func (g processGuard) peak(state *os.ProcessState) int64 {

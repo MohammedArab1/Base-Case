@@ -492,7 +492,13 @@ func treeRequest(language, code string) RunRequest {
 			Returns:   "TreeNode",
 			Mutates:   []string{},
 		},
-		Limits:  Limits{TimeMs: 2000, MemoryMb: 256},
+		Limits: Limits{
+			TimeMs:   2000,
+			MemoryMb: 256,
+			LanguageMultipliers: map[string]float64{
+				"typescript": 3,
+			},
+		},
 		Checker: Checker{Kind: "exact"},
 		Tests: []Test{
 			{
@@ -767,7 +773,13 @@ export { Solution }
 					Returns:   "string",
 					Mutates:   []string{},
 				},
-				Limits:  Limits{TimeMs: 2000, MemoryMb: 256},
+				Limits: Limits{
+					TimeMs:   2000,
+					MemoryMb: 256,
+					LanguageMultipliers: map[string]float64{
+						"typescript": 3,
+					},
+				},
 				Checker: Checker{Kind: "exact"},
 				Tests: []Test{
 					{Index: 0, IsSample: true, Input: json.RawMessage(`{"text":"héllo 🌍"}`), Expected: json.RawMessage(`"héllo 🌍"`)},
