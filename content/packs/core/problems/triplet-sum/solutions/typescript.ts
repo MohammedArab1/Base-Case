@@ -1,5 +1,6 @@
 class Solution {
   threeSum(nums: number[]): number[][] {
+    nums = [...nums]
     nums.sort((left, right) => left - right)
     const result: number[][] = []
 

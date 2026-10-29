@@ -15,15 +15,15 @@ A list of levels, each level being a list of node values.
 **Example 1**
 
 ```
-Input: root = [3,9,20,null,null,15,7]
-Output: [[3],[9,20],[15,7]]
+Input: root = [6,2,8,1,4,7,9]
+Output: [[6],[2,8],[1,4,7,9]]
 ```
 
 **Example 2**
 
 ```
-Input: root = [1]
-Output: [[1]]
+Input: root = [5]
+Output: [[5]]
 ```
 
 **Example 3**
@@ -31,6 +31,20 @@ Output: [[1]]
 ```
 Input: root = []
 Output: []
+```
+
+**Example 4**
+
+```
+Input: root = [10,5,15,2,7]
+Output: [[10],[5,15],[2,7]]
+```
+
+**Example 5**
+
+```
+Input: root = [1,2,null,3]
+Output: [[1],[2],[3]]
 ```
 
 ## Constraints

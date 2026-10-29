@@ -24,7 +24,6 @@ The counts begin as the multiset available in the source. Each note character co
 
 - Reusing one source letter for multiple note letters.
 - Comparing lengths but not counts.
-- Treating uppercase and lowercase as interchangeable when the contract says case-sensitive.
 
 ## Related pattern
 

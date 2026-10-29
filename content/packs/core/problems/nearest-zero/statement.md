@@ -17,22 +17,36 @@ A grid where each cell is its distance to the nearest zero.
 **Example 1**
 
 ```
-Input: grid = [[0,0,0],[0,1,0],[0,0,0]]
-Output: [[0,0,0],[0,1,0],[0,0,0]]
+Input: grid = [[0,1,1],[1,1,1],[1,1,0]]
+Output: [[0,1,2],[1,2,1],[2,1,0]]
 ```
 
 **Example 2**
 
 ```
-Input: grid = [[0,0,0],[0,1,0],[1,1,1]]
-Output: [[0,0,0],[0,1,0],[1,2,1]]
+Input: grid = [[0,0,1,1],[1,1,1,1]]
+Output: [[0,0,1,2],[1,1,2,3]]
 ```
 
 **Example 3**
 
 ```
-Input: grid = [[1,1,1],[1,1,0]]
-Output: [[3,2,1],[2,1,0]]
+Input: grid = [[1,1,0]]
+Output: [[2,1,0]]
+```
+
+**Example 4**
+
+```
+Input: grid = [[0]]
+Output: [[0]]
+```
+
+**Example 5**
+
+```
+Input: grid = [[1],[0],[1]]
+Output: [[1],[0],[1]]
 ```
 
 ## Constraints

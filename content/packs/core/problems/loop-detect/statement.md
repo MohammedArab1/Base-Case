@@ -2,7 +2,7 @@
 
 A linked list is described by its sequence of values and an optional link index. Build the list from `values`; then, when `linkIndex` is not `-1`, connect the last node's `next` pointer to the node at that index. A link index of `-1` means the list ends normally.
 
-Return whether the resulting list contains a cycle.
+Return whether the resulting list contains a cycle. Constructing the list takes `O(n)` space; the cycle check itself should use `O(1)` extra space.
 
 ## Input
 
@@ -18,23 +18,39 @@ Return whether the resulting list contains a cycle.
 **Example 1**
 
 ```
-Input: values = [3,2,0,-4], linkIndex = 1
+Input: values = [7,12,5,9], linkIndex = 2
 Output: true
 ```
 
-The tail connects back to the node holding `2`.
+The tail connects back to the node holding `5`.
 
 **Example 2**
 
 ```
-Input: values = [1,2], linkIndex = 0
-Output: true
+Input: values = [4,8], linkIndex = -1
+Output: false
 ```
 
 **Example 3**
 
 ```
-Input: values = [1], linkIndex = -1
+Input: values = [6], linkIndex = 0
+Output: true
+```
+
+The single node points to itself.
+
+**Example 4**
+
+```
+Input: values = [1,2,3,4], linkIndex = 0
+Output: true
+```
+
+**Example 5**
+
+```
+Input: values = [10,20,30], linkIndex = -1
 Output: false
 ```
 

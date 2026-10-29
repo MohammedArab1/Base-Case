@@ -18,8 +18,8 @@ Without a cycle, the faster pointer reaches the end. With a cycle, both pointers
 
 ## Complexity
 
-- Time: `O(n)`.
-- Space: `O(1)`.
+- Time: `O(n)` to build the list and `O(n)` for the scan.
+- Space: `O(n)` for the constructed nodes, plus `O(1)` extra for the two pointers.
 
 ## Common mistakes
 

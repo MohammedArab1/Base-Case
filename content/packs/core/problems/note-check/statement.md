@@ -1,6 +1,6 @@
 # Note Check
 
-You want to compose a note by cutting letters out of a source string. Each letter in the source may be used at most once. Letters are case-sensitive.
+You want to compose a note by cutting letters out of a source string. Each letter in the source may be used at most once.
 
 Return whether the note can be composed.
 
@@ -18,21 +18,37 @@ Return whether the note can be composed.
 **Example 1**
 
 ```
-Input: note = "a", source = "b"
-Output: false
+Input: note = "canvas", source = "cavnas"
+Output: true
 ```
 
 **Example 2**
 
 ```
-Input: note = "aa", source = "ab"
+Input: note = "letter", source = "letr"
 Output: false
 ```
+
+The source does not contain enough `t` and `e` letters.
 
 **Example 3**
 
 ```
-Input: note = "aa", source = "aab"
+Input: note = "aab", source = "ab"
+Output: false
+```
+
+**Example 4**
+
+```
+Input: note = "", source = ""
+Output: true
+```
+
+**Example 5**
+
+```
+Input: note = "code", source = "decoy"
 Output: true
 ```
 

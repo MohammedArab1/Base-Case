@@ -45,14 +45,14 @@
       "language": "python",
       "path": "solutions/python.py",
       "time": "O(n)",
-      "space": "O(1)",
+      "space": "O(n) build; O(1) scan",
       "isCanonical": true
     },
     {
       "language": "typescript",
       "path": "solutions/typescript.ts",
       "time": "O(n)",
-      "space": "O(1)"
+      "space": "O(n) build; O(1) scan"
     }
   ],
   "explanation": "explanation.md",

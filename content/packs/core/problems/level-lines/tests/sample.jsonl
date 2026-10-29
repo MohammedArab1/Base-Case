@@ -1,3 +1,5 @@
-{"input":{"root":[3,9,20,null,null,15,7]},"expected":[[3],[9,20],[15,7]]}
-{"input":{"root":[1]},"expected":[[1]]}
+{"input":{"root":[6,2,8,1,4,7,9]},"expected":[[6],[2,8],[1,4,7,9]]}
+{"input":{"root":[5]},"expected":[[5]]}
 {"input":{"root":[]},"expected":[]}
+{"input":{"root":[10,5,15,2,7]},"expected":[[10],[5,15],[2,7]]}
+{"input":{"root":[1,2,null,3]},"expected":[[1],[2],[3]]}

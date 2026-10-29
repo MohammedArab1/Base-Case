@@ -18,27 +18,41 @@ A list of exactly `k` points in the order described above.
 **Example 1**
 
 ```
-Input: points = [[1,3],[-2,2]], k = 1
-Output: [[-2,2]]
+Input: points = [[5,2],[-3,4],[1,-6],[0,3]], k = 2
+Output: [[0,3],[-3,4]]
 ```
+
+Squared distances: `29`, `25`, `37`, and `9`.
 
 **Example 2**
 
 ```
-Input: points = [[3,3],[5,-1],[-2,4]], k = 2
-Output: [[3,3],[-2,4]]
+Input: points = [[7,0],[0,7],[3,4]], k = 1
+Output: [[3,4]]
 ```
-
-Their squared distances are `18`, `26`, and `20`.
 
 **Example 3**
 
 ```
-Input: points = [[1,1],[0,1],[1,0]], k = 2
-Output: [[0,1],[1,0]]
+Input: points = [[0,0]], k = 1
+Output: [[0,0]]
 ```
 
-The last two points tie on distance, so the smaller `x` comes first.
+**Example 4**
+
+```
+Input: points = [[1,2],[1,-2],[-1,2],[-1,-2]], k = 2
+Output: [[-1,-2],[-1,2]]
+```
+
+All four points have squared distance `5`; ties use smaller `x`, then smaller `y`.
+
+**Example 5**
+
+```
+Input: points = [[4,1],[-2,5],[3,-3],[0,0]], k = 3
+Output: [[0,0],[4,1],[3,-3]]
+```
 
 ## Constraints
 

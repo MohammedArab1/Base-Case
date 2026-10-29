@@ -1,3 +1,5 @@
-{"input":{"note":"a","source":"b"},"expected":false}
-{"input":{"note":"aa","source":"ab"},"expected":false}
-{"input":{"note":"aa","source":"aab"},"expected":true}
+{"input":{"note":"canvas","source":"cavnas"},"expected":true}
+{"input":{"note":"letter","source":"letr"},"expected":false}
+{"input":{"note":"aab","source":"ab"},"expected":false}
+{"input":{"note":"","source":""},"expected":true}
+{"input":{"note":"code","source":"decoy"},"expected":true}

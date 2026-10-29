@@ -15,27 +15,39 @@ The maximum possible sum of any contiguous subarray.
 **Example 1**
 
 ```
-Input: nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-Output: 6
+Input: nums = [4, -2, 9, -7, 3, -1, 6]
+Output: 12
 ```
-
-The stretch `[4, -1, 2, 1]` sums to `6`.
 
 **Example 2**
 
 ```
-Input: nums = [1]
-Output: 1
+Input: nums = [8, -9, 2, -1, 4, -3, 5]
+Output: 8
 ```
 
 **Example 3**
 
 ```
-Input: nums = [-3, -2, -5]
+Input: nums = [-6, -2, -9, -4]
 Output: -2
 ```
 
 Every value is negative, so the best stretch is the single largest value.
+
+**Example 4**
+
+```
+Input: nums = [1, 2, 3, 4]
+Output: 10
+```
+
+**Example 5**
+
+```
+Input: nums = [0]
+Output: 0
+```
 
 ## Constraints
 

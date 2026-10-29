@@ -17,21 +17,37 @@ Return whether the tree is height-balanced.
 **Example 1**
 
 ```
-Input: root = [3,9,20,null,null,15,7]
+Input: root = [8,3,10,1,6,null,14]
 Output: true
 ```
 
 **Example 2**
 
 ```
-Input: root = [1,2,2,3,3,null,null,4,4]
+Input: root = [5,2,8,1,null,null,9,0]
 Output: false
 ```
+
+The left subtree of `2` has height `2`, while its right subtree is empty.
 
 **Example 3**
 
 ```
 Input: root = []
+Output: true
+```
+
+**Example 4**
+
+```
+Input: root = [7]
+Output: true
+```
+
+**Example 5**
+
+```
+Input: root = [1,2,3,4,5,6,7]
 Output: true
 ```
 
