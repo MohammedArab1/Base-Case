@@ -18,36 +18,36 @@ The head of the merged sorted linked list, or `null` when both inputs are empty.
 **Example 1**
 
 ```
-Input: first = [1, 2, 4], second = [1, 3, 4]
-Output: [1, 1, 2, 3, 4, 4]
+Input: first = [2, 5, 8], second = [1, 3, 9]
+Output: [1, 2, 3, 5, 8, 9]
 ```
 
 **Example 2**
 
 ```
-Input: first = [], second = []
-Output: []
+Input: first = [-7, -2], second = [-5, 0, 4]
+Output: [-7, -5, -2, 0, 4]
 ```
 
 **Example 3**
 
 ```
-Input: first = [], second = [0]
-Output: [0]
+Input: first = [], second = [6, 6]
+Output: [6, 6]
 ```
 
 **Example 4**
 
 ```
-Input: first = [1, 3, 5], second = [2, 4, 6]
-Output: [1, 2, 3, 4, 5, 6]
+Input: first = [10], second = []
+Output: [10]
 ```
 
 **Example 5**
 
 ```
-Input: first = [1], second = [2]
-Output: [1, 2]
+Input: first = [], second = []
+Output: []
 ```
 
 ## Constraints

@@ -1,5 +1,5 @@
-{"input":{"root":[1,2,2,3,4,4,3]},"expected":true}
-{"input":{"root":[1,2,2,null,3,null,3]},"expected":false}
-{"input":{"root":[1]},"expected":true}
+{"input":{"root":[5,2,2,9,1,1,9]},"expected":true}
+{"input":{"root":[5,2,2,9,1,1,8]},"expected":false}
+{"input":{"root":[7]},"expected":true}
 {"input":{"root":[]},"expected":true}
-{"input":{"root":[1,2,2]},"expected":true}
+{"input":{"root":[4,-1,-1]},"expected":true}

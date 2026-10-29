@@ -17,45 +17,45 @@ The length of the longest substring with all distinct characters.
 **Example 1**
 
 ```
-Input: text = "abcabcbb"
-Output: 3
+Input: text = "giraffe"
+Output: 5
 ```
 
-The longest unique stretches are `"abc"`, `"bca"`, and `"cab"`.
+`"giraf"` is the longest stretch without a repeated character.
 
 **Example 2**
 
 ```
-Input: text = "bbbbb"
-Output: 1
+Input: text = "cocoa"
+Output: 3
 ```
 
-Every stretch contains the same character repeated, so the best is a single `"b"`.
+`"coa"` starts at the third character.
 
 **Example 3**
 
 ```
-Input: text = "pwwkew"
-Output: 3
+Input: text = "AaA"
+Output: 2
 ```
 
-`"wke"` has three distinct characters. `"pwke"` is not contiguous.
+Case matters, so `'A'` and `'a'` are different characters.
 
 **Example 4**
+
+```
+Input: text = "ab12ab"
+Output: 4
+```
+
+`"ab12"`, `"b12a"`, and `"12ab"` all have length four.
+
+**Example 5**
 
 ```
 Input: text = ""
 Output: 0
 ```
-
-**Example 5**
-
-```
-Input: text = "dvdf"
-Output: 3
-```
-
-`"vdf"` has three distinct characters.
 
 ## Constraints
 

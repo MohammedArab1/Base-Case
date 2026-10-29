@@ -4,8 +4,8 @@
 {"input":{"text":"abba"},"expected":2}
 {"input":{"text":"abcde"},"expected":5}
 {"input":{"text":"abcda"},"expected":4}
-{"input":{"text":"tmmzuxt"},"expected":5}
-{"input":{"text":"anviaj"},"expected":5}
+{"input":{"text":"saffron"},"expected":4}
+{"input":{"text":"kayak"},"expected":3}
 {"input":{"text":"aab"},"expected":2}
 {"input":{"text":"abb"},"expected":2}
 {"input":{"text":"abcdefghij"},"expected":10}

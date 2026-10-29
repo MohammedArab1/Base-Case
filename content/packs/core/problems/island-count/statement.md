@@ -18,13 +18,14 @@ The number of connected land regions.
 
 ```
 Input: grid = [
-  [1, 1, 0, 0, 0],
-  [1, 1, 0, 0, 0],
-  [0, 0, 1, 0, 0],
-  [0, 0, 0, 1, 1]
+  [1, 1, 0, 1],
+  [0, 1, 0, 0],
+  [1, 0, 0, 1]
 ]
-Output: 3
+Output: 4
 ```
+
+The two cells in the first column are connected vertically; the other three land cells are isolated.
 
 **Example 2**
 
@@ -49,7 +50,7 @@ Output: 0
 **Example 4**
 
 ```
-Input: grid = [[1, 0, 1, 0, 1]]
+Input: grid = [[1, 0, 1, 1, 0, 1]]
 Output: 3
 ```
 

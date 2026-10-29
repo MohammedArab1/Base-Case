@@ -19,47 +19,47 @@ An integer: the maximum area `(j - i) * min(heights[i], heights[j])` over all pa
 **Example 1**
 
 ```
-Input: heights = [1, 8, 6, 2, 5, 4, 8, 3, 7]
-Output: 49
+Input: heights = [6, 2, 9, 4, 7, 1, 8]
+Output: 36
 ```
 
-Choose walls at indices `1` and `8`. The width is `7`, the shorter wall is `7`, and `7 * 7 = 49`.
+Choose the walls at indices `0` and `6`: width `6`, shorter wall `6`.
 
 **Example 2**
 
 ```
-Input: heights = [1, 1]
-Output: 1
+Input: heights = [3, 3, 3, 3, 3]
+Output: 12
 ```
 
-There is only one pair: width `1`, shorter wall `1`.
+The widest pair gives width `4` and height `3`.
 
 **Example 3**
 
 ```
-Input: heights = [4, 3, 2, 1, 4]
-Output: 16
+Input: heights = [0, 5, 0, 4, 0]
+Output: 8
 ```
 
-Choose the walls at indices `0` and `4`: width `4`, shorter wall `4`.
+Choose indices `1` and `3`: width `2`, shorter wall `4`.
 
 **Example 4**
 
 ```
-Input: heights = [1, 2, 1]
-Output: 2
+Input: heights = [9, 1, 1, 1, 8]
+Output: 32
 ```
 
-The outer walls are the best choice: width `2`, shorter wall `1`.
+Choose the two ends: width `4`, shorter wall `8`.
 
 **Example 5**
 
 ```
-Input: heights = [0, 0]
-Output: 0
+Input: heights = [2, 10, 10, 2]
+Output: 10
 ```
 
-Both walls have height `0`, so the tank holds no water.
+The adjacent tall walls win with area `1 * 10`.
 
 ## Constraints
 

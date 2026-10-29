@@ -1,5 +1,5 @@
-{"input":{"heights":[1,8,6,2,5,4,8,3,7]},"expected":49}
-{"input":{"heights":[1,1]},"expected":1}
-{"input":{"heights":[4,3,2,1,4]},"expected":16}
-{"input":{"heights":[1,2,1]},"expected":2}
-{"input":{"heights":[0,0]},"expected":0}
+{"input":{"heights":[6,2,9,4,7,1,8]},"expected":36}
+{"input":{"heights":[3,3,3,3,3]},"expected":12}
+{"input":{"heights":[0,5,0,4,0]},"expected":8}
+{"input":{"heights":[9,1,1,1,8]},"expected":32}
+{"input":{"heights":[2,10,10,2]},"expected":10}

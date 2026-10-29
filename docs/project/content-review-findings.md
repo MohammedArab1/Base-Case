@@ -8,6 +8,8 @@
 
 This document accompanies the completed `docs/project/content-review-form.md` and is the detailed finding log referenced from that form.
 
+> **Maintainer update 2026-10-29:** P0-02–P0-07 and P1-13/P1-19 are fixed in `e31a2b8`. P0-01 example/test remediation is at Batch 1/8. See `docs/project/content-remediation.md` for live status. The findings below remain the reviewer's original record; they are not rewritten.
+
 ## Automated checks
 
 Run with Node 24.22.0 and pnpm 12.15.0 at the reviewed content commit.

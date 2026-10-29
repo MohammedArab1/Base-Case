@@ -17,7 +17,7 @@ An empty tree is symmetric.
 **Example 1**
 
 ```
-Input: root = [1, 2, 2, 3, 4, 4, 3]
+Input: root = [5, 2, 2, 9, 1, 1, 9]
 Output: true
 ```
 
@@ -26,16 +26,16 @@ The left subtree is a mirror of the right subtree.
 **Example 2**
 
 ```
-Input: root = [1, 2, 2, null, 3, null, 3]
+Input: root = [5, 2, 2, 9, 1, 1, 8]
 Output: false
 ```
 
-The value `3` appears on the right of the left subtree, but there is no matching `3` on the left of the right subtree.
+The outer leaves do not match.
 
 **Example 3**
 
 ```
-Input: root = [1]
+Input: root = [7]
 Output: true
 ```
 
@@ -51,7 +51,7 @@ Output: true
 **Example 5**
 
 ```
-Input: root = [1, 2, 2]
+Input: root = [4, -1, -1]
 Output: true
 ```
 

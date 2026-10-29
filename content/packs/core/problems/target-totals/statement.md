@@ -18,38 +18,45 @@ The number of non-empty contiguous ranges whose values sum to `target`.
 **Example 1**
 
 ```
-Input: weights = [1, 1, 1], target = 2
-Output: 2
+Input: weights = [4, 1, 3, 2, 2], target = 4
+Output: 3
 ```
 
-The ranges `[1, 1]` at indices 0–1 and 1–2 both reach the target.
+The ranges are `[4]`, `[1, 3]`, and `[2, 2]`.
 
 **Example 2**
 
 ```
-Input: weights = [1, 2, 3], target = 3
-Output: 2
+Input: weights = [2, -1, 3, -2, 1], target = 1
+Output: 4
 ```
 
-The single change `3` and the range `[1, 2]` both count.
+The ranges are `[2, -1]`, `[3, -2]`, `[1]`, and `[-1, 3, -2, 1]`.
 
 **Example 3**
 
 ```
-Input: weights = [-1, -1, 1], target = 0
-Output: 1
+Input: weights = [5, -3, 2, 1, 1], target = 2
+Output: 3
 ```
 
-The range `[-1, 1]` at indices 1–2 sums to zero.
+The ranges are `[5, -3]`, `[2]`, and `[1, 1]`.
 
 **Example 4**
 
 ```
-Input: weights = [1, -1, 1, -1], target = 0
-Output: 4
+Input: weights = [0, 0, 7, -7], target = 0
+Output: 6
 ```
 
-Negative values allow several overlapping zero-sum ranges.
+There are three zero-sum ranges made only from the zeros, plus three that include the `7, -7` pair.
+
+**Example 5**
+
+```
+Input: weights = [9], target = 4
+Output: 0
+```
 
 ## Constraints
 

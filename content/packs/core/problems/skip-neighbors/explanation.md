@@ -6,7 +6,7 @@ Each index has two states: it was chosen, or it was skipped. If you choose the c
 
 ## Why greedy fails
 
-A greedy rule that always takes a value larger than its neighbors can still miss a better combination. For example, in `[2, 1, 1, 2]`, taking the two outer values gives `4`, which is better than taking either inner value.
+A greedy rule that always takes a value larger than its neighbors can still miss a better combination. For example, in `[0, 4, 0, 4]`, taking both `4`s gives `8`, which is better than taking only one of them.
 
 ## Algorithm
 

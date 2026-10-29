@@ -1,5 +1,5 @@
-{"input":{"text":"abcabcbb"},"expected":3}
-{"input":{"text":"bbbbb"},"expected":1}
-{"input":{"text":"pwwkew"},"expected":3}
+{"input":{"text":"giraffe"},"expected":5}
+{"input":{"text":"cocoa"},"expected":3}
+{"input":{"text":"AaA"},"expected":2}
+{"input":{"text":"ab12ab"},"expected":4}
 {"input":{"text":""},"expected":0}
-{"input":{"text":"dvdf"},"expected":3}

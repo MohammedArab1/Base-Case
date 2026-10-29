@@ -18,42 +18,42 @@ The `k`-th largest value in `nums`.
 **Example 1**
 
 ```
-Input: nums = [3, 2, 1, 5, 6, 4], k = 2
-Output: 5
+Input: nums = [9, 4, 7, 1, 6, 3], k = 3
+Output: 6
 ```
 
-Sorted descending: `[6, 5, 4, 3, 2, 1]`. The second value is `5`.
+Sorted descending: `[9, 7, 6, 4, 3, 1]`.
 
 **Example 2**
 
 ```
-Input: nums = [3, 2, 3, 1, 2, 4, 5, 5, 6], k = 4
-Output: 4
+Input: nums = [8, 8, 5, 5, 5, 2], k = 4
+Output: 5
 ```
 
-Sorted descending: `[6, 5, 5, 4, 3, 3, 2, 2, 1]`.
+Duplicate values occupy separate positions.
 
 **Example 3**
 
 ```
-Input: nums = [1], k = 1
-Output: 1
+Input: nums = [-4, -9, -2], k = 2
+Output: -4
 ```
+
+Sorted descending: `[-2, -4, -9]`.
 
 **Example 4**
 
 ```
-Input: nums = [-1, -2, -3], k = 2
-Output: -2
+Input: nums = [42], k = 1
+Output: 42
 ```
-
-Sorted descending: `[-1, -2, -3]`.
 
 **Example 5**
 
 ```
-Input: nums = [7, 6, 5, 4, 3, 2, 1], k = 7
-Output: 1
+Input: nums = [12, 15, 10, 18, 20], k = 5
+Output: 10
 ```
 
 ## Constraints

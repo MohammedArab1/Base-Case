@@ -17,42 +17,44 @@ The maximum sum of a subset with no two adjacent indices.
 **Example 1**
 
 ```
-Input: values = [1, 2, 3, 1]
-Output: 4
+Input: values = [4, 9, 2, 8, 3]
+Output: 17
 ```
 
-Choose indices `0` and `2`: `1 + 3 = 4`.
+Choose indices `1` and `3`: `9 + 8 = 17`.
 
 **Example 2**
 
 ```
-Input: values = [2, 7, 9, 3, 1]
-Output: 12
+Input: values = [6, 1, 7, 2, 9, 3]
+Output: 22
 ```
 
-Choose indices `0`, `2`, and `4`: `2 + 9 + 1 = 12`.
+Choose indices `0`, `2`, and `4`: `6 + 7 + 9 = 22`.
 
 **Example 3**
 
 ```
-Input: values = [5]
-Output: 5
+Input: values = [5, 5, 5]
+Output: 10
 ```
+
+Choose the first and last values.
 
 **Example 4**
 
 ```
-Input: values = [2, 1, 1, 2]
-Output: 4
+Input: values = [0, 4, 0, 4]
+Output: 8
 ```
 
-Choose indices `0` and `3`: `2 + 2 = 4`.
+Choose both `4`s.
 
 **Example 5**
 
 ```
-Input: values = [0, 0, 0]
-Output: 0
+Input: values = [3]
+Output: 3
 ```
 
 ## Constraints

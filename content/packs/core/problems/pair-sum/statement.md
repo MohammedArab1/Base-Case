@@ -18,38 +18,45 @@ A list of two indices `[i, j]` with `i < j` and `nums[i] + nums[j] == target`.
 **Example 1**
 
 ```
-Input: nums = [2, 7, 11, 15], target = 9
-Output: [0, 1]
+Input: nums = [13, 4, 21, 9, 6], target = 15
+Output: [3, 4]
 ```
 
-`nums[0] + nums[1] = 2 + 7 = 9`.
+Only `9 + 6` reaches `15`.
 
 **Example 2**
 
 ```
-Input: nums = [3, 2, 4], target = 6
-Output: [1, 2]
+Input: nums = [-8, 12, 5, 3, -2], target = -5
+Output: [0, 3]
 ```
 
-The value `3` appears once, so it cannot be paired with itself.
+Negative values are allowed.
 
 **Example 3**
 
 ```
-Input: nums = [3, 3], target = 6
+Input: nums = [7, 7, 2, 11], target = 14
 Output: [0, 1]
 ```
 
-These are two distinct elements, so they may form a pair.
+The two `7`s are different positions.
 
 **Example 4**
 
 ```
-Input: nums = [-1, 0, 1], target = 0
-Output: [0, 2]
+Input: nums = [100, 250, 40, 210], target = 250
+Output: [2, 3]
 ```
 
-Negative numbers are allowed.
+`40 + 210 = 250`.
+
+**Example 5**
+
+```
+Input: nums = [8, 1], target = 9
+Output: [0, 1]
+```
 
 ## Constraints
 

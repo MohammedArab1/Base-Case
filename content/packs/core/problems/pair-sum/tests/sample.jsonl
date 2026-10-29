@@ -1,5 +1,5 @@
-{"input":{"nums":[2,7,11,15],"target":9},"expected":[0,1]}
-{"input":{"nums":[3,2,4],"target":6},"expected":[1,2]}
-{"input":{"nums":[3,3],"target":6},"expected":[0,1]}
-{"input":{"nums":[-1,0,1],"target":0},"expected":[0,2]}
-{"input":{"nums":[5,1,9,3],"target":8},"expected":[0,3]}
+{"input":{"nums":[13,4,21,9,6],"target":15},"expected":[3,4]}
+{"input":{"nums":[-8,12,5,3,-2],"target":-5},"expected":[0,3]}
+{"input":{"nums":[7,7,2,11],"target":14},"expected":[0,1]}
+{"input":{"nums":[100,250,40,210],"target":250},"expected":[2,3]}
+{"input":{"nums":[8,1],"target":9},"expected":[0,1]}
