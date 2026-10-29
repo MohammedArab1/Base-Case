@@ -1,9 +1,9 @@
 Base Case
 =========
 
-This product includes software and assets from third parties. The project
-itself does not include copied LeetCode statements, examples, constraints, test
-cases, or editorial content.
+This product includes software and assets from third parties. The bundled
+content pack is undergoing an example/test provenance audit. Do not treat it as
+cleared for redistribution until that audit is complete; see `CONTENT_LICENSE`.
 
 Planned runtime and library dependencies (verify exact versions and licenses in
 the lockfile and packaged notices before release):

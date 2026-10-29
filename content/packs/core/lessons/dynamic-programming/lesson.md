@@ -82,10 +82,12 @@ If no coin fits, leave the value at infinity.
         ""  c  a  t
    ""    0  1  2  3
    c     1  0  1  2
-   a     1  1  0  1
-   r     2  2  1  1
-   t     3  3  2  1
+   a     2  1  0  1
+   r     3  2  1  1
+   t     4  3  2  1
 ```
+
+`word1 = "cart"` is shown on the rows and `word2 = "cat"` on the columns. The first column is `0, 1, 2, 3, 4` because deleting all `i` characters costs `i` edits.
 
 If the current characters match, the cost carries over diagonally:
 

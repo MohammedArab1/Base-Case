@@ -46,6 +46,7 @@ Output: -1
 
 - `1 <= expression.length <= 100,000`
 - The expression contains digits, spaces, `+`, `-`, `(`, and `)`.
+- There are no two consecutive operators. A `-` is unary only at the start of the expression or after a `(` (spaces are allowed).
 - Parentheses are balanced and the expression is valid.
 - Intermediate results fit in a signed 32-bit integer.
 

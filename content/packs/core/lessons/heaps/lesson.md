@@ -59,7 +59,11 @@ compare with children 3 and 5 -> swap with 3
 
 [3, 8, 5, 7, 9]
    ↑
-compare with children 7 and 9 -> 8 is smaller, stop
+compare with children 7 and 9 -> 8 is larger than 7, swap with 7
+
+[3, 7, 5, 8, 9]
+      ↑
+8 is now a leaf, so stop
 ```
 
 Each step moves one level, so push and pop are `O(log n)`. Peeking at the root is `O(1)`.

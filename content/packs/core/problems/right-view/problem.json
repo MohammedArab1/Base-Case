@@ -59,6 +59,6 @@
   ],
   "followUps": ["How would you return the left view?", "How would you return the bottom view?"],
   "license": "CC-BY-SA-4.0",
-  "attribution": "Original problem by the Base Case contributors.",
+  "attribution": "Problem statement, explanation, and solutions by the Base Case contributors. Example and test provenance is under audit.",
   "version": 1
 }

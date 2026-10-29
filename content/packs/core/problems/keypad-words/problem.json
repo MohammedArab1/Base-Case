@@ -53,6 +53,6 @@
     "What changes if a digit can map to a variable number of letters, as 7 and 9 do?"
   ],
   "license": "CC-BY-SA-4.0",
-  "attribution": "Original problem by the Base Case contributors.",
+  "attribution": "Problem statement, explanation, and solutions by the Base Case contributors. Example and test provenance is under audit.",
   "version": 1
 }

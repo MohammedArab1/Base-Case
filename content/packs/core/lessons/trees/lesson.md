@@ -127,7 +127,7 @@ A level-order list uses `null` for a missing child:
     1  3 6  9
 ```
 
-To rebuild a tree, read the root, then attach children in queue order. **Tree Rebuild** is the exercise for this.
+To reconstruct a tree from traversals, read the root from preorder, split the inorder list into left and right subtrees, and recurse. **Tree Rebuild** is the exercise for that. A level-order list is only the judge's input encoding; it is not the traversal used for reconstruction.
 
 ## The first question to ask
 

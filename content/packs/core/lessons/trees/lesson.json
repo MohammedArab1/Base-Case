@@ -31,7 +31,7 @@
       "note": "w is the maximum width of a level."
     },
     {
-      "operation": "Search in a balanced binary tree",
+      "operation": "Search in a balanced BST",
       "time": "O(log n)",
       "space": "O(log n)",
       "note": "Height is logarithmic."
@@ -74,8 +74,8 @@
       "answer": "Ascending sorted order, because it visits left subtree, current node, then right subtree."
     },
     {
-      "question": "Why is the space complexity of a traversal O(h) rather than O(n)?",
-      "answer": "The call stack or queue holds one path or one level, not every node at once. h is the height."
+      "question": "What are the space costs of depth-first and breadth-first traversals?",
+      "answer": "DFS uses O(h) call-stack space, where h is the height. BFS uses O(w) queue space, where w is the maximum width of a level; w can be O(n) in a complete tree."
     },
     {
       "question": "How do you compute a diameter?",

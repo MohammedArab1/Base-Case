@@ -13,3 +13,4 @@
 {"input":{"expression":" -2 + ( -3 ) "},"expected":-5}
 {"input":{"expression":"(7)-(8)+(9)"},"expected":8}
 {"input":{"expression":"2147483647-2147483647"},"expected":0}
+{"input":{"expression":"1-(-2)"},"expected":3}
