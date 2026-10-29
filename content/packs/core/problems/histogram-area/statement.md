@@ -15,23 +15,39 @@ The largest rectangle area.
 **Example 1**
 
 ```
-Input: heights = [2,1,5,6,2,3]
-Output: 10
+Input: heights = [3,1,4,2,5]
+Output: 6
 ```
 
-The rectangle of height `5` spans the bars of heights `5` and `6`.
+The rectangle of height `2` spans the bars `4`, `2`, and `5`.
 
 **Example 2**
 
 ```
-Input: heights = [2,4]
-Output: 4
+Input: heights = [2,3,2]
+Output: 6
 ```
 
 **Example 3**
 
 ```
-Input: heights = [0]
+Input: heights = [6,2,5,4,5]
+Output: 12
+```
+
+The rectangle of height `4` spans the bars `5`, `4`, and `5`.
+
+**Example 4**
+
+```
+Input: heights = [0,7,0]
+Output: 7
+```
+
+**Example 5**
+
+```
+Input: heights = []
 Output: 0
 ```
 

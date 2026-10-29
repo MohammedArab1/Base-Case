@@ -16,25 +16,43 @@ A rectangular board contains uppercase letters. Decide whether `word` can be for
 **Example 1**
 
 ```
-Input: board = ["ABCE","SFCS","ADEE"], word = "ABCCED"
+Input: board = ["STAR","PONE","LIGH"], word = "STAR"
 Output: true
 ```
 
 **Example 2**
 
 ```
-Input: board = ["ABCE","SFCS","ADEE"], word = "SEE"
+Input: board = ["STAR","PONE","LIGH"], word = "STONE"
 Output: true
 ```
+
+The path is `S -> T -> O -> N -> E`.
 
 **Example 3**
 
 ```
-Input: board = ["ABCE","SFCS","ADEE"], word = "ABCB"
+Input: board = ["STAR","PONE","LIGH"], word = "PONG"
+Output: true
+```
+
+**Example 4**
+
+```
+Input: board = ["STAR","PONE","LIGH"], word = "RATS"
+Output: true
+```
+
+The word can run right-to-left along the top row.
+
+**Example 5**
+
+```
+Input: board = ["STAR","PONE","LIGH"], word = "STONED"
 Output: false
 ```
 
-The letter `B` would have to be reused.
+The board has no `D`.
 
 ## Constraints
 

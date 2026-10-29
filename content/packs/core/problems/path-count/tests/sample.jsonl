@@ -1,3 +1,5 @@
-{"input":{"rows":3,"columns":7},"expected":28}
-{"input":{"rows":3,"columns":2},"expected":3}
-{"input":{"rows":1,"columns":1},"expected":1}
+{"input":{"rows":4,"columns":3},"expected":10}
+{"input":{"rows":2,"columns":5},"expected":5}
+{"input":{"rows":1,"columns":4},"expected":1}
+{"input":{"rows":5,"columns":5},"expected":70}
+{"input":{"rows":3,"columns":3},"expected":6}

@@ -20,7 +20,7 @@
         "type": "int"
       }
     ],
-    "returns": "int",
+    "returns": "long",
     "mutates": []
   },
   "limits": {

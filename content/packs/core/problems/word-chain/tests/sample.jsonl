@@ -1,3 +1,5 @@
-{"input":{"begin":"hit","end":"cog","words":["hot","dot","dog","lot","log","cog"]},"expected":5}
-{"input":{"begin":"hit","end":"cog","words":["hot","dot","dog","lot","log"]},"expected":0}
-{"input":{"begin":"a","end":"c","words":["a","b","c"]},"expected":2}
+{"input":{"begin":"cold","end":"warm","words":["cord","word","ward","warm"]},"expected":5}
+{"input":{"begin":"cat","end":"dog","words":["cot","dot","dog"]},"expected":4}
+{"input":{"begin":"lead","end":"gold","words":["load","goad","gold"]},"expected":4}
+{"input":{"begin":"abc","end":"xyz","words":["xbc","xyc","xyz"]},"expected":4}
+{"input":{"begin":"same","end":"some","words":["same","some"]},"expected":2}

@@ -19,29 +19,43 @@ The shortest sequence length, or `0`.
 **Example 1**
 
 ```
-Input: begin = "hit", end = "cog", words = ["hot","dot","dog","lot","log","cog"]
+Input: begin = "cold", end = "warm", words = ["cord","word","ward","warm"]
 Output: 5
 ```
 
-One shortest sequence is `hit -> hot -> dot -> dog -> cog`.
+One shortest sequence is `cold -> cord -> word -> ward -> warm`.
 
 **Example 2**
 
 ```
-Input: begin = "hit", end = "cog", words = ["hot","dot","dog","lot","log"]
-Output: 0
+Input: begin = "cat", end = "dog", words = ["cot","dot","dog"]
+Output: 4
 ```
 
-The target is not available.
+One shortest sequence is `cat -> cot -> dot -> dog`.
 
 **Example 3**
 
 ```
-Input: begin = "a", end = "c", words = ["a","b","c"]
+Input: begin = "lead", end = "gold", words = ["load","goad","gold"]
+Output: 4
+```
+
+**Example 4**
+
+```
+Input: begin = "abc", end = "xyz", words = ["xbc","xyc","xyz"]
+Output: 4
+```
+
+**Example 5**
+
+```
+Input: begin = "same", end = "some", words = ["same","some"]
 Output: 2
 ```
 
-`a -> c` changes one letter.
+One letter changes between the endpoints.
 
 ## Constraints
 

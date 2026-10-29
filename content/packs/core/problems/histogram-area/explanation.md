@@ -14,7 +14,7 @@ A rectangle of height `h` can use every consecutive bar at least `h` tall. The b
 
 ## Correctness
 
-The stack always holds indices with nondecreasing heights. When a bar is popped, the current index is the first shorter bar on its right, and the new stack top is the nearest shorter bar on its left. The width between those boundaries is the widest rectangle using that bar's height. Every bar is popped once, so every candidate rectangle is considered.
+The stack always holds indices with nondecreasing heights. When a bar is popped, the current index is the first shorter bar on its right, and the new stack top is the nearest bar on its left with height less than or equal to the popped bar. Equal-height bars are popped later and produce the wider candidate. The width between those boundaries is the widest rectangle using that bar's height. Every bar is popped once, so every candidate rectangle is considered.
 
 ## Complexity
 

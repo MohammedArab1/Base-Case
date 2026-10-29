@@ -45,14 +45,14 @@
       "language": "python",
       "path": "solutions/python.py",
       "time": "O(m * n * 4^L)",
-      "space": "O(L)",
+      "space": "O(m*n + L)",
       "isCanonical": true
     },
     {
       "language": "typescript",
       "path": "solutions/typescript.ts",
       "time": "O(m * n * 4^L)",
-      "space": "O(L)"
+      "space": "O(m*n + L)"
     }
   ],
   "explanation": "explanation.md",

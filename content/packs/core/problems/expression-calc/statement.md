@@ -17,30 +17,41 @@ The integer value.
 **Example 1**
 
 ```
-Input: expression = "1 + 1"
-Output: 2
+Input: expression = "7 + 2"
+Output: 9
 ```
 
 **Example 2**
 
 ```
-Input: expression = " 2-1 + 2 "
-Output: 3
+Input: expression = " 10-4 + 3 "
+Output: 9
 ```
 
 **Example 3**
 
 ```
-Input: expression = "(1+(4+5+2)-3)+(6+8)"
-Output: 23
+Input: expression = "(2+(3+4)-1)+(5+6)"
+Output: 19
 ```
 
 **Example 4**
 
 ```
-Input: expression = "-2+1"
-Output: -1
+Input: expression = "-5+2"
+Output: -3
 ```
+
+The leading minus is a unary sign.
+
+**Example 5**
+
+```
+Input: expression = "4-(2-6)"
+Output: 8
+```
+
+The inner group evaluates to `-4`, so the result is `4 - (-4)`.
 
 ## Constraints
 

@@ -1,3 +1,5 @@
-{"input":{"board":["ABCE","SFCS","ADEE"],"word":"ABCCED"},"expected":true}
-{"input":{"board":["ABCE","SFCS","ADEE"],"word":"SEE"},"expected":true}
-{"input":{"board":["ABCE","SFCS","ADEE"],"word":"ABCB"},"expected":false}
+{"input":{"board":["STAR","PONE","LIGH"],"word":"STAR"},"expected":true}
+{"input":{"board":["STAR","PONE","LIGH"],"word":"STONE"},"expected":true}
+{"input":{"board":["STAR","PONE","LIGH"],"word":"PONG"},"expected":true}
+{"input":{"board":["STAR","PONE","LIGH"],"word":"RATS"},"expected":true}
+{"input":{"board":["STAR","PONE","LIGH"],"word":"STONED"},"expected":false}

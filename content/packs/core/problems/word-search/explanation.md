@@ -19,7 +19,7 @@ The recursion maintains the invariant that the current path matches the prefix e
 ## Complexity
 
 - Time: `O(m * n * 4^L)` in the worst case.
-- Space: `O(L)` for the recursion path.
+- Space: `O(m * n)` for the copied mutable board, plus `O(L)` for the recursion path.
 
 ## Common mistakes
 

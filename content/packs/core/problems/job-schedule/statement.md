@@ -18,27 +18,45 @@ The largest possible total profit.
 **Example 1**
 
 ```
-Input: starts = [1,2,3,3], ends = [3,4,5,6], profits = [50,10,40,70]
-Output: 120
+Input: starts = [2,4,6], ends = [5,7,9], profits = [15,20,12]
+Output: 27
 ```
 
-Choose the jobs `[1,3)` and `[3,6)` for `50 + 70`.
+Choose `[2,5)` and `[6,9)` for `15 + 12`.
 
 **Example 2**
 
 ```
-Input: starts = [1,2,3,4,6], ends = [3,5,10,6,9], profits = [20,20,100,70,60]
-Output: 150
+Input: starts = [1,3,2], ends = [4,6,5], profits = [30,10,25]
+Output: 30
 ```
 
-Choose `[1,3)`, `[4,6)`, and `[6,9)` for `20 + 70 + 60`.
+Choose the single job `[1,4)`.
 
 **Example 3**
 
 ```
-Input: starts = [1,1,1], ends = [2,3,4], profits = [5,6,4]
-Output: 6
+Input: starts = [1,2,3], ends = [2,3,4], profits = [5,6,7]
+Output: 18
 ```
+
+All three jobs touch but do not overlap.
+
+**Example 4**
+
+```
+Input: starts = [1,1,2], ends = [3,4,4], profits = [10,15,7]
+Output: 15
+```
+
+**Example 5**
+
+```
+Input: starts = [5,1,3], ends = [7,4,6], profits = [8,9,7]
+Output: 17
+```
+
+Choose `[1,4)` and `[5,7)` for `9 + 8`.
 
 ## Constraints
 

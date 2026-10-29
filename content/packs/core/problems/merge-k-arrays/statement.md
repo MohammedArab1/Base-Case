@@ -15,8 +15,8 @@ A single sorted array containing every value.
 **Example 1**
 
 ```
-Input: arrays = [[1,4,5],[1,3,4],[2,6]]
-Output: [1,1,2,3,4,4,5,6]
+Input: arrays = [[1,4,7],[2,5,8],[3,6,9]]
+Output: [1,2,3,4,5,6,7,8,9]
 ```
 
 **Example 2**
@@ -29,8 +29,22 @@ Output: []
 **Example 3**
 
 ```
-Input: arrays = [[],[1],[]]
-Output: [1]
+Input: arrays = [[],[],[]]
+Output: []
+```
+
+**Example 4**
+
+```
+Input: arrays = [[-5,0],[0,5]]
+Output: [-5,0,0,5]
+```
+
+**Example 5**
+
+```
+Input: arrays = [[10,20],[1,30],[15]]
+Output: [1,10,15,20,30]
 ```
 
 ## Constraints
