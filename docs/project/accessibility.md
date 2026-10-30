@@ -48,7 +48,11 @@ reduced-motion transition check.
 - Keyboard access: command palette supports arrow keys, Enter, Escape, and
   focus return; tabs use Radix primitives with keyboard semantics.
 
-## Manual checklist before v1.0
+## Manual checklist (optional for alpha; v1.0 aspiration)
+
+**Owner decision (2026-10-30):** B11 is closed as a blocker. The automated axe
+gate remains required; the manual checks below are not an alpha gate and remain a
+v1.0 aspiration.
 
 These require a human at a real desktop and are not covered by the automated
 gate:

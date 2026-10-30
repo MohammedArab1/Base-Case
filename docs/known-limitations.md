@@ -11,7 +11,7 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - macOS builds are ad-hoc signed but not notarized. Gatekeeper requires per-app
   **Open Anyway** approval on first launch and may show “Apple could not verify
   … free of malware.” Windows SmartScreen warnings are also expected. Follow
-  `install.md`; Developer ID signing and notarization are tracked as B12.
+  `install.md`; ad-hoc signing is accepted for this side-project alpha (B12 closed by owner decision).
 - Automatic updates are not implemented. Install a newer build over the old one.
 
 ## Judge and sandbox
@@ -81,8 +81,8 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - There is no local AI conversation history yet. Feedback is stored locally, but
   full transcripts are not. Lesson clarification is a single question/answer,
   not a running chat.
-- The Apple Foundation Models sidecar is a stretch goal and is not implemented
-  (B9).
+- The Apple Foundation Models sidecar is an optional stretch goal and is not
+  implemented (B9 closed by owner decision).
 
 ## Data and sync
 
@@ -97,8 +97,9 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## UI and accessibility
 
-- The alpha is keyboard-friendly but has not had a full screen-reader or
-  high-contrast audit.
+- The alpha is keyboard-friendly and passes the automated axe gate, but it has
+  not had a full screen-reader or high-contrast manual audit. Manual verification
+  is not an alpha gate (B11 closed by owner decision) and remains a v1.0 aspiration.
 - The command palette and global shortcuts cover navigation and common actions,
   not every control.
 - The interface is English-only.

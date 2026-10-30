@@ -8,7 +8,7 @@ Platforms: macOS arm64, macOS x64
 Status: **build candidate only** — not tagged and not published.
 
 This build is the Phase 9 MVP feature-complete candidate. It is intentionally
-not tagged or released until the private beta and the external gates below are
+not tagged or released until the final checks below are
 complete.
 
 > **Historical record.** This candidate predates the 79-problem and learning-
@@ -76,8 +76,7 @@ The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 - B1 — closed by owner waiver (Windows hardware install passed; macOS clean-OS isolation accepted for the alpha).
 - B2 — done (Build installers run `40607714499`; Windows installer launched).
 - B3 — done (real-model eval: 59/60 reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks).
-- B11 — manual VoiceOver/NVDA, high-contrast, zoom, and canvas keyboard pass.
-- B10 — private beta with no open P0/P1 bugs.
+- B11/B10/B9/B12 — closed by owner decision for this side project; automated accessibility coverage and the documented **Open Anyway** flow remain.
 - B4 — closed for the alpha via owner waiver (2026-10-30). The Full-tier review and remediation covered the current 81 + 8 + 39 content set; all findings are closed and the originality claims are restored. An independent human second-person review remains a v1.0 requirement. See `docs/project/content-review-findings.md`.
 - B7 legal review is accepted as a side-project risk; no commercial launch is planned. B5 name risk is accepted for the public repo; revisit both before any public branding campaign.
 

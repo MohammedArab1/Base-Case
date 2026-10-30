@@ -85,7 +85,11 @@ report from Settings → Diagnostics.
 No telemetry. Your data stays on your machine.
 ```
 
-## Private beta
+## Private beta (optional)
+
+**Owner decision (2026-10-30):** no formal private beta is required for this
+side-project alpha (B10 closed). The public repository and owner self-testing are
+sufficient. This section remains as optional guidance.
 
 Target 10–30 users. Prefer a mix of interview candidates, career switchers, and
 at least two people who use Windows as their primary machine.

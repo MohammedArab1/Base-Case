@@ -65,9 +65,9 @@ identity, so the OS still requires explicit approval.
 
 Making this prompt disappear requires an Apple Developer Program membership,
 a **Developer ID Application** certificate, notarization with Apple, and
-stapling the ticket to the app. That is tracked as blocker B12 in
-`docs/project/open-blockers.md`; it cannot be completed from the repository
-alone. Do not disable Gatekeeper globally.
+stapling the ticket to the app. That work is accepted as out of scope for this
+side-project alpha (B12 closed by owner decision); see
+`docs/project/open-blockers.md`. Do not disable Gatekeeper globally.
 
 ### “Base Case is damaged and can’t be opened”
 

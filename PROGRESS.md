@@ -1,9 +1,9 @@
 # Progress Log
 
 > Last updated: 2026-10-30
-> Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B7 are closed; B8–B12 remain (B8/B9 optional, B12 post-MVP).
-> Next milestone: MVP release candidate once B10 and B11 clear (B1/B4 waived; B2/B3/B5/B6/B7 accepted or done), then the private alpha and `v0.1.0-alpha` tag
+> Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; optional B8 reference scenes and final release checks remain)
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is optional B8 reference scenes and final release checks. B1–B7 and B9–B12 are closed; B8 is optional.
+> Next milestone: tag `v0.1.0-alpha` when the owner is ready; no required external blockers remain. B8 is optional.
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -12,7 +12,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Area | Status | Last updated | Notes |
 |---|---|---|---|
 | Plan | Done | 2026-10-23 | `PLAN.md` v1.1; macOS + Windows scope; progress log required |
-| Phase 0 — Decisions and project setup | In progress | 2026-10-23 | Code/docs complete; name confirmed as “Base Case.” Pending: trademark search before public launch; GitHub milestones/labels/board |
+| Phase 0 — Decisions and project setup | Done | 2026-10-30 | Code/docs complete; B5 name risk accepted and B6 GitHub setup deliberately kept as-is. |
 | Phase 1 — Technical spike | Done | 2026-10-27 | macOS and Windows verified end to end. Windows `0.1.0-alpha` install passed diagnostics 9/9 with bundled Node/Python; clean-OS isolation was waived by the owner for the alpha (B1). Clean-VM verification remains a v1.0 bar |
 | Phase 2 — App foundation | Done | 2026-10-24 | All Phase 2 tasks complete: shell, IPC, logging, settings, search, packs, onboarding, repositories, inspector, and Playwright |
 | Phase 3 — Judge engine | Done | 2026-10-24 | Protocol, memory, compile-once, harness, sandbox, conformance, and runtime bundling complete. Design signatures are deferred to Phase 5. Packaged macOS app: 252 MB DMG, ~2.4 s cold start, bundled runtimes |
@@ -20,25 +20,21 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | Done | 2026-10-28 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Real-model eval: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented. Optional local history remains post-MVP |
 | Phase 7 — Content production | In progress | 2026-10-28 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 39 lessons, including a 17-lesson system-design track that covers the public System Design Primer's core topic index. All 162 reference solutions pass. B4 is closed via owner waiver; optional reference scenes remain |
-| Phase 8 — Alpha release | In progress | 2026-10-27 | Installers, checksums, diagnostics self-test, alpha docs, feedback form, triage/metrics runbook, and a tag-driven release job are in place. B2 is done (workflow run 40607714499); B1 is closed by owner waiver. Remaining: private beta (B10), P0/P1 fixes, and the tag |
-| Phase 9 — MVP expansion | In progress | 2026-10-28 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 39 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, trie/deque exercises, and a 17-lesson system-design track covering the System Design Primer topic index. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
+| Phase 8 — Alpha release | In progress | 2026-10-27 | Installers, checksums, diagnostics self-test, alpha docs, feedback form, triage/metrics runbook, and a tag-driven release job are in place. B2 is done (workflow run 40607714499); B1 is closed by owner waiver. Remaining: the release tag (B10 private beta closed by owner decision) |
+| Phase 9 — MVP expansion | In progress | 2026-10-28 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 39 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, trie/deque exercises, and a 17-lesson system-design track covering the System Design Primer topic index. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: optional B8 reference scenes and final release checks (B11 closed by owner decision) |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
-1. Run the manual accessibility checklist in `docs/project/accessibility.md` on macOS and Windows and record the result (B11).
-2. Confirm the release-candidate checksums in `docs/project/release-candidate.md` after the final rebuild, then review known issues and re-run export/import plus backup/restore one final time.
-3. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
-4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
-5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-6. B4 is closed for the alpha via owner waiver (2026-10-30); the independent human second-person sign-off remains a v1.0 requirement. Evidence: `docs/project/content-review-findings.md`.
-7. Add optional local AI history with a clear delete button (privacy default stays off).
-8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-9. B5 is closed by owner acceptance: the working name remains for the public repository; revisit trademark/domain work before commercial branding.
-10. B6 is closed by owner decision: keep the GitHub repository as-is, without milestones, boards, or extra labels.
-11. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
+1. Confirm the release-candidate checksums in `docs/project/release-candidate.md` after the final rebuild, then review known issues and re-run export/import plus backup/restore one final time.
+2. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
+3. Tag `v0.1.0-alpha` when ready and publish the GitHub Release if desired.
+4. Add optional local AI history with a clear delete button (privacy default stays off).
+5. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
+6. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
+7. B5–B7 and B9–B12 are closed by owner decision for this side project; B8 is the only optional item still open.
 
-B1 and B4 are closed by owner waiver, B2/B3/B5/B6 are done or accepted, and B3 is closed with 59/60 cases reviewed; see `docs/project/open-blockers.md` for the evidence and exceptions.
+B1 and B4 are closed by owner waiver; B2/B3/B5/B6/B7/B9–B12 are done, accepted, or closed by owner decision; B8 is optional. See `docs/project/open-blockers.md` for the evidence.
 
 ## Blockers
 
@@ -51,12 +47,24 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B5 — Trademark and domain (closed by owner acceptance, 2026-10-30):** preliminary research found conflicting software/training uses and taken domains/handles, but the owner is keeping the working name for the public GitHub repository with no aggressive marketing and will rename if a concern is raised. No domain was registered; risk accepted. Evidence: `docs/project/brand-clearance.md`.
 - **B6 — GitHub setup (closed by owner decision, 2026-10-30):** the repository remains a simple public code repository. No milestones, custom labels, project board, issue seeding, Discussions, wiki, branch-protection, or Dependabot changes will be made for now.
 - **B7 — Legal review (closed by owner acceptance, 2026-10-30):** non-commercial side project; no legal review will be commissioned. The owner accepts the risk and will remove or change content if a credible issue arises. Revisit before any commercial launch.
-- **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
-- **B11 — Manual accessibility verification:** the automated axe gate passes; VoiceOver/NVDA, 200% zoom, forced colors, and canvas keyboard fallback still need a human at a real desktop.
-- **B12 — Apple Developer ID signing and notarization:** the macOS build is ad-hoc signed, so Gatekeeper requires per-app **Open Anyway** approval on first launch. Needs an Apple Developer Program membership, certificate, and notary credentials.
-- **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
+- **B9 — Apple Foundation Models sidecar (closed by owner decision, 2026-10-30):** optional stretch goal; not built.
+- **B10 — Private alpha beta (closed by owner decision, 2026-10-30):** no separate beta program; public repo and owner self-testing are sufficient.
+- **B11 — Manual accessibility verification (closed by owner decision, 2026-10-30):** automated axe gate remains required; manual assistive-tech checks remain a v1.0 aspiration.
+- **B12 — Apple Developer ID signing/notarization (closed by owner decision, 2026-10-30):** ad-hoc signing accepted; documented **Open Anyway** flow remains.
+- **Optional only:** reference Excalidraw scenes for the eight designs (B8).
 
 ## Work log (newest first)
+
+### 2026-10-30 — B9–B12 closed as non-blocking
+
+- Status: no external blockers remain; B8 is optional
+- Done:
+  - B9 Apple Foundation Models sidecar: optional, not built.
+  - B10 private beta: no separate program; public repo and owner testing are sufficient.
+  - B11 manual accessibility: automated axe gate required; manual checks remain a v1.0 aspiration.
+  - B12 signing/notarization: ad-hoc signing accepted; **Open Anyway** instructions remain.
+- Next:
+  - Tag `v0.1.0-alpha` when ready; optional B8 reference scenes and optional local AI history.
 
 ### 2026-10-30 — B7 closed by owner acceptance
 
