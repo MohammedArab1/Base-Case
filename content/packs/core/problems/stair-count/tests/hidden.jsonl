@@ -12,4 +12,4 @@
 {"input":{"steps":35},"expected":14930352}
 {"input":{"steps":40},"expected":165580141}
 {"input":{"steps":44},"expected":1134903170}
-{"input":{"steps":45},"expected":1836311903}
+{"input":{"steps":45},"expected":1836311903,"performance":true}

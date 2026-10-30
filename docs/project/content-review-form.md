@@ -2,6 +2,10 @@
 
 Completed review. Do not treat this as approval: the decision is **Request changes**.
 
+## Maintainer remediation update (2026-10-30)
+
+All 49 findings are addressed in the working tree: examples and samples were rewritten across eight batches, hidden suites were audited and deduplicated, lesson/rubric wording was aligned, performance-marked cases were added for all 81 problems, and the clean-list/canonical-example scans are clean. P0-01 originality claims remain under audit until the reviewer recheck and human sign-off. This addendum does not change the original review decision.
+
 ## Reviewer
 
 - Name: Zed coding agent (AI-assisted review)

@@ -8,46 +8,46 @@ This is the maintainer's remediation tracker. It does not change the reviewer's 
 
 ## Status summary
 
-| Area                                                   | Status                                                                                                                                     |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| P0-01 — example/test provenance                        | **In progress** — all 8 example/sample batches rewritten and clean-list spot check complete; hidden-test provenance recheck/claims pending |
-| P0-02 — `search-tree-check` out-of-range hidden values | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P0-03 — `tree-rebuild` invalid traversal pair          | Fixed in all batches; pending recheck                                                                                                      |
-| P0-04 — `expression-calc` unary-minus grammar          | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P0-05 — `heaps` pop example                            | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P0-06 — `dynamic-programming` edit-distance table      | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P0-07 — `trees` traversal-space answer                 | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P1-01 — `loop-detect` space claim                      | Fixed in Batch 4; pending recheck                                                                                                          |
-| P1-02 — `word-search` space claim                      | Fixed in Batch 7; pending recheck                                                                                                          |
-| P1-03 — `cargo-deadline` impossible example            | Fixed in Batch 2; pending recheck                                                                                                          |
-| P1-04 — `search-tree-check` recursion depth            | Fixed in Batch 2; pending recheck                                                                                                          |
-| P1-05 — `segment-text` empty text rule                 | Fixed in Batch 6; pending recheck                                                                                                          |
-| P1-06 — `prefix-ledger` root counter hint              | Fixed in final polish; pending recheck                                                                                                     |
-| P1-07 — `orange-rot` TypeScript queue cost             | Fixed in Batch 5; pending recheck                                                                                                          |
-| P1-08 — `product-except` output bound                  | Fixed in Batch 5; pending recheck                                                                                                          |
-| P1-09 — `rotated-search` zero rotation                 | Fixed in Batch 5; pending recheck                                                                                                          |
-| P1-10 — `min-window` empty target                      | Fixed in Batch 5; pending recheck                                                                                                          |
-| P1-11 — `build-order` duplicate prerequisites          | Fixed in Batch 2; pending recheck                                                                                                          |
-| P1-12 — performance-marked tests                       | In progress; 30 cases added (all five prioritised problems covered; broader coverage pending)                                              |
-| P1-13 — trees balanced-BST wording                     | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P1-14 — stacks histogram boundary wording              | Fixed in final polish; pending recheck                                                                                                     |
-| P1-15 — sliding-window deque state                     | Fixed in final polish; pending recheck                                                                                                     |
-| P1-16 — prefix-sums half-open range mistake            | Fixed in final polish; pending recheck                                                                                                     |
-| P1-17 — greedy lesson exercise mismatch                | Fixed in final polish; pending recheck                                                                                                     |
-| P1-18 — heaps Task Intervals description               | Fixed in final polish; pending recheck                                                                                                     |
-| P1-19 — trees reconstruction exercise                  | Fixed in `e31a2b8`; pending recheck                                                                                                        |
-| P1-20 — graph Build Order wording                      | Fixed in final polish; pending recheck                                                                                                     |
-| P1-21 — system-design rubric checklist                 | Fixed in final polish; pending recheck                                                                                                     |
-| P1-22 — databases range and hash complexity            | Fixed in final polish; pending recheck                                                                                                     |
-| P1-23 — requirements p95 definition                    | Fixed in final polish; pending recheck                                                                                                     |
-| P2-01 — mutation declarations                          | Fixed across Batches 1–8; pending recheck                                                                                                  |
-| P2-02 — duplicate test cases                           | Fixed across the pack; duplicate scan is clean                                                                                             |
-| P2-03, P2-04, P2-05, P2-06, P2-07                      | Fixed; pending recheck                                                                                                                     |
-| P2-08, P2-09, P2-10, P2-11                             | Fixed; pending recheck                                                                                                                     |
-| P2-12 — incomplete explanations                        | Fixed for `window-max` and `prefix-ledger`; pending recheck                                                                                |
-| P2-13, P2-14, P2-15                                    | Fixed; pending recheck                                                                                                                     |
-| P2-16 — design NFRs and rubric families                | Numeric NFRs added; two seven-dimension rubric families documented; pending recheck                                                        |
-| P2-17, P2-18, P2-19                                    | Fixed in final polish; pending recheck                                                                                                     |
+| Area                                                   | Status                                                                                                                                                               |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P0-01 — example/test provenance                        | **Ready for recheck** — all 8 example/sample batches rewritten, clean-list spot check and hidden canonical-example scan complete; originality claims pending recheck |
+| P0-02 — `search-tree-check` out-of-range hidden values | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P0-03 — `tree-rebuild` invalid traversal pair          | Fixed in all batches; pending recheck                                                                                                                                |
+| P0-04 — `expression-calc` unary-minus grammar          | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P0-05 — `heaps` pop example                            | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P0-06 — `dynamic-programming` edit-distance table      | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P0-07 — `trees` traversal-space answer                 | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P1-01 — `loop-detect` space claim                      | Fixed in Batch 4; pending recheck                                                                                                                                    |
+| P1-02 — `word-search` space claim                      | Fixed in Batch 7; pending recheck                                                                                                                                    |
+| P1-03 — `cargo-deadline` impossible example            | Fixed in Batch 2; pending recheck                                                                                                                                    |
+| P1-04 — `search-tree-check` recursion depth            | Fixed in Batch 2; pending recheck                                                                                                                                    |
+| P1-05 — `segment-text` empty text rule                 | Fixed in Batch 6; pending recheck                                                                                                                                    |
+| P1-06 — `prefix-ledger` root counter hint              | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-07 — `orange-rot` TypeScript queue cost             | Fixed in Batch 5; pending recheck                                                                                                                                    |
+| P1-08 — `product-except` output bound                  | Fixed in Batch 5; pending recheck                                                                                                                                    |
+| P1-09 — `rotated-search` zero rotation                 | Fixed in Batch 5; pending recheck                                                                                                                                    |
+| P1-10 — `min-window` empty target                      | Fixed in Batch 5; pending recheck                                                                                                                                    |
+| P1-11 — `build-order` duplicate prerequisites          | Fixed in Batch 2; pending recheck                                                                                                                                    |
+| P1-12 — performance-marked tests                       | Fixed in final audit; all 81 problems have at least one marked case; pending recheck                                                                                 |
+| P1-13 — trees balanced-BST wording                     | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P1-14 — stacks histogram boundary wording              | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-15 — sliding-window deque state                     | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-16 — prefix-sums half-open range mistake            | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-17 — greedy lesson exercise mismatch                | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-18 — heaps Task Intervals description               | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-19 — trees reconstruction exercise                  | Fixed in `e31a2b8`; pending recheck                                                                                                                                  |
+| P1-20 — graph Build Order wording                      | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-21 — system-design rubric checklist                 | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-22 — databases range and hash complexity            | Fixed in final polish; pending recheck                                                                                                                               |
+| P1-23 — requirements p95 definition                    | Fixed in final polish; pending recheck                                                                                                                               |
+| P2-01 — mutation declarations                          | Fixed across Batches 1–8; pending recheck                                                                                                                            |
+| P2-02 — duplicate test cases                           | Fixed across the pack; duplicate scan is clean                                                                                                                       |
+| P2-03, P2-04, P2-05, P2-06, P2-07                      | Fixed; pending recheck                                                                                                                                               |
+| P2-08, P2-09, P2-10, P2-11                             | Fixed; pending recheck                                                                                                                                               |
+| P2-12 — incomplete explanations                        | Fixed for `window-max` and `prefix-ledger`; pending recheck                                                                                                          |
+| P2-13, P2-14, P2-15                                    | Fixed; pending recheck                                                                                                                                               |
+| P2-16 — design NFRs and rubric families                | Numeric NFRs added; two seven-dimension rubric families documented; pending recheck                                                                                  |
+| P2-17, P2-18, P2-19                                    | Fixed in final polish; pending recheck                                                                                                                               |
 
 Clean-list spot check (2026-10-30): reviewed `bracket-balance`, `stair-count`, `mid-node`, `subset-list`, and `prefix-ledger`. Their statements, samples, and hidden cases use generic inputs; no copied public examples or test strings were found. `prefix-ledger` also received a 20k-word/20k-query performance case.
 
@@ -111,6 +111,18 @@ Do a single polish pass after P0/P1:
 - Hint/example wording.
 - Design NFR numbers and rubric naming.
 - Lesson definitions, diagrams, and attribution URLs.
+
+## Ready for recheck (2026-10-30)
+
+The remediation work is ready for a reviewer recheck:
+
+- All 7 P0 findings are fixed; P0-01's examples/samples and hidden canonical-example scan are complete, with originality claims still under audit.
+- All 23 P1 findings are fixed, including P1-12: every one of the 81 problems now has at least one `"performance": true` hidden case.
+- All 19 P2 findings are fixed or documented, including numeric design NFRs and the two rubric-family note.
+- Pack-wide tests have no duplicate sample/hidden inputs, and the five clean-list problems plus a canonical-public-example scan are clean.
+- Verification for the final tree: `pnpm content:validate`, `pnpm content:test` (**162/162**), `pnpm typecheck`, and `pnpm format:check`.
+
+The remaining external steps are the reviewer recheck, restoring the originality claims if the recheck accepts P0-01, and the human second-person sign-off.
 
 ## Recheck and sign-off
 

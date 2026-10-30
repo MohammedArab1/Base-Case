@@ -13,3 +13,4 @@
 {"input":{"coins":[2,4,6,8],"amount":15},"expected":-1}
 {"input":{"coins":[1,5,7,9],"amount":24},"expected":4}
 {"input":{"coins":[11,17,23],"amount":100},"expected":8}
+{"input":{"coins":[1,2,5],"amount":10000},"expected":2000,"performance":true}
