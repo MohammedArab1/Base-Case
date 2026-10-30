@@ -54,8 +54,9 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - The content has automated validation and passing reference solutions. B4 is
   closed for the alpha via owner waiver; an independent human second-person
   editorial review remains a v1.0 requirement.
-- The eight design scenarios do not yet ship reference Excalidraw scenes. The
-  reference design is Markdown; the canvas starts empty (B8).
+- The eight design scenarios do not ship reference Excalidraw scenes. The
+  reference design is Markdown and the canvas starts empty; reference scenes were
+  closed as not needed (B8).
 - Design feedback is a self-assessed rubric. There is no automatic diagram
   grading.
 - Imported packs are shown as **Unverified** unless they come from the bundled
