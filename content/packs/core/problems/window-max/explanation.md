@@ -6,6 +6,14 @@ A monotonic deque stores indices in increasing position order, with their values
 
 Each index enters the deque once and leaves at most once, so the total work is `O(n)`.
 
+## Algorithm
+
+1. Scan `nums` with an index `i`.
+2. While the deque is non-empty and the value at its back is less than or equal to `nums[i]`, pop the back.
+3. Append `i` to the deque.
+4. If the front index is no longer inside the window ending at `i`, remove it from the front.
+5. Once `i` reaches `k - 1`, append the value at the front index.
+
 ## Complexity
 
 - Time: `O(n)`, because every index is pushed and popped at most once.
@@ -14,6 +22,12 @@ Each index enters the deque once and leaves at most once, so the total work is `
 ## Correctness sketch
 
 After processing index `i`, the deque contains indices from the current window in increasing order, and their values are strictly decreasing. The front is the largest value in the window because any value that was removed from the back was smaller than a later value that is still present. Indices that left the window are removed from the front. Therefore the front at each step is exactly the window maximum.
+
+## Common mistakes
+
+- Scanning each window from scratch, which gives `O(n * k)` time.
+- Removing only the current maximum and losing the next-best candidate.
+- Comparing array values instead of indices when deciding whether an element has left the window.
 
 ## Related idea
 

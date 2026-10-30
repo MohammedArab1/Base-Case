@@ -18,14 +18,14 @@ All labels that produce minimum height, sorted ascending.
 **Example 1**
 
 ```
-Input: n = 4, edges = [[1,0],[1,2],[1,3]]
-Output: [1]
+Input: n = 7, edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]]
+Output: [3]
 ```
 
 **Example 2**
 
 ```
-Input: n = 6, edges = [[3,0],[3,1],[3,2],[3,4],[5,4]]
+Input: n = 8, edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]
 Output: [3,4]
 ```
 
@@ -34,6 +34,20 @@ Output: [3,4]
 ```
 Input: n = 1, edges = []
 Output: [0]
+```
+
+**Example 4**
+
+```
+Input: n = 5, edges = [[2,0],[2,1],[2,3],[2,4]]
+Output: [2]
+```
+
+**Example 5**
+
+```
+Input: n = 6, edges = [[0,1],[1,2],[2,3],[2,4],[4,5]]
+Output: [2]
 ```
 
 ## Constraints

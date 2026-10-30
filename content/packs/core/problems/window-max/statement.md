@@ -18,17 +18,15 @@ A list of `nums.length - k + 1` integers. The value at index `i` is the maximum 
 **Example 1**
 
 ```
-Input: nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
-Output: [3, 3, 5, 5, 6, 7]
+Input: nums = [5,1,3,2,8,6], k = 3
+Output: [5,3,8,8]
 ```
-
-The windows are `[1, 3, -1]`, `[3, -1, -3]`, `[-1, -3, 5]`, `[-3, 5, 3]`, `[5, 3, 6]`, and `[3, 6, 7]`.
 
 **Example 2**
 
 ```
-Input: nums = [9, 8, 7, 6], k = 2
-Output: [9, 8, 7]
+Input: nums = [9,8,7,6], k = 2
+Output: [9,8,7]
 ```
 
 **Example 3**
@@ -41,11 +39,18 @@ Output: [4]
 **Example 4**
 
 ```
-Input: nums = [-1, -2, -3], k = 2
-Output: [-1, -2]
+Input: nums = [-1,-2,-3], k = 2
+Output: [-1,-2]
 ```
 
 Negative values are allowed; the maximum is still the least negative value in the window.
+
+**Example 5**
+
+```
+Input: nums = [2,2,2,2], k = 2
+Output: [2,2,2]
+```
 
 ## Constraints
 

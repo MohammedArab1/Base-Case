@@ -17,20 +17,27 @@ Return whether the person can attend every meeting without overlaps.
 **Example 1**
 
 ```
-Input: intervals = [[0,30],[5,10],[15,20]]
-Output: false
+Input: intervals = [[2,5],[7,9],[10,12]]
+Output: true
 ```
-
-The first meeting overlaps the other two.
 
 **Example 2**
 
 ```
-Input: intervals = [[7,10],[2,4]]
-Output: true
+Input: intervals = [[1,6],[5,8]]
+Output: false
 ```
 
 **Example 3**
+
+```
+Input: intervals = [[0,1],[1,2],[2,3]]
+Output: true
+```
+
+Touching meetings do not overlap.
+
+**Example 4**
 
 ```
 Input: intervals = []
@@ -38,6 +45,15 @@ Output: true
 ```
 
 No meetings means no conflicts.
+
+**Example 5**
+
+```
+Input: intervals = [[8,10],[2,4],[4,6]]
+Output: true
+```
+
+The input is unsorted, but the intervals can still be ordered without conflicts.
 
 ## Constraints
 

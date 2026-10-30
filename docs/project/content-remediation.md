@@ -8,33 +8,34 @@ This is the maintainer's remediation tracker. It does not change the reviewer's 
 
 ## Status summary
 
-| Area                                                                 | Status                                                                             |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| P0-01 — example/test provenance                                      | **Open** — Batch 7/8 rewritten; 6 problems remaining                               |
-| P0-02 — `search-tree-check` out-of-range hidden values               | Fixed in `e31a2b8`; pending recheck                                                |
-| P0-03 — `tree-rebuild` invalid traversal pair                        | Fixed in `e31a2b8`; pending recheck                                                |
-| P0-04 — `expression-calc` unary-minus grammar                        | Fixed in `e31a2b8`; pending recheck                                                |
-| P0-05 — `heaps` pop example                                          | Fixed in `e31a2b8`; pending recheck                                                |
-| P0-06 — `dynamic-programming` edit-distance table                    | Fixed in `e31a2b8`; pending recheck                                                |
-| P0-07 — `trees` traversal-space answer                               | Fixed in `e31a2b8`; pending recheck                                                |
-| P1-01 — `loop-detect` space claim                                    | Fixed in Batch 4; pending recheck                                                  |
-| P1-02 — `word-search` space claim                                    | Fixed in Batch 7; pending recheck                                                  |
-| P1-03 — `cargo-deadline` impossible example                          | Fixed in Batch 2; pending recheck                                                  |
-| P1-04 — `search-tree-check` recursion depth                          | Fixed in Batch 2 (iterative + 10k-node test)                                       |
-| P1-05 — `segment-text` empty text rule                               | Fixed in Batch 6; pending recheck                                                  |
-| P1-07 — `orange-rot` TypeScript queue cost                           | Fixed in Batch 5 (cursor + performance case)                                       |
-| P1-08 — `product-except` output bound                                | Fixed in Batch 5; pending recheck                                                  |
-| P1-09 — `rotated-search` zero rotation                               | Fixed in Batch 5; pending recheck                                                  |
-| P1-10 — `min-window` empty target                                    | Fixed in Batch 5; pending recheck                                                  |
-| P1-11 — `build-order` duplicate prerequisites                        | Fixed in Batch 2 (duplicate tests added)                                           |
-| P1-12 — performance-marked tests                                     | In progress; 22 cases added across Batches 5–7                                     |
-| P1-17 — greedy lesson exercise mismatch                              | Partial — Stock Peaks paragraph fixed in Batch 3                                   |
-| P1-13 — trees balanced-BST wording                                   | Fixed in `e31a2b8`; pending recheck                                                |
-| P1-19 — trees reconstruction exercise                                | Fixed in `e31a2b8`; pending recheck                                                |
-| Remaining P1-06, P1-14–P1-16, P1-18, P1-20–P1-23                     | Open                                                                               |
-| P2-01, P2-03, P2-04, P2-06, P2-07, P2-08, P2-09, P2-11, P2-13, P2-15 | Fixed in Batches 1–7; pending recheck                                              |
-| P2-02 — duplicate test cases                                         | Partial — `word-chain` and `tree-depth` fixed in Batch 7; other duplicates pending |
-| Remaining P2-05, P2-10, P2-12, P2-14, P2-16–P2-19                    | Open; polish pass after P0/P1                                                      |
+| Area                                                   | Status                                                                                          |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| P0-01 — example/test provenance                        | **In progress** — all 8 batches rewritten; clean-list spot check and provenance recheck pending |
+| P0-02 — `search-tree-check` out-of-range hidden values | Fixed in `e31a2b8`; pending recheck                                                             |
+| P0-03 — `tree-rebuild` invalid traversal pair          | Fixed in `e31a2b8`; pending recheck                                                             |
+| P0-04 — `expression-calc` unary-minus grammar          | Fixed in `e31a2b8`; pending recheck                                                             |
+| P0-05 — `heaps` pop example                            | Fixed in `e31a2b8`; pending recheck                                                             |
+| P0-06 — `dynamic-programming` edit-distance table      | Fixed in `e31a2b8`; pending recheck                                                             |
+| P0-07 — `trees` traversal-space answer                 | Fixed in `e31a2b8`; pending recheck                                                             |
+| P1-01 — `loop-detect` space claim                      | Fixed in Batch 4; pending recheck                                                               |
+| P1-02 — `word-search` space claim                      | Fixed in Batch 7; pending recheck                                                               |
+| P1-03 — `cargo-deadline` impossible example            | Fixed in Batch 2; pending recheck                                                               |
+| P1-04 — `search-tree-check` recursion depth            | Fixed in Batch 2 (iterative + 10k-node test)                                                    |
+| P1-05 — `segment-text` empty text rule                 | Fixed in Batch 6; pending recheck                                                               |
+| P1-07 — `orange-rot` TypeScript queue cost             | Fixed in Batch 5 (cursor + performance case)                                                    |
+| P1-08 — `product-except` output bound                  | Fixed in Batch 5; pending recheck                                                               |
+| P1-09 — `rotated-search` zero rotation                 | Fixed in Batch 5; pending recheck                                                               |
+| P1-10 — `min-window` empty target                      | Fixed in Batch 5; pending recheck                                                               |
+| P1-11 — `build-order` duplicate prerequisites          | Fixed in Batch 2 (duplicate tests added)                                                        |
+| P1-12 — performance-marked tests                       | In progress; 28 cases added across Batches 5–8                                                  |
+| P1-17 — greedy lesson exercise mismatch                | Partial — Stock Peaks paragraph fixed in Batch 3                                                |
+| P1-13 — trees balanced-BST wording                     | Fixed in `e31a2b8`; pending recheck                                                             |
+| P1-19 — trees reconstruction exercise                  | Fixed in `e31a2b8`; pending recheck                                                             |
+| Remaining P1-06, P1-14–P1-16, P1-18, P1-20–P1-23       | Open                                                                                            |
+| P2-01, P2-03, P2-04, P2-06–P2-11, P2-13, P2-15         | Fixed in Batches 1–8; pending recheck                                                           |
+| P2-02 — duplicate test cases                           | Partial — `word-chain` and `tree-depth` fixed in Batch 7; other duplicates pending              |
+| P2-12 — incomplete explanations                        | Partial — `window-max` fixed in Batch 8; `prefix-ledger` pending                                |
+| Remaining P2-05, P2-14, P2-16–P2-19                    | Open; polish pass after P0/P1                                                                   |
 
 ## P0-01 remediation
 
@@ -65,7 +66,7 @@ For every affected problem:
 | 5     | `polish-notation`, `coin-count`, `product-except`, `palindrome-build`, `orange-rot`, `rotated-search`, `sum-combinations`, `permutation-list`, `ancestor-tree`, `min-window`                   | **Examples, samples, and hidden tests done 2026-10-29** — one performance case added; remaining performance cases pending |
 | 6     | `trapped-water`, `majority-value`, `binary-sum`, `tree-diameter`, `color-sort`, `segment-text`, `equal-split`, `strict-integer`, `right-view`, `longest-mirror`                                | **Examples, samples, hidden tests, and performance cases done 2026-10-29**                                                |
 | 7     | `word-chain`, `expression-calc`, `job-schedule`, `merge-k-arrays`, `histogram-area`, `tree-depth`, `duplicate-check`, `path-count`, `tree-rebuild`, `word-search`                              | **Examples, samples, hidden tests, and performance cases done 2026-10-29**                                                |
-| 8     | `anagram-windows`, `task-intervals`, `kth-smallest-tree`, `meeting-overlap`, `center-roots`, `window-max`                                                                                      | Open                                                                                                                      |
+| 8     | `anagram-windows`, `task-intervals`, `kth-smallest-tree`, `meeting-overlap`, `center-roots`, `window-max`                                                                                      | **Examples, samples, hidden tests, and performance cases done 2026-10-29**                                                |
 
 Clean-list spot check: `bracket-balance`, `stair-count`, `mid-node`, `subset-list`, `prefix-ledger`.
 

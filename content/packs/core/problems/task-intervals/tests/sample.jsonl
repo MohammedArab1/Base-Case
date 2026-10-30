@@ -1,4 +1,5 @@
-{"input":{"tasks":"AAABBB","cooldown":2},"expected":8}
-{"input":{"tasks":"AAABBB","cooldown":0},"expected":6}
-{"input":{"tasks":"A","cooldown":2},"expected":1}
-{"input":{"tasks":"AAAAA","cooldown":2},"expected":13}
+{"input":{"tasks":"AAB","cooldown":2},"expected":4}
+{"input":{"tasks":"ABCABC","cooldown":3},"expected":7}
+{"input":{"tasks":"AAABBB","cooldown":1},"expected":6}
+{"input":{"tasks":"ABCD","cooldown":5},"expected":4}
+{"input":{"tasks":"A","cooldown":5},"expected":1}

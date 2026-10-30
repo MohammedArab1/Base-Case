@@ -18,33 +18,42 @@ The minimum total interval count.
 **Example 1**
 
 ```
-Input: tasks = "AAABBB", cooldown = 2
-Output: 8
+Input: tasks = "AAB", cooldown = 2
+Output: 4
 ```
 
-One schedule is `A B _ A B _ A B`.
+One schedule is `A B _ A`.
 
 **Example 2**
 
 ```
-Input: tasks = "AAABBB", cooldown = 0
-Output: 6
+Input: tasks = "ABCABC", cooldown = 3
+Output: 7
 ```
 
-No idle time is needed.
+One schedule is `A B C _ A B C`.
 
 **Example 3**
 
 ```
-Input: tasks = "A", cooldown = 2
-Output: 1
+Input: tasks = "AAABBB", cooldown = 1
+Output: 6
 ```
 
 **Example 4**
 
 ```
-Input: tasks = "AAAAA", cooldown = 2
-Output: 13
+Input: tasks = "ABCD", cooldown = 5
+Output: 4
+```
+
+All task labels are distinct, so no idle time is needed.
+
+**Example 5**
+
+```
+Input: tasks = "A", cooldown = 5
+Output: 1
 ```
 
 ## Constraints

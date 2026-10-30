@@ -1,3 +1,5 @@
-{"input":{"source":"cbaebabacd","pattern":"abc"},"expected":[0,6]}
+{"input":{"source":"listen","pattern":"silent"},"expected":[0]}
+{"input":{"source":"abcabc","pattern":"abc"},"expected":[0,1,2,3]}
+{"input":{"source":"aaaa","pattern":"aa"},"expected":[0,1,2]}
 {"input":{"source":"abab","pattern":"ab"},"expected":[0,1,2]}
-{"input":{"source":"a","pattern":"a"},"expected":[0]}
+{"input":{"source":"xyz","pattern":"abcd"},"expected":[]}

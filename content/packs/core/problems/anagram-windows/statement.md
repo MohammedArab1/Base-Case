@@ -18,25 +18,41 @@ All valid starting indices in ascending order.
 **Example 1**
 
 ```
-Input: source = "cbaebabacd", pattern = "abc"
-Output: [0,6]
+Input: source = "listen", pattern = "silent"
+Output: [0]
 ```
 
-The substrings at `0` (`"cba"`) and `6` (`"bac"`) are anagrams.
-
 **Example 2**
+
+```
+Input: source = "abcabc", pattern = "abc"
+Output: [0,1,2,3]
+```
+
+Every length-three window contains one `a`, one `b`, and one `c`.
+
+**Example 3**
+
+```
+Input: source = "aaaa", pattern = "aa"
+Output: [0,1,2]
+```
+
+**Example 4**
 
 ```
 Input: source = "abab", pattern = "ab"
 Output: [0,1,2]
 ```
 
-**Example 3**
+**Example 5**
 
 ```
-Input: source = "a", pattern = "a"
-Output: [0]
+Input: source = "xyz", pattern = "abcd"
+Output: []
 ```
+
+The pattern is longer than the source.
 
 ## Constraints
 

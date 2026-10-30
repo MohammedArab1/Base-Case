@@ -18,7 +18,7 @@ Suppose a meeting overlaps an earlier one. The earliest-ending among those earli
 ## Complexity
 
 - Time: `O(n log n)`.
-- Space: `O(1)` aside from sorting.
+- Space: `O(n)` for the sorted copy of the intervals.
 
 ## Common mistakes
 

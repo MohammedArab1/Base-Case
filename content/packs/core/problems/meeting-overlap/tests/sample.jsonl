@@ -1,3 +1,5 @@
-{"input":{"intervals":[[0,30],[5,10],[15,20]]},"expected":false}
-{"input":{"intervals":[[7,10],[2,4]]},"expected":true}
+{"input":{"intervals":[[2,5],[7,9],[10,12]]},"expected":true}
+{"input":{"intervals":[[1,6],[5,8]]},"expected":false}
+{"input":{"intervals":[[0,1],[1,2],[2,3]]},"expected":true}
 {"input":{"intervals":[]},"expected":true}
+{"input":{"intervals":[[8,10],[2,4],[4,6]]},"expected":true}
