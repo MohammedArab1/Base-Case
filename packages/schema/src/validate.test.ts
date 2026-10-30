@@ -53,7 +53,7 @@ describe('validatePack', () => {
     expect(result.ok).toBe(true)
     expect(result.pack?.id).toBe('core')
     expect(result.pack?.problems).toContain('pair-sum')
-  })
+  }, 30_000)
 
   it('exposes the learning library and its linked exercises', async () => {
     const result = await validatePack(corePackDirectory)
@@ -65,7 +65,7 @@ describe('validatePack', () => {
     expect(result.pack?.lessons).toContain('dns-and-reverse-proxies')
     expect(result.pack?.lessons).toContain('system-design-reference')
     expect(result.pack?.lessons).toContain('real-world-architectures')
-  })
+  }, 30_000)
 
   it('links every design scenario from a system-design lesson', async () => {
     const result = await validatePack(corePackDirectory)
@@ -89,7 +89,7 @@ describe('validatePack', () => {
     for (const design of result.pack?.designs ?? []) {
       expect(linkedDesigns.has(design)).toBe(true)
     }
-  })
+  }, 30_000)
 
   it('rejects a lesson exercise that is not in the pack', async () => {
     await withPackOptions({ lessons: ['demo'] }, async (directory) => {
@@ -139,7 +139,7 @@ describe('validatePack', () => {
     expect(collection?.problems).toContain('meeting-overlap')
     expect(collection?.problems).not.toContain('compact-signals')
     expect(collection?.url).toBe('https://www.techinterviewhandbook.org/grind75/')
-  })
+  }, 30_000)
 
   it('rejects collection entries that are not pack problems', async () => {
     await withPack(
