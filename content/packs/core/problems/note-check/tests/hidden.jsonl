@@ -1,4 +1,4 @@
-{"input":{"note":"","source":""},"expected":true}
+{"input":{"note":"abc","source":"bc"},"expected":false}
 {"input":{"note":"","source":"abc"},"expected":true}
 {"input":{"note":"a","source":""},"expected":false}
 {"input":{"note":"abc","source":"cba"},"expected":true}

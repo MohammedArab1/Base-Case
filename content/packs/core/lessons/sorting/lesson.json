@@ -29,7 +29,7 @@
       "operation": "Quick sort",
       "time": "O(n log n) average",
       "space": "O(log n)",
-      "note": "O(n²) worst case with bad pivots."
+      "note": "O(n²) worst case with bad pivots; call-stack space is O(log n) average and O(n) worst case."
     },
     {
       "operation": "Insertion sort",

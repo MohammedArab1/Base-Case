@@ -14,7 +14,7 @@
       "Show basic click analytics for the owner."
     ],
     "nonFunctional": [
-      "Redirects should be fast and highly available.",
+      "Redirect under 100 ms at p95 and keep 99.9% monthly availability.",
       "Short codes should be hard to guess and collision-safe.",
       "The system should tolerate hot keys and traffic spikes.",
       "Analytics may be eventually consistent."

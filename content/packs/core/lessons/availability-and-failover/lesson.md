@@ -84,7 +84,7 @@ One node serves traffic. The other waits.
 - **Warm standby** is running but may need configuration or cache warm-up.
 - **Cold standby** must be started. Failover is slow and cheap.
 
-Active-passive is simpler to reason about because only one node writes. The risk is a gap between the last replicated write and the failure. That gap is the **recovery point objective (RPO)**.
+Active-passive is simpler to reason about because only one node writes. The risk is a gap between the last replicated write and the failure. The size of that gap is the data-loss exposure measured against the **recovery point objective (RPO)**.
 
 ### Active-active
 

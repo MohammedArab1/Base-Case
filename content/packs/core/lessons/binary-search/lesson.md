@@ -60,7 +60,7 @@ It computes the same midpoint without adding two large values.
 
 ## Rotated arrays
 
-A rotated sorted array looks like two sorted runs:
+A rotated sorted array with distinct values looks like two sorted runs:
 
 ```text
 [7, 9, 11, 15, 1, 2, 4]

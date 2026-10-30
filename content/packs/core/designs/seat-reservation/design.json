@@ -15,9 +15,8 @@
       "Release expired holds automatically and publish every state change."
     ],
     "nonFunctional": [
-      "Never sell the same seat twice, even during a traffic spike.",
-      "Seat-map reads should stay fast under heavy read traffic.",
-      "A hold must expire reliably within a few seconds of its deadline.",
+      "Seat-map reads stay under 150 ms at p95 under heavy read traffic.",
+      "A hold expires reliably within 5 seconds of its deadline.",
       "A payment-provider outage must not corrupt seat state or lose a paid booking.",
       "Every hold, sale, release, and refund must be auditable."
     ]

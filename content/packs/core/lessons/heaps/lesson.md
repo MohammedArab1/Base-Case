@@ -104,7 +104,7 @@ Every value enters and leaves once, and each heap operation is `O(log k)`. The t
 
 ## Scheduling and greedy choices
 
-**Task Intervals** asks for the minimum number of machines to run tasks. Sort by start time, keep end times in a min-heap, and reuse a machine when the earliest finish is before the next start.
+**Task Intervals** is a cooldown-scheduling problem, not a machine-counting problem. Count task frequencies, find the maximum frequency and how many tasks tie it, then apply the frame formula `(maximum - 1) * (cooldown + 1) + tied`. The answer is the larger of that frame and the task count; no heap is needed.
 
 **Join Sticks** repeatedly joins the two shortest sticks. A min-heap gives the two shortest at each step, and the total cost is minimized by always combining the smallest pair.
 

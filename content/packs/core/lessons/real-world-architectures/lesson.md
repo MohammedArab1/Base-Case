@@ -23,7 +23,7 @@ Most large web systems are variations on one shape.
 client
   |
   v
-DNS
+DNS resolution  (a lookup, not a request hop)
   |
   v
 CDN / edge cache
@@ -33,12 +33,12 @@ reverse proxy / load balancer
   |
   v
 stateless application tier  <---->  cache
-  |                                    |
-  v                                    v
-primary database  ---->  read replicas
+  |                    \
+  v                     v
+primary database      queue  ---->  workers  ---->  external services
   |
   v
-queue  ---->  workers  ---->  external services
+read replicas
 ```
 
 Not every system needs every box. The skeleton is a checklist of questions:
@@ -134,7 +134,7 @@ The consumer stores processed message ids and ignores duplicates. This turns "ex
 
 ### Read models and CQRS
 
-Sometimes reads and writes want different shapes. A read model is a denormalized copy built for queries, updated from events or a change stream. The trade is the same as any denormalization: faster reads, more moving parts, and a lag to explain.
+Command Query Responsibility Segregation (CQRS) separates the write model from one or more read models. Sometimes reads and writes want different shapes. A read model is a denormalized copy built for queries, updated from events or a change stream. The trade is the same as any denormalization: faster reads, more moving parts, and a lag to explain.
 
 ## Capstone: read a feed design
 

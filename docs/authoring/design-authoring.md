@@ -38,6 +38,8 @@ Use exactly seven dimensions:
 6. Trade-offs
 7. Communication
 
+Four of the bundled designs use a product-oriented seven-dimension variant instead: requirements, API, data model, architecture, scale and performance, trade-offs, and failure modes. Both families have exactly seven dimensions; the per-design `rubric.json` is authoritative. Do not mix dimension names within a single rubric.
+
 Make each level concrete:
 
 - **1** = missing or incorrect

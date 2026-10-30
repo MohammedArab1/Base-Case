@@ -101,6 +101,6 @@
     }
   ],
   "license": "CC-BY-SA-4.0",
-  "attribution": "Original lesson by the Base Case contributors. Coverage topics follow the public System Design Primer topic index (CC BY 4.0). All explanations, diagrams, and examples are original to Base Case; no primer text or diagrams are reproduced.",
+  "attribution": "Original lesson by the Base Case contributors. Coverage topics follow the public System Design Primer topic index (https://github.com/donnemartin/system-design-primer) under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). All explanations, diagrams, and examples are original to Base Case; no primer text or diagrams are reproduced.",
   "version": 1
 }

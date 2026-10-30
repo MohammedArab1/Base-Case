@@ -18,7 +18,7 @@
     {
       "level": 4,
       "title": "Pseudocode",
-      "body": "Create a root node. For each word, set node = root and loop over its characters: create or follow the child, then increment that child's count. For each query, set node = root and loop over its characters: follow the child or record zero and stop. If the loop finishes, record node.count."
+      "body": "Create a root node. Increment the root count once for every word. For each word, set node = root and loop over its characters: create or follow the child, then increment that child's count. For each query, set node = root and loop over its characters: follow the child or record zero and stop. If the loop finishes, record node.count."
     }
   ]
 }

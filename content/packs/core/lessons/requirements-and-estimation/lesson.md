@@ -20,7 +20,7 @@ Keep the list short. Three to five core flows are enough for an interview. Say w
 
 These are the qualities the system must have.
 
-- **Latency**: redirects under 100 ms at p95.
+- **Latency**: redirects under 100 ms at p95 (95% of requests finish below that value).
 - **Availability**: 99.9% for reads.
 - **Durability**: a created link is not lost after a crash.
 - **Consistency**: a new link is readable immediately by its creator.
@@ -68,7 +68,7 @@ record size = 500 bytes
 daily writes = 20,000,000
 daily raw storage = 10 GB
 yearly raw storage = 3.65 TB
-with 3x replication and indexes ≈ 12 TB
+with 3x replication and roughly 20% for indexes ≈ 13 TB
 ```
 
 Bandwidth:

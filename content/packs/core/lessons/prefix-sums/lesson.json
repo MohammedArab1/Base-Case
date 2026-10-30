@@ -14,6 +14,7 @@
   "keyPoints": [
     "A prefix array stores the total of everything before each index.",
     "The sum of a range is prefix[right] - prefix[left], which is O(1) after O(n) preprocessing.",
+    "Prefix arrays use half-open ranges: [left, right) is prefix[right] - prefix[left].",
     "A prefix sum plus a hash map counts subarrays with a target sum in one pass.",
     "Prefix and suffix products can replace division when zeroes make division unsafe."
   ],
@@ -48,7 +49,7 @@
     "designs": []
   },
   "commonMistakes": [
-    "Using prefix[right] - prefix[left] when the range should include the left endpoint.",
+    "Using prefix[right] - prefix[left] when the range should include the right endpoint.",
     "Forgetting the empty prefix in the frequency map, which misses subarrays that start at index 0.",
     "Dividing by zero in a prefix-product problem when the input contains zeroes.",
     "Building prefix sums but then scanning the range again anyway."

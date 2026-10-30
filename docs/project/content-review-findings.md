@@ -8,7 +8,7 @@
 
 This document accompanies the completed `docs/project/content-review-form.md` and is the detailed finding log referenced from that form.
 
-> **Maintainer update 2026-10-29:** P0-02–P0-07 and P1-01–P1-05, P1-07–P1-11, P1-13, P1-19 are fixed; P0-01 example/test remediation has rewritten all 8 batches and still needs the clean-list spot check and provenance recheck; P1-12 performance tests are in progress; P1-17 is partially fixed; P2-01, P2-03, P2-04, P2-06–P2-11, P2-13, P2-15 are fixed, while P2-02 and P2-12 are partially fixed. See `docs/project/content-remediation.md` for live status. The findings below remain the reviewer's original record; they are not rewritten.
+> **Maintainer update 2026-10-30:** P0-02–P0-07 and all P1 findings except P1-12 are fixed. P0-01 examples/samples have been rewritten for all eight batches, the five clean-list problems were spot-checked, and hidden-test provenance/claim rechecks remain. P1-12 has 30 performance-marked cases, including all five prioritised problems; broader coverage remains. All P2 findings are fixed or documented, with rechecks pending. See `docs/project/content-remediation.md` for live status. The findings below remain the reviewer's original record; they are not rewritten.
 
 ## Automated checks
 

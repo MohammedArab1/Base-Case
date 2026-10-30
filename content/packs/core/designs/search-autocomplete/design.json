@@ -15,8 +15,7 @@
       "Serve suggestions for multiple locales and device types."
     ],
     "nonFunctional": [
-      "Suggestion latency should stay under 100 ms at p99.",
-      "The service must remain available during index rebuilds.",
+      "Suggestion latency stays under 100 ms at p99 with 99.9% monthly availability.",
       "Slightly stale suggestions are acceptable, but results must never be empty because of a deployment.",
       "Query text is sensitive and should not be retained longer than needed.",
       "Traffic can spike sharply during live events."

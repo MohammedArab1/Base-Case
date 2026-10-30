@@ -33,7 +33,7 @@ Use TLS for every connection that crosses a network, including internal service 
 client --TLS--> reverse proxy --TLS--> service --TLS--> database
 ```
 
-TLS protects confidentiality and integrity in transit. It does not protect data after it is decrypted. Certificates should be valid and rotated; HSTS tells browsers to prefer HTTPS for a domain. For service-to-service identity, mutual TLS can verify both sides.
+TLS protects confidentiality and integrity in transit. It does not protect data after it is decrypted. Certificates should be valid and rotated; HSTS instructs browsers to use HTTPS for future requests to a domain, and it is an enforced policy rather than a preference. For service-to-service identity, mutual TLS can verify both sides.
 
 Do not disable certificate validation to "make it work." That converts encryption into decoration.
 

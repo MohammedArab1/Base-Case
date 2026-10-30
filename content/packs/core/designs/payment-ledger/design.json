@@ -15,7 +15,7 @@
       "Reconcile provider statements and handle unmatched entries."
     ],
     "nonFunctional": [
-      "A committed journal entry must never lose or duplicate money.",
+      "Committed ledger reads and writes target 99.99% monthly availability.",
       "Every transaction must balance: total debits equal total credits.",
       "Writes for one account should be strongly consistent.",
       "The ledger must remain auditable for seven years.",

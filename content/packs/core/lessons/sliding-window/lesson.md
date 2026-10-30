@@ -103,15 +103,16 @@ At each step, the window stores a count per character. When the new character ma
 For **Window Max**, a counter is not enough. The largest value may leave, and you need the next largest.
 
 ```text
-nums:  1  3  -1  -3  5
-queue of useful indices (values decrease):
-[1]        value 3
-[1, 2]     value 3, -1
-[3]        -3 replaces -1, then 3 is still at the front
-[4]        5 replaces everything smaller
+nums:  4  2  5  1  3      k = 3
+deque of useful indices (values decrease):
+[0]        value 4
+[0, 1]     values 4, 2
+[2]        5 evicts both smaller values
+[2, 3]     values 5, 1
+[2, 4]     values 5, 3; 3 evicts 1, index 2 is still in the window
 ```
 
-The front is always the current maximum. This is the same monotonic idea as a stack, but items can also leave from the front when they fall out of the window.
+The front is always the current maximum. This is the same monotonic idea as a stack, but items can also leave from the front when their index falls outside the window.
 
 ## The one-sentence check
 

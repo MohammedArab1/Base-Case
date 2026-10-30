@@ -1,4 +1,4 @@
-{"input":{"first":"a","second":"a"},"expected":true}
+{"input":{"first":"listen","second":"silent"},"expected":true}
 {"input":{"first":"a","second":"b"},"expected":false}
 {"input":{"first":"ab","second":"ba"},"expected":true}
 {"input":{"first":"aab","second":"abb"},"expected":false}

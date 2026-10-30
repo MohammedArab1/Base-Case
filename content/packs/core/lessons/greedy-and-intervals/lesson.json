@@ -14,8 +14,9 @@
   "keyPoints": [
     "A greedy algorithm takes the best local choice and never reconsiders it.",
     "Greedy is only correct when an exchange argument shows the local choice can be part of an optimal solution.",
-    "Sorting intervals by start makes merging easy; sorting by end makes maximum scheduling easy.",
-    "For interval overlap, compare the next start with the current end."
+    "Sorting intervals by start makes overlap checks easy; sorting by end makes interval selection easy.",
+    "For interval overlap, compare the next start with the previous end.",
+    "Cooldown scheduling uses task frequencies and a frame formula, not a heap of room end times."
   ],
   "complexity": [
     {
@@ -25,22 +26,28 @@
       "note": "Usually the dominant cost."
     },
     {
-      "operation": "Merge overlapping intervals",
-      "time": "O(n log n)",
+      "operation": "Insert one interval into a sorted list",
+      "time": "O(n)",
       "space": "O(n)",
-      "note": "Sort, then one pass."
+      "note": "Scan the sorted list; the output copy is linear."
     },
     {
-      "operation": "Maximum non-overlapping meetings",
+      "operation": "Check meeting conflicts",
       "time": "O(n log n)",
+      "space": "O(n)",
+      "note": "Sorting a copy dominates."
+    },
+    {
+      "operation": "Cooldown scheduling",
+      "time": "O(n)",
       "space": "O(1)",
-      "note": "Sort by end time."
+      "note": "Count 26 task labels and apply the frame formula."
     },
     {
-      "operation": "Minimum rooms for intervals",
-      "time": "O(n log n)",
-      "space": "O(n)",
-      "note": "Sort starts and ends, or use a heap."
+      "operation": "Stock Peaks",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Track the cheapest earlier price."
     }
   ],
   "exercises": {

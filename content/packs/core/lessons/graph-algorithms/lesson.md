@@ -15,7 +15,7 @@ A, B, C, D
 A, C, B, D
 ```
 
-This is the order you need when tasks have prerequisites. **Build Order** asks for a sequence that satisfies every dependency.
+This is the order you need when tasks have prerequisites. **Build Order** asks whether such an order exists, returning a boolean. The same Kahn traversal can produce the sequence if the problem asks for one.
 
 A graph with a cycle has no topological order. If `A` depends on `B` and `B` depends on `A`, neither can go first.
 

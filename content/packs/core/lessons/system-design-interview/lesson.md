@@ -130,16 +130,16 @@ Finish with a summary:
 
 That sentence shows you know what you chose and what you gave up.
 
-## The seven dimensions
+## A seven-part checklist
 
-The app's design rubric uses these dimensions:
+The app's design rubrics cover these seven areas, although they group them slightly differently:
 
-1. Requirements
-2. API
-3. Data model
-4. High-level architecture
-5. Deep dives
-6. Trade-offs
-7. Failure modes and monitoring
+1. Requirements and estimation
+2. API and data model
+3. High-level architecture
+4. Deep dives or scale and performance
+5. Trade-offs
+6. Failure modes and monitoring
+7. Communication
 
-Use them as a checklist when you practice. A design that covers all seven is usually a complete conversation.
+Use this as a checklist when you practice, then follow the per-design rubric for its exact dimensions and weighting. A design that covers all seven is usually a complete conversation.

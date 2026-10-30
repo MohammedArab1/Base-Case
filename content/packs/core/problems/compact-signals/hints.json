@@ -13,7 +13,7 @@
     {
       "level": 3,
       "title": "Compare with the last written value",
-      "body": "When `signals[read]` differs from `signals[write - 1]`, copy it to `signals[write]` and advance the write position. At the end, shorten the array to the write position and return it."
+      "body": "When `signals[read]` differs from `signals[write - 1]`, copy it to `signals[write]` and advance the write position. At the end, return that position (`write`), which is also the number of kept values."
     },
     {
       "level": 4,

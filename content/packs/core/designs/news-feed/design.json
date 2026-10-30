@@ -16,8 +16,8 @@
       "Let users hide or block accounts."
     ],
     "nonFunctional": [
-      "Keep feed reads fast at very high volume.",
-      "Accept a few seconds of eventual consistency for new posts and counts.",
+      "Feed reads under 200 ms at p95 at peak and 99.9% monthly availability.",
+      "Accept up to 5 seconds of eventual consistency for new posts and counts.",
       "Persist posts durably and keep them available for years.",
       "Keep the feed useful when ranking or fan-out services are degraded.",
       "Scale to a large daily audience without per-read fan-out for most users."

@@ -25,7 +25,7 @@ with index:
 look up "a7K2" in the index -> follow the pointer to the row
 ```
 
-A B-tree index supports equality and range queries in `O(log n)`.
+A B-tree index supports equality lookups in `O(log n)`. A range query costs `O(log n + k)` when it returns `k` rows, because the index finds the start and then walks the matching entries. Hash indexes give `O(1)` average-case equality lookups, with `O(n)` worst case when many keys collide.
 
 ```text
 index on (user_id, created_at):

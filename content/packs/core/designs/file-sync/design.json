@@ -15,8 +15,8 @@
       "Resolve concurrent edits with a predictable conflict policy."
     ],
     "nonFunctional": [
-      "Acknowledged uploads must be durable and never silently lost.",
-      "Metadata operations should stay fast even for large folders.",
+      "Changes propagate to other online devices within 5 seconds.",
+      "Metadata operations stay under 200 ms at p95 even for large folders.",
       "Deduplicate identical content to control storage growth.",
       "Reconnect and catch up efficiently after a long offline period.",
       "The system must tolerate partial uploads, retries, and device crashes."

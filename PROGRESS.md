@@ -47,7 +47,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
-- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 are fixed; P0-01 example/test remediation has rewritten all 8 batches, with the clean-list spot check and provenance recheck still pending. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
+- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 are fixed; P0-01 examples/samples are rewritten for all eight batches and the clean-list spot check is complete, while hidden-test provenance and claim rechecks remain. P1-12 still needs broader performance-marked coverage. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -57,6 +57,25 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-30 — Final B4 audit and polish pass
+
+- Status: Remaining lesson, duplicate-test, design, and definition findings fixed; P1-12 and the P0-01 provenance recheck remain open
+- Done:
+  - Fixed P1-06: `prefix-ledger` hint 4 now increments the root once per word, so an empty query returns the total entry count.
+  - Fixed P1-14 through P1-23: stacks, sliding-window, prefix-sums, greedy-and-intervals, heaps, graph-algorithms, system-design-interview, databases, and requirements-and-estimation wording now matches the actual exercises and complexity claims.
+  - Fixed P2-02 across the whole pack: all duplicate sample/hidden inputs were replaced; the pack-wide duplicate scan is clean.
+  - Fixed P2-05, P2-12, P2-14, and P2-17–P2-19: hint wording, missing explanation sections, strict-bound mistake text, complexity qualifications, lesson clarity, and attribution URLs.
+  - Fixed P2-16: every design now has measurable latency/availability targets, and the two seven-dimension rubric families are documented in the design authoring guide.
+  - Completed the P0-01 clean-list spot check for `bracket-balance`, `stair-count`, `mid-node`, `subset-list`, and `prefix-ledger`; no copied public examples or test strings were found.
+  - Added performance-marked cases for the remaining prioritised problems: `prefix-ledger` (20k words/queries) and `fuel-circuit` (50k stations). P1-12 now has 30 marked cases.
+- Verification:
+  - `pnpm content:validate` — valid; 81 problems, 8 designs, 39 lessons.
+  - `pnpm content:test` — 162/162 reference solutions accepted.
+  - `pnpm typecheck` — passed.
+  - `pnpm format:check` — passed.
+- Next:
+  - Expand performance-marked coverage to the remaining problems, recheck the P0-01 hidden-test provenance and originality claims, then request the B4 reviewer recheck and human sign-off.
 
 ### 2026-10-29 — B4 remediation Batch 8: windows, intervals, trees, and centers
 

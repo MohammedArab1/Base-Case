@@ -15,7 +15,7 @@
       "Expose presence and typing indicators."
     ],
     "nonFunctional": [
-      "Deliver messages with low latency within a region.",
+      "Deliver messages under 200 ms at p95 within a region.",
       "Preserve per-conversation order and never silently lose a message.",
       "Tolerate reconnects and duplicate delivery without showing duplicates.",
       "Scale to tens of millions of daily users and hundreds of millions of messages.",

@@ -5,7 +5,7 @@
 {"input":{"digits":"6"},"expected":["m","n","o"]}
 {"input":{"digits":"7"},"expected":["p","q","r","s"]}
 {"input":{"digits":"8"},"expected":["t","u","v"]}
-{"input":{"digits":"9"},"expected":["w","x","y","z"]}
+{"input":{"digits":"79"},"expected":["pw","px","py","pz","qw","qx","qy","qz","rw","rx","ry","rz","sw","sx","sy","sz"]}
 {"input":{"digits":"36"},"expected":["dm","dn","do","em","en","eo","fm","fn","fo"]}
 {"input":{"digits":"32"},"expected":["da","db","dc","ea","eb","ec","fa","fb","fc"]}
 {"input":{"digits":"44"},"expected":["gg","gh","gi","hg","hh","hi","ig","ih","ii"]}

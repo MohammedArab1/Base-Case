@@ -27,7 +27,7 @@ Users notice these more than the abstract label. A user who posts a comment and 
 
 ## CAP without the slogan
 
-CAP says that during a network partition, a distributed system must choose between consistency and availability.
+CAP says that during a network partition, a distributed system must choose between consistency and availability. CAP stands for consistency, availability, and partition tolerance. A CP system favors consistency during a partition; an AP system favors availability and may serve stale data.
 
 ```text
 partition: two replicas cannot talk

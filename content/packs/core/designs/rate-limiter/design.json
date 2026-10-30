@@ -14,8 +14,8 @@
       "Expose per-key usage metrics for operators and customers."
     ],
     "nonFunctional": [
-      "Add only a few milliseconds to the request path.",
-      "Be accurate enough that a small burst above the limit is acceptable, but sustained abuse is not.",
+      "Add under 5 ms at p99 to the request path.",
+      "Allow under 0.1% of requests above the configured limit during short bursts, while blocking sustained abuse.",
       "Stay available when the counter store is degraded.",
       "Apply consistent limits across regions and gateway instances."
     ]

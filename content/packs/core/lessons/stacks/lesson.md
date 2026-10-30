@@ -86,7 +86,7 @@ The stack does not store every value. It stores the values that are still waitin
 ```text
 heights: 2 1 5 6 2 3
             ↑
-        bar of height 5 can extend left to the 1 and right to the next 1
+        bar of height 5 can extend left to the 1 and right to the 2 at index 4
 ```
 
 A monotonic increasing stack gives both boundaries in one pass. When a shorter bar arrives, it is the right boundary for every taller bar on the stack. The stack also tells you the nearest smaller bar on the left.

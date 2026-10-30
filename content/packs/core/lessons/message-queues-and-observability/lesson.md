@@ -96,8 +96,8 @@ Three signals, tied together:
 - **Traces**: one request followed across services, with a span per hop.
 
 ```text
-trace 8f2a
-  API           12 ms
+trace 8f2a  total 88 ms
+  API           88 ms
   auth           8 ms
   feed cache     2 ms
   database      61 ms
