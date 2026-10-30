@@ -14,7 +14,7 @@ grid[row][column]
 grid[1][2] = 6
 ```
 
-Rows come first. Writing `grid[column][row]` happens to work on a square matrix and then silently breaks on a rectangle. Keep the order consistent.
+Rows come first. Writing `grid[column][row]` does not crash on a square matrix but reads the wrong cell; on a rectangle it can go out of bounds. Keep the order consistent.
 
 ## Bounds checks
 

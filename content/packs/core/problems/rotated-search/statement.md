@@ -1,6 +1,6 @@
 # Rotated Search
 
-A list of distinct integers was sorted in ascending order and then possibly rotated at an unknown pivot. A rotation of zero is allowed, so the list may still be fully sorted. For example, `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`.
+A list of distinct integers was sorted in ascending order and then possibly rotated at an unknown pivot. A rotation of zero is allowed, so the list may still be fully sorted. For example, `[0,1,3,5,8]` might become `[5,8,0,1,3]`.
 
 Find the index of `target` in the list, or return `-1` if it is absent.
 

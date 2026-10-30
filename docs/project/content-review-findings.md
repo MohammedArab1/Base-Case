@@ -4,7 +4,8 @@
 - **Date:** 2026-10-29
 - **Commit reviewed:** `ed7bddd` (content is identical at `41eb54e`; `git diff ed7bddd HEAD -- content/` is empty)
 - **Tier:** Full — 81 coding problems, 8 design scenarios, 39 lessons (128 items)
-- **Decision:** **Request changes** — P0 findings are open.
+- **Decision:** **Request changes** — one P1 residual remains; 47 of 49 original findings are fully fixed and 2 are partially fixed at recheck.
+- **Recheck:** `f03cce2` on 2026-10-30
 
 This document accompanies the completed `docs/project/content-review-form.md` and is the detailed finding log referenced from that form.
 
@@ -22,6 +23,29 @@ Run with Node 24.22.0 and pnpm 12.15.0 at the reviewed content commit.
 
 Passing automation does not clear the findings below. The P0 items are content, contract, and test-oracle problems that the current validator and reference runs do not detect.
 
+## Recheck — 2026-10-30 (`f03cce2`)
+
+The maintainer rewrote examples and sample tests across eight batches, audited and deduplicated hidden suites, added performance-marked cases to all 81 problems, and aligned the lesson/rubric wording. I rechecked the changed items at `f03cce2`.
+
+**Verified fixed:**
+
+- **P0-02–P0-07:** all six verified directly. `search-tree-check` hidden values are now within the stated range; `tree-rebuild` hidden test 15 is a consistent traversal pair; `expression-calc` now excludes consecutive operators and tests the restricted grammar; the `heaps` pop example now swaps 8 with 7; the edit-distance table is correct; and the `trees` self-check now states `O(h)` for DFS and `O(w)` for BFS.
+- **P1-01–P1-23:** all 23 verified. The space claims, recursion bounds, empty-input rules, hints, `orange-rot` queue cost, output bounds, zero-rotation rule, duplicate-prerequisite cases, lesson wording, and rubric checklist are fixed. All 81 problems now have at least one `"performance": true` hidden case; the five priority cases (`window-max`, `prefix-ledger`, `job-schedule`, `fuel-circuit`, `tree-depth`) use near-bound inputs.
+- **P0-01 (examples/samples/hidden):** the previously identified copied examples are rewritten. The sample and hidden files no longer contain the named copied cases (`coin-count`’s `[186,419,83,408]`, `strict-integer`’s public atoi cases, `longest-mirror`’s `forgeeksskeegfor`). The clean-list five were spot-checked. The pack, NOTICE, CONTENT_LICENSE, and all 81 problem attributions now mark provenance as under audit rather than claiming blanket originality.
+- **P2-02–P2-17 and P2-19:** verified fixed, including duplicate-test removal, `path-count`’s `long` return, the space metadata, explanation sections, design NFR numbers, the documented two rubric families, and the System Design Primer URL.
+
+**Residual findings:**
+
+| ID  | Item / path                                                                                           | Severity | Finding                                                                                                                                                                                                                       | Suggested change                                                                                                                                         |
+| --- | ----------------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | `content/packs/core/problems/rotated-search/statement.md:3`                                           | P1       | The introductory sentence still contains the public LeetCode 33 example almost verbatim: “For example, `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`.” The rest of the statement and all five examples are rewritten.      | Replace the illustrative array with an original one, for example `[0,1,3,5,8]` becoming `[5,8,0,1,3]`, or reword the sentence.                           |
+| R2  | `problems/island-count/problem.json:15`; `problems/paint-fill/problem.json:32`; both Python solutions | P2       | Both still mutate the input (`grid` is set to `0`; `image` is painted in place) while declaring `mutates: []`. `triplet-sum`, `sum-combinations`, and `orange-rot` were correctly changed to copy their inputs.               | Copy `grid`/`image` before mutating, or declare `mutates: ["grid"]`/`["image"]` and use the `mutated` expected shape. Copying keeps the tests unchanged. |
+| R3  | `content/packs/core/lessons/matrix-traversal/lesson.md:17`                                            | P2       | “Writing `grid[column][row]` happens to work on a square matrix and then silently breaks on a rectangle.” “Happens to work” still reads as correct behavior; on a square matrix it reads the transposed cell, which is wrong. | Say “does not crash on a square matrix but reads the wrong cell; on a rectangle it can go out of bounds.”                                                |
+
+**Recheck status:** 0 open P0; 1 open P1 (R1); 2 open P2 (R2, R3). 47 of the 49 original findings are fully fixed; P2-01 and P2-18 are partially fixed. After R1 is reworded, all original P0/P1 findings are closed, subject to the human second-person sign-off and restoring the originality claims if the audit is accepted.
+
+**Maintainer response (2026-10-30):** R1 was reworded with an original illustrative array; R2 was fixed by copying `grid` in `island-count` (the `paint-fill` references already copied `image`); and R3 now states that the transposed write reads the wrong cell. The automated checks were re-run after these fixes. The reviewer’s recheck table above remains the record of what was found at `f03cce2`; a final confirmation of R1–R3 and the human sign-off are still required.
+
 ## Summary
 
 | Severity | Findings | Meaning                                 |
@@ -30,7 +54,7 @@ Passing automation does not clear the findings below. The P0 items are content, 
 | P1       |       23 | Fix before release or explicitly accept |
 | P2       |       19 | Polish; fix when convenient             |
 
-Counts are findings, not items; some findings group several files. All P0 findings and the material P1 findings were re-checked directly against the files. Lower-severity items came from the batch passes and spot checks.
+Counts are findings, not items; some findings group several files. **Recheck status (2026-10-30):** 0 open P0; 1 open P1 (R1); 2 open P2 (R2, R3). 47 of 49 original findings are fully fixed. All P0 findings and the material P1 findings were re-checked directly against the files. Lower-severity items came from the batch passes and spot checks.
 
 ---
 
@@ -275,10 +299,10 @@ Also label the axes: `word1 = "cart"` (rows), `word2 = "cat"` (columns).
 
 - **Problem titles:** Renamed and descriptive (`Pair Sum`, `Water Between Walls`, `Island Count`, etc.). No LeetCode/NeetCode trademark appears in a title. The `leetcodeSlug` field on `pair-sum` is an optional convenience link, not a title.
 - **Collection name:** "Grind 75" is a public list name, used descriptively with an attribution to Tech Interview Handbook and a URL. This is consistent with the policy.
-- **Problem examples/tests:** Not original for at least 76 of 81 problems. This contradicts `NOTICE`, `CONTENT_LICENSE`, `pack.json:146`, and every "Original problem" attribution. P0-01.
-- **Lesson prose/diagrams:** Appear original. The System Design Primer is used as a coverage checklist; no primer text or diagram was found. The only attribution gap is the missing URL (P2-19).
+- **Problem examples/tests:** Initial review: not original for at least 76 of 81 problems. Recheck at `f03cce2`: examples, samples, and the named copied hidden cases are rewritten; one verbatim LeetCode 33 sentence remains in `rotated-search/statement.md:3` (R1). The blanket originality claims are now marked under audit.
+- **Lesson prose/diagrams:** Appear original. The System Design Primer is used as a coverage checklist; no primer text or diagram was found. The primer and CC BY 4.0 URLs were added in the recheck (P2-19 fixed).
 - **Design prompts/references:** Appear original; they are standard system-design scenarios but the prose and numbers are Base Case's own.
-- **License fields:** Present on all 128 items. The fields are not accurate for the copied examples/tests. The pack's CC BY-SA 4.0 notice cannot cover LeetCode-owned example text.
+- **License fields:** Present on all 128 items. They now say provenance is under audit rather than asserting blanket originality. Restore the originality claims only after R1 and the human review.
 - **External services:** No separate plagiarism service was used. The review itself was performed by an in-editor AI agent; see the limitations below.
 
 ---
@@ -288,16 +312,19 @@ Also label the axes: `word1 = "cart"` (rows), `word2 = "cat"` (columns).
 - This is an **AI-assisted review**, not a human second-person sign-off. The form records the reviewer as a Zed coding agent. If the project's process requires a human reviewer, a human must re-run the checklist and sign; this report can serve as the input.
 - The eight designs, 39 lessons, and 81 coding items were all read, but coding and lesson batches were split across parallel passes. P0 findings and the material P1 findings were re-checked directly by the lead reviewer; lower-severity items are from the batch passes.
 - The Electron app was not launched. The review used the Markdown/JSON source, the CLI validator, and the reference test runner, which the packet permits ("opening the app is optional").
-- The originality assessment is based on recognition plus spot checks against public mirrors (for example, LeetCode 1 and 42), not a forensic comparison of every hidden test against every public source. The finding is stated as "at least 76 of 81"; the true count may be higher.
+- The originality assessment is based on recognition plus spot checks against public mirrors (for example, LeetCode 1 and 42), not a forensic comparison of every hidden test against every public source. The initial finding was stated as "at least 76 of 81"; the recheck verified the named cases and the sample rewrite but did not repeat a full forensic comparison.
 - Some P2 items are judgment calls about pedagogy and wording, not contract violations.
+- The recheck is AI-assisted as well. It verifies the changed files and the automated checks, but it is not a human second-person sign-off.
 
 ---
 
 # Recommended remediation order
 
-1. **P0-01:** Replace copied examples and sample tests; audit hidden tests; correct the originality/license claims. This is the release blocker.
+1. **P0-01:** Replace copied examples and sample tests; audit hidden tests; correct the originality/license claims. This was the release blocker.
 2. **P0-02–P0-07:** Fix the two invalid/contradictory test suites, the `expression-calc` grammar, and the three lesson errors.
 3. **P1-01–P1-12:** Fix the code/test contract and complexity issues; add performance-marked cases.
 4. **P1-13–P1-23:** Align the lesson prose with the exercises and rubrics.
 5. **P2:** Polish pass.
 6. Re-run `pnpm content:validate`, `pnpm content:test`, and `pnpm typecheck`; ask the reviewer to recheck only changed items; update `PROGRESS.md` B4 and `docs/project/open-blockers.md`.
+
+**Recheck status:** Steps 1–5 are complete except R1 (P1) and R2/R3 (P2). Step 6's automated checks and AI recheck are complete; the human sign-off and the `PROGRESS.md` / `open-blockers.md` updates remain.

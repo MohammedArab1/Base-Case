@@ -4,6 +4,7 @@ class Solution {
       return 0
     }
 
+    grid = grid.map((current) => [...current])
     const rows = grid.length
     const cols = grid[0].length
     let count = 0

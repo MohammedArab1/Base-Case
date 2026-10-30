@@ -1,6 +1,6 @@
 # Content review sign-off — B4
 
-Completed review. Do not treat this as approval: the decision is **Request changes**.
+Rechecked 2026-10-30 at `f03cce2`. The substantive fixes are verified; one P1 residual and two P2 residuals remain. Decision: **Request changes** pending R1.
 
 ## Maintainer remediation update (2026-10-30)
 
@@ -11,8 +11,8 @@ All 49 findings are addressed in the working tree: examples and samples were rew
 - Name: Zed coding agent (AI-assisted review)
 - Role/background: In-editor AI reviewer; not a content author. This is an AI-assisted Full-tier review, not a substitute for a human second-person sign-off.
 - Are you the author of any reviewed item? **No**
-- Date: 2026-10-29
-- Commit reviewed: `ed7bddd` (content is identical at `41eb54e`; `git diff ed7bddd HEAD -- content/` is empty)
+- Date: 2026-10-29 (initial); 2026-10-30 (recheck)
+- Commit reviewed: initial `ed7bddd`; recheck `f03cce2` (2026-10-30). The content changed across 372 files since the initial review.
 - Review tier: **Full**
 - Items reviewed (from `content-review-inventory.md`):
   - Coding: **81**
@@ -25,11 +25,14 @@ All 49 findings are addressed in the working tree: examples and samples were rew
 - [x] `pnpm content:validate` — **Valid.** 81 problems, 8 designs, 39 lessons. Only the eight expected "no reference Excalidraw scene" warnings (accepted gap B8).
 - [x] `pnpm content:test` — **162/162 reference solutions passed.**
 - [x] `pnpm typecheck` — **Passed** for `packages/schema`, `packages/content-cli`, and `apps/desktop`.
+- [x] `pnpm format:check` — **Passed.**
 - [ ] I used the maintainer’s recorded result for this commit instead
 
-Notes: Run with Node 24.22.0 and pnpm 12.15.0 at the reviewed content commit. The automated checks pass; the findings below are content, contract, and test-oracle issues that these checks do not detect.
+Notes: Run with Node 24.22.0 and pnpm 12.15.0. These results were re-run at recheck commit `f03cce2` on 2026-10-30; the original review ran them at `ed7bddd`. The automated checks pass; the findings below are content, contract, and test-oracle issues that these checks do not detect.
 
-## Findings
+## Initial findings (2026-10-29)
+
+Statuses in this table are from the initial review. Current statuses are in the reviewer recheck section below.
 
 | ID            | Item / path                                                                                                                                           | Kind                     | Severity | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Status |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
@@ -50,25 +53,54 @@ Add more rows or attach a separate issue/PR. The full evidence, suggested fixes,
 
 ### Summary
 
+Initial review:
+
 - P0: **7**
 - P1: **23**
 - P2: **19**
 - **Total: 49 findings** (some findings group several files)
 
+Recheck at `f03cce2` (2026-10-30):
+
+- P0: **0 open** (7 verified fixed)
+- P1: **1 open** (R1; 23 original P1s verified fixed)
+- P2: **2 open** (R2, R3; 17 original P2s verified fixed, 2 partially fixed)
+
+## Reviewer recheck (2026-10-30)
+
+Commit: `f03cce2`. I rechecked the changed items, not the unchanged ones.
+
+**Verified fixed:**
+
+- **P0-02–P0-07:** all six verified directly. `search-tree-check` now uses values within the stated range; `tree-rebuild` hidden test 15 is a consistent traversal pair; `expression-calc` excludes consecutive operators and the grammar is stated; the `heaps` pop example swaps 8 with 7; the edit-distance table is correct; and the `trees` self-check now distinguishes DFS `O(h)` from BFS `O(w)`.
+- **P1-01–P1-23:** all 23 verified. The space claims, recursion bounds, empty-input rules, hints, `orange-rot` queue cost, output bounds, zero-rotation rule, duplicate-prerequisite cases, lesson wording, and rubric checklist are fixed. All 81 problems have at least one `"performance": true` hidden case; the five priority cases (`window-max`, `prefix-ledger`, `job-schedule`, `fuel-circuit`, `tree-depth`) use near-bound inputs.
+- **P0-01 (examples/samples/hidden):** the previously identified copied examples are rewritten. The named copied hidden cases (`coin-count`’s `[186,419,83,408]`, `strict-integer`’s public atoi cases, `longest-mirror`’s `forgeeksskeegfor`) are gone. The clean-list five were spot-checked. `NOTICE`, `CONTENT_LICENSE`, `pack.json`, and all 81 problem attributions now mark provenance as under audit instead of claiming blanket originality.
+- **P2-02–P2-17 and P2-19:** verified fixed, including duplicate-test removal, `path-count`’s `long` return, the space metadata, explanation sections, design NFR numbers, the documented two rubric families, and the System Design Primer URL.
+
+**Residual findings:**
+
+| ID  | Item / path                                                                                           | Severity | Finding                                                                                                                                                                                                                       | Suggested change                                                                                                                                         |
+| --- | ----------------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | `content/packs/core/problems/rotated-search/statement.md:3`                                           | P1       | The introductory sentence still contains the public LeetCode 33 example almost verbatim: “For example, `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`.” The rest of the statement and all five examples are rewritten.      | Replace the illustrative array with an original one, for example `[0,1,3,5,8]` becoming `[5,8,0,1,3]`, or reword the sentence.                           |
+| R2  | `problems/island-count/problem.json:15`; `problems/paint-fill/problem.json:32`; both Python solutions | P2       | Both still mutate the input (`grid` is set to `0`; `image` is painted in place) while declaring `mutates: []`. `triplet-sum`, `sum-combinations`, and `orange-rot` were correctly changed to copy their inputs.               | Copy `grid`/`image` before mutating, or declare `mutates: ["grid"]`/`["image"]` and use the `mutated` expected shape. Copying keeps the tests unchanged. |
+| R3  | `content/packs/core/lessons/matrix-traversal/lesson.md:17`                                            | P2       | “Writing `grid[column][row]` happens to work on a square matrix and then silently breaks on a rectangle.” “Happens to work” still reads as correct behavior; on a square matrix it reads the transposed cell, which is wrong. | Say “does not crash on a square matrix but reads the wrong cell; on a rectangle it can go out of bounds.”                                                |
+
+**Recheck decision:** **Request changes** for R1. R2 and R3 are P2 and can ship. After R1 is reworded or explicitly accepted with a rationale, all original P0/P1 findings are closed; the remaining steps are the human second-person sign-off and restoring the originality claims if the provenance audit is accepted.
+
 ## Originality and license check
 
 - [ ] I did not find copied statements, examples, tests, editorial prose, lesson diagrams, or tables.
-  - **Unchecked.** Copied LeetCode examples were found in at least 76 of 81 coding problems, and some hidden tests copy public test data (P0-01). Lesson prose and design prose appear original.
+  - **Unchecked.** The initial review found copied LeetCode examples in at least 76 of 81 problems. The recheck confirms the examples, samples, and named hidden cases were rewritten, but one verbatim LeetCode 33 sentence remains in `rotated-search/statement.md:3` (R1). Lesson prose and design prose appear original.
 - [x] Problem titles and collection names are trademark-safe.
   - Titles are renamed. "Grind 75" is used descriptively with an attribution to Tech Interview Handbook and a URL.
 - [x] Every reviewed item has a license and attribution.
-  - Present on all 81 problems, 8 designs, and 39 lessons. The attribution/license **claims are inaccurate** for the copied examples and tests; presence is not correctness.
+  - Present on all 81 problems, 8 designs, and 39 lessons. The claims now say provenance is under audit rather than asserting blanket originality.
 - [x] The Grind 75 and System Design Primer references are descriptive and attributed, not copied.
-  - Grind 75 is attributed with a URL. The System Design Primer is used as a topic checklist and attributed; one lesson lacks the primer/license URL (P2-19).
+  - Grind 75 is attributed with a URL. The System Design Primer is used as a topic checklist and now includes the primer and CC BY 4.0 URLs (P2-19 fixed).
 - [ ] I did not paste unpublished content into an external AI or plagiarism service.
   - **Unchecked / not attestable as written.** This review was performed by an in-editor AI agent. No separate plagiarism service was used, but the content was processed by the reviewing model. A human second-person review is still required if the project's policy demands one.
 
-Notes: The `NOTICE`, `CONTENT_LICENSE`, `pack.json:146`, and every "Original problem by the Base Case contributors" attribution must be corrected if any copied material remains. Do not merely add an attribution link; the policy says not to copy the material.
+Notes: The `NOTICE`, `CONTENT_LICENSE`, `pack.json:146`, and every problem attribution now mark provenance as under audit. Restore the originality claims only after R1 is fixed and the human review is complete.
 
 ## Decision
 
@@ -78,28 +110,39 @@ Notes: The `NOTICE`, `CONTENT_LICENSE`, `pack.json:146`, and every "Original pro
 
 Exceptions or required changes:
 
-1. **P0-01 (systemic originality)** must be resolved before any sign-off: replace copied examples and sample tests, audit hidden tests, recompute expected outputs, and correct the originality/license claims.
-2. **P0-02–P0-07** must be fixed: two invalid/contradictory test suites, the `expression-calc` grammar, and three lesson errors.
-3. **P1-01–P1-23** must be fixed or explicitly accepted by the maintainer with a rationale.
-4. **P2-01–P2-19** can ship, but should be scheduled.
-5. Re-run `pnpm content:validate`, `pnpm content:test`, and `pnpm typecheck` after fixes, and ask the reviewer to recheck only the changed items.
+1. **R1 (P1):** Reword the LeetCode 33 example sentence in `rotated-search/statement.md:3`, or explicitly accept it with a rationale. This is the only original P1 left open.
+2. **R2 (P2):** Copy or declare `mutates` for `island-count` and `paint-fill`.
+3. **R3 (P2):** Fix the `matrix-traversal` “happens to work” wording.
+4. **Human sign-off:** This recheck is AI-assisted and does not satisfy the project's human second-person requirement. A human must sign the form.
+5. **Provenance claims:** Keep the originality claims under audit until R1 is fixed and the human review is complete; restore them only then.
 
 ## Reviewer statement
 
 I reviewed the items and tier recorded above against the checklists in `docs/project/content-review-packet.md`. I am not the author of the reviewed content. This sign-off covers only the recorded tier and item count.
 
-This review is **AI-assisted** and does not satisfy a human-only second-person review requirement. The automated checks pass; the content does not.
+This review is **AI-assisted** and does not satisfy a human-only second-person review requirement. The automated checks pass; one P1 residual remains (R1).
 
 Signature: Zed coding agent (AI-assisted review)
 
 Human reviewer signature (if required): ______________________________
 
-Date: 2026-10-29
+Date: 2026-10-30
+
+Recheck: I rechecked the changed items at `f03cce2` on 2026-10-30 and verified the fixes listed above. R1 remains open.
+
+## Maintainer response to recheck (2026-10-30)
+
+- **R1:** replaced the LeetCode 33 illustration with an original `[0,1,3,5,8]` → `[5,8,0,1,3]` example.
+- **R2:** `island-count` now copies `grid` before marking cells in both references. `paint-fill` already copied `image` before painting, so it needed no change.
+- **R3:** `matrix-traversal` now says the transposed write does not crash on a square matrix but reads the wrong cell, and can go out of bounds on a rectangle.
+- Re-ran `pnpm content:validate`, `pnpm content:test` (162/162), `pnpm typecheck`, and `pnpm format:check` after these fixes.
 
 ## Maintainer follow-up
 
-- [ ] P0/P1 fixed or accepted with rationale
-- [ ] Reviewer rechecked changed items
-- [ ] `PROGRESS.md` B4 updated
-- [ ] `docs/project/open-blockers.md` B4 updated
-- [ ] `pnpm content:validate` and `pnpm content:test` re-run after fixes
+- [x] P0/P1 fixed or accepted with rationale (R1 fixed)
+- [x] Reviewer rechecked changed items
+- [x] `PROGRESS.md` B4 updated
+- [x] `docs/project/open-blockers.md` B4 updated
+- [x] `pnpm content:validate` and `pnpm content:test` re-run after fixes
+- [ ] Human second-person sign-off
+- [ ] Restore originality claims if the provenance audit is accepted

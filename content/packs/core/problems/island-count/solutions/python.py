@@ -6,6 +6,7 @@ class Solution:
         if not grid or not grid[0]:
             return 0
 
+        grid = [current[:] for current in grid]
         rows, cols = len(grid), len(grid[0])
         count = 0
 

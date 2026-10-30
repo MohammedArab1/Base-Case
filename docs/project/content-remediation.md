@@ -48,6 +48,9 @@ This is the maintainer's remediation tracker. It does not change the reviewer's 
 | P2-13, P2-14, P2-15                                    | Fixed; pending recheck                                                                                                                                               |
 | P2-16 — design NFRs and rubric families                | Numeric NFRs added; two seven-dimension rubric families documented; pending recheck                                                                                  |
 | P2-17, P2-18, P2-19                                    | Fixed in final polish; pending recheck                                                                                                                               |
+| R1 — `rotated-search` illustrative array               | Fixed 2026-10-30; pending final recheck                                                                                                                              |
+| R2 — `island-count` input mutation                     | Fixed 2026-10-30; `paint-fill` already copied its image; pending final recheck                                                                                       |
+| R3 — `matrix-traversal` transposed-index wording       | Fixed 2026-10-30; pending final recheck                                                                                                                              |
 
 Clean-list spot check (2026-10-30): reviewed `bracket-balance`, `stair-count`, `mid-node`, `subset-list`, and `prefix-ledger`. Their statements, samples, and hidden cases use generic inputs; no copied public examples or test strings were found. `prefix-ledger` also received a 20k-word/20k-query performance case.
 
@@ -120,6 +123,7 @@ The remediation work is ready for a reviewer recheck:
 - All 23 P1 findings are fixed, including P1-12: every one of the 81 problems now has at least one `"performance": true` hidden case.
 - All 19 P2 findings are fixed or documented, including numeric design NFRs and the two rubric-family note.
 - Pack-wide tests have no duplicate sample/hidden inputs, and the five clean-list problems plus a canonical-public-example scan are clean.
+- Recheck residuals R1–R3 were fixed on 2026-10-30: the `rotated-search` illustration is original, `island-count` copies its grid, and the `matrix-traversal` wording is corrected.
 - Verification for the final tree: `pnpm content:validate`, `pnpm content:test` (**162/162**), `pnpm typecheck`, and `pnpm format:check`.
 
 The remaining external steps are the reviewer recheck, restoring the originality claims if the recheck accepts P0-01, and the human second-person sign-off.
