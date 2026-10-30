@@ -46,7 +46,7 @@ Start here:
 - `project/accessibility.md` — automated gate and manual assistive-tech checklist.
 - `project/states-audit.md` — loading, empty, and error behavior per view.
 - `project/performance.md` — packaged startup, editor, canvas, judge, and memory numbers.
-- `project/open-blockers.md` — canonical external blockers (B1–B4 closed; B5–B12 tracked).
+- `project/open-blockers.md` — canonical external blockers (B1–B6 closed; B7–B12 tracked).
 - `project/brand-clearance.md` — preliminary trademark/domain research and B5 owner actions.
 - `project/content-review-packet.md` — B4 second-reviewer handoff packet.
 - `project/content-review-inventory.md` — tiered checklist for all 128 content items.

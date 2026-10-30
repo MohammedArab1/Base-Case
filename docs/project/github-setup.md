@@ -1,8 +1,13 @@
 # GitHub project setup
 
-`gh` is not installed in the current development environment. When it is
-available (or via the GitHub web UI), configure milestones, labels, and the
-project board from this document.
+**Status: closed by owner decision (2026-10-30).** The repository is intentionally
+kept as a simple public code repository for now. Do not create milestones, extra
+labels, a project board, or repository-setting changes unless the project later
+adopts a community workflow. This document is retained as a future checklist.
+
+`gh` is installed (`2.103.3`) but not authenticated. If B6 is reopened, authenticate
+it (or use the GitHub web UI) and configure milestones, labels, and the project
+board from this document.
 
 ## Milestones
 

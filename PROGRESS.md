@@ -2,8 +2,8 @@
 
 > Last updated: 2026-10-30
 > Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B4 are closed; B5–B12 remain (B8/B9 optional, B12 post-MVP).
-> Next milestone: MVP release candidate once B10 and B11 clear (B1/B4 waived; B2/B3 done), then the private alpha and `v0.1.0-alpha` tag
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B6 are closed; B7–B12 remain (B8/B9 optional, B12 post-MVP).
+> Next milestone: MVP release candidate once B10 and B11 clear (B1/B4 waived; B2/B3/B5/B6 done), then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -34,11 +34,11 @@ This is the living status document for the project. `PLAN.md` describes the inte
 6. B4 is closed for the alpha via owner waiver (2026-10-30); the independent human second-person sign-off remains a v1.0 requirement. Evidence: `docs/project/content-review-findings.md`.
 7. Add optional local AI history with a clear delete button (privacy default stays off).
 8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
-9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
-10. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
+9. B5 is closed by owner acceptance: the working name remains for the public repository; revisit trademark/domain work before commercial branding.
+10. B6 is closed by owner decision: keep the GitHub repository as-is, without milestones, boards, or extra labels.
 11. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
 
-B1 and B4 are closed by owner waiver, B2 is done, and B3 is closed with 59/60 cases reviewed; see `docs/project/open-blockers.md` for the evidence and exceptions.
+B1 and B4 are closed by owner waiver, B2/B3/B5/B6 are done or accepted, and B3 is closed with 59/60 cases reviewed; see `docs/project/open-blockers.md` for the evidence and exceptions.
 
 ## Blockers
 
@@ -48,8 +48,8 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
 - **B4 — Second-person content review (closed via owner waiver, 2026-10-30):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. All findings and recheck residuals R1–R3 were fixed and rechecked at `af4ba7f`; `content:validate` is valid, `content:test` is 162/162, and `typecheck`/`format:check` pass. The repository owner accepted the provenance audit, restored the originality claims, and waived the independent human second-person requirement for the alpha. A human second-person review remains a v1.0 requirement. Evidence: `docs/project/content-review-form.md`, `docs/project/content-review-findings.md`, and `docs/project/content-remediation.md`.
-- **B5 — Trademark and domain (in progress):** preliminary research found registered/software uses of BASECASE (notably Certara Germany GmbH) and multiple taken domains/handles. Formal clearance, a name decision, and domain/handle reservation remain before public branding. Evidence: `docs/project/brand-clearance.md`.
-- **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
+- **B5 — Trademark and domain (closed by owner acceptance, 2026-10-30):** preliminary research found conflicting software/training uses and taken domains/handles, but the owner is keeping the working name for the public GitHub repository with no aggressive marketing and will rename if a concern is raised. No domain was registered; risk accepted. Evidence: `docs/project/brand-clearance.md`.
+- **B6 — GitHub setup (closed by owner decision, 2026-10-30):** the repository remains a simple public code repository. No milestones, custom labels, project board, issue seeding, Discussions, wiki, branch-protection, or Dependabot changes will be made for now.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
 - **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
 - **B11 — Manual accessibility verification:** the automated axe gate passes; VoiceOver/NVDA, 200% zoom, forced colors, and canvas keyboard fallback still need a human at a real desktop.
@@ -57,6 +57,17 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-30 — B5 and B6 closed by owner decision
+
+- Status: B5 name risk accepted; B6 deferred/closed with no GitHub changes
+- Done:
+  - Recorded the owner decision to keep the “Base Case” working name for the public GitHub repository without domain registration or aggressive marketing, accepting the preliminary trademark risk.
+  - Installed GitHub CLI `2.103.3` during the investigation.
+  - Checked the repository: 13 default labels, no milestones, Discussions disabled, wiki enabled.
+  - Owner decided to keep the GitHub repository as-is: no milestones, boards, extra labels, or settings changes.
+- Next:
+  - B7 legal review before commercial launch; B10/B11 and the release-candidate gates remain.
 
 ### 2026-10-30 — B5 preliminary brand clearance
 
