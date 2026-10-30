@@ -48,7 +48,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
 - **B4 — Second-person content review (closed via owner waiver, 2026-10-30):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. All findings and recheck residuals R1–R3 were fixed and rechecked at `af4ba7f`; `content:validate` is valid, `content:test` is 162/162, and `typecheck`/`format:check` pass. The repository owner accepted the provenance audit, restored the originality claims, and waived the independent human second-person requirement for the alpha. A human second-person review remains a v1.0 requirement. Evidence: `docs/project/content-review-form.md`, `docs/project/content-review-findings.md`, and `docs/project/content-remediation.md`.
-- **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
+- **B5 — Trademark and domain (in progress):** preliminary research found registered/software uses of BASECASE (notably Certara Germany GmbH) and multiple taken domains/handles. Formal clearance, a name decision, and domain/handle reservation remain before public branding. Evidence: `docs/project/brand-clearance.md`.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
 - **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
@@ -57,6 +57,17 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-30 — B5 preliminary brand clearance
+
+- Status: preliminary research complete; owner/legal decision required
+- Done:
+  - Found a registered **BASECASE** service mark owned by Certara Germany GmbH (USPTO serial `77955079`, 2010) covering teaching/training in business, industry, and IT; Certara markets BaseCase® software.
+  - Found additional software uses at `basecase.co`, `basecase.app`, and `getbasecase.com`.
+  - Checked candidate domains and handles: `basecase.com/.co/.io/.ai/.app`, GitHub `basecase` and `base-case`, and `x.com/basecase` are taken; `basecase.dev` appeared unregistered but needs registrar confirmation.
+  - Recorded the evidence and owner/legal checklist in `docs/project/brand-clearance.md`; recommendation is a new public brand unless formal clearance supports keeping “Base Case.”
+- Next:
+  - Owner decision on rename vs. formal clearance; commission counsel search, register the chosen domain, reserve handles, then record the result in `docs/project/open-blockers.md`.
 
 ### 2026-10-30 — B4 closed via owner waiver
 
