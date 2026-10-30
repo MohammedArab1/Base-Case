@@ -80,7 +80,7 @@ reviewed before a release.
   a v1.0 bar.
 - Manual screen-reader and high-contrast verification remain in
   `docs/project/accessibility.md`.
-- Legal review of content, licenses, and AI/privacy disclosures remains B7.
+- Legal review of content, licenses, and AI/privacy disclosures was not commissioned; B7 is closed by owner acceptance for this non-commercial side project. Revisit before any commercial launch.
 - The app is not suitable for hostile code execution, formal assessment, or
   multi-tenant use.
 

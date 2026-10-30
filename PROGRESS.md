@@ -2,8 +2,8 @@
 
 > Last updated: 2026-10-30
 > Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B6 are closed; B7–B12 remain (B8/B9 optional, B12 post-MVP).
-> Next milestone: MVP release candidate once B10 and B11 clear (B1/B4 waived; B2/B3/B5/B6 done), then the private alpha and `v0.1.0-alpha` tag
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B7 are closed; B8–B12 remain (B8/B9 optional, B12 post-MVP).
+> Next milestone: MVP release candidate once B10 and B11 clear (B1/B4 waived; B2/B3/B5/B6/B7 accepted or done), then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -50,13 +50,22 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B4 — Second-person content review (closed via owner waiver, 2026-10-30):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. All findings and recheck residuals R1–R3 were fixed and rechecked at `af4ba7f`; `content:validate` is valid, `content:test` is 162/162, and `typecheck`/`format:check` pass. The repository owner accepted the provenance audit, restored the originality claims, and waived the independent human second-person requirement for the alpha. A human second-person review remains a v1.0 requirement. Evidence: `docs/project/content-review-form.md`, `docs/project/content-review-findings.md`, and `docs/project/content-remediation.md`.
 - **B5 — Trademark and domain (closed by owner acceptance, 2026-10-30):** preliminary research found conflicting software/training uses and taken domains/handles, but the owner is keeping the working name for the public GitHub repository with no aggressive marketing and will rename if a concern is raised. No domain was registered; risk accepted. Evidence: `docs/project/brand-clearance.md`.
 - **B6 — GitHub setup (closed by owner decision, 2026-10-30):** the repository remains a simple public code repository. No milestones, custom labels, project board, issue seeding, Discussions, wiki, branch-protection, or Dependabot changes will be made for now.
-- **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
+- **B7 — Legal review (closed by owner acceptance, 2026-10-30):** non-commercial side project; no legal review will be commissioned. The owner accepts the risk and will remove or change content if a credible issue arises. Revisit before any commercial launch.
 - **B10 — Private alpha beta:** recruit 10–30 testers, run the onboarding script, and record activation, retention, and P0/P1 issues.
 - **B11 — Manual accessibility verification:** the automated axe gate passes; VoiceOver/NVDA, 200% zoom, forced colors, and canvas keyboard fallback still need a human at a real desktop.
 - **B12 — Apple Developer ID signing and notarization:** the macOS build is ad-hoc signed, so Gatekeeper requires per-app **Open Anyway** approval on first launch. Needs an Apple Developer Program membership, certificate, and notary credentials.
 - **Optional:** reference Excalidraw scenes for the eight designs (B8) and the Apple Foundation Models sidecar (B9).
 
 ## Work log (newest first)
+
+### 2026-10-30 — B7 closed by owner acceptance
+
+- Status: legal review accepted as a side-project risk; no commercial launch planned
+- Done:
+  - Recorded that no legal review will be commissioned.
+  - The owner accepts the risk and will remove or change content if a credible issue arises.
+- Next:
+  - B10 private beta and B11 manual accessibility verification are the remaining required alpha gates; B8/B9 are optional and B12 is post-MVP.
 
 ### 2026-10-30 — B5 and B6 closed by owner decision
 
@@ -67,7 +76,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - Checked the repository: 13 default labels, no milestones, Discussions disabled, wiki enabled.
   - Owner decided to keep the GitHub repository as-is: no milestones, boards, extra labels, or settings changes.
 - Next:
-  - B7 legal review before commercial launch; B10/B11 and the release-candidate gates remain.
+  - B10 private beta and B11 manual accessibility verification remain; B8/B9 are optional and B12 is post-MVP.
 
 ### 2026-10-30 — B5 preliminary brand clearance
 
@@ -109,7 +118,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - `pnpm typecheck` — passed.
   - `pnpm format:check` — passed.
 - Next:
-  - B4 is closed. Remaining content-related follow-ups are the v1.0 human second-person review and the B7 legal review; remaining alpha gates are B10/B11 and the release candidate.
+  - B4 and B7 are closed by owner decision. Remaining alpha gates are B10/B11 and the release candidate; the v1.0 human second-person review remains.
 
 ### 2026-10-29 — B4 remediation Batch 8: windows, intervals, trees, and centers
 

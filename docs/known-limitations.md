@@ -121,5 +121,6 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 - The project board, milestones, and labels are intentionally not configured; the repository is kept as a simple public code repository for now (B6 closed by owner decision).
 - The name "Base Case" is a working name. Preliminary research found existing
   software/training uses; the owner accepted the name risk for the public
-  repository and will rename if a concern is raised (B5). Legal review is required
-  before any commercial launch (B7).
+  repository and will rename if a concern is raised (B5). Legal review was not
+  commissioned for this non-commercial side project; the owner accepts the risk
+  and will remove content if a credible issue arises (B7).

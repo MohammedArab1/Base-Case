@@ -332,7 +332,7 @@ Also label the axes: `word1 = "cart"` (rows), `word2 = "cat"` (columns).
 - The originality assessment is based on recognition plus spot checks against public mirrors (for example, LeetCode 1 and 42), not a forensic comparison of every hidden test against every public source. The initial finding was stated as "at least 76 of 81"; the recheck verified the named cases and the sample rewrite but did not repeat a full forensic comparison.
 - Some P2 items are judgment calls about pedagogy and wording, not contract violations.
 - The recheck is AI-assisted and verifies the changed files and automated checks. The owner waiver is an explicit process exception, not evidence of an independent human review.
-- The owner accepted the provenance audit; this is not a legal opinion on copyright. A legal review remains B7.
+- The owner accepted the provenance audit; this is not a legal opinion on copyright. B7 legal review is closed by owner acceptance for this non-commercial side project; revisit before any commercial launch.
 
 ---
 

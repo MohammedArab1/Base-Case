@@ -79,6 +79,6 @@ The app is unsigned. Gatekeeper and SmartScreen will warn; follow
 - B11 — manual VoiceOver/NVDA, high-contrast, zoom, and canvas keyboard pass.
 - B10 — private beta with no open P0/P1 bugs.
 - B4 — closed for the alpha via owner waiver (2026-10-30). The Full-tier review and remediation covered the current 81 + 8 + 39 content set; all findings are closed and the originality claims are restored. An independent human second-person review remains a v1.0 requirement. See `docs/project/content-review-findings.md`.
-- Legal review (B7) before commercial launch. B5 name risk is accepted for the public repo; revisit branding before any public campaign.
+- B7 legal review is accepted as a side-project risk; no commercial launch is planned. B5 name risk is accepted for the public repo; revisit both before any public branding campaign.
 
 Do not tag or publish this build until those gates are resolved.
