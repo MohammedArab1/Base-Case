@@ -143,7 +143,7 @@
     {
       "id": "grind75",
       "name": "Grind 75",
-      "description": "A 75-problem core subset of the Grind 75 study list. Problem statements, explanations, and hints are written for Base Case. Example and test provenance is under audit; do not redistribute the bundled pack until the audit is complete.",
+      "description": "A 75-problem core subset of the Grind 75 study list. Every statement, example, hint, and test here is original to Base Case.",
       "problems": [
         "pair-sum",
         "water-between-walls",

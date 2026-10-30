@@ -1,9 +1,9 @@
 # Progress Log
 
-> Last updated: 2026-10-28
+> Last updated: 2026-10-30
 > Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; manual accessibility and release-candidate gates remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B3 are closed; B4–B12 remain (B8/B9 optional, B12 post-MVP).
-> Next milestone: MVP release candidate once B10 and B11 clear (B1 waived; B2/B3 done), then the private alpha and `v0.1.0-alpha` tag
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is manual accessibility verification and the release-candidate gates, both tied to external/human checks. B1–B4 are closed; B5–B12 remain (B8/B9 optional, B12 post-MVP).
+> Next milestone: MVP release candidate once B10 and B11 clear (B1/B4 waived; B2/B3 done), then the private alpha and `v0.1.0-alpha` tag
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
 
@@ -19,7 +19,7 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 4 — Coding practice | Done | 2026-10-24 | All Phase 4 tasks complete: practice loop, hints, snapshots, mistake tags, FSRS review, filters, cancellation, KaTeX, export/import, and Playwright coverage. Windows E2E is confirmed by CI |
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | Done | 2026-10-28 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Real-model eval: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented. Optional local history remains post-MVP |
-| Phase 7 — Content production | In progress | 2026-10-28 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 39 lessons, including a 17-lesson system-design track that covers the public System Design Primer's core topic index. All 162 reference solutions pass. Second-person review and optional reference scenes remain |
+| Phase 7 — Content production | In progress | 2026-10-28 | Phase 9 expanded the pack to 81 coding problems (including the 75-problem Grind 75 collection), 8 design scenarios, and 39 lessons, including a 17-lesson system-design track that covers the public System Design Primer's core topic index. All 162 reference solutions pass. B4 is closed via owner waiver; optional reference scenes remain |
 | Phase 8 — Alpha release | In progress | 2026-10-27 | Installers, checksums, diagnostics self-test, alpha docs, feedback form, triage/metrics runbook, and a tag-driven release job are in place. B2 is done (workflow run 40607714499); B1 is closed by owner waiver. Remaining: private beta (B10), P0/P1 fixes, and the tag |
 | Phase 9 — MVP expansion | In progress | 2026-10-28 | Content expanded to 81 coding problems (162/162 reference solutions), 8 design scenarios, and 39 offline lessons with linked practice. Added a filterable 75-problem Grind 75 collection, the Learn library, local lesson completion, optional lesson clarification, trie/deque exercises, and a 17-lesson system-design track covering the System Design Primer topic index. Importer, command palette, search/filters, progress chart, reduced motion, window/layout persistence, runtime verification, dual-arch macOS builds, AI mistake suggestions/explain-back, performance measurements, security review, screenshots, and a 10-second GIF/MP4 demo are done. Remaining: manual accessibility verification (B11) and the release-candidate gates |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
@@ -31,14 +31,14 @@ This is the living status document for the project. `PLAN.md` describes the inte
 3. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
 4. Recruit 10–30 beta testers and run the onboarding script in `docs/project/alpha-release.md` (B10).
 5. Fix P0/P1 bugs from the beta, then tag `v0.1.0-alpha` and publish the GitHub Release.
-6. Remediate the B4 review: fix P0-01 (example/test provenance), P0-02–P0-07, and P1-01–P1-23; then request a recheck and human second-person sign-off. Evidence: `docs/project/content-review-findings.md`.
+6. B4 is closed for the alpha via owner waiver (2026-10-30); the independent human second-person sign-off remains a v1.0 requirement. Evidence: `docs/project/content-review-findings.md`.
 7. Add optional local AI history with a clear delete button (privacy default stays off).
 8. Add optional reference Excalidraw scenes and an automated native export-dialog check (B8).
 9. Do a basic trademark search for “Base Case” before public launch (B5). Register the domain when branding starts.
 10. Add milestones for Phases 0–10, labels, and a project board using `docs/project/github-setup.md` (B6).
 11. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
 
-B1 is closed by owner waiver, B2 is done, and B3 is closed with 59/60 cases reviewed; see `docs/project/open-blockers.md` for the evidence and exceptions.
+B1 and B4 are closed by owner waiver, B2 is done, and B3 is closed with 59/60 cases reviewed; see `docs/project/open-blockers.md` for the evidence and exceptions.
 
 ## Blockers
 
@@ -47,7 +47,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **B1 — Clean-VM installs (closed by owner waiver, 2026-10-27):** the Windows `0.1.0-alpha` installer passed diagnostics 9/9 with bundled Node/Python and both sample languages. No clean macOS VM was available; the owner accepted the clean-OS isolation risk for the alpha. Clean-VM verification remains a v1.0 bar.
 - **B2 — Manual Windows installer workflow (done, 2026-10-27):** `Build installers` run [40607714499](https://github.com/MohammedArab1/Base-Case/actions/runs/40607714499) succeeded and the Windows artifact installed and launched.
 - **B3 — Real-model AI eval run (done, 2026-10-28):** `deepseek-v4.1-flash` on 60 bug-zoo cases: 0 leaks, 59/60 human-reviewed, 100% explain diagnosis accuracy, 4.9/5 helpfulness. One hint was truncated by the provider after retries and is documented as unreviewed. Results: `docs/evals/results-openai-compatible.json`.
-- **B4 — Second-person content review (changes requested):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. P0-02–P0-07 and all P1/P2 findings are fixed or documented; every problem now has a performance-marked case. P0-01 examples/samples and hidden canonical-example scans are complete, and recheck residuals R1–R3 are fixed. The originality-claim acceptance and human sign-off remain. Remediation tracker: `docs/project/content-remediation.md`; evidence: `docs/project/content-review-form.md` and `docs/project/content-review-findings.md`. A human second-person sign-off is still required after remediation.
+- **B4 — Second-person content review (closed via owner waiver, 2026-10-30):** Full-tier AI-assisted review completed 2026-10-29 with 7 P0, 23 P1, and 19 P2 findings. All findings and recheck residuals R1–R3 were fixed and rechecked at `af4ba7f`; `content:validate` is valid, `content:test` is 162/162, and `typecheck`/`format:check` pass. The repository owner accepted the provenance audit, restored the originality claims, and waived the independent human second-person requirement for the alpha. A human second-person review remains a v1.0 requirement. Evidence: `docs/project/content-review-form.md`, `docs/project/content-review-findings.md`, and `docs/project/content-remediation.md`.
 - **B5 — Trademark and domain:** the name is confirmed as “Base Case.” A basic trademark search and domain registration remain before public branding.
 - **B6 — GitHub setup:** `gh` is not installed. Milestones, labels, and the project board still need to be created through the web UI or a token-based script.
 - **B7 — Legal review:** consult a lawyer before commercial launch, as required by the content policy.
@@ -58,9 +58,19 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 
 ## Work log (newest first)
 
+### 2026-10-30 — B4 closed via owner waiver
+
+- Status: B4 done for the alpha
+- Done:
+  - Rechecked R1–R3 at `af4ba7f`: the `rotated-search` illustration is original, `island-count` copies its grid, and the `matrix-traversal` wording is corrected.
+  - Owner accepted the provenance audit and restored the originality claims in `NOTICE`, `CONTENT_LICENSE`, `pack.json`, and all 81 problem attributions.
+  - Waived the independent human second-person requirement for the alpha (remains a v1.0 bar), consistent with the B1 owner waiver.
+  - Re-ran `content:validate` (valid), `content:test` (162/162), `typecheck`, and `format:check`.
+- Evidence: `docs/project/content-review-form.md`, `docs/project/content-review-findings.md`, and `docs/project/open-blockers.md`.
+
 ### 2026-10-30 — Final B4 audit and polish pass
 
-- Status: All recheck residuals fixed; only the P0-01 originality-claim acceptance and human sign-off remain
+- Status: All recheck residuals fixed; owner waiver and closure recorded above
 - Done:
   - Fixed P1-06: `prefix-ledger` hint 4 now increments the root once per word, so an empty query returns the total entry count.
   - Fixed P1-14 through P1-23: stacks, sliding-window, prefix-sums, greedy-and-intervals, heaps, graph-algorithms, system-design-interview, databases, and requirements-and-estimation wording now matches the actual exercises and complexity claims.
@@ -77,7 +87,7 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
   - `pnpm typecheck` — passed.
   - `pnpm format:check` — passed.
 - Next:
-  - Obtain the final R1–R3 confirmation/acceptance of P0-01 provenance, then the human second-person sign-off.
+  - B4 is closed. Remaining content-related follow-ups are the v1.0 human second-person review and the B7 legal review; remaining alpha gates are B10/B11 and the release candidate.
 
 ### 2026-10-29 — B4 remediation Batch 8: windows, intervals, trees, and centers
 

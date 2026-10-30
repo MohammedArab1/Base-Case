@@ -8,9 +8,10 @@
 offline lessons covering DSA and system-design fundamentals, a real
 Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
 persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
-review. Manual accessibility verification, demo media, the release candidate, a
-second-person content review, trademark/domain, and GitHub project setup are
-pending. The real-model AI bug-zoo eval is complete (59/60 cases reviewed at
+review. Manual accessibility verification, demo media, the release candidate,
+trademark/domain, and GitHub project setup are pending. The B4 content review is
+closed for the alpha via owner waiver; an independent human second-person review
+remains a v1.0 requirement. The real-model AI bug-zoo eval is complete (59/60 cases reviewed at
 100% diagnosis accuracy and 4.9/5 helpfulness), and the Windows `0.1.0-alpha`
 installer passed its diagnostics check with bundled runtimes; clean-OS isolation
 was waived by the owner for the alpha. See `docs/project/open-blockers.md`.
@@ -147,13 +148,12 @@ runtimes. See ADR-0010.
 - Installer checksums (`SHA256SUMS.txt`) and a tag-driven GitHub Release
   job, plus an alpha feedback issue form.
 
-Still open: manual accessibility verification (B11), the second-person content
-review, refreshed screenshots and demo media for the Learn library, the release
-candidate, optional reference Excalidraw scenes, local AI history, the Apple
-Foundation Models sidecar, the private beta, trademark/domain, and GitHub
-milestones. B1 is closed by owner waiver, B2 is done, and the real-model AI eval
-(B3) is complete with 59/60 cases reviewed; see
-`docs/project/open-blockers.md`. Windows filesystem and network isolation remain
+Still open: manual accessibility verification (B11), refreshed screenshots and
+demo media for the Learn library, the release candidate, optional reference
+Excalidraw scenes, local AI history, the Apple Foundation Models sidecar, the
+private beta, trademark/domain, and GitHub milestones. B1 and B4 are closed by
+owner waiver, B2 is done, and the real-model AI eval (B3) is complete with 59/60
+cases reviewed; see `docs/project/open-blockers.md`. Windows filesystem and network isolation remain
 best-effort.
 
 ## Repository layout

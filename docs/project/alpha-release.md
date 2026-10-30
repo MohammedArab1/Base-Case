@@ -32,6 +32,7 @@ Exit criteria from `PLAN.md`:
 - [ ] `pnpm format:check && pnpm lint && pnpm typecheck`
 - [ ] `pnpm test`
 - [ ] `pnpm content:validate && pnpm content:test`
+- [x] B4 content review closed for the alpha via owner waiver (Full-tier review and remediation; see `docs/project/content-review-form.md`)
 - [ ] `pnpm judge:build && pnpm build && pnpm smoke:e2e`
 - [ ] `pnpm smoke:playwright`
 - [x] `pnpm evals` (mock baseline plus real-model B3 run: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented)

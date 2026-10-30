@@ -56,6 +56,6 @@
     "How would you compute the distance between two very long strings with limited memory?"
   ],
   "license": "CC-BY-SA-4.0",
-  "attribution": "Problem statement, explanation, and solutions by the Base Case contributors. Example and test provenance is under audit.",
+  "attribution": "Original problem by the Base Case contributors.",
   "version": 1
 }

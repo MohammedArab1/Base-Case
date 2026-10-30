@@ -36,7 +36,10 @@ semantic versioning once releases begin.
 
 ### Fixed
 
-- Nothing yet.
+- Completed the B4 Full-tier content review: rewrote copied examples and test
+  data, added performance-marked cases to all 81 problems, fixed lesson and
+  rubric issues, restored the originality claims after owner acceptance, and
+  closed B4 for the alpha via owner waiver.
 
 ## [0.1.0-alpha] — 2026-10-25
 

@@ -6,11 +6,6 @@ problem statements, examples, constraints, test cases, hints, explanations,
 design prompts, rubrics, and reference designs — is licensed under the Creative
 Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).
 
-> **Provenance audit in progress.** The bundled coding pack is being audited for
-> example and test provenance. Content that is pending replacement is not
-> offered for redistribution under this license until the audit is complete and
-> the affected files have been rewritten. See `docs/project/content-review-findings.md`.
-
 You are free to:
 
 - Share — copy and redistribute the material in any medium or format.
@@ -31,9 +26,8 @@ https://creativecommons.org/licenses/by-sa/4.0/legalcode
 
 Attribution for the bundled core pack:
 
-  Original statements and explanations by the Base Case contributors.
-  Example and test provenance is under audit; see the note above.
-  Licensed under CC BY-SA 4.0 once the audit is complete.
+  Original statements, examples, tests, and explanations by the Base Case
+  contributors. Licensed under CC BY-SA 4.0.
 
 This license does not apply to the application source code, which is licensed
 under the MIT License in `LICENSE`. Third-party assets and dependencies retain

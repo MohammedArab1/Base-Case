@@ -63,6 +63,6 @@
   ],
   "followUps": ["How would you find the insertion point?", "What changes with duplicate values?"],
   "license": "CC-BY-SA-4.0",
-  "attribution": "Problem statement, explanation, and solutions by the Base Case contributors. Example and test provenance is under audit.",
+  "attribution": "Original problem by the Base Case contributors.",
   "version": 1
 }

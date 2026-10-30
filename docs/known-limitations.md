@@ -51,8 +51,9 @@ need work outside this repository are tracked in `project/open-blockers.md`.
   require no network, but they are not interactive.
 - Lesson completion is manual. Reading a lesson does not automatically mark it
   complete, and lessons are not scheduled by FSRS.
-- The content has automated validation and passing reference solutions, but the
-  second-person editorial review is still pending (B4).
+- The content has automated validation and passing reference solutions. B4 is
+  closed for the alpha via owner waiver; an independent human second-person
+  editorial review remains a v1.0 requirement.
 - The eight design scenarios do not yet ship reference Excalidraw scenes. The
   reference design is Markdown; the canvas starts empty (B8).
 - Design feedback is a self-assessed rubric. There is no automatic diagram

@@ -2,7 +2,7 @@
 
 This inventory is generated from `content/packs/core/pack.json` and the item metadata at commit `ed7bddd`. Check off each item you actually review. `[T1]`, `[T2]`, and `[Full]` match the tiers in `content-review-packet.md`. For T2, review both `[T1]` and `[T2]` items; for Full, review every row.
 
-The Full-tier recheck was performed at `f03cce2` on 2026-10-30. Hidden test counts have increased where performance-marked cases were added; the tier labels and item set are unchanged.
+The Full-tier rechecks were performed at `f03cce2` and `af4ba7f` on 2026-10-30. Hidden test counts have increased where performance-marked cases were added; the tier labels and item set are unchanged. The final recheck verified R1–R3 fixed; no findings remain open. B4 is closed for the alpha via owner waiver, and the originality claims are restored.
 
 ## Tier counts
 
