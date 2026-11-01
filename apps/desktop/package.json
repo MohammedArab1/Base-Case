@@ -7,7 +7,10 @@
   "license": "MIT",
   "main": "./out/main/index.js",
   "scripts": {
+    "postinstall": "install-electron",
+    "predev": "install-electron",
     "dev": "electron-vite dev",
+    "predev:inspect": "install-electron",
     "dev:inspect": "electron-vite dev --inspect 9229",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
