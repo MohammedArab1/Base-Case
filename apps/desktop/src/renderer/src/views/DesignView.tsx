@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { JSX } from 'react'
-import { Excalidraw, exportToBlob, serializeAsJSON } from '@excalidraw/excalidraw'
+import {
+  Excalidraw,
+  exportToBlob,
+  hashElementsVersion,
+  serializeAsJSON,
+} from '@excalidraw/excalidraw'
 import type {
   ExcalidrawImperativeAPI,
   ExcalidrawInitialDataState,
@@ -197,7 +202,7 @@ function DesignWorkspace({
   const dirtyRef = useRef(false)
   const leavingRef = useRef(false)
   const saveTimer = useRef<number | null>(null)
-  const lastInput = useRef<{ elements: unknown; files: unknown } | null>(null)
+  const lastInputKey = useRef<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -568,17 +573,33 @@ function DesignWorkspace({
                   return
                 }
 
-                const contentChanged =
-                  lastInput.current === null ||
-                  elements !== lastInput.current.elements ||
-                  files !== lastInput.current.files
-                lastInput.current = { elements, files }
+                // Excalidraw reuses the elements array while dragging and mutates
+                // the element objects in place, so reference equality misses the
+                // final size of a newly drawn shape. Hash the scene versions
+                // instead; cursor and selection updates leave them unchanged.
+                const inputKey = [
+                  elements.length,
+                  hashElementsVersion(elements),
+                  appState.viewBackgroundColor,
+                  appState.gridSize,
+                  appState.gridStep,
+                  appState.gridModeEnabled ? 1 : 0,
+                  Object.keys(files).length,
+                ].join('|')
 
-                if (!contentChanged) {
+                if (inputKey === lastInputKey.current) {
                   return
                 }
 
-                sceneJsonRef.current = serializeAsJSON(elements, appState, files, 'local')
+                lastInputKey.current = inputKey
+
+                const sceneJson = serializeAsJSON(elements, appState, files, 'local')
+
+                if (sceneJson === sceneJsonRef.current) {
+                  return
+                }
+
+                sceneJsonRef.current = sceneJson
                 scheduleSave()
               }}
             />

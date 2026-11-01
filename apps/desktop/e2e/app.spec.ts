@@ -461,6 +461,11 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
     await expect(page.getByTestId('design-scenario').first()).toBeVisible()
     await page.getByTestId('design-scenario').first().click()
     await expect(page.getByRole('heading', { name: 'URL Shortener', level: 2 })).toBeVisible()
+    await expect(page.locator('.excalidraw__canvas.interactive')).toBeVisible()
+
+    // Wait past the autosave debounce: a failed restore would repaint an empty
+    // scene and overwrite the draft during this window.
+    await page.waitForTimeout(2000)
 
     await expect
       .poll(
@@ -468,11 +473,19 @@ test('draws, writes notes, scores the rubric, submits, and reveals the reference
           const draft = (await page.evaluate(
             "window.baseCase.design.getDraft('core/url-shortener')",
           )) as { sceneJson: string }
-          return draft.sceneJson
+          const scene = JSON.parse(draft.sceneJson || '{}') as {
+            elements?: Array<{ type: string; width: number; height: number }>
+          }
+          const rectangle = scene.elements?.find((element) => element.type === 'rectangle')
+
+          return {
+            count: scene.elements?.length ?? 0,
+            restored: Boolean(rectangle && rectangle.width > 0 && rectangle.height > 0),
+          }
         },
         { timeout: 15_000 },
       )
-      .toContain('rectangle')
+      .toEqual({ count: 1, restored: true })
 
     await page.getByRole('tab', { name: 'Notes' }).click()
     const noteValues: Record<string, string> = {
