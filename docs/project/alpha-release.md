@@ -29,18 +29,18 @@ Exit criteria from `PLAN.md`:
 
 ### Before tagging
 
-- [ ] `pnpm format:check && pnpm lint && pnpm typecheck`
-- [ ] `pnpm test`
-- [ ] `pnpm content:validate && pnpm content:test`
+- [x] `pnpm format:check && pnpm lint && pnpm typecheck` (2026-11-01)
+- [x] `pnpm test` (2026-11-01)
+- [x] `pnpm content:validate && pnpm content:test` (162/162, 2026-11-01)
 - [x] B4 content review closed for the alpha via owner waiver (Full-tier review and remediation; see `docs/project/content-review-form.md`)
-- [ ] `pnpm judge:build && pnpm build && pnpm smoke:e2e`
-- [ ] `pnpm smoke:playwright`
+- [x] `pnpm judge:build && pnpm build && pnpm smoke:e2e` (2026-11-01)
+- [x] `pnpm smoke:playwright` (12/12, 2026-11-01)
 - [x] `pnpm evals` (mock baseline plus real-model B3 run: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented)
-- [ ] macOS package built and launched: `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac`
+- [ ] macOS package built and launched: `CSC_IDENTITY_AUTO_DISCOVERY=false pnpm package:mac` — pre-tag build intentionally skipped; the tag workflow builds it
 - [x] Windows package built through the manual `Build installers` workflow (B2: run `40607714499`; installed and launched on Windows 11)
 - [x] Clean install works on macOS and Windows (B1 closed by owner waiver for the alpha: Windows hardware install passed; clean-OS isolation was not performed and remains a v1.0 bar)
-- [ ] `CHANGELOG.md` has a dated `0.1.0-alpha` section
-- [ ] `README.md` status and `PROGRESS.md` reflect the release
+- [x] `CHANGELOG.md` has a dated `0.1.0-alpha` section (2026-11-01)
+- [x] `README.md` status and `PROGRESS.md` reflect the release preparation
 - [ ] `docs/quickstart.md`, `faq.md`, `privacy.md`, and `known-limitations.md` are
       linked from `docs/README.md`
 - [ ] Diagnostics self-test passes on both platforms

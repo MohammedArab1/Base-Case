@@ -3,13 +3,14 @@
 > Working name. Base Case is a local-first practice app for coding interviews
 > and system design. It is not affiliated with LeetCode or any other judge.
 
-**Status:** Phase 9 MVP expansion. The app has 81 original coding problems
+**Status:** `v0.1.0-alpha` release preparation. The app has 81 original coding problems
 (including a 75-problem Grind 75 collection), 8 system design scenarios, 39
 offline lessons covering DSA and system-design fundamentals, a real
 Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
 persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
-review. Demo media and the final release tag are pending. B1–B12 are closed,
-accepted, or closed by owner decision for this side project. The B4 content review is closed for the alpha
+The final release checks pass; installer builds and publication are handled by the
+tag workflow. B1–B12 are closed, accepted, or closed by owner decision for this
+side project. The B4 content review is closed for the alpha
 via owner waiver; B5 name risk is accepted and B6 (GitHub project setup) is
 deferred by owner decision. An independent human second-person review remains a
 v1.0 requirement. The real-model AI bug-zoo eval is complete (59/60 cases reviewed at

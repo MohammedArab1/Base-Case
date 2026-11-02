@@ -1,6 +1,16 @@
 # MVP release-candidate build record
 
-Date: 2026-10-25
+## Final release preparation — 2026-11-01
+
+- Version: `0.1.0-alpha`
+- Code state: release preparation based on `ad3232d` plus the release-docs commit; the tag should be created only after that commit is pushed.
+- Content: **81 coding problems, 8 design scenarios, 39 lessons**, 75-problem Grind 75 collection; **162/162** reference solutions pass.
+- Automated checks: `pnpm install --frozen-lockfile`, `format:check`, `lint`, `typecheck`, `test`, `content:validate`, `content:test`, `judge:build`, `build`, `smoke:e2e`, and `smoke:playwright` (12/12) all passed on 2026-11-01.
+- Installer build: **intentionally skipped before tagging at the owner's request.** No fresh installer artifacts or checksums were produced or verified locally.
+- Release risk: the tag-triggered `Build installers` workflow will build and publish the macOS/Windows artifacts. Download, checksum, install, and smoke-test them immediately after the workflow finishes.
+
+## Historical candidate — 2026-10-25
+
 Version: `0.1.0-alpha`
 Code commit: `0e5ed87` (includes the custom app icon); later
 documentation-only commits do not change packaged bytes

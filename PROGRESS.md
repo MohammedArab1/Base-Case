@@ -1,8 +1,8 @@
 # Progress Log
 
-> Last updated: 2026-10-30
-> Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; final release checks remain)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is the final release checks. B1–B12 are closed or accepted by the owner; no blockers remain.
+> Last updated: 2026-11-01
+> Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; release checks passed, tag pending)
+> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is the release tag and post-tag artifact verification. B1–B12 are closed or accepted by the owner; no blockers remain.
 > Next milestone: tag `v0.1.0-alpha` when the owner is ready; no blockers remain.
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
@@ -20,15 +20,15 @@ This is the living status document for the project. `PLAN.md` describes the inte
 | Phase 5 — System design | Done | 2026-10-25 | Four scenarios (URL Shortener, Rate Limiter, Chat System, News Feed) with prompts, seven-dimension rubrics, references, checklists, canvas, notes, attempts, design FSRS cards, and Markdown+PNG export. Optional reference scenes and a native-dialog export test remain as polish |
 | Phase 6 — AI tutor | Done | 2026-10-28 | Provider abstraction, token-budgeted context, structured outputs, guardrails, per-feature toggles, design-note review, follow-up interviewer, local feedback, and bug-zoo evals are complete. Real-model eval: `deepseek-v4.1-flash`, 59/60 cases reviewed, 100% diagnosis accuracy, 4.9/5 helpfulness, 0 leaks; one provider-truncated hint documented. Optional local history remains post-MVP |
 | Phase 7 — Content production | Done | 2026-10-30 | 81 coding problems, 8 design scenarios, and 39 lessons are complete; 162/162 reference solutions pass. B4 and B8 are closed by owner decision. Optional content-cli lint/package/import work is not a phase gate. |
-| Phase 8 — Alpha release | In progress | 2026-10-30 | Installers, checksums, diagnostics, docs, feedback/triage, and the tag-driven release job exist. Remaining: rebuild from the final 81+8+39 content, refresh checksums, run the packaged smoke test, then tag and publish `v0.1.0-alpha`. The private-beta gate is closed by owner decision. |
+| Phase 8 — Alpha release | In progress | 2026-10-30 | Installers, checksums, diagnostics, docs, feedback/triage, and the tag-driven release job exist. All release checks pass. Remaining: tag and publish `v0.1.0-alpha`; the tag workflow builds the installers. Installer build/verification before tagging was intentionally skipped by the owner. The private-beta gate is closed by owner decision. |
 | Phase 9 — MVP expansion | In progress | 2026-10-30 | Content, Learn library, importer, AI, performance, security, docs, screenshots, and demo media are complete; 162/162 reference solutions pass. Feature-complete. The only remaining task is the final release-candidate artifact/tag shared with Phase 8. |
 | Phase 10 — v1.0 release | Not started | — | Stable release and community |
 
 ## Next up
 
-1. Confirm the release-candidate checksums in `docs/project/release-candidate.md` after the final rebuild, then review known issues and re-run export/import plus backup/restore one final time.
-2. Rebuild the final 81-problem/39-lesson content state and rerun the Windows packaged smoke test before tagging.
-3. Tag `v0.1.0-alpha` when ready and publish the GitHub Release if desired.
+1. Tag `v0.1.0-alpha` when ready; the tag workflow builds the installers and publishes a pre-release.
+2. Immediately download and verify the generated artifacts/checksums, then install-test both platforms.
+3. Review the published release notes and promote it.
 4. Add optional local AI history with a clear delete button (privacy default stays off).
 5. Regenerate screenshots and the demo GIF/MP4 so they include the Learn library and the 81-problem content set.
 7. B1–B12 are closed, accepted, or closed by owner decision; no blockers remain.
@@ -53,6 +53,16 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **No open blockers.** B8 reference scenes are closed as not needed.
 
 ## Work log (newest first)
+
+### 2026-11-01 — v0.1.0-alpha release checks passed
+
+- Status: release checks complete; installer build/verification intentionally skipped; tag pending
+- Done:
+  - Merged the Unreleased changelog into `[0.1.0-alpha] — 2026-11-01`.
+  - Ran the full check suite: format, lint, typecheck, unit/Go tests, content validation and 162/162 reference solutions, judge build, app build, Electron smoke, and Playwright 12/12.
+  - Recorded the release preparation and the skipped pre-tag installer build in `docs/project/release-candidate.md`.
+- Next:
+  - Tag `v0.1.0-alpha`; verify the tag workflow artifacts/checksums and installers; promote after verification.
 
 ### 2026-10-30 — B8 closed as not needed
 
