@@ -1,7 +1,6 @@
 # Base Case
 
-> Working name. Base Case is a local-first practice app for coding interviews
-> and system design. It is not affiliated with LeetCode or any other judge.
+> Base Case is a local-first learning and practice app for coding interviews and system design. It is not affiliated with LeetCode or any other judge.
 
 **Status:** `v0.1.0-alpha` release preparation. The app has 81 original coding problems
 (including a 75-problem Grind 75 collection), 8 system design scenarios, 39
