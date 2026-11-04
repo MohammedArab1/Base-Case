@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Choose an order",
+      "body": "Sorting by end time makes the interval that finishes earliest available first."
+    },
+    {
+      "level": 2,
+      "title": "Keep compatible intervals",
+      "body": "Keep an interval whenever its start is at or after the end of the last kept interval."
+    },
+    {
+      "level": 3,
+      "title": "Count removals indirectly",
+      "body": "Maximize the number of kept intervals, then subtract that count from the total."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort intervals by end time\nkept = 0\nlastEnd = -infinity\nfor each [start, end] in sorted intervals:\n    if start >= lastEnd:\n        kept += 1\n        lastEnd = end\nreturn length(intervals) - kept\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

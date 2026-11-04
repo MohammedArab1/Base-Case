@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/valid-parenthesis-string",
+  "slug": "valid-parenthesis-string",
+  "title": "Flexible Brackets",
+  "difficulty": "medium",
+  "patterns": ["greedy", "strings"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "checkBrackets",
+    "params": [
+      {
+        "name": "text",
+        "type": "string"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Assigning every joker the same role",
+    "Allowing the lower balance to go below zero",
+    "Forgetting to fail when the maximum balance becomes negative",
+    "Accepting a string whose minimum possible final balance is greater than zero"
+  ],
+  "followUps": [
+    "How would you count the number of valid joker assignments?",
+    "What if a joker could stand for at most two brackets rather than any one?",
+    "How would the problem change if square and curly brackets were also present?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

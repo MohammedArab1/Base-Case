@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Inspect the bits",
+      "body": "A simple approach examines one bit position at a time."
+    },
+    {
+      "level": 2,
+      "title": "Remove the lowest set bit",
+      "body": "The expression `value & (value - 1)` clears exactly one set bit."
+    },
+    {
+      "level": 3,
+      "title": "Count removals",
+      "body": "Repeat the clearing operation and count how many times it succeeds before the value becomes zero."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncount = 0\nwhile value != 0:\n    value = value & (value - 1)\n    count += 1\nreturn count\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/palindrome-partitioning",
+  "slug": "palindrome-partitioning",
+  "title": "All Palindrome Splits",
+  "difficulty": "medium",
+  "patterns": ["backtracking", "strings", "dynamic-programming", "recursion"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "partition",
+    "params": [
+      {
+        "name": "s",
+        "type": "string"
+      }
+    ],
+    "returns": "string[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n * 2^n)",
+      "space": "O(n) recursion plus output",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n * 2^n)",
+      "space": "O(n) recursion plus output"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Allowing a piece to be empty",
+    "Checking only the outer characters of a candidate piece",
+    "Forgetting to copy the path before recording a split",
+    "Returning recursion order without applying the required sort"
+  ],
+  "followUps": [
+    "How would you return only the split with the fewest pieces?",
+    "How can precomputed palindrome ranges speed up the backtracking?",
+    "How would you count the number of palindrome splits without listing them?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

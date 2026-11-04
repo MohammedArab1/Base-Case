@@ -1,0 +1,16 @@
+{"input":{"value":3},"expected":3221225472}
+{"input":{"value":4},"expected":536870912}
+{"input":{"value":5},"expected":2684354560}
+{"input":{"value":255},"expected":4278190080}
+{"input":{"value":256},"expected":8388608}
+{"input":{"value":65535},"expected":4294901760}
+{"input":{"value":65536},"expected":32768}
+{"input":{"value":2147483648},"expected":1}
+{"input":{"value":4294967294},"expected":2147483647}
+{"input":{"value":305419896},"expected":510274632}
+{"input":{"value":252645135},"expected":4042322160}
+{"input":{"value":1024},"expected":2097152}
+{"input":{"value":1431655765},"expected":2863311530}
+{"input":{"value":2863311530},"expected":1431655765}
+{"input":{"value":32768},"expected":65536}
+{"input":{"value":1073741824},"expected":2}

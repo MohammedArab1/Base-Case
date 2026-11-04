@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/pacific-atlantic-water-flow",
+  "slug": "pacific-atlantic-water-flow",
+  "title": "Ocean-Draining Cells",
+  "difficulty": "medium",
+  "patterns": ["graph", "depth-first-search", "breadth-first-search", "matrix"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "pacificAtlantic",
+    "params": [
+      {
+        "name": "heights",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(R * C)",
+      "space": "O(R * C)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(R * C)",
+      "space": "O(R * C)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Letting water flow to a strictly higher neighbor",
+    "Starting the search from every cell instead of the ocean borders",
+    "Using only one ocean's reachable set",
+    "Returning cells in discovery order instead of row-major order"
+  ],
+  "followUps": [
+    "How would you return the drainage paths themselves?",
+    "How would you support multiple separate oceans?",
+    "What changes if water may flow diagonally?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

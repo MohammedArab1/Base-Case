@@ -1,0 +1,4 @@
+{"input":{"candidates":[9,2,2,4,6],"target":8},"expected":[[2,2,4],[2,6]]}
+{"input":{"candidates":[6,2,3,3,1],"target":6},"expected":[[1,2,3],[3,3],[6]]}
+{"input":{"candidates":[3,4,5],"target":2},"expected":[]}
+{"input":{"candidates":[1],"target":1},"expected":[[1]]}

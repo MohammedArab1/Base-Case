@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Values are also positions",
+      "body": "Every value is a valid index because it lies between 1 and `n`, and the list has indices 0 through `n`. Treat `nums[i]` as the next position to visit from position `i`."
+    },
+    {
+      "level": 2,
+      "title": "The graph has a cycle",
+      "body": "The mapping `i -> nums[i]` forms a functional graph. Because a value is repeated, two different positions point to the same place, which creates a cycle that can be detected without extra memory."
+    },
+    {
+      "level": 3,
+      "title": "Find the cycle entrance",
+      "body": "Use one slow and one fast pointer to meet inside the cycle. Then reset one pointer to the start and advance both one step at a time; they meet at the entrance, which is the repeated value."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nslow = nums[0]\nfast = nums[0]\nrepeat:\n    slow = nums[slow]\n    fast = nums[nums[fast]]\nuntil slow == fast\nslow = nums[0]\nwhile slow != fast:\n    slow = nums[slow]\n    fast = nums[fast]\nreturn slow\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

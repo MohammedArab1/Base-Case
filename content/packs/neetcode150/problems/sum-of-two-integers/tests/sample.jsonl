@@ -1,0 +1,4 @@
+{"input":{"a":3,"b":5},"expected":8}
+{"input":{"a":-4,"b":7},"expected":3}
+{"input":{"a":-6,"b":-7},"expected":-13}
+{"input":{"a":0,"b":0},"expected":0}

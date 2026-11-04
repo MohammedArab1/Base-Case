@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/merge-triplets-to-form-target-triplet",
+  "slug": "merge-triplets-to-form-target-triplet",
+  "title": "Triplet Assembly",
+  "difficulty": "medium",
+  "patterns": ["greedy", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "canForm",
+    "params": [
+      {
+        "name": "triplets",
+        "type": "int[][]"
+      },
+      {
+        "name": "target",
+        "type": "int[]"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using a card that exceeds the target in one position",
+    "Checking only that every target component appears somewhere on one card",
+    "Stopping after finding a card that already equals the target without considering the rest of the input",
+    "Treating an empty selection as valid"
+  ],
+  "followUps": [
+    "What if fusing added the ratings instead of taking the maximum?",
+    "What if each card could be used at most once but the target had more than three positions?",
+    "How would you return a smallest selection that produces the target?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

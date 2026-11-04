@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Use one queen per row",
+      "body": "Any valid placement must put exactly one queen in each row. Deciding the column for row after row removes row conflicts automatically."
+    },
+    {
+      "level": 2,
+      "title": "Track the attacked lines",
+      "body": "Besides used columns, track both diagonal directions. Two squares share a top-left-to-bottom-right diagonal when `row - col` is equal, and share the other diagonal when `row + col` is equal."
+    },
+    {
+      "level": 3,
+      "title": "Count instead of storing",
+      "body": "You do not need to build the board. When the row index reaches `n`, add one to the answer. A bitmask can track all forbidden columns and diagonals compactly."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncount(row, columns, diag_down, diag_up):\n    if row == n:\n        return 1\n\n    total = 0\n    for col from 0 to n - 1:\n        if col is used or (row - col) is used or (row + col) is used:\n            continue\n        total += count(row + 1,\n                       columns with col,\n                       diag_down with row - col,\n                       diag_up with row + col)\n    return total\n\nreturn count(0, empty, empty, empty)\n```"
+    }
+  ]
+}

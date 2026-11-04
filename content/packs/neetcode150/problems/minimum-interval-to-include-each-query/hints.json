@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Reorder the work",
+      "body": "Sort the queries by coordinate and answer them offline."
+    },
+    {
+      "level": 2,
+      "title": "Add eligible intervals",
+      "body": "As the query coordinate grows, add every interval whose start is at most that coordinate."
+    },
+    {
+      "level": 3,
+      "title": "Remove expired intervals",
+      "body": "Use a heap ordered by interval length and discard intervals whose end is before the query."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort intervals by start\norder = query indices sorted by query value\nheap = empty\nnext = 0\nfor each query index qIndex in order:\n    q = queries[qIndex]\n    while next < length(intervals) and intervals[next].start <= q:\n        push (length, end) onto heap\n        next += 1\n    while heap is not empty and heap.top.end < q:\n        pop heap\n    answer[qIndex] = heap.top.length if heap is not empty else -1\nreturn answers\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

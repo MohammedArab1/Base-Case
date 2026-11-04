@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Two jobs at once",
+      "body": "Lookups must be fast, and recency order must be updated quickly. A plain array or a plain sorted list makes one of those jobs expensive."
+    },
+    {
+      "level": 2,
+      "title": "Combine a map with a linked list",
+      "body": "A hash map finds nodes in constant time. A doubly linked list keeps recency order, with the most recent node at one end and the least recent at the other."
+    },
+    {
+      "level": 3,
+      "title": "Move on access",
+      "body": "On a hit or an update, unlink the node and put it at the most-recent end. On an insert into a full cache, remove the least-recent node before adding the new one."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncache = map from key to node\nrecency = doubly linked list, most recent at front\nfor each operation:\n    if get:\n        if key is absent: record -1\n        else: move node to front; record its value\n    else:\n        if key exists: update value and move node to front\n        else:\n            if size == capacity: remove the node at the back\n            insert a new node at the front\nreturn the recorded get results\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

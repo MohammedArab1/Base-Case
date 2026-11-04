@@ -1,0 +1,4 @@
+{"input":{"s":"aabccbb","k":2},"expected":5}
+{"input":{"s":"abcde","k":0},"expected":1}
+{"input":{"s":"aaaa","k":0},"expected":4}
+{"input":{"s":"xyzxyz","k":3},"expected":5}

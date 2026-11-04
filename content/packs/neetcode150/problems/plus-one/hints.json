@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Start at the end",
+      "body": "The least significant digit is the rightmost one."
+    },
+    {
+      "level": 2,
+      "title": "Carry stops early",
+      "body": "If a digit is less than `9`, increase it and the increment is finished."
+    },
+    {
+      "level": 3,
+      "title": "All nines",
+      "body": "Turn every trailing `9` into `0`. If every digit was `9`, prepend a new `1`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = copy of digits\nfor i from length(result) - 1 down to 0:\n    if result[i] < 9:\n        result[i] += 1\n        return result\n    result[i] = 0\nreturn [1] followed by result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

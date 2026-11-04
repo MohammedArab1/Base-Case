@@ -199,9 +199,16 @@ app
     const content = new ContentRepository()
     const database = new AppDatabase(userDataPath)
     const contentIndex = new ContentIndexRepository(database)
+    const settingsRepository = new SettingsRepository(database)
+    const settings = new SettingsStore(settingsRepository)
 
     try {
-      await rebuildContentIndex(content, contentIndex, userDataPath)
+      await rebuildContentIndex(
+        content,
+        contentIndex,
+        userDataPath,
+        settings.get().enabledBundledPacks,
+      )
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       logger.error('content.load.failed', { message })
@@ -211,8 +218,6 @@ app
       return
     }
 
-    const settingsRepository = new SettingsRepository(database)
-    const settings = new SettingsStore(settingsRepository)
     const attempts = new AttemptsRepository(database)
     const drafts = new DraftsRepository(database)
     const design = new DesignRepository(database)
@@ -229,7 +234,7 @@ app
       content,
       new AiFeedbackRepository(database),
     )
-    const packs = new PackManager(userDataPath, content, contentIndex)
+    const packs = new PackManager(userDataPath, content, contentIndex, settings)
 
     await packs.cleanupStaleImports()
 

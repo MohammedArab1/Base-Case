@@ -1,0 +1,16 @@
+{"input":{"cost":[1,100]},"expected":1}
+{"input":{"cost":[100,1]},"expected":1}
+{"input":{"cost":[1,2,3]},"expected":2}
+{"input":{"cost":[3,2,1,4]},"expected":3}
+{"input":{"cost":[4,4,4,4,4]},"expected":8}
+{"input":{"cost":[0,1,0,1,0]},"expected":0}
+{"input":{"cost":[10,2,10,2,10]},"expected":4}
+{"input":{"cost":[2,3,4,5,6,7]},"expected":12}
+{"input":{"cost":[9,1,9,1,9,1]},"expected":3}
+{"input":{"cost":[100,1,1,100]},"expected":2}
+{"input":{"cost":[0,5,5,0]},"expected":5}
+{"input":{"cost":[1,1,1,1,1,1,1,1]},"expected":4}
+{"input":{"cost":[6,9,3,8,1,7,4]},"expected":14}
+{"input":{"cost":[2,0,2,0,2]},"expected":0}
+{"input":{"cost":[3,1,2,4,1,5]},"expected":4}
+{"input":{"cost":[5,5,1,1,5,5]},"expected":11}

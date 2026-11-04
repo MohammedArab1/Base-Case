@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { app } from 'electron'
 import { validatePack } from '@base-case/schema'
 import type {
+  ContentCollection,
   DesignScenario,
   HintFile,
   Lesson,
@@ -125,6 +126,10 @@ async function packDirectories(root: string): Promise<string[]> {
   } catch {
     return []
   }
+}
+
+function collectionId(packId: string, collection: ContentCollection): string {
+  return collection.groupId ?? `${packId}/${collection.id}`
 }
 
 function parseJsonLines<T>(contents: string, path: string): T[] {
@@ -287,12 +292,17 @@ export class ContentRepository {
   private readonly designs = new Map<string, LoadedDesign>()
   private readonly lessons = new Map<string, LoadedLesson>()
   private readonly packs = new Map<string, LoadedPack>()
+  private readonly disabledBundledPacks = new Map<string, LoadedPack>()
 
-  async initialize(userDataPath?: string): Promise<void> {
+  async initialize(
+    userDataPath?: string,
+    enabledBundledPacks: readonly string[] = [],
+  ): Promise<void> {
     this.problems.clear()
     this.designs.clear()
     this.lessons.clear()
     this.packs.clear()
+    this.disabledBundledPacks.clear()
 
     const bundledRoot = join(contentRoot(), 'packs')
     const bundledPacks = await packDirectories(bundledRoot)
@@ -302,6 +312,17 @@ export class ContentRepository {
     }
 
     for (const directory of bundledPacks) {
+      const manifest = await readJson<PackManifest>(join(directory, 'pack.json'))
+
+      if (manifest.optional === true && !enabledBundledPacks.includes(manifest.id)) {
+        this.disabledBundledPacks.set(manifest.id, {
+          manifest,
+          source: 'bundled',
+          directory,
+        })
+        continue
+      }
+
       await this.loadPack(directory, 'bundled', true)
     }
 
@@ -317,12 +338,23 @@ export class ContentRepository {
   }
 
   listCollections(): ContentCollectionSummary[] {
-    const collections: ContentCollectionSummary[] = []
+    const collections = new Map<string, ContentCollectionSummary>()
 
     for (const pack of this.packs.values()) {
       for (const collection of pack.manifest.collections ?? []) {
-        collections.push({
-          id: `${pack.manifest.id}/${collection.id}`,
+        const id = collectionId(pack.manifest.id, collection)
+        const existing = collections.get(id)
+
+        if (existing) {
+          collections.set(id, {
+            ...existing,
+            problemCount: existing.problemCount + collection.problems.length,
+          })
+          continue
+        }
+
+        collections.set(id, {
+          id,
           name: collection.name,
           description: collection.description,
           attribution: collection.attribution,
@@ -332,7 +364,7 @@ export class ContentRepository {
       }
     }
 
-    return collections.sort((left, right) => left.name.localeCompare(right.name))
+    return [...collections.values()].sort((left, right) => left.name.localeCompare(right.name))
   }
 
   listDesigns(): DesignScenarioSummary[] {
@@ -428,22 +460,14 @@ export class ContentRepository {
   }
 
   listPacks(): ContentPackSummary[] {
-    return [...this.packs.values()].map((pack) => ({
-      id: pack.manifest.id,
-      name: pack.manifest.name,
-      version: pack.manifest.version,
-      license: pack.manifest.license,
-      attribution: pack.manifest.attribution,
-      source: pack.source,
-      problemCount: pack.manifest.problems.length,
-      designCount: pack.manifest.designs.length,
-      lessonCount: (pack.manifest.lessons ?? []).length,
-      path: pack.directory,
-    }))
+    return [
+      ...[...this.packs.values()].map((pack) => this.packSummary(pack, true)),
+      ...[...this.disabledBundledPacks.values()].map((pack) => this.packSummary(pack, false)),
+    ].sort((left, right) => left.name.localeCompare(right.name))
   }
 
   bundledPackIds(): string[] {
-    return [...this.packs.values()]
+    return [...this.packs.values(), ...this.disabledBundledPacks.values()]
       .filter((pack) => pack.source === 'bundled')
       .map((pack) => pack.manifest.id)
   }
@@ -656,8 +680,25 @@ export class ContentRepository {
       source,
       collections: (pack.collections ?? [])
         .filter((collection) => collection.problems.includes(slug))
-        .map((collection) => `${pack.id}/${collection.id}`),
+        .map((collection) => collectionId(pack.id, collection)),
     })
+  }
+
+  private packSummary(pack: LoadedPack, enabled: boolean): ContentPackSummary {
+    return {
+      id: pack.manifest.id,
+      name: pack.manifest.name,
+      version: pack.manifest.version,
+      license: pack.manifest.license,
+      attribution: pack.manifest.attribution,
+      source: pack.source,
+      optional: pack.manifest.optional === true,
+      enabled,
+      problemCount: pack.manifest.problems.length,
+      designCount: pack.manifest.designs.length,
+      lessonCount: (pack.manifest.lessons ?? []).length,
+      path: pack.directory,
+    }
   }
 
   private summary(problem: LoadedProblem): ProblemSummary {

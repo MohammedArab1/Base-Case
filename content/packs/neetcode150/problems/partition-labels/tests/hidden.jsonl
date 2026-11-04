@@ -1,0 +1,16 @@
+{"input":{"text":"abcabc"},"expected":[6]}
+{"input":{"text":"aabbcc"},"expected":[2,2,2]}
+{"input":{"text":"abacbd"},"expected":[5,1]}
+{"input":{"text":"xyzzyx"},"expected":[6]}
+{"input":{"text":"aaabbb"},"expected":[3,3]}
+{"input":{"text":"abccba"},"expected":[6]}
+{"input":{"text":"qwerty"},"expected":[1,1,1,1,1,1]}
+{"input":{"text":"xyxxyzz"},"expected":[5,2]}
+{"input":{"text":"abcdabcd"},"expected":[8]}
+{"input":{"text":"abcde"},"expected":[1,1,1,1,1]}
+{"input":{"text":"aabb"},"expected":[2,2]}
+{"input":{"text":"abba"},"expected":[4]}
+{"input":{"text":"zzzz"},"expected":[4]}
+{"input":{"text":"abacadae"},"expected":[7,1]}
+{"input":{"text":"mnopnmo"},"expected":[7]}
+{"input":{"text":"aabacbebebe"},"expected":[11]}

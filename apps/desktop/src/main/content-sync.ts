@@ -9,7 +9,8 @@ export async function rebuildContentIndex(
   content: ContentRepository,
   contentIndex: ContentIndexRepository,
   userDataPath: string,
+  enabledBundledPacks: readonly string[] = [],
 ): Promise<void> {
-  await content.initialize(userDataPath)
+  await content.initialize(userDataPath, enabledBundledPacks)
   contentIndex.replace(content.searchDocuments())
 }

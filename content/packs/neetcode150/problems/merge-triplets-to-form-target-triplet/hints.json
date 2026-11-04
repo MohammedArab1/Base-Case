@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Discard impossible cards",
+      "body": "A card with any rating above the corresponding target can never be used."
+    },
+    {
+      "level": 2,
+      "title": "Only maxima matter",
+      "body": "Among the usable cards, the fused result is the componentwise maximum of the selected cards."
+    },
+    {
+      "level": 3,
+      "title": "Track three maxima",
+      "body": "Keep the best value achieved in each of the three positions."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbest = [0, 0, 0]\nfor each card in triplets:\n    if card[0] <= target[0] and card[1] <= target[1] and card[2] <= target[2]:\n        for j from 0 to 2:\n            best[j] = max(best[j], card[j])\nreturn best == target\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

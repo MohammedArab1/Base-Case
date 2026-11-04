@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/reverse-nodes-in-k-group",
+  "slug": "reverse-nodes-in-k-group",
+  "title": "Flip Chain Segments",
+  "difficulty": "hard",
+  "patterns": ["linked-list", "recursion", "in-place"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "reverseKGroup",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "ListNode",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Reversing an incomplete final block",
+    "Losing the start of the next block during reversal",
+    "Not reconnecting the previous block to the new head",
+    "Treating the first block differently instead of using a dummy",
+    "Changing node values rather than links"
+  ],
+  "followUps": [
+    "How would you reverse every other block?",
+    "How would you solve it recursively, and what space would the stack use?",
+    "How would you reverse the chain in groups of variable sizes?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

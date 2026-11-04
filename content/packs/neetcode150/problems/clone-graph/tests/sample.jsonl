@@ -1,0 +1,4 @@
+{"input":{"adjacency":[[2],[1]]},"expected":[[2],[1]]}
+{"input":{"adjacency":[[]]},"expected":[[]]}
+{"input":{"adjacency":[]},"expected":[]}
+{"input":{"adjacency":[[2,3],[1],[1]]},"expected":[[2,3],[1],[1]]}

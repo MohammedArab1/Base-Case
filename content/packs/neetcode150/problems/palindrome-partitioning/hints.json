@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Choose a palindromic prefix",
+      "body": "Every split begins with some prefix of the remaining text. That prefix is allowed only when it reads the same forward and backward."
+    },
+    {
+      "level": 2,
+      "title": "Recurse on the rest",
+      "body": "After choosing a palindromic prefix, solve the same problem for the remaining suffix. When no characters remain, the current list of pieces is one complete split."
+    },
+    {
+      "level": 3,
+      "title": "Backtrack and sort",
+      "body": "Push the chosen piece, recurse, then pop it. The pieces stay in original order automatically. Sort the completed list of splits at the end to get the required lexicographic order."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = []\npath = []\n\nexplore(start):\n    if start == s.length:\n        result.push(copy of path)\n        return\n    for end from start to s.length - 1:\n        piece = s[start .. end]\n        if piece is a palindrome:\n            path.push(piece)\n            explore(end + 1)\n            path.pop()\n\nexplore(0)\nsort result\nreturn result\n```"
+    }
+  ]
+}

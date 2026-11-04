@@ -58,6 +58,11 @@ export const packIdSchema = z
   .max(100)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
 
+export const packEnabledInputSchema = z.object({
+  packId: packIdSchema,
+  enabled: z.boolean(),
+})
+
 export const noInputSchema = z.undefined()
 
 const failureSchema: z.ZodType<Failure> = z.object({
@@ -288,6 +293,7 @@ export const appSettingsSchema: z.ZodType<AppSettings> = z.object({
   newCardsPerDay: z.number().int().min(0).max(100).default(10),
   reviewReminders: z.boolean(),
   onboardingCompleted: z.boolean().default(false),
+  enabledBundledPacks: z.array(packIdSchema).max(50).default([]),
 }) as z.ZodType<AppSettings>
 
 export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
@@ -319,4 +325,5 @@ export const settingsPatchSchema: z.ZodType<SettingsPatch> = z.object({
   newCardsPerDay: z.number().int().min(0).max(100).optional(),
   reviewReminders: z.boolean().optional(),
   onboardingCompleted: z.boolean().optional(),
+  enabledBundledPacks: z.array(packIdSchema).max(50).optional(),
 }) as z.ZodType<SettingsPatch>

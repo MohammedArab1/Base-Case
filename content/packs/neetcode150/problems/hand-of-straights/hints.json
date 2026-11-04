@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Start small",
+      "body": "The smallest remaining card value has to be the first card of some run."
+    },
+    {
+      "level": 2,
+      "title": "Count copies",
+      "body": "Count how many copies of each value remain in the deck."
+    },
+    {
+      "level": 3,
+      "title": "Consume runs together",
+      "body": "If the smallest remaining value appears `k` times, each of the next `groupSize - 1` values must appear at least `k` times."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif length(hand) is not divisible by groupSize: return false\ncounts = frequency table of hand\nfor value in sorted keys:\n    amount = counts[value]\n    if amount == 0: continue\n    for offset from 0 to groupSize - 1:\n        if counts[value + offset] < amount: return false\n        counts[value + offset] -= amount\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

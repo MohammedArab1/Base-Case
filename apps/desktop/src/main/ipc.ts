@@ -25,6 +25,7 @@ import {
   gradeReviewSchema,
   lessonIdSchema,
   noInputSchema,
+  packEnabledInputSchema,
   packIdSchema,
   packImportKindSchema,
   packTokenSchema,
@@ -601,6 +602,9 @@ export function registerIpc({
   register(channels.packsPreview, packImportKindSchema, (kind) => packs.preview(kind))
   register(channels.packsInstall, packTokenSchema, (token) => packs.install(token))
   register(channels.packsUninstall, packIdSchema, (packId) => packs.uninstall(packId))
+  register(channels.packsSetEnabled, packEnabledInputSchema, (input) =>
+    packs.setEnabled(input.packId, input.enabled),
+  )
 
   register(channels.dataExport, noInputSchema, async () => {
     const selection = await dialog.showSaveDialog({

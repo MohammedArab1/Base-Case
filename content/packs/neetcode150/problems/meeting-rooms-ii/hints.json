@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Busiest moment",
+      "body": "The number of rooms is the maximum number of bookings active at any moment."
+    },
+    {
+      "level": 2,
+      "title": "Separate timelines",
+      "body": "Sort all start times and all end times independently."
+    },
+    {
+      "level": 3,
+      "title": "Sweep",
+      "body": "Walk through the starts in order. Before opening a room, release an ending time that is at or before the current start."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif intervals is empty: return 0\nstarts = sorted starts\nends = sorted ends\nrooms = 0\nendIndex = 0\nfor start in starts:\n    if endIndex < length(ends) and ends[endIndex] <= start:\n        endIndex += 1\n    else:\n        rooms += 1\nreturn rooms\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

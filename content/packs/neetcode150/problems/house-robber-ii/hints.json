@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Break the ring",
+      "body": "A circular choice is awkward because the first and last rooms constrain each other. Consider the two cases: the first room is skipped, or the last room is skipped. Every valid selection belongs to at least one of those cases."
+    },
+    {
+      "level": 2,
+      "title": "Solve a straight row",
+      "body": "For a line of rooms, scan left to right and keep the best total when the current room is taken and when it is skipped."
+    },
+    {
+      "level": 3,
+      "title": "Two-value recurrence",
+      "body": "When processing room `i`, taking it means adding `values[i]` to the best total that skipped room `i - 1`. Skipping it means keeping the better of the previous taken and skipped totals."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif length(values) == 1: return values[0]\nreturn max(bestLine(values without last),\n           bestLine(values without first))\n\nbestLine(rooms):\n    take = 0\n    skip = 0\n    for value in rooms:\n        take, skip = skip + value, max(skip, take)\n    return max(take, skip)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/walls-and-gates",
+  "slug": "walls-and-gates",
+  "title": "Distance to Nearest Gate",
+  "difficulty": "medium",
+  "patterns": ["graph", "breadth-first-search", "matrix"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "wallsAndGates",
+    "params": [
+      {
+        "name": "rooms",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(R * C)",
+      "space": "O(R * C)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(R * C)",
+      "space": "O(R * C)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Running a separate search from each gate",
+    "Using depth-first search and returning non-shortest distances",
+    "Entering walls",
+    "Replacing gates with distances",
+    "Using a different sentinel value for unreachable rooms"
+  ],
+  "followUps": [
+    "How would you handle gates that appear over time?",
+    "How would you return one nearest gate for every room?",
+    "What changes if diagonal movement is allowed?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

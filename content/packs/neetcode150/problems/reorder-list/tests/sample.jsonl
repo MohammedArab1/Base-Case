@@ -1,0 +1,4 @@
+{"input":{"head":[1,2,3,4]},"expected":[1,4,2,3]}
+{"input":{"head":[10,20,30,40,50]},"expected":[10,50,20,40,30]}
+{"input":{"head":[]},"expected":[]}
+{"input":{"head":[7]},"expected":[7]}

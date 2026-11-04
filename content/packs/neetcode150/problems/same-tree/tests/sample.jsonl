@@ -1,0 +1,4 @@
+{"input":{"p":[2,7,9],"q":[2,7,9]},"expected":true}
+{"input":{"p":[2,7],"q":[2,null,7]},"expected":false}
+{"input":{"p":[],"q":[]},"expected":true}
+{"input":{"p":[2,7,7],"q":[2,7]},"expected":false}

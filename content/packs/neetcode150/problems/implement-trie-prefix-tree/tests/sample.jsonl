@@ -1,0 +1,4 @@
+{"input":{"operations":["insert","search","startsWith","search"],"words":["harbor","harbor","har","harbors"]},"expected":[true,true,true,false]}
+{"input":{"operations":["insert","insert","search","startsWith"],"words":["cascade","cas","cascade","cask"]},"expected":[true,true,true,false]}
+{"input":{"operations":["insert","startsWith","search","insert"],"words":["bat","ba","bat","bat"]},"expected":[true,true,true,true]}
+{"input":{"operations":["startsWith","search","insert","search"],"words":["z","z","zebra","zebra"]},"expected":[false,false,true,true]}

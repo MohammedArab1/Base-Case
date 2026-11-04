@@ -1,0 +1,16 @@
+{"input":{"digits":"0"},"expected":0}
+{"input":{"digits":"1"},"expected":1}
+{"input":{"digits":"10"},"expected":1}
+{"input":{"digits":"27"},"expected":1}
+{"input":{"digits":"30"},"expected":0}
+{"input":{"digits":"111"},"expected":3}
+{"input":{"digits":"112"},"expected":3}
+{"input":{"digits":"100"},"expected":0}
+{"input":{"digits":"1203"},"expected":1}
+{"input":{"digits":"1111"},"expected":5}
+{"input":{"digits":"2612"},"expected":4}
+{"input":{"digits":"2121"},"expected":5}
+{"input":{"digits":"12345"},"expected":3}
+{"input":{"digits":"999"},"expected":1}
+{"input":{"digits":"1001"},"expected":0}
+{"input":{"digits":"2101"},"expected":1}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Count the units that must stay unique",
+      "body": "Every filled cell belongs to exactly three units: one row, one column, and one 3x3 box. A grid is valid when no unit contains the same digit twice."
+    },
+    {
+      "level": 2,
+      "title": "Keep 27 sets",
+      "body": "Maintain nine sets for rows, nine for columns, and nine for boxes. For each non-empty cell, check membership in all three relevant sets before adding the digit."
+    },
+    {
+      "level": 3,
+      "title": "Map a cell to its box",
+      "body": "The box index is `(row // 3) * 3 + (column // 3)`. This numbers boxes left to right, top to bottom. Do not skip empty cells by treating `'.'` as a digit."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nrows = 9 empty sets\ncols = 9 empty sets\nboxes = 9 empty sets\nfor row from 0 to 8:\n    for col from 0 to 8:\n        value = board[row][col]\n        if value == '.': continue\n        box = (row // 3) * 3 + (col // 3)\n        if value in rows[row] or value in cols[col] or value in boxes[box]:\n            return false\n        add value to rows[row], cols[col], and boxes[box]\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

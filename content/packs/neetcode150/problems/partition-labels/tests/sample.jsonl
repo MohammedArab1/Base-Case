@@ -1,0 +1,4 @@
+{"input":{"text":"abacdcbe"},"expected":[7,1]}
+{"input":{"text":"ababcc"},"expected":[4,2]}
+{"input":{"text":"a"},"expected":[1]}
+{"input":{"text":"abcd"},"expected":[1,1,1,1]}

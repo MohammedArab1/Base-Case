@@ -1,0 +1,4 @@
+{"input": {"words": ["ba", "bc", "ac"]}, "expected": "bac"}
+{"input": {"words": ["abc", "abd", "acd"]}, "expected": "abcd"}
+{"input": {"words": ["zebra", "zebra"]}, "expected": "aberz"}
+{"input": {"words": ["mango", "man"]}, "expected": ""}

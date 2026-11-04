@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Track both extremes",
+      "body": "A negative number can turn the smallest product into the largest one. Remember the minimum product of a stretch ending at the current position as well as the maximum."
+    },
+    {
+      "level": 2,
+      "title": "Stretches ending here",
+      "body": "Any optimal stretch ending at index `i` either starts at `i` or extends a stretch that ended at `i - 1`."
+    },
+    {
+      "level": 3,
+      "title": "Three candidates",
+      "body": "The product ending at `i` is one of `values[i]`, the previous maximum times `values[i]`, or the previous minimum times `values[i]`. Compute both the new maximum and the new minimum from those candidates before overwriting either one."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nhighest = values[0]\nlowest = values[0]\nbest = values[0]\nfor value in values[1:]:\n    candidates = [value, highest * value, lowest * value]\n    highest = max(candidates)\n    lowest = min(candidates)\n    best = max(best, highest)\nreturn best\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

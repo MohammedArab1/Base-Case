@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Compare nodes in parallel",
+      "body": "At each step, the two trees should be at corresponding positions. Compare the current pair before moving to their children."
+    },
+    {
+      "level": 2,
+      "title": "Cover the base cases",
+      "body": "If both nodes are absent, this part matches. If exactly one is absent, the shapes differ. If both exist but their values differ, the trees differ."
+    },
+    {
+      "level": 3,
+      "title": "Recurse on both sides",
+      "body": "The current pair matches only when the left subtrees match and the right subtrees match."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfunction same(a, b):\n    if a is null and b is null: return true\n    if a is null or b is null: return false\n    if a.value != b.value: return false\n    return same(a.left, b.left) and same(a.right, b.right)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{"input":{"s":"a","k":0},"expected":1}
+{"input":{"s":"a","k":1},"expected":1}
+{"input":{"s":"ab","k":1},"expected":2}
+{"input":{"s":"ab","k":0},"expected":1}
+{"input":{"s":"aab","k":0},"expected":2}
+{"input":{"s":"aab","k":1},"expected":3}
+{"input":{"s":"abab","k":0},"expected":1}
+{"input":{"s":"abab","k":1},"expected":3}
+{"input":{"s":"abcabc","k":2},"expected":4}
+{"input":{"s":"zzzzabzz","k":1},"expected":5}
+{"input":{"s":"aaabbb","k":2},"expected":5}
+{"input":{"s":"aaabbb","k":0},"expected":3}
+{"input":{"s":"abc","k":3},"expected":3}
+{"input":{"s":"aabbcc","k":2},"expected":4}
+{"input":{"s":"abacada","k":1},"expected":3}
+{"input":{"s":"xyzxyzxyz","k":4},"expected":7}

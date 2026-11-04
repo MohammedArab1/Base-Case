@@ -133,6 +133,7 @@ export function SettingsView(): JSX.Element {
   const [installing, setInstalling] = useState(false)
   const [removeTarget, setRemoveTarget] = useState<ContentPackSummary | null>(null)
   const [removing, setRemoving] = useState(false)
+  const [togglingPack, setTogglingPack] = useState<string | null>(null)
   const [transferring, setTransferring] = useState<'export' | 'import' | null>(null)
   const [transferStatus, setTransferStatus] = useState<string | null>(null)
   const [diagnostics, setDiagnostics] = useState<DiagnosticsReport | null>(null)
@@ -364,6 +365,29 @@ export function SettingsView(): JSX.Element {
 
   const loadPacks = async (): Promise<void> => {
     setPacks(await window.baseCase.packs.list())
+  }
+
+  const togglePack = async (pack: ContentPackSummary): Promise<void> => {
+    setTogglingPack(pack.id)
+
+    try {
+      setPacks(await window.baseCase.packs.setEnabled(pack.id, !pack.enabled))
+      window.dispatchEvent(new Event('base-case:content-changed'))
+      setToast({
+        title: pack.enabled ? `${pack.name} removed` : `${pack.name} added`,
+        description: pack.enabled
+          ? 'Your attempts, notes, and review cards for this pack were kept.'
+          : 'Its problems, designs, and lessons are now available.',
+      })
+    } catch (toggleError: unknown) {
+      setToast({
+        title: 'Could not update the pack',
+        description: toggleError instanceof Error ? toggleError.message : String(toggleError),
+        tone: 'danger',
+      })
+    } finally {
+      setTogglingPack(null)
+    }
   }
 
   const startImport = async (kind: PackImportKind): Promise<void> => {
@@ -755,8 +779,8 @@ export function SettingsView(): JSX.Element {
           <div>
             <h2>Content packs</h2>
             <p className="muted">
-              Problem sets stored locally. Imports are validated before installation, and removing a
-              pack keeps your attempts and drafts.
+              Problem sets stored locally. Optional packs stay off until you add them, and removing
+              a pack keeps your attempts and drafts.
             </p>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -801,6 +825,14 @@ export function SettingsView(): JSX.Element {
                   >
                     {pack.source === 'bundled' ? 'Bundled' : 'Unverified'}
                   </Badge>
+                  {pack.optional ? (
+                    <Badge
+                      tone={pack.enabled ? 'accent' : 'neutral'}
+                      title="Optional packs stay off until you add them"
+                    >
+                      {pack.enabled ? 'Optional · On' : 'Optional · Off'}
+                    </Badge>
+                  ) : null}
                   <span className="text-xs text-bc-muted">v{pack.version}</span>
                 </div>
                 <p className="m-0 mt-1 text-xs text-bc-muted">
@@ -821,6 +853,17 @@ export function SettingsView(): JSX.Element {
                   data-testid={`pack-remove-${pack.id}`}
                 >
                   Remove
+                </Button>
+              ) : pack.optional ? (
+                <Button
+                  size="sm"
+                  variant={pack.enabled ? 'ghost' : 'secondary'}
+                  className="shrink-0"
+                  onClick={() => void togglePack(pack)}
+                  disabled={togglingPack !== null}
+                  data-testid={`pack-toggle-${pack.id}`}
+                >
+                  {togglingPack === pack.id ? 'Updating…' : pack.enabled ? 'Remove' : 'Add'}
                 </Button>
               ) : null}
             </div>

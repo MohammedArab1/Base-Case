@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think partition, not merge",
+      "body": "Merging both arrays costs `O(m + n)`. Instead, split each array into a left part and a right part so that the two left parts together hold exactly the lower half of all values."
+    },
+    {
+      "level": 2,
+      "title": "Balance the halves",
+      "body": "If the total length is `T`, the left side should contain `ceil(T / 2)` values. Choosing the split in the smaller array fixes the split in the larger array."
+    },
+    {
+      "level": 3,
+      "title": "Check four boundaries",
+      "body": "A split is valid when the largest left value on each side is at most the smallest right value on the other side. If it is not, move the split in the correct direction."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif nums1 is longer than nums2: swap them\nm = length(nums1), n = length(nums2)\nhalf = (m + n + 1) / 2\ntry every split i in nums1 from 0 to m:\n    j = half - i\n    left1 = nums1[i - 1] or -infinity\n    right1 = nums1[i] or +infinity\n    left2 = nums2[j - 1] or -infinity\n    right2 = nums2[j] or +infinity\n    if left1 <= right2 and left2 <= right1:\n        if total is odd: return max(left1, left2)\n        else: return (max(left1, left2) + min(right1, right2)) / 2\n    if left1 > right2: move i left\n    else: move i right\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Separate relationships from tweets",
+      "body": "Keep a set of followees for each user. Separately, keep one global list of published tweets in publication order."
+    },
+    {
+      "level": 2,
+      "title": "Newest means scan backward",
+      "body": "A feed is collected by walking the global tweet list from newest to oldest and keeping tweets authored by the user or one of their followees."
+    },
+    {
+      "level": 3,
+      "title": "Stop after ten",
+      "body": "Because the global list is already in publication order, the first ten matching tweets found from the end are exactly the feed. Do not sort by tweet ID, which may not reflect publication order."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfollowees = map from user to set of users\ntimeline = []          # pairs (author, tweetId)\nfeeds = []\n\nfor each command and its arguments:\n    if post:\n        timeline.push((user, tweet))\n    elif follow:\n        if follower != followee: add followee to followees[follower]\n    elif unfollow:\n        remove followee from followees[follower] if present\n    else:  # feed\n        visible = followees[user]\n        result = []\n        for (author, tweet) in timeline from newest to oldest:\n            if author == user or author in visible:\n                result.push(tweet)\n                if result.length == 10: break\n        feeds.push(result)\nreturn feeds\n```"
+    }
+  ]
+}

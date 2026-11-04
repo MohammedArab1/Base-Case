@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/clone-graph",
+  "slug": "clone-graph",
+  "title": "Deep Copy of an Undirected Graph",
+  "difficulty": "medium",
+  "patterns": ["graph", "depth-first-search", "breadth-first-search", "hash-table"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "cloneGraph",
+    "params": [
+      {
+        "name": "adjacency",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(V + E log E)",
+      "space": "O(V + E)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(V + E log E)",
+      "space": "O(V + E)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Reusing original nodes instead of creating copies",
+    "Copying a node more than once through different edges",
+    "Traversing only one connected component",
+    "Dropping isolated nodes",
+    "Leaving neighbor lists unsorted"
+  ],
+  "followUps": [
+    "How would you clone a graph with node objects instead of an adjacency list?",
+    "How would you avoid recursion for a very deep graph?",
+    "How would you verify two graphs are isomorphic rather than identical?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

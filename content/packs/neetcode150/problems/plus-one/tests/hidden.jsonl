@@ -1,0 +1,16 @@
+{"input":{"digits":[9,8]},"expected":[9,9]}
+{"input":{"digits":[1]},"expected":[2]}
+{"input":{"digits":[2,9]},"expected":[3,0]}
+{"input":{"digits":[1,0,0]},"expected":[1,0,1]}
+{"input":{"digits":[9,9,9,9]},"expected":[1,0,0,0,0]}
+{"input":{"digits":[2,3,4]},"expected":[2,3,5]}
+{"input":{"digits":[5,9,9]},"expected":[6,0,0]}
+{"input":{"digits":[8,8,8]},"expected":[8,8,9]}
+{"input":{"digits":[1,9,9,9]},"expected":[2,0,0,0]}
+{"input":{"digits":[7,0,0,9]},"expected":[7,0,1,0]}
+{"input":{"digits":[9,0,0]},"expected":[9,0,1]}
+{"input":{"digits":[1,0,9,9]},"expected":[1,1,0,0]}
+{"input":{"digits":[4,5,6,7]},"expected":[4,5,6,8]}
+{"input":{"digits":[9,8,7]},"expected":[9,8,8]}
+{"input":{"digits":[2,0,9]},"expected":[2,1,0]}
+{"input":{"digits":[9,9,0]},"expected":[9,9,1]}

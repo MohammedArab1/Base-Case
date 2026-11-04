@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pick a target letter for a window",
+      "body": "For a fixed substring, making it uniform means choosing the letter that already occurs most often and replacing every other character. The cost is `window length - maximum letter count`."
+    },
+    {
+      "level": 2,
+      "title": "Slide a window",
+      "body": "Extend the right end one character at a time. If the window's replacement cost exceeds `k`, move the left end forward until the cost is at most `k`. Track the largest valid window seen."
+    },
+    {
+      "level": 3,
+      "title": "Counts, not positions",
+      "body": "Keep an array of 26 counts for the current window. After adding a character, compute the largest count, then shrink while `length - largest > k`. Because the alphabet is fixed, finding the largest count costs only 26 operations."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncounts = 26 zeros\nleft = 0\nbest = 0\nfor right from 0 to length(s) - 1:\n    counts[s[right]] += 1\n    while (right - left + 1) - max(counts) > k:\n        counts[s[left]] -= 1\n        left += 1\n    best = max(best, right - left + 1)\nreturn best\n```\n\nThis is pseudocode, not a complete solution. The `max(counts)` scan is constant work because the alphabet has 26 letters."
+    }
+  ]
+}

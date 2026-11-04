@@ -61,6 +61,7 @@ export const channels = {
   packsPreview: 'packs:preview',
   packsInstall: 'packs:install',
   packsUninstall: 'packs:uninstall',
+  packsSetEnabled: 'packs:set-enabled',
 } as const
 
 export type Channel = (typeof channels)[keyof typeof channels]

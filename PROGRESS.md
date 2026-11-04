@@ -1,8 +1,8 @@
 # Progress Log
 
-> Last updated: 2026-11-01
-> Current phase: Phase 9 — MVP expansion (81 + 8 content, 39-lesson Learn library with full system-design topic coverage, Grind 75 collection filter, importer, polish, platform, AI, performance, security, docs, and demo media complete; release checks passed, tag pending)
-> Overall status: On track — the expanded 81-problem coding pack, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is the release tag and post-tag artifact verification. B1–B12 are closed or accepted by the owner; no blockers remain.
+> Last updated: 2026-11-03
+> Current phase: Phase 9 — MVP expansion (81 + 8 content, optional 88-problem extension, 39-lesson Learn library with full system-design topic coverage, Grind 75 and 150 Essential Problems collection filters, importer, polish, platform, AI, performance, security, docs, and demo media complete; release checks passed, tag pending)
+> Overall status: On track — the expanded 81-problem coding pack, optional 88-problem extension for the 150 Essential Problems collection, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is the release tag and post-tag artifact verification. B1–B12 are closed or accepted by the owner; no blockers remain.
 > Next milestone: tag `v0.1.0-alpha` when the owner is ready; no blockers remain.
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
@@ -53,6 +53,40 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **No open blockers.** B8 reference scenes are closed as not needed.
 
 ## Work log (newest first)
+
+### 2026-11-03 — Optional content packs and the 150 Essential Problems extension
+
+- Status: done
+- Done:
+  - Added `optional` pack manifests. Bundled optional packs are listed in
+    Settings but stay out of the live catalog until enabled.
+  - Persisted enabled bundled pack IDs in settings, reload content after a
+    toggle, and roll back the setting if the catalog cannot reload.
+  - Added cross-pack collection groups (`groupId`) so the 150 Essential
+    Problems filter spans the core pack and the extension.
+  - Added the optional `content/packs/neetcode150` extension with 88 original
+    coding problems. The core pack contributes the 62 overlapping problems, so
+    the merged filter goes from 62 to 150 when the extension is enabled.
+  - Updated pack validation, importer docs, README, changelog, diagnostics, and
+    known limitations for optional packs.
+  - Extended the CDP smoke test to enable and disable the extension and verify
+    the 81/169 problem count and 62/150 collection count.
+- Tests run:
+  - `pnpm format:check`
+  - `pnpm lint`
+  - `pnpm typecheck`
+  - `pnpm test` (139 desktop tests, 13 schema tests, Go judge tests)
+  - `pnpm content:validate` (81 core + 88 extension problems)
+  - `pnpm content:test` (162/162 core and 176/176 extension reference solutions)
+  - `pnpm build`
+  - `pnpm smoke:e2e`
+  - `pnpm smoke:playwright` (13/13)
+  - Manual Electron check of the Settings toggle: 62 -> 150 -> 62.
+- Files:
+  - `apps/desktop/src/main/content.ts`, `pack-manager.ts`, `index.ts`,
+    `content-sync.ts`, `diagnostics.ts`, `packages/schema/src/*`,
+    `content/packs/neetcode150/`, `content/packs/core/pack.json`,
+    `scripts/smoke-electron.mjs`, `apps/desktop/e2e/app.spec.ts`.
 
 ### 2026-11-01 — v0.1.0-alpha release checks passed
 

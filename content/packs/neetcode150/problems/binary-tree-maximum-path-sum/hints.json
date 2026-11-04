@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A route bends at one node",
+      "body": "Every simple path has a highest node. At that node the route can use a downward branch on the left, a downward branch on the right, or both, but it cannot branch again below."
+    },
+    {
+      "level": 2,
+      "title": "Compute downward gains",
+      "body": "For each node, compute the best sum obtainable by starting at that node and descending into at most one child. Negative branches are better ignored."
+    },
+    {
+      "level": 3,
+      "title": "Combine at each node",
+      "body": "The best route whose highest node is the current node is the node's value plus the positive left gain and the positive right gain. Track the maximum over all nodes."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbest = -infinity\nfunction gain(node):\n    if node is null: return 0\n    left = max(gain(node.left), 0)\n    right = max(gain(node.right), 0)\n    best = max(best, node.value + left + right)\n    return node.value + max(left, right)\n\ngain(root)\nreturn best\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

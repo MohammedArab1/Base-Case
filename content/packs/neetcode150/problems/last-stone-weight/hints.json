@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Repeatedly need the maximum",
+      "body": "Each round needs the two largest weights. Re-sorting after every smash works, but a priority queue finds the heaviest stones faster."
+    },
+    {
+      "level": 2,
+      "title": "A max-heap",
+      "body": "Store the stones so the largest is always easy to remove. In many languages the standard heap is a min-heap, so negate the weights or build a max-heap."
+    },
+    {
+      "level": 3,
+      "title": "Push only a real remainder",
+      "body": "Remove the two largest. If their weights differ, push the positive difference back. Stop when zero or one stone remains."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nheap = max-heap of stones\nwhile heap has at least two stones:\n    a = remove maximum\n    b = remove maximum\n    if a != b:\n        push a - b\n\nif heap is empty: return 0\nreturn the only remaining weight\n```"
+    }
+  ]
+}

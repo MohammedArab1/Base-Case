@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/combination-sum-ii",
+  "slug": "combination-sum-ii",
+  "title": "Target Sums from a Multiset",
+  "difficulty": "medium",
+  "patterns": ["backtracking", "recursion", "sorting", "array"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "combinationSum2",
+    "params": [
+      {
+        "name": "candidates",
+        "type": "int[]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n * 2^n)",
+      "space": "O(n) recursion plus output",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n * 2^n)",
+      "space": "O(n) recursion plus output"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Reusing the same candidate position in one combination",
+    "Skipping equal values across all recursion depths",
+    "Not stopping when a sorted candidate exceeds the remaining target",
+    "Producing the same combination from two different equal positions"
+  ],
+  "followUps": [
+    "How would you solve the problem when each value may be used unlimited times?",
+    "How would you count the combinations without storing them?",
+    "What changes if negative candidates are allowed?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

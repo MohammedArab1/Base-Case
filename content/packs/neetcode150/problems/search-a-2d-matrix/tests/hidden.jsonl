@@ -1,0 +1,16 @@
+{"input":{"matrix":[[1]],"target":1},"expected":true}
+{"input":{"matrix":[[1]],"target":2},"expected":false}
+{"input":{"matrix":[[1,2,3]],"target":3},"expected":true}
+{"input":{"matrix":[[1,2,3]],"target":0},"expected":false}
+{"input":{"matrix":[[1],[2],[3]],"target":2},"expected":true}
+{"input":{"matrix":[[1],[2],[3]],"target":4},"expected":false}
+{"input":{"matrix":[[-8,-3,4],[-2,1,9],[5,7,12]],"target":-3},"expected":true}
+{"input":{"matrix":[[-8,-3,4],[-2,1,9],[5,7,12]],"target":6},"expected":false}
+{"input":{"matrix":[[1,1,1],[1,1,1],[1,1,1]],"target":1},"expected":true}
+{"input":{"matrix":[[1,1,1],[1,1,1],[1,1,1]],"target":2},"expected":false}
+{"input":{"matrix":[[1,4,7,11],[2,5,8,12],[3,6,9,16],[10,13,14,17]],"target":5},"expected":true}
+{"input":{"matrix":[[1,4,7,11],[2,5,8,12],[3,6,9,16],[10,13,14,17]],"target":15},"expected":false}
+{"input":{"matrix":[[1,2],[3,4]],"target":4},"expected":true}
+{"input":{"matrix":[[1,2],[3,4]],"target":1},"expected":true}
+{"input":{"matrix":[[-10,-5,0],[-9,-4,1],[-8,-3,2],[-7,-2,3],[-6,-1,4]],"target":3},"expected":true}
+{"input":{"matrix":[[-10,-5,0],[-9,-4,1],[-8,-3,2],[-7,-2,3],[-6,-1,4]],"target":-11},"expected":false}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Carry the maximum",
+      "body": "When you move from a parent to a child, the only information needed from the path above is the largest value seen so far."
+    },
+    {
+      "level": 2,
+      "title": "Decide at the node",
+      "body": "A node is unobstructed exactly when its value is at least the maximum value on the path before it, including its parent."
+    },
+    {
+      "level": 3,
+      "title": "Update the maximum",
+      "body": "Pass the larger of the current maximum and the node's value to both children. Count the node before descending."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncount = 0\nfunction walk(node, maximum):\n    if node is null: return\n    if node.value >= maximum: count = count + 1\n    nextMaximum = max(maximum, node.value)\n    walk(node.left, nextMaximum)\n    walk(node.right, nextMaximum)\nwalk(root, value of root)\nreturn count\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

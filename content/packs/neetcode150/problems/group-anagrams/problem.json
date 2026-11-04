@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/group-anagrams",
+  "slug": "group-anagrams",
+  "title": "Anagram Clusters",
+  "difficulty": "medium",
+  "patterns": ["arrays", "hash-map", "strings", "sorting"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "groupAnagrams",
+    "params": [{ "name": "words", "type": "string[]" }],
+    "returns": "string[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(T + N log N * L)",
+      "space": "O(T)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(T + N log N * L)",
+      "space": "O(T)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using a Set of letters as the key, which loses how many times each letter occurs",
+    "Sorting only the outer list but not the words inside each group",
+    "Dropping duplicate words instead of keeping every input occurrence",
+    "Assuming every word has at least one character"
+  ],
+  "followUps": [
+    "How can a 26-slot letter-count key avoid sorting each word?",
+    "What changes if words may contain uppercase letters or digits?",
+    "How would you process a stream of words that does not fit in memory?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

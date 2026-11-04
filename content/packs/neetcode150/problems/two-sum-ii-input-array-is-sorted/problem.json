@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/two-sum-ii-input-array-is-sorted",
+  "slug": "two-sum-ii-input-array-is-sorted",
+  "title": "Sorted Pair Search",
+  "difficulty": "easy",
+  "patterns": ["arrays", "two-pointers", "binary-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "twoSumSorted",
+    "params": [
+      { "name": "numbers", "type": "int[]" },
+      { "name": "target", "type": "int" }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Returning 1-based indices when 0-based indices are required",
+    "Using the same index twice",
+    "Using a hash map and missing the opportunity provided by sorted input",
+    "Moving both pointers after a failed comparison"
+  ],
+  "followUps": [
+    "How would you solve it in O(n log n) with binary search instead?",
+    "What changes if no valid pair is guaranteed?",
+    "How would you count all pairs that sum to the target?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

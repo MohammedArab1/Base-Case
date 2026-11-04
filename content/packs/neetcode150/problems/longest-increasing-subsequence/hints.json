@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Quadratic first",
+      "body": "For each position, ask for the longest rising chain that ends there. Looking back at every earlier position gives a correct `O(n^2)` solution."
+    },
+    {
+      "level": 2,
+      "title": "Better bookkeeping",
+      "body": "Keep an array `tails` where `tails[k]` is the smallest possible final value of a rising chain with length `k + 1` among the elements processed so far."
+    },
+    {
+      "level": 3,
+      "title": "Smaller endings are better",
+      "body": "A smaller final value leaves more room for future elements. When a new value arrives, replace the first tail that is greater than or equal to it. If no tail is that large, the value extends the longest chain."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntails = empty list\nfor value in values:\n    position = first index where tails[position] >= value\n    if no such index:\n        append value to tails\n    else:\n        tails[position] = value\nreturn length(tails)\n```\n\nUse binary search for the first index. This is pseudocode, not a complete solution."
+    }
+  ]
+}

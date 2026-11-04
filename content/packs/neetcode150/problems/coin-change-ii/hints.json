@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Build combinations by denomination",
+      "body": "Process one denomination at a time. Once a denomination is fixed, only combinations that use it may be extended with it."
+    },
+    {
+      "level": 2,
+      "title": "One-dimensional ways",
+      "body": "Let `ways[x]` be the number of combinations that make total `x` using the denominations processed so far. Initialize `ways[0] = 1` for the empty combination."
+    },
+    {
+      "level": 3,
+      "title": "Outer loop over coins",
+      "body": "For each coin, walk totals upward from the coin value and add `ways[total - coin]`. The upward walk allows unlimited copies of that coin, while processing coins in the outer loop prevents the same multiset from being counted in different orders."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nways = zeros of length amount + 1\nways[0] = 1\nfor coin in coins:\n    for total from coin to amount:\n        ways[total] += ways[total - coin]\nreturn ways[amount]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

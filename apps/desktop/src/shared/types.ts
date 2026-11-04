@@ -43,6 +43,8 @@ export interface AppSettings {
   readonly newCardsPerDay: number
   readonly reviewReminders: boolean
   readonly onboardingCompleted: boolean
+  /** Bundled optional packs the user has turned on. */
+  readonly enabledBundledPacks: readonly string[]
 }
 
 export interface SettingsPatch {
@@ -56,6 +58,7 @@ export interface SettingsPatch {
   readonly newCardsPerDay?: number
   readonly reviewReminders?: boolean
   readonly onboardingCompleted?: boolean
+  readonly enabledBundledPacks?: readonly string[]
 }
 
 export const defaultAppSettings: AppSettings = {
@@ -73,6 +76,7 @@ export const defaultAppSettings: AppSettings = {
   newCardsPerDay: 10,
   reviewReminders: true,
   onboardingCompleted: false,
+  enabledBundledPacks: [],
 }
 
 export type SectionId = 'today' | 'learn' | 'coding' | 'design' | 'review' | 'progress' | 'settings'
@@ -105,6 +109,8 @@ export interface ContentPackSummary {
   readonly license: string
   readonly attribution: string
   readonly source: 'bundled' | 'user'
+  readonly optional: boolean
+  readonly enabled: boolean
   readonly problemCount: number
   readonly designCount: number
   readonly lessonCount: number
@@ -985,6 +991,7 @@ export interface BaseCaseApi {
     preview(kind: PackImportKind): Promise<PackPreviewResult | null>
     install(token: string): Promise<ContentPackSummary>
     uninstall(packId: string): Promise<void>
+    setEnabled(packId: string, enabled: boolean): Promise<ContentPackSummary[]>
   }
   readonly design: {
     listScenarios(): Promise<DesignScenarioSummary[]>

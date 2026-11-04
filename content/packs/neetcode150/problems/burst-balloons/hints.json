@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Choose the last balloon",
+      "body": "Instead of deciding which balloon bursts first, decide which balloon in an interval bursts last. At that moment its neighbors are the interval boundaries."
+    },
+    {
+      "level": 2,
+      "title": "Pad the row",
+      "body": "Add a 1 at each end. These sentinels never burst but provide the outside values for the first and last balloons."
+    },
+    {
+      "level": 3,
+      "title": "Interval DP",
+      "body": "Let `dp[left][right]` be the best bounty from bursting all balloons strictly between two boundary indices. Try every balloon `last` in that gap as the final one: `dp[left][last] + values[left] * values[last] * values[right] + dp[last][right]`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nvalues = [1] + nums + [1]\ndp = zeros of size (n + 2) x (n + 2)\nfor length from 2 to n + 1:\n    for left from 0 to n + 1 - length:\n        right = left + length\n        for last from left + 1 to right - 1:\n            dp[left][right] = max(\n                dp[left][right],\n                dp[left][last] + values[left] * values[last] * values[right] + dp[last][right])\nreturn dp[0][n + 1]\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

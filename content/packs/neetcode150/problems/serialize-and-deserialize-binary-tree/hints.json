@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Use preorder plus markers",
+      "body": "A preorder list of values is not enough to recover the shape. Missing children need explicit markers so the decoder knows when a subtree ends."
+    },
+    {
+      "level": 2,
+      "title": "Write every child slot",
+      "body": "Every present node writes its value, then recursively writes its left subtree and its right subtree. A null child writes a single marker."
+    },
+    {
+      "level": 3,
+      "title": "Join without a trailing comma",
+      "body": "Collect tokens in a list and join them with commas. An empty tree produces exactly one marker."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntokens = empty list\nfunction visit(node):\n    if node is null:\n        append \"#\" to tokens\n        return\n    append node.value to tokens\n    visit(node.left)\n    visit(node.right)\nvisit(root)\nreturn join(tokens, \",\")\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

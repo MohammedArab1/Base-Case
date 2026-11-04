@@ -1,0 +1,16 @@
+{"input":{"board":[["a","b"],["c","d"]],"words":["ab","bd","cd","ac","abd","cab","bad"]},"expected":["ab","abd","ac","bd","cab","cd"]}
+{"input":{"board":[["a","b"],["c","d"]],"words":["ad","bc","bd"]},"expected":["bd"]}
+{"input":{"board":[["a","b"],["a","b"]],"words":["ab","aba","abab","bab","ba"]},"expected":["ab","ba"]}
+{"input":{"board":[["a","b"],["c","d"]],"words":["zz","xyz"]},"expected":[]}
+{"input":{"board":[["a","a"]],"words":["aa","aaa","a"]},"expected":["a","aa"]}
+{"input":{"board":[["t","e"],["s","t"]],"words":["tet","st","es","set"]},"expected":["st","tet"]}
+{"input":{"board":[["c","a"],["t","s"]],"words":["cat","cast","sat","as","tac"]},"expected":["as","cast"]}
+{"input":{"board":[["w","o","r"],["d","l","d"],["o","r","d"]],"words":["word","world","lord","row","dor"]},"expected":["dor","lord","row","word"]}
+{"input":{"board":[["a","b","c"],["d","e","f"],["g","h","i"]],"words":["aei","ceg","abc","beh","adg","cfi"]},"expected":["abc","adg","beh","cfi"]}
+{"input":{"board":[["a","a","a"],["a","a","a"]],"words":["aaa","aaaa","aaaaa","aaaaaa","aaaaaaa"]},"expected":["aaa","aaaa","aaaaa","aaaaaa"]}
+{"input":{"board":[["b","a","b"],["a","b","a"],["b","a","b"]],"words":["bab","aba","abab","baba","ababa","zzz"]},"expected":["aba","abab","ababa","bab","baba"]}
+{"input":{"board":[["q"]],"words":[]},"expected":[]}
+{"input":{"board":[["a","b","c","d"]],"words":["abcd","dcba","abc","bcd","ad"]},"expected":["abc","abcd","bcd","dcba"]}
+{"input":{"board":[["a","b"],["c","d"],["e","f"]],"words":["ab","bd","bf","ce","ec","abf","cdef"]},"expected":["ab","bd","ce","ec"]}
+{"input":{"board":[["x","y","z"],["x","y","z"],["x","y","z"]],"words":["xyz","zyx","xy","yz","xx","zz"]},"expected":["xx","xy","xyz","yz","zyx","zz"]}
+{"input":{"board":[["a"]],"words":["a","b"]},"expected":["a"]}

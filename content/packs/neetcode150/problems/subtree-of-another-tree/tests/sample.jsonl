@@ -1,0 +1,4 @@
+{"input":{"root":[6,2,8,1,4,null,9],"subRoot":[2,1,4]},"expected":true}
+{"input":{"root":[6,2,8,1,4,null,9,null,null,3],"subRoot":[2,1,4]},"expected":false}
+{"input":{"root":[1],"subRoot":[1]},"expected":true}
+{"input":{"root":[],"subRoot":[]},"expected":true}

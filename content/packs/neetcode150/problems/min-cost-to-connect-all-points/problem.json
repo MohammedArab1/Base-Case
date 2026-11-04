@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/min-cost-to-connect-all-points",
+  "slug": "min-cost-to-connect-all-points",
+  "title": "Road Network Budget",
+  "difficulty": "medium",
+  "patterns": ["graph", "minimum-spanning-tree", "prim", "geometry"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "minCostConnectPoints",
+    "params": [
+      {
+        "name": "points",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n^2)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n^2)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using Euclidean distance instead of Manhattan distance",
+    "Adding the infinity initialization value for the first settlement",
+    "Updating the best distance of an already connected settlement",
+    "Treating duplicate coordinates as requiring a positive-cost road"
+  ],
+  "followUps": [
+    "How would Kruskal's algorithm perform on this dense graph?",
+    "What changes if roads have a fixed construction fee plus a per-unit cost?",
+    "Can you maintain the answer under online insertion of settlements?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

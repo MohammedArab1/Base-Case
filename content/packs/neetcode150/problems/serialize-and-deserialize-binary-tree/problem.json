@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/serialize-and-deserialize-binary-tree",
+  "slug": "serialize-and-deserialize-binary-tree",
+  "title": "Tree Wire Format",
+  "difficulty": "hard",
+  "patterns": ["trees", "depth-first-search", "serialization"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "serializeTree",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "string",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Dropping null markers and losing the tree shape",
+    "Writing a trailing comma",
+    "Encoding an empty tree as an empty string",
+    "Writing only the value of a single-child node without its missing sibling marker",
+    "Using an ambiguous separator or token set"
+  ],
+  "followUps": [
+    "Write the matching decoder and test round trips.",
+    "How would you design a more compact encoding for sparse trees?",
+    "How would you serialize a tree with arbitrary arity?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

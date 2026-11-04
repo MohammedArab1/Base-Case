@@ -1,0 +1,16 @@
+{"input":{"first":"a","second":"a"},"expected":1}
+{"input":{"first":"a","second":"b"},"expected":0}
+{"input":{"first":"ab","second":"ba"},"expected":1}
+{"input":{"first":"abc","second":"abc"},"expected":3}
+{"input":{"first":"abcdef","second":"ace"},"expected":3}
+{"input":{"first":"stone","second":"notes"},"expected":2}
+{"input":{"first":"planet","second":"plant"},"expected":5}
+{"input":{"first":"market","second":"matter"},"expected":3}
+{"input":{"first":"aaaa","second":"aa"},"expected":2}
+{"input":{"first":"xyz","second":"xyzxyz"},"expected":3}
+{"input":{"first":"abcdefg","second":"aceg"},"expected":4}
+{"input":{"first":"brick","second":"brake"},"expected":3}
+{"input":{"first":"weekday","second":"weekend"},"expected":5}
+{"input":{"first":"pilot","second":"lotus"},"expected":3}
+{"input":{"first":"cabaret","second":"caravan"},"expected":3}
+{"input":{"first":"abcabcabc","second":"bcabcab"},"expected":7}

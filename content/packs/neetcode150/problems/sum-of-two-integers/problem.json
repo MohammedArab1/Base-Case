@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/sum-of-two-integers",
+  "slug": "sum-of-two-integers",
+  "title": "Bitwise Addition",
+  "difficulty": "medium",
+  "patterns": ["bit-manipulation", "math"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "addWithoutPlus",
+    "params": [
+      {
+        "name": "a",
+        "type": "int"
+      },
+      {
+        "name": "b",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Forgetting to shift the carry into the next bit position",
+    "Using OR where XOR is needed for the sum bits",
+    "Returning an unsigned 32-bit value for a negative sum in Python",
+    "Stopping before all carries have propagated"
+  ],
+  "followUps": [
+    "How would you implement subtraction using bitwise operations?",
+    "How would you add two numbers represented as 64-bit words?",
+    "How would you detect signed overflow during the addition?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -56,6 +56,7 @@ prerequisite slugs are checked against the same pack.
   "collections": [
     {
       "id": "interview-core",
+      "groupId": "interview-core",
       "name": "Interview Core",
       "description": "A focused subset of this pack.",
       "problems": ["echo"],
@@ -75,6 +76,13 @@ prerequisite slugs are checked against the same pack.
   `name`, a `description`, and a `problems` list. Collection members must also
   appear in the top-level `problems` list. Collections are exposed in the app as
   filters and do not duplicate content.
+- `groupId` is optional. Collections in different packs that share a `groupId`
+  are merged into one app-level filter. Use it for a study list that spans a
+  core pack and an optional extension pack. Each pack still lists only its own
+  problem slugs.
+- `optional` is optional and only applies to packs bundled with the app. A
+  bundled pack marked `"optional": true` is listed in Settings but stays off
+  until the user enables it. Imported packs are always enabled when installed.
 - `attribution` and `url` are optional collection fields. Use them when the
   collection follows a public study list; link out rather than copying its
   problem text.

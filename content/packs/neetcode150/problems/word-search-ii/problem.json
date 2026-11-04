@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/word-search-ii",
+  "slug": "word-search-ii",
+  "title": "Board Word Harvest",
+  "difficulty": "hard",
+  "patterns": ["trie", "backtracking", "matrix", "depth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "findWords",
+    "params": [
+      {
+        "name": "board",
+        "type": "string[][]"
+      },
+      {
+        "name": "words",
+        "type": "string[]"
+      }
+    ],
+    "returns": "string[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(R * C * 4^L)",
+      "space": "O(W + L)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(R * C * 4^L)",
+      "space": "O(W + L)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Permitting diagonal steps",
+    "Reusing a cell inside one trace",
+    "Returning a word more than once when it has several traces",
+    "Stopping at a terminal trie node before checking longer candidates",
+    "Failing to restore a board cell after backtracking"
+  ],
+  "followUps": [
+    "How would you prune trie branches after all their words have been found?",
+    "What changes if moves may wrap around the board edges?",
+    "How would you handle a board too large to copy?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -173,7 +173,7 @@ test('onboards, persists the theme, searches, and reopens without onboarding', a
     // The collection filter narrows the library to the Grind 75 subset.
     await expect(
       firstPage.getByRole('button', { name: /Pair Sum/ }).locator('.tag-collection'),
-    ).toHaveText('Grind 75')
+    ).toHaveText(['Grind 75', '150 Essential Problems'])
     await firstPage.getByLabel('Collection filter').selectOption('core/grind75')
     await expect(firstPage.getByText(/A 75-problem core subset/)).toBeVisible()
     await expect(firstPage.getByRole('button', { name: /Pair Sum/ })).toBeVisible()
@@ -279,6 +279,59 @@ test('runs the local diagnostics self-test from Settings', async () => {
       'All required checks passed.',
     )
     await capture(page, 'diagnostics')
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
+test('adds and removes the optional extension pack from Settings', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-optional-pack-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+
+    const openSettings = async (): Promise<void> => {
+      await page
+        .getByRole('navigation', { name: 'Primary' })
+        .getByRole('button', { name: 'Settings' })
+        .click()
+      await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
+    }
+
+    const openCoding = async (): Promise<void> => {
+      await page
+        .getByRole('navigation', { name: 'Primary' })
+        .getByRole('button', { name: 'Coding' })
+        .click()
+      await expect(page.getByRole('heading', { name: 'Problem library' })).toBeVisible()
+    }
+
+    const collectionOption = page
+      .getByLabel('Collection filter')
+      .locator('option[value="neetcode150"]')
+
+    await openSettings()
+    await expect(page.getByTestId('pack-toggle-neetcode150')).toHaveText('Add')
+    await openCoding()
+    await expect(collectionOption).toHaveText('150 Essential Problems (62)')
+
+    await openSettings()
+    await page.getByTestId('pack-toggle-neetcode150').click()
+    await expect(page.getByTestId('pack-toggle-neetcode150')).toHaveText('Remove')
+
+    await openCoding()
+    await expect(collectionOption).toHaveText('150 Essential Problems (150)')
+    await page.getByLabel('Collection filter').selectOption('neetcode150')
+    await expect(page.getByRole('button', { name: /Anagram Clusters/ })).toBeVisible()
+
+    await openSettings()
+    await page.getByTestId('pack-toggle-neetcode150').click()
+    await expect(page.getByTestId('pack-toggle-neetcode150')).toHaveText('Add')
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

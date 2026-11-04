@@ -1,0 +1,4 @@
+{"input": {"matrix": [[9, 8, 7], [4, 5, 6], [3, 2, 1]]}, "expected": 9}
+{"input": {"matrix": [[4]]}, "expected": 1}
+{"input": {"matrix": [[1, 2], [3, 4]]}, "expected": 3}
+{"input": {"matrix": [[5, 4], [3, 6]]}, "expected": 2}

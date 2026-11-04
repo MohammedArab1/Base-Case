@@ -1,0 +1,4 @@
+{"input":{"root":[8,3,10,1,6,null,14]},"expected":"8,3,1,#,#,6,#,#,10,#,14,#,#"}
+{"input":{"root":[]},"expected":"#"}
+{"input":{"root":[5]},"expected":"5,#,#"}
+{"input":{"root":[1,2,3,4]},"expected":"1,2,4,#,#,#,3,#,#"}

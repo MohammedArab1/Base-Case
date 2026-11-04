@@ -1,0 +1,16 @@
+{"input": {"s": "", "t": ""}, "expected": 1}
+{"input": {"s": "a", "t": ""}, "expected": 1}
+{"input": {"s": "", "t": "a"}, "expected": 0}
+{"input": {"s": "a", "t": "a"}, "expected": 1}
+{"input": {"s": "aa", "t": "a"}, "expected": 2}
+{"input": {"s": "aaa", "t": "aa"}, "expected": 3}
+{"input": {"s": "abab", "t": "ab"}, "expected": 3}
+{"input": {"s": "mississippi", "t": "issi"}, "expected": 15}
+{"input": {"s": "abcd", "t": "bd"}, "expected": 1}
+{"input": {"s": "zzzz", "t": "z"}, "expected": 4}
+{"input": {"s": "abcabc", "t": "abc"}, "expected": 4}
+{"input": {"s": "xyz", "t": "xyz"}, "expected": 1}
+{"input": {"s": "aaaaa", "t": "aaa"}, "expected": 10}
+{"input": {"s": "abcdefgh", "t": "aeh"}, "expected": 1}
+{"input": {"s": "aabbcc", "t": "abc"}, "expected": 8}
+{"input": {"s": "ababababababababababababababababababababababababab", "t": "abababababababababab"}, "expected": 3247943160}

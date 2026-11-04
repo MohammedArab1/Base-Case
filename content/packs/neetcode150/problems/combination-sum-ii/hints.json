@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Include or leave out",
+      "body": "For each position, decide whether to include it. Including a value reduces the remaining target, and the next decision must start at a later index because positions cannot be reused."
+    },
+    {
+      "level": 2,
+      "title": "Sort to spot repeated branches",
+      "body": "Sorting groups equal values. At one decision level, picking a value equal to the previous value recreates a combination already produced by the earlier branch."
+    },
+    {
+      "level": 3,
+      "title": "Finish and prune",
+      "body": "Record the path when the remaining target reaches zero. Since all values are positive and sorted, stop the loop as soon as the current value is larger than the remaining target."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort candidates\nresult = []\npath = []\n\nexplore(start, remaining):\n    if remaining == 0:\n        result.push(copy of path)\n        return\n\n    for i from start to candidates.length - 1:\n        if i > start and candidates[i] == candidates[i - 1]:\n            continue\n        if candidates[i] > remaining:\n            break\n        path.push(candidates[i])\n        explore(i + 1, remaining - candidates[i])\n        path.pop()\n\nexplore(0, target)\nreturn result\n```"
+    }
+  ]
+}

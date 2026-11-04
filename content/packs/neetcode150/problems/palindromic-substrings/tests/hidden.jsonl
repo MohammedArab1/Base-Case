@@ -1,0 +1,16 @@
+{"input":{"text":"ab"},"expected":2}
+{"input":{"text":"aa"},"expected":3}
+{"input":{"text":"aba"},"expected":4}
+{"input":{"text":"aaaa"},"expected":10}
+{"input":{"text":"abcd"},"expected":4}
+{"input":{"text":"civic"},"expected":7}
+{"input":{"text":"racecar"},"expected":10}
+{"input":{"text":"aabbaa"},"expected":11}
+{"input":{"text":"mississippi"},"expected":20}
+{"input":{"text":"xyxzyx"},"expected":7}
+{"input":{"text":"tenet"},"expected":7}
+{"input":{"text":"kayak"},"expected":7}
+{"input":{"text":"abcdef"},"expected":6}
+{"input":{"text":"abaaba"},"expected":11}
+{"input":{"text":"zzzzzz"},"expected":21}
+{"input":{"text":"abacabadabacaba"},"expected":32}

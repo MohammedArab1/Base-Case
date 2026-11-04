@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/number-of-1-bits",
+  "slug": "number-of-1-bits",
+  "title": "Set Bit Tally",
+  "difficulty": "easy",
+  "patterns": ["bit-manipulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "setBitCount",
+    "params": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting zero bits instead of one bits",
+    "Shifting without updating the value inside the loop",
+    "Forgetting that `0` has no set bits",
+    "Using a signed right shift where an unsigned pattern is intended"
+  ],
+  "followUps": [
+    "How would you count set bits in a 64-bit word?",
+    "How would you count bits in every integer from `0` through `n`?",
+    "How would you swap the parity of two numbers using bit operations?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

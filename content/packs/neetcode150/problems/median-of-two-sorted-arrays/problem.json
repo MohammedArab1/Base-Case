@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/median-of-two-sorted-arrays",
+  "slug": "median-of-two-sorted-arrays",
+  "title": "Middle Value of Two Sorted Ranges",
+  "difficulty": "hard",
+  "patterns": ["binary-search", "divide-and-conquer", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "findMedianSortedArrays",
+    "params": [
+      {
+        "name": "nums1",
+        "type": "int[]"
+      },
+      {
+        "name": "nums2",
+        "type": "int[]"
+      }
+    ],
+    "returns": "double",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "float",
+    "absoluteTolerance": 1e-6,
+    "relativeTolerance": 1e-6
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(log(min(m, n)))",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(log(min(m, n)))",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Merging both arrays when a logarithmic partition is requested",
+    "Searching over the longer array",
+    "Using the wrong size for the lower half",
+    "Ignoring the empty-array boundary values",
+    "Returning an integer instead of a floating-point median for an even total"
+  ],
+  "followUps": [
+    "How would you generalize the partition idea to three sorted arrays?",
+    "How would you find the k-th smallest value across two sorted arrays?",
+    "What changes if the inputs are streams rather than arrays?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

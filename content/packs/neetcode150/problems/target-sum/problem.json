@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/target-sum",
+  "slug": "target-sum",
+  "title": "Plus-Minus Ledger",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "countSignedAssignments",
+    "params": [
+      {
+        "name": "values",
+        "type": "int[]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n * total)",
+      "space": "O(total)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n * total)",
+      "space": "O(total)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Skipping the check that `total + target` is even",
+    "Returning zero for a negative target without trying the transformation",
+    "Iterating subtotals upward and reusing an entry",
+    "Ignoring zeros, which double the number of assignments"
+  ],
+  "followUps": [
+    "How would you count assignments when each entry may also be left unused?",
+    "How would you return one assignment that reaches the target?",
+    "What changes if the entries can be very large but there are only a few of them?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/house-robber-ii",
+  "slug": "house-robber-ii",
+  "title": "Circular Vault Run",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "maxCircularLoot",
+    "params": [
+      {
+        "name": "values",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Letting a selection contain both the first and last room",
+    "Returning zero for a ring that contains exactly one room",
+    "Using the wrong half-open endpoint when removing the first or last room",
+    "Forgetting that skipping a room keeps the better of the two previous states"
+  ],
+  "followUps": [
+    "How would you return the chosen rooms as well as the total?",
+    "What changes if the ring has `k` rooms that are mutually adjacent?",
+    "How would the solution handle negative room values when opening a room is optional?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

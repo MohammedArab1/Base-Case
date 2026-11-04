@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/design-add-and-search-words-data-structure",
+  "slug": "design-add-and-search-words-data-structure",
+  "title": "Dictionary with Wildcard Lookup",
+  "difficulty": "medium",
+  "patterns": ["trie", "depth-first-search", "design"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "dictionaryOperations",
+    "params": [
+      {
+        "name": "operations",
+        "type": "string[]"
+      },
+      {
+        "name": "words",
+        "type": "string[]"
+      }
+    ],
+    "returns": "boolean[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(L) add, O(26^k * L) wildcard search",
+      "space": "O(C) for the trie",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(L) add, O(26^k * L) wildcard search",
+      "space": "O(C) for the trie"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Letting a wildcard match more than one character",
+    "Returning true when the pattern ends at a nonterminal node",
+    "Forgetting to try every child at a wildcard position",
+    "Matching a pattern against a word of a different length"
+  ],
+  "followUps": [
+    "How would you support a wildcard that matches zero or more characters?",
+    "How could you memoize searches that repeatedly use the same pattern?",
+    "How would you remove a word and clean up unused trie nodes?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

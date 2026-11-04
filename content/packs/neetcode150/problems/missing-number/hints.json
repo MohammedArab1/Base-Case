@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Expected total",
+      "body": "The complete range `0..n` contains a known number of values."
+    },
+    {
+      "level": 2,
+      "title": "Pair cancellation",
+      "body": "XOR every index with every label; values that appear in both places cancel."
+    },
+    {
+      "level": 3,
+      "title": "Include n",
+      "body": "Start the XOR with `n` so that every integer from `0` through `n` is represented exactly once on the index side."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = length(labels)\nfor i from 0 to length(labels) - 1:\n    result = result XOR i\n    result = result XOR labels[i]\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

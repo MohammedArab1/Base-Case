@@ -1,0 +1,16 @@
+{"input":{"operations":["insert","insert","search","search"],"words":["car","cart","car","cart"]},"expected":[true,true,true,true]}
+{"input":{"operations":["insert","search","startsWith","search"],"words":["cart","car","car","carts"]},"expected":[true,false,true,false]}
+{"input":{"operations":["insert","insert","search","search"],"words":["a","ab","a","abc"]},"expected":[true,true,true,false]}
+{"input":{"operations":["insert","startsWith","startsWith","startsWith"],"words":["hello","hell","hello","hellos"]},"expected":[true,true,true,false]}
+{"input":{"operations":["insert","insert","search","startsWith"],"words":["top","tops","top","to"]},"expected":[true,true,true,true]}
+{"input":{"operations":["insert","search","startsWith","search"],"words":["x","x","x","y"]},"expected":[true,true,true,false]}
+{"input":{"operations":["insert","insert","search","search"],"words":["seed","see","see","seed"]},"expected":[true,true,true,true]}
+{"input":{"operations":["insert","insert","search","search"],"words":["see","seed","se","seed"]},"expected":[true,true,false,true]}
+{"input":{"operations":["insert","startsWith","startsWith","search"],"words":["banana","ban","band","banan"]},"expected":[true,true,false,false]}
+{"input":{"operations":["insert","insert","insert","search","startsWith"],"words":["a","b","ab","ab","a"]},"expected":[true,true,true,true,true]}
+{"input":{"operations":["insert","search","startsWith","insert","search"],"words":["prefix","prefi","prefi","prefi","prefi"]},"expected":[true,false,true,true,true]}
+{"input":{"operations":["insert","insert","startsWith","startsWith","search"],"words":["code","coder","cod","coders","coder"]},"expected":[true,true,true,false,true]}
+{"input":{"operations":["insert","search","insert","search","startsWith"],"words":["z","z","zebra","zebra","ze"]},"expected":[true,true,true,true,true]}
+{"input":{"operations":["insert","startsWith","search","insert","search"],"words":["aaa","aaaa","aaaa","aaaa","aaaa"]},"expected":[true,false,false,true,true]}
+{"input":{"operations":["insert","insert","startsWith","search","search"],"words":["inter","internet","inter","intern","internet"]},"expected":[true,true,true,false,true]}
+{"input":{"operations":["insert","insert","search","startsWith","search"],"words":["mango","man","man","mang","mangoes"]},"expected":[true,true,true,true,false]}

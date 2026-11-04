@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/interleaving-string",
+  "slug": "interleaving-string",
+  "title": "Woven Threads",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "strings", "two-pointers"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "isWoven",
+    "params": [
+      {
+        "name": "first",
+        "type": "string"
+      },
+      {
+        "name": "second",
+        "type": "string"
+      },
+      {
+        "name": "woven",
+        "type": "string"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Accepting a candidate with the wrong total length",
+    "Choosing greedily when both threads offer the same next character",
+    "Forgetting the base row for a candidate made only from the second thread",
+    "Off-by-one errors between prefix lengths and string indices"
+  ],
+  "followUps": [
+    "How would you count the number of distinct interleavings that produce the candidate?",
+    "How would you generalize the check to three threads?",
+    "How would you use this table to build a shortest common supersequence?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/distinct-subsequences",
+  "slug": "distinct-subsequences",
+  "title": "Hidden Word Count",
+  "difficulty": "hard",
+  "patterns": ["dynamic-programming", "strings"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "numDistinct",
+    "params": [
+      {
+        "name": "s",
+        "type": "string"
+      },
+      {
+        "name": "t",
+        "type": "string"
+      }
+    ],
+    "returns": "long",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(|s| * |t|)",
+      "space": "O(|t|)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(|s| * |t|)",
+      "space": "O(|t|)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting distinct strings rather than distinct deletion choices",
+    "Setting the empty-target count to zero",
+    "Taking the diagonal from the current row instead of the previous row",
+    "Forgetting that every source character may be deleted"
+  ],
+  "followUps": [
+    "How would you count distinct resulting subsequence strings?",
+    "What changes if the alphabet is very large?",
+    "How would you reconstruct one valid set of deleted positions?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

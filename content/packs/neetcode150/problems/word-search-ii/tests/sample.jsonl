@@ -1,0 +1,4 @@
+{"input":{"board":[["c","a","t"],["o","a","t"],["d","o","g"]],"words":["cat","dog","coat","goat","act"]},"expected":["cat","coat","dog","goat"]}
+{"input":{"board":[["a","b","c"]],"words":["abc","ab","bc","abcd","cba"]},"expected":["ab","abc","bc","cba"]}
+{"input":{"board":[["a"]],"words":["a","aa","b"]},"expected":["a"]}
+{"input":{"board":[["x","x"],["x","x"]],"words":["xx","xxx","xxxx","x"]},"expected":["x","xx","xxx","xxxx"]}

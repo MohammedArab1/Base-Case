@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which car can block which?",
+      "body": "A car can only be slowed by a car ahead of it. Sorting the cars by starting position lets you reason about them from the destination backward."
+    },
+    {
+      "level": 2,
+      "title": "Use arrival times",
+      "body": "Ignoring other cars, a car at `position[i]` with speed `speed[i]` reaches the destination in `(target - position[i]) / speed[i]` hours. This is the value that determines whether it catches the car ahead."
+    },
+    {
+      "level": 3,
+      "title": "Compare with the fleet directly ahead",
+      "body": "Process cars from closest to the destination to farthest. Keep the arrival time of the last fleet formed. If the current car's arrival time is greater, it is slower and starts a new fleet; otherwise it catches the fleet ahead and joins it. Equal times join."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncars = pairs (position, speed), sorted by position descending\nfleets = 0\nslowest_arrival = -infinity\nfor (start, rate) in cars:\n    arrival = (target - start) / rate\n    if arrival > slowest_arrival:\n        fleets += 1\n        slowest_arrival = arrival\nreturn fleets\n```\n\nThis is pseudocode, not a complete solution. Be careful with the strict comparison: equal arrival times belong to the same fleet."
+    }
+  ]
+}

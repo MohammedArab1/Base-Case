@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/multiply-strings",
+  "slug": "multiply-strings",
+  "title": "Long Multiplication",
+  "difficulty": "medium",
+  "patterns": ["math", "strings", "simulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "multiplyDecimal",
+    "params": [
+      {
+        "name": "num1",
+        "type": "string"
+      },
+      {
+        "name": "num2",
+        "type": "string"
+      }
+    ],
+    "returns": "string",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n)",
+      "space": "O(m + n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n)",
+      "space": "O(m + n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Writing the carry to the current position instead of the next position left",
+    "Ignoring the value already stored at a position",
+    "Returning an empty string or multiple zeros when the product is zero",
+    "Using floating-point conversion for long inputs"
+  ],
+  "followUps": [
+    "How would you multiply signed decimal strings?",
+    "How would you divide a large decimal string by a small integer?",
+    "How could you reduce the work using a faster multiplication algorithm?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

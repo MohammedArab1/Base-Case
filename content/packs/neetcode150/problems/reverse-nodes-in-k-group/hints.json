@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Reverse one block at a time",
+      "body": "The overall list is a sequence of independent blocks. Solve the reversal for one full block, then reconnect it to the already processed prefix."
+    },
+    {
+      "level": 2,
+      "title": "Check before reversing",
+      "body": "A block should only be reversed if it contains exactly `k` nodes. Walk `k` steps first; if you fall off the chain, the remaining nodes stay as they are."
+    },
+    {
+      "level": 3,
+      "title": "Reconnect the boundaries",
+      "body": "Keep a pointer to the node before the current block. After reversing, that node must point to the block's new head, and the block's old head becomes the new predecessor for the next block."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndummy = new node pointing to head\npreviousBlockEnd = dummy\nloop:\n    probe = previousBlockEnd\n    repeat k times:\n        probe = probe.next\n        if probe is null: return dummy.next\n    nextBlockStart = probe.next\n    reverse the block from previousBlockEnd.next through probe\n    oldBlockStart = previousBlockEnd.next\n    previousBlockEnd.next = probe\n    previousBlockEnd = oldBlockStart\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/min-cost-climbing-stairs",
+  "slug": "min-cost-climbing-stairs",
+  "title": "The Toll Staircase",
+  "difficulty": "easy",
+  "patterns": ["dynamic-programming", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "minAscentCost",
+    "params": [
+      {
+        "name": "cost",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Paying for the starting step even though arrival is free",
+    "Finishing on the last step instead of beyond it",
+    "Choosing each jump greedily rather than comparing both final moves",
+    "Overwriting the two rolling values before both transitions use them"
+  ],
+  "followUps": [
+    "How would you reconstruct a cheapest sequence of steps?",
+    "How does the recurrence change if a jump may skip up to `k` steps?",
+    "How would you handle tolls that depend on both the source and destination steps?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

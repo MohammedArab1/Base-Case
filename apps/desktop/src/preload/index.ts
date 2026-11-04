@@ -154,6 +154,8 @@ const api: BaseCaseApi = {
       invoke<PackPreviewResult | null>(channels.packsPreview, kind),
     install: (token: string) => invoke<ContentPackSummary>(channels.packsInstall, token),
     uninstall: (packId: string) => invoke<void>(channels.packsUninstall, packId),
+    setEnabled: (packId: string, enabled: boolean) =>
+      invoke<ContentPackSummary[]>(channels.packsSetEnabled, { packId, enabled }),
   },
   design: {
     listScenarios: () => invoke<DesignScenarioSummary[]>(channels.designListScenarios),

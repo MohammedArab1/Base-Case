@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Compare adjacent words",
+      "body": "Only adjacent pairs matter. Find the first character where two neighboring words differ; that pair gives one alphabet constraint."
+    },
+    {
+      "level": 2,
+      "title": "Reject bad prefixes",
+      "body": "If no differing character is found and the first word is longer than the second, the list is impossible. Otherwise the shorter prefix case is fine."
+    },
+    {
+      "level": 3,
+      "title": "Order the letters",
+      "body": "The constraints form a directed graph on letters. A valid alphabet is a topological order. If the graph has a cycle, return an empty string."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncollect every distinct letter\ngraph = empty, indegree = 0 for each letter\nfor each adjacent pair (a, b):\n    find first differing position i\n    if no differing position:\n        if length(a) > length(b): return \"\"\n    else add edge a[i] -> b[i]\nuse a min-heap of letters with indegree 0\nrepeatedly take the smallest letter, append it, and lower its neighbors' indegrees\nif the result does not contain every letter: return \"\"\nreturn result\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

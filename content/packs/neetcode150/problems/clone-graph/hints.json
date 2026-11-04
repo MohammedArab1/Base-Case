@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Copy nodes before copying edges",
+      "body": "An edge cannot point to a copied node that does not exist yet. Create a copy of every node first, or create copies lazily while traversing."
+    },
+    {
+      "level": 2,
+      "title": "Map original to copy",
+      "body": "Use a dictionary or map from an original node's label to its copy. The map prevents creating two copies for the same original node when it is reached along different edges."
+    },
+    {
+      "level": 3,
+      "title": "Traverse every component",
+      "body": "A depth-first traversal from one node only covers its connected component. Start a traversal from every node, or iterate over all nodes after building the map, so disconnected components are copied too."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncreate an original node for each index, with the given neighbors\ncopies = empty map from label to copied node\n\nclone(node):\n    if node.label in copies: return copies[node.label]\n    copy = new node with node.label\n    copies[node.label] = copy\n    for neighbor in node.neighbors:\n        copy.neighbors.push(clone(neighbor))\n    return copy\n\nfor every original node:\n    clone(node)\n\nresult = []\nfor label from 1 to n:\n    result.push(sorted labels of copies[label].neighbors)\nreturn result\n```"
+    }
+  ]
+}

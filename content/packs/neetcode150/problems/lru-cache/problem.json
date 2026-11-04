@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/lru-cache",
+  "slug": "lru-cache",
+  "title": "Bounded Recency Cache",
+  "difficulty": "medium",
+  "patterns": ["design", "hash-map", "linked-list"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "lruCache",
+    "params": [
+      {
+        "name": "capacity",
+        "type": "int"
+      },
+      {
+        "name": "operations",
+        "type": "string[]"
+      },
+      {
+        "name": "keys",
+        "type": "int[]"
+      },
+      {
+        "name": "values",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1) average per operation",
+      "space": "O(capacity)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1) average per operation",
+      "space": "O(capacity)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Forgetting to refresh recency on a successful read",
+    "Removing the most recently used entry during eviction",
+    "Evicting an entry when merely updating an existing key",
+    "Leaving the evicted key in the lookup table",
+    "Recording a value for a `put` operation when only `get` results are requested"
+  ],
+  "followUps": [
+    "How would you add expiration times to entries?",
+    "How would you implement a least-frequently-used cache instead?",
+    "How would you make the cache safe for concurrent readers and writers?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

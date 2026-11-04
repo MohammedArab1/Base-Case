@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/longest-increasing-path-in-a-matrix",
+  "slug": "longest-increasing-path-in-a-matrix",
+  "title": "Uphill Path Length",
+  "difficulty": "hard",
+  "patterns": ["dynamic-programming", "graph", "depth-first-search", "memoization"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "longestIncreasingPath",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n log(m * n))",
+      "space": "O(m * n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n log(m * n))",
+      "space": "O(m * n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Treating equal elevations as increasing",
+    "Forgetting that paths may start at any cell",
+    "Using only down and right moves",
+    "Assuming the grid is square when it is rectangular"
+  ],
+  "followUps": [
+    "How would diagonal moves change the graph?",
+    "How would you return one longest path?",
+    "What changes if the path must alternate between increasing and decreasing?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -190,11 +190,16 @@ function contentCheck(content: DiagnosticsDependencies['content']): DiagnosticCh
       }
     }
 
+    const enabledPacks = packs.filter((pack) => pack.enabled !== false)
+    const disabledPacks = packs.length - enabledPacks.length
+
     return {
       id: 'content',
       label: 'Content',
       status: 'pass',
-      detail: `${problems.length} coding problems, ${designs.length} design scenarios, and ${lessons.length} lessons across ${packs.length} pack(s).`,
+      detail: `${problems.length} coding problems, ${designs.length} design scenarios, and ${lessons.length} lessons across ${enabledPacks.length} enabled pack(s)${
+        disabledPacks > 0 ? `; ${disabledPacks} optional pack(s) off` : ''
+      }.`,
     }
   } catch (error) {
     return {

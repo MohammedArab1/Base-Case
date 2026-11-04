@@ -3,7 +3,8 @@
 > Base Case is a local-first learning and practice app for coding interviews and system design. It is not affiliated with LeetCode or any other judge.
 
 **Status:** `v0.1.0-alpha` release preparation. The app has 81 original coding problems
-(including a 75-problem Grind 75 collection), 8 system design scenarios, 39
+(including a 75-problem Grind 75 collection) plus an optional 88-problem extension
+for the 150 Essential Problems study list, 8 system design scenarios, 39
 offline lessons covering DSA and system-design fundamentals, a real
 Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
 persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
@@ -119,6 +120,11 @@ runtimes. See ADR-0010.
   Grind 75 study list. The list is maintained by Tech Interview Handbook; this
   app is not affiliated with or endorsed by it. Every statement, example, hint,
   and test is original to Base Case.
+- A **150 Essential Problems** collection that spans the core pack and an
+  optional extension pack. The core covers 62 overlapping problems; enabling
+  the extension adds the remaining 88 for a complete 150-problem filter. The
+  list follows the public NeetCode 150 study list; this app is not affiliated
+  with or endorsed by NeetCode.
 - Eight system design scenarios (URL Shortener, Rate Limiter, Chat System, News
   Feed, Seat Reservation, Search Autocomplete, File Sync, Payment Ledger) with
   prompts, requirements, scale targets, seven-dimension rubrics, reference
@@ -135,7 +141,8 @@ runtimes. See ADR-0010.
 - Structured failure panel, FSRS review queue, mistake tags, Today and Progress
   dashboards (including a 14-day activity chart), and JSON data export/import.
 - Content pack import (ZIP or folder) with schema validation, preview, an
-  Unverified badge, and removal that preserves attempts.
+  Unverified badge, and removal that preserves attempts. Bundled optional packs
+  can be added or removed from Settings without reimporting them.
 - Excalidraw canvas with local scene persistence and PNG export.
 - SQLite (WAL) migrations, attempts, drafts, design scenes, notes, lesson
   progress, settings, AI feedback, and verified startup backups.
@@ -163,6 +170,7 @@ services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate and test commands for content packs
 content/packs/core/    Bundled core pack (81 coding + 8 designs + 39 lessons; 75-problem Grind 75 collection)
+content/packs/neetcode150/  Optional 88-problem extension for the 150 Essential Problems collection
 docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates
 scripts/               Judge build, runtime fetch, CDP smoke, packaged measurement

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Too many multiplications",
+      "body": "A loop that multiplies once per exponent step is too slow for large exponents."
+    },
+    {
+      "level": 2,
+      "title": "Square the base",
+      "body": "Cut the exponent in half and square the base so each step handles two powers at once."
+    },
+    {
+      "level": 3,
+      "title": "Negative powers",
+      "body": "Invert the base and negate the exponent before applying the fast method."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\npower = exponent\nif power < 0:\n    base = 1 / base\n    power = -power\nresult = 1\nwhile power > 0:\n    if power is odd:\n        result = result * base\n    base = base * base\n    power = power // 2\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

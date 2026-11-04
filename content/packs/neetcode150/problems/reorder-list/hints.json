@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Split the work into stages",
+      "body": "The final order takes nodes from the front and from the back alternately. If the back half were reversed, the problem would become a simple interleaving of two lists."
+    },
+    {
+      "level": 2,
+      "title": "Find the midpoint",
+      "body": "Use one slow pointer and one fast pointer. When the fast pointer reaches the end, the slow pointer is at the end of the first half."
+    },
+    {
+      "level": 3,
+      "title": "Reverse and interleave",
+      "body": "Cut the chain after the midpoint, reverse the second half, then merge the two halves one node at a time."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif the list has fewer than two nodes: return head\nfind the last node of the first half with slow and fast pointers\nsecond = slow.next\nslow.next = null\nreverse second\nfirst = head\nwhile second is not empty:\n    firstNext = first.next\n    secondNext = second.next\n    first.next = second\n    second.next = firstNext\n    first = firstNext\n    second = secondNext\nreturn head\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

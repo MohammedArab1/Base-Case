@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Equal values make equal branches",
+      "body": "If two equal values are available at the same choice point, picking either one leads to the same subset values. Make that choice only once."
+    },
+    {
+      "level": 2,
+      "title": "Sorting exposes duplicates",
+      "body": "After sorting, equal values are adjacent. A branch that starts with a value equal to the previous value can be skipped at that level."
+    },
+    {
+      "level": 3,
+      "title": "Every path is a subset",
+      "body": "Record the current path at the beginning of every recursive call. Then try each later index as the next value. Skip an index when it repeats the previous value at the same level."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsort nums\nresult = []\npath = []\n\nexplore(start):\n    result.push(copy of path)\n    for i from start to nums.length - 1:\n        if i > start and nums[i] == nums[i - 1]:\n            continue\n        path.push(nums[i])\n        explore(i + 1)\n        path.pop()\n\nexplore(0)\nreturn result\n```"
+    }
+  ]
+}

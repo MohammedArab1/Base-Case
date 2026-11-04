@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Two pieces",
+      "body": "Separate each addition into sum bits and carry bits."
+    },
+    {
+      "level": 2,
+      "title": "XOR and AND",
+      "body": "XOR gives the sum without carries; AND shifted left gives the carry positions."
+    },
+    {
+      "level": 3,
+      "title": "Repeat",
+      "body": "Add the carries back using the same two operations until there are no carries left."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nwhile b != 0:\n    carry = (a AND b) shifted left by 1\n    a = a XOR b\n    b = carry\nreturn a\n```\n\nFor languages whose bitwise operations are signed 32-bit, mask intermediate values to 32 bits and convert the final pattern back to a signed value.\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

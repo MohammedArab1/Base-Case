@@ -1,0 +1,4 @@
+{"input":{"operations":["push","push","push","getMin","pop","top","getMin"],"arguments":[[5],[2],[7],[],[],[],[]]},"expected":[2,-1,2,2]}
+{"input":{"operations":["push","push","getMin","pop","getMin","top"],"arguments":[[-3],[-3],[],[],[],[]]},"expected":[-3,-1,-3,-3]}
+{"input":{"operations":["push","top","getMin","pop","push","getMin"],"arguments":[[0],[],[],[],[9],[]]},"expected":[0,0,-1,9]}
+{"input":{"operations":["push","push","pop","top"],"arguments":[[4],[1],[],[]]},"expected":[-1,4]}

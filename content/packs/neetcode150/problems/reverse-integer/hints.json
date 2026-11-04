@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Separate the sign",
+      "body": "Work with the absolute value, then restore the sign at the end."
+    },
+    {
+      "level": 2,
+      "title": "Build one digit at a time",
+      "body": "Take the last digit with modulo ten and append it to the reversed number."
+    },
+    {
+      "level": 3,
+      "title": "Guard the range",
+      "body": "Check the signed 32-bit limits before returning; the negative limit has one more allowed unit than the positive limit."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nsign = -1 if value < 0 else 1\nnumber = absolute value of value\nreversed = 0\nwhile number > 0:\n    reversed = reversed * 10 + number % 10\n    number = number // 10\nif sign == 1 and reversed > 2147483647: return 0\nif sign == -1 and reversed > 2147483648: return 0\nreturn sign * reversed\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

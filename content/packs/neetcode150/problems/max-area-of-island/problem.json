@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/max-area-of-island",
+  "slug": "max-area-of-island",
+  "title": "Largest Connected Landmass",
+  "difficulty": "medium",
+  "patterns": ["graph", "depth-first-search", "breadth-first-search", "matrix"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "maxAreaOfIsland",
+    "params": [
+      {
+        "name": "grid",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(R * C)",
+      "space": "O(R * C)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(R * C)",
+      "space": "O(R * C)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Connecting cells diagonally",
+    "Counting cells more than once during flood fill",
+    "Forgetting the empty-grid case",
+    "Returning the count of regions instead of the largest area"
+  ],
+  "followUps": [
+    "How would you find the second-largest region?",
+    "What changes if diagonal connections count?",
+    "How would you process a grid too large for memory?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

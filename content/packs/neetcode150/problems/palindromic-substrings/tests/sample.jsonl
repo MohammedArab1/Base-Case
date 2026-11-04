@@ -1,0 +1,4 @@
+{"input":{"text":"level"},"expected":7}
+{"input":{"text":"abac"},"expected":5}
+{"input":{"text":"z"},"expected":1}
+{"input":{"text":"noon"},"expected":6}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Use a gap",
+      "body": "If one pointer is `n` nodes ahead of another, the trailing pointer will be just before the node to remove when the leading pointer reaches the end."
+    },
+    {
+      "level": 2,
+      "title": "A dummy node removes special cases",
+      "body": "Placing an extra node before the head means every removal, including removing the original head, has a predecessor."
+    },
+    {
+      "level": 3,
+      "title": "Advance the lead by n + 1",
+      "body": "Start both pointers at the dummy. Move the leading pointer `n + 1` steps, then move both until the leader falls off the end. The trailing pointer is then immediately before the target."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndummy = new node pointing to head\nlead = dummy\ntrail = dummy\nrepeat n + 1 times: lead = lead.next\nwhile lead is not null:\n    lead = lead.next\n    trail = trail.next\ntrail.next = trail.next.next\nreturn dummy.next\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

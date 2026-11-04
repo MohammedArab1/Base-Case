@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Set membership",
+      "body": "Store every occupied coordinate in a hash set so corner checks are constant time."
+    },
+    {
+      "level": 2,
+      "title": "Four directions",
+      "body": "For a fixed corner and side, the square can extend northeast, northwest, southeast, or southwest."
+    },
+    {
+      "level": 3,
+      "title": "Check three partners",
+      "body": "For each direction, the other three corners are determined; require all four corners, including the query corner, to be occupied."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\noccupied = set of unique points\nanswers = []\nfor each [x, y, side] in queries:\n    if (x, y) not in occupied:\n        append 0 to answers\n        continue\n    count = 0\n    for dx in {-side, side}:\n        for dy in {-side, side}:\n            corners = [(x, y), (x + dx, y), (x, y + dy), (x + dx, y + dy)]\n            if every corner in occupied: count += 1\n    append count to answers\nreturn answers\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

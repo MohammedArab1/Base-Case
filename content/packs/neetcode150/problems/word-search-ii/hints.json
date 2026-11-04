@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Share prefixes while exploring",
+      "body": "Several candidates may begin with the same letters. A trie lets one board search follow all of those candidates at once instead of restarting for each word."
+    },
+    {
+      "level": 2,
+      "title": "Search from every cell",
+      "body": "Treat each board cell as a possible first letter. Move to orthogonal neighbors only when the next trie edge matches the neighbor's letter."
+    },
+    {
+      "level": 3,
+      "title": "Mark the cell, then undo",
+      "body": "Before exploring neighbors, temporarily mark the current cell so the current word cannot reuse it. Restore the original letter after returning so other words can use that cell."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbuild a trie of all candidates\nfound = empty set\n\nvisit(cell, node):\n    letter = board[cell]\n    next = child of node labeled letter\n    if next is missing: return\n    if next marks a word: add that word to found\n    save = board[cell]\n    board[cell] = '#'\n    for each orthogonal neighbor inside the board and not '#':\n        visit(neighbor, next)\n    board[cell] = save\n\nfor every cell:\n    visit(cell, root)\nreturn sorted(found)\n```"
+    }
+  ]
+}

@@ -6,6 +6,9 @@ import { describe, expect, it } from 'vitest'
 import { resolveWithinRoot, validatePack } from './validate.js'
 
 const corePackDirectory = fileURLToPath(new URL('../../../content/packs/core', import.meta.url))
+const optionalPackDirectory = fileURLToPath(
+  new URL('../../../content/packs/neetcode150', import.meta.url),
+)
 
 async function withPack(
   collections: unknown,
@@ -18,6 +21,7 @@ async function withPackOptions(
   options: {
     readonly collections?: unknown
     readonly lessons?: readonly string[]
+    readonly optional?: boolean
   },
   run: (directory: string) => Promise<void>,
 ): Promise<void> {
@@ -33,6 +37,7 @@ async function withPackOptions(
         version: '0.0.0',
         license: 'MIT',
         attribution: 'Test fixture.',
+        optional: options.optional,
         problems: [],
         designs: [],
         lessons: options.lessons ?? [],
@@ -140,6 +145,49 @@ describe('validatePack', () => {
     expect(collection?.problems).not.toContain('compact-signals')
     expect(collection?.url).toBe('https://www.techinterviewhandbook.org/grind75/')
   }, 30_000)
+
+  it('exposes the 62 core problems in the 150 Essential Problems collection', async () => {
+    const result = await validatePack(corePackDirectory)
+    const collection = result.pack?.collections?.find((entry) => entry.id === 'neetcode150')
+
+    expect(collection?.problems).toHaveLength(62)
+    expect(collection?.groupId).toBe('neetcode150')
+    expect(collection?.problems).toContain('pair-sum')
+    expect(collection?.problems).not.toContain('binary-sum')
+  }, 30_000)
+
+  it('accepts the optional 88-problem extension pack', async () => {
+    const result = await validatePack(optionalPackDirectory)
+
+    expect(result.issues).toEqual([])
+    expect(result.pack?.optional).toBe(true)
+    expect(result.pack?.problems).toHaveLength(88)
+    expect(result.pack?.collections?.[0]?.groupId).toBe('neetcode150')
+  }, 30_000)
+
+  it('accepts optional packs and cross-pack collection groups', async () => {
+    await withPackOptions(
+      {
+        optional: true,
+        collections: [
+          {
+            id: 'shared-list',
+            groupId: 'shared-list',
+            name: 'Shared list',
+            description: 'A collection shared across packs.',
+            problems: [],
+          },
+        ],
+      },
+      async (directory) => {
+        const result = await validatePack(directory)
+
+        expect(result.ok).toBe(true)
+        expect(result.pack?.optional).toBe(true)
+        expect(result.pack?.collections?.[0]?.groupId).toBe('shared-list')
+      },
+    )
+  })
 
   it('rejects collection entries that are not pack problems', async () => {
     await withPack(

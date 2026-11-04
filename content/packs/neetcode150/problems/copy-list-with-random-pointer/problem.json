@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/copy-list-with-random-pointer",
+  "slug": "copy-list-with-random-pointer",
+  "title": "Clone a Chain with Back-References",
+  "difficulty": "medium",
+  "patterns": ["linked-list", "hash-map", "copying"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "copyRandomList",
+    "params": [
+      {
+        "name": "values",
+        "type": "int[]"
+      },
+      {
+        "name": "random",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Sharing nodes between the original chain and the copy",
+    "Building the back-references before all copies exist",
+    "Treating `-1` as a valid node position",
+    "Forgetting to preserve the exact order of the copied chain"
+  ],
+  "followUps": [
+    "Can you clone the chain with `O(1)` extra space by interleaving copies?",
+    "How would you clone a chain that contains a cycle?",
+    "How would you serialize a chain with back-references to a file?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Feasibility is monotone",
+      "body": "If some rate finishes all piles in time, every larger rate also finishes in time. The answer is the first rate that is fast enough."
+    },
+    {
+      "level": 2,
+      "title": "Measure one candidate rate",
+      "body": "A pile of size `p` needs `ceil(p / rate)` hours, because the worker never moves to another pile during the same hour."
+    },
+    {
+      "level": 3,
+      "title": "Binary search the answer",
+      "body": "The answer lies between `1` and the largest pile. Use the total-hours calculation as the monotone predicate."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlow = 1\nhigh = max(piles)\nwhile low < high:\n    mid = (low + high) / 2\n    total = 0\n    for p in piles:\n        total = total + ceil(p / mid)\n    if total <= hours: high = mid\n    else: low = mid + 1\nreturn low\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

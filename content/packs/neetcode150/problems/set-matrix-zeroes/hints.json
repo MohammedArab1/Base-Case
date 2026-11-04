@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Two passes",
+      "body": "First find every row and column that must be cleared, then build the result."
+    },
+    {
+      "level": 2,
+      "title": "Remember positions",
+      "body": "Store the affected row indices and column indices in sets."
+    },
+    {
+      "level": 3,
+      "title": "Build from the original",
+      "body": "When writing each result cell, consult the original value and the two sets."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nzeroRows = empty set\nzeroColumns = empty set\nfor each cell (r, c):\n    if matrix[r][c] == 0:\n        add r to zeroRows\n        add c to zeroColumns\nresult = same dimensions\nfor each cell (r, c):\n    if r in zeroRows or c in zeroColumns:\n        result[r][c] = 0\n    else:\n        result[r][c] = matrix[r][c]\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think uphill, not downhill",
+      "body": "Starting from every cell and simulating downhill flow would repeat a lot of work. Instead, start at an ocean border and move inward to cells at least as high as the current one."
+    },
+    {
+      "level": 2,
+      "title": "One search per ocean",
+      "body": "A cell drains to the Pacific exactly when it can be reached by an uphill search starting from the top or left border. The Atlantic has the analogous search from the bottom or right border."
+    },
+    {
+      "level": 3,
+      "title": "Intersect the reachable sets",
+      "body": "Mark all cells reachable from each ocean. A cell belongs in the answer when both marks are set. Scanning rows and columns in order produces the required sorted output."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nreachable(starts):\n    seen = grid of false\n    stack = starts with seen set true\n    while stack is not empty:\n        r, c = pop\n        for each neighbor (nr, nc) inside the grid:\n            if not seen[nr][nc] and heights[nr][nc] >= heights[r][c]:\n                seen[nr][nc] = true\n                push (nr, nc)\n    return seen\n\npacific = reachable(top row + left column)\natlantic = reachable(bottom row + right column)\nreturn all (r, c) where pacific[r][c] and atlantic[r][c]\n```"
+    }
+  ]
+}

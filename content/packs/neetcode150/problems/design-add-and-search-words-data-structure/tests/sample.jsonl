@@ -1,0 +1,4 @@
+{"input":{"operations":["addWord","search","search","search"],"words":["harbor","harbor","harbour","h.rb.r"]},"expected":[true,true,false,true]}
+{"input":{"operations":["addWord","search","search","search"],"words":["lantern","lantern","l....rn","l...rn"]},"expected":[true,true,true,false]}
+{"input":{"operations":["addWord","search","search","search"],"words":["dart","d..t","d...","d...."]},"expected":[true,true,true,false]}
+{"input":{"operations":["addWord","search","search","addWord","search"],"words":["a",".","a","ab",".b"]},"expected":[true,true,true,true,true]}

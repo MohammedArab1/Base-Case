@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/longest-consecutive-sequence",
+  "slug": "longest-consecutive-sequence",
+  "title": "Longest Consecutive Run",
+  "difficulty": "medium",
+  "patterns": ["arrays", "hash-set", "sorting"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "longestConsecutive",
+    "params": [{ "name": "nums", "type": "int[]" }],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting duplicate values as separate steps in a run",
+    "Expanding a run from every value, which can degrade to quadratic time",
+    "Sorting the input but forgetting that duplicates must collapse",
+    "Returning a run's ending value instead of its length"
+  ],
+  "followUps": [
+    "How would you return the actual values in the longest run?",
+    "Can you solve it in O(n log n) without a hash set, and what is the trade-off?",
+    "How would you maintain the answer as values are inserted one at a time?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A block cannot close early",
+      "body": "A block cannot end before the last occurrence of every letter it contains."
+    },
+    {
+      "level": 2,
+      "title": "Record last positions",
+      "body": "Find the final index of each distinct letter before scanning."
+    },
+    {
+      "level": 3,
+      "title": "Expand the boundary",
+      "body": "As you scan, extend the current block end to the furthest last occurrence seen so far."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlast = map from letter to its final index\nstart = 0\nend = 0\nresult = []\nfor i from 0 to length(text) - 1:\n    end = max(end, last[text[i]])\n    if i == end:\n        append (end - start + 1) to result\n        start = i + 1\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

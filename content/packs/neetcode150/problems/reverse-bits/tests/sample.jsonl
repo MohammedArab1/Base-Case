@@ -1,0 +1,4 @@
+{"input":{"value":1},"expected":2147483648}
+{"input":{"value":4294967295},"expected":4294967295}
+{"input":{"value":0},"expected":0}
+{"input":{"value":2},"expected":1073741824}

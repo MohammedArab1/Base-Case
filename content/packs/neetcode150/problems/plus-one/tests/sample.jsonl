@@ -1,0 +1,4 @@
+{"input":{"digits":[1,2,9]},"expected":[1,3,0]}
+{"input":{"digits":[9,9]},"expected":[1,0,0]}
+{"input":{"digits":[0]},"expected":[1]}
+{"input":{"digits":[4,8,9,9]},"expected":[4,9,0,0]}

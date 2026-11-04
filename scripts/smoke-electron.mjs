@@ -429,6 +429,20 @@ async function main() {
     'An extra problem was incorrectly tagged as Grind 75',
   )
 
+  const essentialCore = collections.find((collection) => collection.id === 'neetcode150')
+  assert(
+    essentialCore?.name === '150 Essential Problems',
+    'The 150 Essential Problems collection is missing',
+  )
+  assert(
+    essentialCore?.problemCount === 62,
+    'The core pack should contribute 62 problems to the 150 Essential Problems collection',
+  )
+  assert(
+    !problems.some((problem) => problem.id.startsWith('neetcode150/')),
+    'The optional extension should be disabled by default',
+  )
+
   const lessons = await evaluate('window.baseCase.learn.list()')
   assert(
     Array.isArray(lessons) && lessons.length === 39,
@@ -717,9 +731,39 @@ export { Solution }
   assert(readNote.notes === 'Remember the complement.', 'Notes were not read back')
 
   const packListBefore = await evaluate('window.baseCase.packs.list()')
+  const corePack = packListBefore.find((pack) => pack.id === 'core')
+  const optionalPack = packListBefore.find((pack) => pack.id === 'neetcode150')
   assert(
-    packListBefore.length === 1 && packListBefore[0]?.id === 'core',
-    'The bundled catalog should contain exactly the core pack',
+    corePack?.source === 'bundled' && corePack.enabled,
+    'The core bundled pack should be enabled',
+  )
+  assert(
+    optionalPack?.source === 'bundled' && optionalPack.optional && optionalPack.enabled === false,
+    'The optional extension should be listed but disabled',
+  )
+
+  const enabledPacks = await evaluate("window.baseCase.packs.setEnabled('neetcode150', true)")
+  assert(
+    enabledPacks.find((pack) => pack.id === 'neetcode150')?.enabled === true,
+    'Enabling the optional extension did not update the pack list',
+  )
+  const expandedProblems = await evaluate('window.baseCase.content.list()')
+  assert(expandedProblems.length === 169, 'Enabling the extension did not load its 88 problems')
+  const expandedCollections = await evaluate('window.baseCase.content.collections()')
+  assert(
+    expandedCollections.find((collection) => collection.id === 'neetcode150')?.problemCount === 150,
+    'The 150 Essential Problems collection did not reach 150 items',
+  )
+
+  const restoredPacks = await evaluate("window.baseCase.packs.setEnabled('neetcode150', false)")
+  assert(
+    restoredPacks.find((pack) => pack.id === 'neetcode150')?.enabled === false,
+    'Disabling the optional extension did not update the pack list',
+  )
+  const restoredProblems = await evaluate('window.baseCase.content.list()')
+  assert(
+    restoredProblems.length === 81,
+    'Disabling the extension did not restore the core-only catalog',
   )
 
   const packPreview = await evaluate("window.baseCase.packs.preview('archive')")

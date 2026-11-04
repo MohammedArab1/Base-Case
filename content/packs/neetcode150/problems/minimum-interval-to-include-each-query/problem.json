@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/minimum-interval-to-include-each-query",
+  "slug": "minimum-interval-to-include-each-query",
+  "title": "Smallest Covering Span",
+  "difficulty": "hard",
+  "patterns": ["intervals", "sorting", "heap", "offline-queries"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "smallestSpans",
+    "params": [
+      {
+        "name": "intervals",
+        "type": "int[][]"
+      },
+      {
+        "name": "queries",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O((n + q) log n)",
+      "space": "O(n + q)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O((n + q) log n)",
+      "space": "O(n + q)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Returning answers in sorted-query order rather than input order",
+    "Treating an interval with `end == query` as not covering the query",
+    "Using `end - start` instead of `end - start + 1`",
+    "Failing to add an interval whose start equals the query coordinate"
+  ],
+  "followUps": [
+    "How would you answer queries online if reordering were impossible?",
+    "How would you handle queries that ask for the shortest interval strictly containing a point?",
+    "What if intervals could be added or removed between queries?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

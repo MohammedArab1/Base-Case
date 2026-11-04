@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Layers of flights",
+      "body": "Track the cheapest cost to each city after using exactly some number of flights. The stop limit means you may relax edges at most `k + 1` times."
+    },
+    {
+      "level": 2,
+      "title": "Do not mix rounds",
+      "body": "When extending routes for the current flight count, read costs from the previous round. Updating a single array in place could let a route use more flights than allowed."
+    },
+    {
+      "level": 3,
+      "title": "Bellman-Ford with a round limit",
+      "body": "Copy the distance array, relax every flight using values from the previous copy, then replace the array. Repeat `k + 1` times and read the destination's distance."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndist[src] = 0, all other dist values = infinity\nrepeat k + 1 times:\n    next = copy of dist\n    for each flight (u, v, price):\n        if dist[u] is finite:\n            next[v] = min(next[v], dist[u] + price)\n    dist = next\nreturn -1 if dist[dst] is infinite else dist[dst]\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

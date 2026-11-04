@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Use the ordering",
+      "body": "The input is already sorted. That means increasing an index never decreases its value. How can you use the smallest and largest available values together?"
+    },
+    {
+      "level": 2,
+      "title": "Start at both ends",
+      "body": "Put one pointer at the first element and one at the last. Their sum is the smallest possible sum that uses the largest value, and the largest possible sum that uses the smallest value."
+    },
+    {
+      "level": 3,
+      "title": "Discard one candidate per step",
+      "body": "If the sum is too small, no pair using the current left value can work with any right value at or below the current right index, so move left forward. If the sum is too large, move right backward. If it matches, return the two indices."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nleft = 0\nright = length(numbers) - 1\nwhile left < right:\n    total = numbers[left] + numbers[right]\n    if total == target:\n        return [left, right]\n    if total < target:\n        left += 1\n    else:\n        right -= 1\nreturn []\n```\n\nThis is pseudocode, not a complete solution. Return indices in ascending order and remember they are 0-based."
+    }
+  ]
+}

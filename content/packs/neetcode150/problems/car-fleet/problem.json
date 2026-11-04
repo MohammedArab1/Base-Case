@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/car-fleet",
+  "slug": "car-fleet",
+  "title": "Fleet Arrival Count",
+  "difficulty": "medium",
+  "patterns": ["arrays", "sorting", "stack", "monotonic-stack"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "carFleet",
+    "params": [
+      { "name": "target", "type": "int" },
+      { "name": "position", "type": "int[]" },
+      { "name": "speed", "type": "int[]" }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n log n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Processing cars from the back of the road instead of from the destination backward",
+    "Comparing speeds instead of uninterrupted arrival times",
+    "Creating a new fleet when two cars arrive at exactly the same time",
+    "Forgetting to sort the cars by starting position",
+    "Assuming every car starts in sorted position order"
+  ],
+  "followUps": [
+    "How would you also report the size of each fleet?",
+    "Can you process the cars without storing pairs if the positions are given in order?",
+    "How would a car with zero speed change the result?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

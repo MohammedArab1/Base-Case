@@ -1,0 +1,4 @@
+{"input":{"operations":["encode","decode"],"arguments":[["a#b","","12"],["3#a#b0#2#12"]]},"expected":[["3#a#b0#2#12"],["a#b","","12"]]}
+{"input":{"operations":["encode"],"arguments":[["hello world","x"]]},"expected":[["11#hello world1#x"]]}
+{"input":{"operations":["decode"],"arguments":[["1#a2#bc"]]},"expected":[["a","bc"]]}
+{"input":{"operations":["encode","decode","encode"],"arguments":[[],[""],["a","b"]]},"expected":[[""],[],["1#a1#b"]]}

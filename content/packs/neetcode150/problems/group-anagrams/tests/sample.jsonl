@@ -1,0 +1,4 @@
+{"input":{"words":["listen","silent","enlist","tinsel","google","gooegl"]},"expected":[["enlist","listen","silent","tinsel"],["gooegl","google"]]}
+{"input":{"words":["","","a"]},"expected":[["",""],["a"]]}
+{"input":{"words":["abc","bac","cab","acb"]},"expected":[["abc","acb","bac","cab"]]}
+{"input":{"words":["zzz","z","zz","zzz"]},"expected":[["z"],["zz"],["zzz","zzz"]]}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/network-delay-time",
+  "slug": "network-delay-time",
+  "title": "Signal Propagation Time",
+  "difficulty": "medium",
+  "patterns": ["graph", "shortest-path", "dijkstra", "heap"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "networkDelayTime",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "times",
+        "type": "int[][]"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O((V + E) log V)",
+      "space": "O(V + E)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(V^2 + E)",
+      "space": "O(V + E)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Treating every directed link as bidirectional",
+    "Returning the distance to a single target rather than the maximum over all nodes",
+    "Forgetting that a single-node network is already fully reached",
+    "Processing stale priority-queue entries as if they were current distances"
+  ],
+  "followUps": [
+    "How would you reconstruct the path to each node?",
+    "What changes if links can have negative travel times but no negative cycles?",
+    "How would you answer the same question when new links appear over time?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

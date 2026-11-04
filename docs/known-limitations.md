@@ -32,11 +32,17 @@ need work outside this repository are tracked in `project/open-blockers.md`.
 
 ## Content
 
-- The pack has 81 coding problems, 8 design scenarios, and 39 lessons. The
-  Grind 75 collection is a curated 75-problem subset of a public study list that
-  currently contains more entries; it is not the complete list. Every statement,
-  example, hint, and test is original to Base Case. See the collection
-  attribution in the app and `content/packs/core/pack.json`.
+- The default core pack has 81 coding problems, 8 design scenarios, and 39
+  lessons. An optional bundled extension pack adds 88 coding problems for the
+  150 Essential Problems study list. The extension stays off until it is
+  enabled in Settings; the default experience remains the 81-problem core pack.
+- The 150 Essential Problems collection spans the core and extension packs. It
+  shows the 62 overlapping core problems by default and the complete 150 when
+  the extension is enabled. The Grind 75 collection is a curated 75-problem
+  subset of a public study list that currently contains more entries; it is not
+  the complete list. Every statement, example, hint, and test is original to
+  Base Case. See the collection attribution in the app and
+  `content/packs/core/pack.json`.
 - Lessons are a curated core curriculum, not an exhaustive encyclopedia. They
   cover every pattern used by the bundled problems and the core topic index of
   the public System Design Primer, but some advanced topics (for example advanced

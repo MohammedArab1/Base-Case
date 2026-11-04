@@ -1,5 +1,16 @@
 # MVP release-candidate build record
 
+## Optional content pack update — 2026-11-03
+
+- Content: **81 core coding problems plus an optional 88-problem extension**,
+  8 design scenarios, 39 lessons, 75-problem Grind 75 collection, and a
+  150-problem Essential Problems collection that spans both coding packs.
+- Reference solutions: **162/162 core** and **176/176 extension** pass.
+- Checks: `format:check`, `lint`, `typecheck`, `test`, `content:validate`,
+  `content:test`, `build`, `smoke:e2e`, and `smoke:playwright` (13/13) pass.
+- The CDP smoke test enables and disables the optional pack and verifies the
+  default/expanded problem and collection counts.
+
 ## Final release preparation — 2026-11-01
 
 - Version: `0.1.0-alpha`

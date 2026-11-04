@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/binary-tree-maximum-path-sum",
+  "slug": "binary-tree-maximum-path-sum",
+  "title": "Best Route Through a Tree",
+  "difficulty": "hard",
+  "patterns": ["trees", "depth-first-search", "dynamic-programming"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "maxPathSum",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Letting the route branch at two different nodes",
+    "Initializing the answer to `0` when all values are negative",
+    "Clamping only the root's contribution instead of each child's gain",
+    "Returning the best overall sum from the helper instead of the best downward gain",
+    "Excluding single-node routes"
+  ],
+  "followUps": [
+    "How would you return the path nodes as well as the sum?",
+    "What changes if a route must include the root?",
+    "How would you find the maximum sum path in a general graph?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

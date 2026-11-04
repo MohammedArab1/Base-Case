@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/search-a-2d-matrix",
+  "slug": "search-a-2d-matrix",
+  "title": "Row and Column Search",
+  "difficulty": "medium",
+  "patterns": ["matrix", "binary-search", "two-pointers"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "searchMatrix",
+    "params": [
+      {
+        "name": "matrix",
+        "type": "int[][]"
+      },
+      {
+        "name": "target",
+        "type": "int"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(rows + columns)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(rows + columns)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Starting the search at the top-left corner instead of the top-right corner",
+    "Moving both left and down after a single comparison",
+    "Assuming the whole table is one flattened sorted sequence",
+    "Failing to guard against an empty table"
+  ],
+  "followUps": [
+    "How would you count how many times the target appears?",
+    "What changes if only the rows are sorted and the columns are not?",
+    "Can you use binary search on each row, and what would the complexity be?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

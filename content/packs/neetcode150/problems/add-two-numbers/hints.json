@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Add position by position",
+      "body": "The heads hold the units digits, so the two chains are already aligned by place value. Walk both chains together and add the digits at the same position."
+    },
+    {
+      "level": 2,
+      "title": "Carry to the next position",
+      "body": "For each position, add the two digits plus any carry. The result digit is the total modulo 10, and the new carry is the total divided by 10."
+    },
+    {
+      "level": 3,
+      "title": "Handle unequal lengths and a final carry",
+      "body": "Continue while either chain still has a node or a carry remains. A final carry creates one extra node."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndummy = new node\ntail = dummy\ncarry = 0\nwhile l1 is not empty or l2 is not empty or carry > 0:\n    total = carry\n    if l1: total += l1.value; l1 = l1.next\n    if l2: total += l2.value; l2 = l2.next\n    carry = total / 10\n    tail.next = new node(total % 10)\n    tail = tail.next\nreturn dummy.next\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

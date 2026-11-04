@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/last-stone-weight",
+  "slug": "last-stone-weight",
+  "title": "Stone Smash Reduction",
+  "difficulty": "easy",
+  "patterns": ["heap", "priority-queue", "simulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "lastStoneWeight",
+    "params": [
+      {
+        "name": "stones",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n log n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Choosing the two lightest stones",
+    "Inserting a zero when the two heaviest stones match",
+    "Forgetting that the result may be zero when the heap empties",
+    "Mishandling negated values in a min-heap"
+  ],
+  "followUps": [
+    "How would you simulate a version where three stones are smashed together?",
+    "What is the result if stones are guaranteed to have distinct weights?",
+    "How would you verify the process without a heap for very small inputs?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

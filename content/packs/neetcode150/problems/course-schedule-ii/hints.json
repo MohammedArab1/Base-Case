@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Start with courses that have no prerequisites",
+      "body": "A course can be taken as soon as all courses that must precede it are finished. Track how many unmet prerequisites each course still has."
+    },
+    {
+      "level": 2,
+      "title": "Remove one course at a time",
+      "body": "Take a course with zero remaining prerequisites, append it to the order, and decrease the count for every course that depends on it. Newly freed courses become available."
+    },
+    {
+      "level": 3,
+      "title": "Choose the smallest available label",
+      "body": "Several courses may have zero remaining prerequisites. To get the lexicographically smallest order, always take the smallest label among them. A min-heap does this efficiently."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbuild graph[prerequisite] -> dependent courses\nindegree[course] = number of prerequisites\nheap = all courses with indegree 0\norder = []\n\nwhile heap is not empty:\n    course = remove smallest from heap\n    order.push(course)\n    for dependent in graph[course]:\n        indegree[dependent] -= 1\n        if indegree[dependent] == 0:\n            push dependent into heap\n\nif order.length != numCourses: return []\nreturn order\n```"
+    }
+  ]
+}

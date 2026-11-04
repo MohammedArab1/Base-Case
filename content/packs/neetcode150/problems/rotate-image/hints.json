@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "One cell at a time",
+      "body": "Determine where a single cell lands after a quarter turn."
+    },
+    {
+      "level": 2,
+      "title": "Coordinate mapping",
+      "body": "The cell at `(r, c)` moves to `(c, n - 1 - r)`."
+    },
+    {
+      "level": 3,
+      "title": "Use a fresh matrix",
+      "body": "Writing into a new matrix avoids overwriting values that have not been moved yet."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nn = number of rows\nresult = n by n matrix\nfor r from 0 to n - 1:\n    for c from 0 to n - 1:\n        result[c][n - 1 - r] = matrix[r][c]\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

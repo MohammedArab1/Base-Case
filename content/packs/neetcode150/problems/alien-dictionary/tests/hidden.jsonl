@@ -1,0 +1,16 @@
+{"input": {"words": ["a"]}, "expected": "a"}
+{"input": {"words": ["a", "a"]}, "expected": "a"}
+{"input": {"words": ["ab", "ba"]}, "expected": "ab"}
+{"input": {"words": ["aab", "aac", "bc"]}, "expected": "abc"}
+{"input": {"words": ["abc", "acb"]}, "expected": "abc"}
+{"input": {"words": ["m", "q", "m"]}, "expected": ""}
+{"input": {"words": ["ca", "cb", "ba"]}, "expected": "acb"}
+{"input": {"words": ["z"]}, "expected": "z"}
+{"input": {"words": ["abcz", "abcy"]}, "expected": "abczy"}
+{"input": {"words": ["apple", "app"]}, "expected": ""}
+{"input": {"words": ["app", "apple"]}, "expected": "aelp"}
+{"input": {"words": ["abc", "def"]}, "expected": "abcdef"}
+{"input": {"words": ["da", "dc", "db"]}, "expected": "acbd"}
+{"input": {"words": ["abc", "abcd", "abce"]}, "expected": "abcde"}
+{"input": {"words": ["w", "x", "y", "z"]}, "expected": "wxyz"}
+{"input": {"words": ["banana", "bandana", "bandit"]}, "expected": "abdint"}

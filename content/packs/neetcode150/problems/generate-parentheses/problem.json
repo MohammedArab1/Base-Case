@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/generate-parentheses",
+  "slug": "generate-parentheses",
+  "title": "Balanced Parenthesis Builder",
+  "difficulty": "medium",
+  "patterns": ["backtracking", "recursion", "strings"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "generateParentheses",
+    "params": [{ "name": "n", "type": "int" }],
+    "returns": "string[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(C_n * n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(C_n * n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Adding a closing parenthesis when no unmatched opening parenthesis exists",
+    "Allowing more than n opening parentheses",
+    "Generating duplicates and forgetting to deduplicate",
+    "Returning the strings in recursion-dependent order instead of lexical order",
+    "Forgetting that n = 0 produces the empty string"
+  ],
+  "followUps": [
+    "Can you generate the strings directly in lexicographic order without sorting?",
+    "How does the count of results grow with n?",
+    "How would you generate strings with three bracket types that must nest correctly?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Only k values matter",
+      "body": "The k-th largest value is determined by the largest k values in the collection. Values below that group can never affect the answer again."
+    },
+    {
+      "level": 2,
+      "title": "Keep a small heap",
+      "body": "Maintain a min-heap containing at most the k largest values. The smallest value in this heap is exactly the k-th largest of the whole collection."
+    },
+    {
+      "level": 3,
+      "title": "Add, then trim",
+      "body": "Push each new value into the heap. If the heap grows beyond k, remove its minimum. After the trim, read the minimum as the current answer. Seed the heap with the initial values using the same procedure."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nheap = empty min-heap\nfor value in initial:\n    push value\n    if heap.size > k: pop minimum\n\nanswers = []\nfor value in additions:\n    push value\n    if heap.size > k: pop minimum\n    answers.push(heap.minimum)\nreturn answers\n```"
+    }
+  ]
+}

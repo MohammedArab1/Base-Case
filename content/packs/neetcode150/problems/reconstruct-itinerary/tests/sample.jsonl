@@ -1,0 +1,4 @@
+{"input": {"tickets": [["JFK", "SFO"], ["SFO", "LAX"], ["LAX", "JFK"], ["JFK", "LAX"]]}, "expected": ["JFK", "LAX", "JFK", "SFO", "LAX"]}
+{"input": {"tickets": [["JFK", "AMS"], ["AMS", "JFK"], ["JFK", "BER"]]}, "expected": ["JFK", "AMS", "JFK", "BER"]}
+{"input": {"tickets": [["JFK", "PAR"], ["JFK", "PAR"], ["PAR", "JFK"]]}, "expected": ["JFK", "PAR", "JFK", "PAR"]}
+{"input": {"tickets": [["JFK", "ZRH"]]}, "expected": ["JFK", "ZRH"]}

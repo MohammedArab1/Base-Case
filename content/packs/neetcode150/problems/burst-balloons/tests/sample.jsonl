@@ -1,0 +1,4 @@
+{"input": {"nums": [4, 2, 7]}, "expected": 91}
+{"input": {"nums": [1]}, "expected": 1}
+{"input": {"nums": [0, 5]}, "expected": 5}
+{"input": {"nums": [0, 0, 0]}, "expected": 0}

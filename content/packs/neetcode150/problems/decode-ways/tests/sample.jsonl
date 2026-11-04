@@ -1,0 +1,4 @@
+{"input":{"digits":"231"},"expected":2}
+{"input":{"digits":"110"},"expected":1}
+{"input":{"digits":"101"},"expected":1}
+{"input":{"digits":"306"},"expected":0}

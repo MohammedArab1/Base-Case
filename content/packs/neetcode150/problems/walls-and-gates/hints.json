@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Many sources at once",
+      "body": "Running a separate search from every gate repeats work. Start one search with every gate already in the queue."
+    },
+    {
+      "level": 2,
+      "title": "Breadth-first search",
+      "body": "All gates have distance zero. Expanding in first-in, first-out order guarantees that the first time an empty room is reached, it is reached by a shortest path."
+    },
+    {
+      "level": 3,
+      "title": "Treat walls as blockers",
+      "body": "Only enqueue cells whose current value is exactly the unreachable sentinel. Gates and previously reached rooms are skipped, and walls are never entered."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ngrid = copy of rooms\nqueue = all cells whose value is 0\n\nwhile queue is not empty:\n    r, c = dequeue\n    for each orthogonal neighbor (nr, nc) inside the grid:\n        if grid[nr][nc] == 2147483647:\n            grid[nr][nc] = grid[r][c] + 1\n            enqueue (nr, nc)\n\nreturn grid\n```"
+    }
+  ]
+}

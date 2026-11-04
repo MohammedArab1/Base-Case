@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/longest-common-subsequence",
+  "slug": "longest-common-subsequence",
+  "title": "Shared Thread",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "strings"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "longestSharedThread",
+    "params": [
+      {
+        "name": "first",
+        "type": "string"
+      },
+      {
+        "name": "second",
+        "type": "string"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n)",
+      "space": "O(min(m, n))",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n)",
+      "space": "O(min(m, n))"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Requiring the shared characters to be contiguous",
+    "Crashing or returning a negative value when one string is empty",
+    "Using the wrong neighbor when the final characters differ",
+    "Mixing current-row and previous-row values in a one-dimensional table"
+  ],
+  "followUps": [
+    "How would you reconstruct one longest shared thread?",
+    "How would you compute the shortest common supersequence length from this table?",
+    "What changes if characters have weights and the goal is a maximum-weight common subsequence?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

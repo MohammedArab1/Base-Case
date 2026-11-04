@@ -1,0 +1,16 @@
+{"input":{"operations":["follow","post","post","feed"],"arguments":[[1,2],[2,11],[1,12],[1]]},"expected":[[12,11]]}
+{"input":{"operations":["post","follow","feed"],"arguments":[[1,5],[1,1],[1]]},"expected":[[5]]}
+{"input":{"operations":["post","unfollow","feed"],"arguments":[[1,7],[1,2],[1]]},"expected":[[7]]}
+{"input":{"operations":["post","post","post","follow","follow","feed"],"arguments":[[1,10],[2,20],[1,30],[4,1],[4,2],[4]]},"expected":[[30,20,10]]}
+{"input":{"operations":["post","post","post","post","post","post","post","post","post","post","post","post","feed"],"arguments":[[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[9,11],[9,12],[9]]},"expected":[[12,11,10,9,8,7,6,5,4,3]]}
+{"input":{"operations":["feed"],"arguments":[[7]]},"expected":[[]]}
+{"input":{"operations":["follow","follow","feed"],"arguments":[[1,2],[1,2],[1]]},"expected":[[]]}
+{"input":{"operations":["post","follow","post","unfollow","post","feed"],"arguments":[[1,1],[1,2],[2,2],[1,2],[2,3],[1]]},"expected":[[1]]}
+{"input":{"operations":["post","post","follow","post","feed"],"arguments":[[1,5],[2,6],[1,2],[1,7],[1]]},"expected":[[7,6,5]]}
+{"input":{"operations":["post","post","post","follow","feed"],"arguments":[[1,1],[2,2],[3,3],[1,3],[1]]},"expected":[[3,1]]}
+{"input":{"operations":["post","post","follow","feed"],"arguments":[[1,100],[2,5],[1,2],[1]]},"expected":[[5,100]]}
+{"input":{"operations":["follow","feed"],"arguments":[[1,2],[1]]},"expected":[[]]}
+{"input":{"operations":["post","post","post","feed"],"arguments":[[1,1],[1,2],[1,3],[1]]},"expected":[[3,2,1]]}
+{"input":{"operations":["post","post","post","follow","follow","feed"],"arguments":[[1,1],[2,2],[3,3],[1,2],[2,3],[1]]},"expected":[[2,1]]}
+{"input":{"operations":["post","follow","unfollow","feed"],"arguments":[[1,1],[1,2],[1,2],[1]]},"expected":[[1]]}
+{"input":{"operations":["feed","feed","post","feed","feed"],"arguments":[[1],[2],[3,9],[1],[2]]},"expected":[[],[],[],[]]}

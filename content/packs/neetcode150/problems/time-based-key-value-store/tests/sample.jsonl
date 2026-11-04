@@ -1,0 +1,4 @@
+{"input":{"operations":["set","get","get"],"keys":["alpha","alpha","alpha"],"values":["ready","",""],"times":[5,5,4]},"expected":["ready",""]}
+{"input":{"operations":["set","set","get","get","get"],"keys":["x","x","x","x","y"],"values":["red","blue","","",""],"times":[2,8,1,8,100]},"expected":["","blue",""]}
+{"input":{"operations":["set","set","set","get","get","get"],"keys":["a","b","a","a","b","c"],"values":["one","two","three","","",""],"times":[1,3,7,5,7,6]},"expected":["one","two",""]}
+{"input":{"operations":["get","get"],"keys":["missing","missing"],"values":["",""],"times":[0,1000000000]},"expected":["",""]}

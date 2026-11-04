@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/jump-game",
+  "slug": "jump-game",
+  "title": "Runway Reach",
+  "difficulty": "medium",
+  "patterns": ["greedy", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "canReach",
+    "params": [
+      {
+        "name": "steps",
+        "type": "int[]"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Exploring every jump instead of tracking the farthest reachable index",
+    "Returning too early when the current marker has a zero leap",
+    "Forgetting that a single-marker runway is already complete",
+    "Comparing the current index with the last index before verifying reachability"
+  ],
+  "followUps": [
+    "How would you return one sequence of landing positions that reaches the end?",
+    "What changes if backward leaps are allowed?",
+    "How would you count the number of distinct reachable landing positions?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

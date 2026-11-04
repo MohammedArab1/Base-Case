@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/subsets-ii",
+  "slug": "subsets-ii",
+  "title": "Unique Subsets from a Multiset",
+  "difficulty": "medium",
+  "patterns": ["backtracking", "recursion", "sorting", "array"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "subsetsWithDup",
+    "params": [
+      {
+        "name": "nums",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n * 2^n)",
+      "space": "O(n) recursion plus output",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n * 2^n)",
+      "space": "O(n) recursion plus output"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Skipping duplicates at every depth instead of only at the current level",
+    "Forgetting the empty subset",
+    "Storing the mutable path without copying it",
+    "Not sorting the input before detecting duplicates"
+  ],
+  "followUps": [
+    "How would you produce only subsets of a given size?",
+    "What changes if the input contains values outside the small integer range?",
+    "How would you count distinct subsets without materializing them?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

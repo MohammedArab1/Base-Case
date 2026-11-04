@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/top-k-frequent-elements",
+  "slug": "top-k-frequent-elements",
+  "title": "Top K Frequent Values",
+  "difficulty": "medium",
+  "patterns": ["arrays", "hash-map", "heap", "sorting", "bucket-sort"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "topKFrequent",
+    "params": [
+      { "name": "nums", "type": "int[]" },
+      { "name": "k", "type": "int" }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n + d log d)",
+      "space": "O(d)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n + d log d)",
+      "space": "O(d)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Returning values in first-occurrence order instead of ascending numeric order",
+    "Breaking a frequency tie in favor of the larger value",
+    "Using the array index as the value when building the frequency map",
+    "Assuming the output should list the most frequent value first"
+  ],
+  "followUps": [
+    "How would a min-heap of size k change the complexity?",
+    "Can bucket sort by frequency produce an O(n) solution?",
+    "How would you handle a stream where k changes for each query?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

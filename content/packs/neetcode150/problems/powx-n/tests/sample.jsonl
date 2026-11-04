@@ -1,0 +1,4 @@
+{"input":{"base":3.0,"exponent":4},"expected":81.0}
+{"input":{"base":2.0,"exponent":-3},"expected":0.125}
+{"input":{"base":-3.0,"exponent":3},"expected":-27.0}
+{"input":{"base":0.5,"exponent":4},"expected":0.0625}

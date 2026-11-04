@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What does the median need?",
+      "body": "Only the middle one or two values matter. If the collection were kept sorted, reporting the median would be a direct lookup."
+    },
+    {
+      "level": 2,
+      "title": "Split the collection in half",
+      "body": "Keep the smaller half and the larger half balanced by size. The largest value of the smaller half and the smallest value of the larger half are the two candidates for the middle."
+    },
+    {
+      "level": 3,
+      "title": "Balance after every insertion",
+      "body": "Put each new number into the appropriate half, then move one value across when the halves differ in size by more than one. For odd sizes, keep the extra value in a known half."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\naddNum(value):\n    insert value into a sorted collection\n\nfindMedian():\n    n = collection size\n    if n is odd:\n        return collection[n / 2] as a float\n    else:\n        return (collection[n / 2 - 1] + collection[n / 2]) / 2.0\n```\n\nA balanced pair of heaps gives the same result with faster insertions, but the sorted-collection version is sufficient for these constraints."
+    }
+  ]
+}

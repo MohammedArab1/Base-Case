@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/reconstruct-itinerary",
+  "slug": "reconstruct-itinerary",
+  "title": "Smallest Ticket Chain",
+  "difficulty": "hard",
+  "patterns": ["graph", "eulerian-path", "depth-first-search", "greedy"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "reconstructItinerary",
+    "params": [
+      {
+        "name": "tickets",
+        "type": "string[][]"
+      }
+    ],
+    "returns": "string[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(E log E)",
+      "space": "O(E)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(E log E)",
+      "space": "O(E)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Popping the largest destination because the adjacency list was sorted in the wrong direction",
+    "Returning the postorder without reversing it",
+    "Collapsing duplicate tickets into a single edge",
+    "Committing to a greedy walk that gets stuck while unused tickets remain"
+  ],
+  "followUps": [
+    "How would the answer change if the starting airport were not fixed?",
+    "What is the result when no Eulerian trail exists?",
+    "How would you adapt the algorithm to report the largest valid itinerary instead?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

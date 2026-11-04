@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/kth-largest-element-in-a-stream",
+  "slug": "kth-largest-element-in-a-stream",
+  "title": "Running Kth Largest",
+  "difficulty": "easy",
+  "patterns": ["heap", "priority-queue", "design", "data-stream"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "kthLargestOperations",
+    "params": [
+      {
+        "name": "k",
+        "type": "int"
+      },
+      {
+        "name": "initial",
+        "type": "int[]"
+      },
+      {
+        "name": "additions",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O((n + m) log k)",
+      "space": "O(k) plus output",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O((n + m) log k)",
+      "space": "O(k) plus output"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Treating duplicate values as a single occurrence",
+    "Keeping a heap of the smallest values",
+    "Reading the heap maximum instead of its minimum",
+    "Forgetting to seed the heap with the initial values"
+  ],
+  "followUps": [
+    "How would you support a changing value of k?",
+    "How would you answer several ranks at once?",
+    "What changes if the stream can also remove values?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/powx-n",
+  "slug": "powx-n",
+  "title": "Fast Power",
+  "difficulty": "medium",
+  "patterns": ["math", "divide-and-conquer", "recursion"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "fastPower",
+    "params": [
+      {
+        "name": "base",
+        "type": "double"
+      },
+      {
+        "name": "exponent",
+        "type": "int"
+      }
+    ],
+    "returns": "double",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "float",
+    "absoluteTolerance": 1e-7,
+    "relativeTolerance": 1e-9
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(log |exponent|)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(log |exponent|)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Looping once per exponent unit instead of halving the exponent",
+    "Forgetting to invert the base when the exponent is negative",
+    "Multiplying the result on every iteration rather than only on odd bits",
+    "Using a 32-bit bitwise operation on the absolute value of the minimum exponent"
+  ],
+  "followUps": [
+    "How would you compute matrix powers with the same technique?",
+    "How would you take the result modulo a prime at every step?",
+    "How would you handle rational bases exactly until the final conversion?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

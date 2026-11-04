@@ -1,0 +1,16 @@
+{"input":{"base":5.0,"exponent":0},"expected":1.0}
+{"input":{"base":0.0,"exponent":0},"expected":1.0}
+{"input":{"base":0.0,"exponent":7},"expected":0.0}
+{"input":{"base":1.0,"exponent":-2147483648},"expected":1.0}
+{"input":{"base":-1.0,"exponent":2147483647},"expected":-1.0}
+{"input":{"base":-1.0,"exponent":-2147483648},"expected":1.0}
+{"input":{"base":2.0,"exponent":1000},"expected":1.0715086071862673e+301}
+{"input":{"base":2.0,"exponent":-10},"expected":0.0009765625}
+{"input":{"base":1.5,"exponent":3},"expected":3.375}
+{"input":{"base":-2.5,"exponent":2},"expected":6.25}
+{"input":{"base":-2.5,"exponent":3},"expected":-15.625}
+{"input":{"base":10.0,"exponent":6},"expected":1000000.0}
+{"input":{"base":0.1,"exponent":5},"expected":1.0000000000000006e-05}
+{"input":{"base":3.0,"exponent":12},"expected":531441.0}
+{"input":{"base":-4.0,"exponent":-2},"expected":0.0625}
+{"input":{"base":7.0,"exponent":5},"expected":16807.0}

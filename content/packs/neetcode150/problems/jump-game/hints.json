@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Farthest point",
+      "body": "Track the farthest marker you could possibly reach rather than every individual path."
+    },
+    {
+      "level": 2,
+      "title": "Blocked index",
+      "body": "Scan left to right. If the current index is beyond the farthest reachable index, the end cannot be reached."
+    },
+    {
+      "level": 3,
+      "title": "Update before moving",
+      "body": "At index `i`, extend the farthest reachable index to at least `i + steps[i]`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfarthest = 0\nlast = length(steps) - 1\nfor i from 0 to last:\n    if i > farthest:\n        return false\n    farthest = max(farthest, i + steps[i])\n    if farthest >= last:\n        return true\nreturn true\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

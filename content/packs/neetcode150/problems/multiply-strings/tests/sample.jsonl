@@ -1,0 +1,4 @@
+{"input":{"num1":"47","num2":"83"},"expected":"3901"}
+{"input":{"num1":"0","num2":"999"},"expected":"0"}
+{"input":{"num1":"99","num2":"99"},"expected":"9801"}
+{"input":{"num1":"120","num2":"0"},"expected":"0"}

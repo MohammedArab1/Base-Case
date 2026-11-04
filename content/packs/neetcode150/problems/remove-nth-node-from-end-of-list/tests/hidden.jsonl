@@ -1,0 +1,16 @@
+{"input":{"head":[1,2],"n":2},"expected":[2]}
+{"input":{"head":[1,2,3,4],"n":1},"expected":[1,2,3]}
+{"input":{"head":[1,2,3,4],"n":2},"expected":[1,2,4]}
+{"input":{"head":[1,2,3,4],"n":3},"expected":[1,3,4]}
+{"input":{"head":[1,2,3,4],"n":4},"expected":[2,3,4]}
+{"input":{"head":[5,5,5,5,5],"n":3},"expected":[5,5,5,5]}
+{"input":{"head":[-1,-2,-3],"n":1},"expected":[-1,-2]}
+{"input":{"head":[-1,-2,-3],"n":3},"expected":[-2,-3]}
+{"input":{"head":[0,1,2,3,4,5,6,7,8,9],"n":5},"expected":[0,1,2,3,4,6,7,8,9]}
+{"input":{"head":[10,20,30],"n":2},"expected":[10,30]}
+{"input":{"head":[1,1,2,2,3,3],"n":6},"expected":[1,2,2,3,3]}
+{"input":{"head":[1,1,2,2,3,3],"n":1},"expected":[1,1,2,2,3]}
+{"input":{"head":[42,43,44,45,46],"n":4},"expected":[42,44,45,46]}
+{"input":{"head":[9,8,7,6,5,4,3],"n":3},"expected":[9,8,7,6,4,3]}
+{"input":{"head":[100],"n":1},"expected":[]}
+{"input":{"head":[-10,-20,-30,-40],"n":2},"expected":[-10,-20,-40]}

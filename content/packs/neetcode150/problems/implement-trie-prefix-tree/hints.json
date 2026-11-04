@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Share the work between related words",
+      "body": "Words such as `car`, `cart`, and `cargo` share the same opening characters. Storing them in one character-by-character structure avoids repeating those characters."
+    },
+    {
+      "level": 2,
+      "title": "Two facts per node",
+      "body": "Each node needs a way to reach child nodes keyed by character, plus a flag saying whether a complete word ends there. The flag is what separates an exact search from a prefix query."
+    },
+    {
+      "level": 3,
+      "title": "Walk, then inspect",
+      "body": "For every query, follow the characters from the root. If a character edge is missing, the answer is `false` immediately. Otherwise `startsWith` answers `true` once the whole prefix was consumed, while `search` additionally needs the terminal flag at the final node."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nnodes = [ empty child map ], terminal = [false]\n\ninsert(word):\n    node = 0\n    for ch in word:\n        if ch not in nodes[node]: create a new node\n        node = nodes[node][ch]\n    terminal[node] = true\n\nfind(word):\n    node = 0\n    for ch in word:\n        if ch not in nodes[node]: return -1\n        node = nodes[node][ch]\n    return node\n\nsearch(word):\n    node = find(word)\n    return node >= 0 and terminal[node]\n\nstartsWith(prefix):\n    return find(prefix) >= 0\n```"
+    }
+  ]
+}

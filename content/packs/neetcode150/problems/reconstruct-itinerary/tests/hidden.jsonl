@@ -1,0 +1,16 @@
+{"input": {"tickets": [["JFK", "AAA"]]}, "expected": ["JFK", "AAA"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "BBB"], ["BBB", "JFK"]]}, "expected": ["JFK", "AAA", "BBB", "JFK"]}
+{"input": {"tickets": [["JFK", "BBB"], ["JFK", "AAA"], ["AAA", "JFK"]]}, "expected": ["JFK", "AAA", "JFK", "BBB"]}
+{"input": {"tickets": [["JFK", "AAA"], ["JFK", "AAA"], ["AAA", "BBB"], ["AAA", "BBB"], ["BBB", "JFK"], ["BBB", "JFK"]]}, "expected": ["JFK", "AAA", "BBB", "JFK", "AAA", "BBB", "JFK"]}
+{"input": {"tickets": [["JFK", "BBB"], ["BBB", "CCC"], ["CCC", "BBB"], ["BBB", "AAA"]]}, "expected": ["JFK", "BBB", "CCC", "BBB", "AAA"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "BBB"], ["BBB", "AAA"], ["AAA", "CCC"], ["CCC", "JFK"]]}, "expected": ["JFK", "AAA", "BBB", "AAA", "CCC", "JFK"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "AAA"], ["AAA", "BBB"], ["BBB", "JFK"]]}, "expected": ["JFK", "AAA", "AAA", "BBB", "JFK"]}
+{"input": {"tickets": [["JFK", "BBB"], ["BBB", "JFK"], ["JFK", "AAA"], ["AAA", "JFK"], ["JFK", "CCC"], ["CCC", "JFK"]]}, "expected": ["JFK", "AAA", "JFK", "BBB", "JFK", "CCC", "JFK"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "BBB"], ["BBB", "AAA"], ["AAA", "JFK"], ["JFK", "CCC"]]}, "expected": ["JFK", "AAA", "BBB", "AAA", "JFK", "CCC"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "BBB"], ["BBB", "CCC"], ["CCC", "AAA"], ["AAA", "DDD"]]}, "expected": ["JFK", "AAA", "BBB", "CCC", "AAA", "DDD"]}
+{"input": {"tickets": [["JFK", "ZZZ"], ["ZZZ", "AAA"], ["AAA", "ZZZ"]]}, "expected": ["JFK", "ZZZ", "AAA", "ZZZ"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "JFK"], ["JFK", "AAA"]]}, "expected": ["JFK", "AAA", "JFK", "AAA"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "BBB"], ["BBB", "AAA"], ["AAA", "CCC"], ["CCC", "BBB"], ["BBB", "JFK"]]}, "expected": ["JFK", "AAA", "BBB", "AAA", "CCC", "BBB", "JFK"]}
+{"input": {"tickets": [["JFK", "AAA"], ["AAA", "BBB"], ["BBB", "AAA"], ["AAA", "CCC"], ["CCC", "AAA"], ["AAA", "JFK"]]}, "expected": ["JFK", "AAA", "BBB", "AAA", "CCC", "AAA", "JFK"]}
+{"input": {"tickets": [["JFK", "BBB"], ["JFK", "AAA"], ["AAA", "CCC"], ["CCC", "BBB"], ["BBB", "AAA"], ["AAA", "JFK"]]}, "expected": ["JFK", "AAA", "CCC", "BBB", "AAA", "JFK", "BBB"]}
+{"input": {"tickets": [["JFK", "AAA"], ["JFK", "AAA"], ["AAA", "JFK"], ["AAA", "JFK"]]}, "expected": ["JFK", "AAA", "JFK", "AAA", "JFK"]}

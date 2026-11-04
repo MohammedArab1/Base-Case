@@ -1,0 +1,4 @@
+{"input": {"s": "banana", "t": "ban"}, "expected": 3}
+{"input": {"s": "aaaa", "t": "aa"}, "expected": 6}
+{"input": {"s": "abc", "t": "abc"}, "expected": 1}
+{"input": {"s": "abc", "t": "d"}, "expected": 0}

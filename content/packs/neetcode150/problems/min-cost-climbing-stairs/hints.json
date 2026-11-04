@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think past the last step",
+      "body": "The finish line is position `n`, one place after the final step. The last move into that position started at step `n - 1` or step `n - 2`."
+    },
+    {
+      "level": 2,
+      "title": "Define the state",
+      "body": "Let `dp[i]` be the cheapest way to stand at position `i` without paying for a step at that position. Positions `0` and `1` are both free starting points, so `dp[0] = dp[1] = 0`."
+    },
+    {
+      "level": 3,
+      "title": "Pay only when leaving",
+      "body": "To reach position `i`, leave step `i - 1` after paying `cost[i - 1]`, or leave step `i - 2` after paying `cost[i - 2]`. Keep the cheaper total."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntwoBack = 0\noneBack = 0\nfor position from 2 to length(cost):\n    current = min(oneBack + cost[position - 1],\n                  twoBack + cost[position - 2])\n    twoBack = oneBack\n    oneBack = current\nreturn oneBack\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

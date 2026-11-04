@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Three situations",
+      "body": "At the end of each day the trader is in one of three situations: holding a share, free to buy, or cooling down after a sale."
+    },
+    {
+      "level": 2,
+      "title": "Keep best profit per state",
+      "body": "Track the maximum profit for each situation. A purchase moves from the free state to holding, a sale moves from holding to cooling, and a cooling day moves to free."
+    },
+    {
+      "level": 3,
+      "title": "No same-day round trip",
+      "body": "A sale today must start from a share held before today, and a purchase today must start from a free state before today. Compute all next states from the previous day's values."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfree = 0\nholding = -infinity\ncooling = -infinity\nfor price in prices:\n    nextHolding = max(holding, free - price)\n    nextCooling = holding + price\n    nextFree = max(free, cooling)\n    free, holding, cooling = nextFree, nextHolding, nextCooling\nreturn max(free, cooling)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

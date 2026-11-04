@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A dot is a choice",
+      "body": "A normal pattern character selects one child edge in a prefix tree. A dot allows every child edge, so the search may branch."
+    },
+    {
+      "level": 2,
+      "title": "Store words in a trie",
+      "body": "Nodes need a character-to-child map and a flag for the end of a stored word. Added words share their common prefixes."
+    },
+    {
+      "level": 3,
+      "title": "The pattern must be exhausted",
+      "body": "A branch succeeds only when every pattern character has been consumed and the current node is terminal. Reaching a terminal node early would accept a word that is too short."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode for matching",
+      "body": "```\nmatch(node, position):\n    if position == pattern.length:\n        return terminal[node]\n\n    ch = pattern[position]\n    if ch == '.':\n        for every child of node:\n            if match(child, position + 1): return true\n        return false\n\n    child = edge labeled ch from node\n    if child does not exist: return false\n    return match(child, position + 1)\n```"
+    }
+  ]
+}

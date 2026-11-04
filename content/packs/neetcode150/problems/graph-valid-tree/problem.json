@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/graph-valid-tree",
+  "slug": "graph-valid-tree",
+  "title": "Tree or Not",
+  "difficulty": "medium",
+  "patterns": ["graph", "union-find", "depth-first-search", "breadth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "validTree",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "edges",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n + m alpha(n))",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n + m alpha(n))",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Accepting any graph with n - 1 edges without a cycle check",
+    "Checking connectivity but not cycles",
+    "Ignoring self-loops",
+    "Treating duplicate edges as harmless",
+    "Rejecting the valid single-node tree"
+  ],
+  "followUps": [
+    "How would you find the minimum number of edges to add to make a forest connected?",
+    "How would you return the components of an invalid graph?",
+    "How would you handle a directed definition of a tree?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

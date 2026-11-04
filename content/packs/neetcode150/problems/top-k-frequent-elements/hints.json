@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What information do you need first?",
+      "body": "The answer depends on how many times each distinct value occurs, not on where it appears. Build a frequency table before thinking about selection."
+    },
+    {
+      "level": 2,
+      "title": "Turn the table into a ranking",
+      "body": "Each distinct value becomes a pair `(value, count)`. Sort those pairs by count descending, and for equal counts by value ascending. The first `k` pairs identify the selected values."
+    },
+    {
+      "level": 3,
+      "title": "Do not forget the output order",
+      "body": "After choosing the top `k`, sort the chosen values numerically before returning them. This is different from the ranking order. Python's `Counter` plus a tuple sort key, or a min-heap of size `k`, both work."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ncounts = map from value to occurrence count\npairs = list of (value, count) for every key in counts\nsort pairs by (-count, value)\nchosen = values of the first k pairs\nsort chosen in ascending order\nreturn chosen\n```\n\nA heap implementation can replace the full sort. This is pseudocode, not a complete solution."
+    }
+  ]
+}

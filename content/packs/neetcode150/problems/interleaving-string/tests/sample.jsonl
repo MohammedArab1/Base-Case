@@ -1,0 +1,4 @@
+{"input":{"first":"oak","second":"elm","woven":"oelamk"},"expected":true}
+{"input":{"first":"","second":"drum","woven":"drum"},"expected":true}
+{"input":{"first":"ab","second":"cd","woven":"acbd"},"expected":true}
+{"input":{"first":"ab","second":"cd","woven":"abdc"},"expected":false}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/count-good-nodes-in-binary-tree",
+  "slug": "count-good-nodes-in-binary-tree",
+  "title": "Unobstructed Nodes",
+  "difficulty": "medium",
+  "patterns": ["trees", "depth-first-search", "recursion"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "goodNodes",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(h)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(h)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Comparing only against the immediate parent",
+    "Excluding nodes whose value equals the path maximum",
+    "Forgetting to count the root",
+    "Not updating the maximum for deeper descendants"
+  ],
+  "followUps": [
+    "How would you count nodes that are strictly greater than every ancestor?",
+    "How would you return the sum of the unobstructed node values?",
+    "Can you solve it with an explicit stack instead of recursion?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

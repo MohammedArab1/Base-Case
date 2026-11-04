@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Match prefixes",
+      "body": "Let `dp[i][j]` be the number of ways to form the first `j` characters of `t` using the first `i` characters of `s`."
+    },
+    {
+      "level": 2,
+      "title": "Decide about the last source character",
+      "body": "You may always delete `s[i-1]`, which contributes `dp[i-1][j]`. If it matches `t[j-1]`, you may also use it as the last matched character, contributing `dp[i-1][j-1]`."
+    },
+    {
+      "level": 3,
+      "title": "One row is enough",
+      "body": "`dp[i][j] = dp[i-1][j] + (s[i-1] == t[j-1] ? dp[i-1][j-1] : 0)`. Set the empty-target column to 1. Update the row downward or use a copy so each source character is considered once."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nprevious = [1, 0, 0, ..., 0]\nfor each character c in s:\n    current = copy of previous\n    for j from 1 to length(t):\n        if c == t[j-1]:\n            current[j] = previous[j] + previous[j-1]\n        else:\n            current[j] = previous[j]\n    previous = current\nreturn previous[length(t)]\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

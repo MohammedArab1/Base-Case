@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/cheapest-flights-within-k-stops",
+  "slug": "cheapest-flights-within-k-stops",
+  "title": "Budget Flights with Stop Limits",
+  "difficulty": "medium",
+  "patterns": ["graph", "shortest-path", "bellman-ford", "dynamic-programming"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "findCheapestPrice",
+    "params": [
+      {
+        "name": "n",
+        "type": "int"
+      },
+      {
+        "name": "flights",
+        "type": "int[][]"
+      },
+      {
+        "name": "src",
+        "type": "int"
+      },
+      {
+        "name": "dst",
+        "type": "int"
+      },
+      {
+        "name": "k",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O((k + 1) * E)",
+      "space": "O(V)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O((k + 1) * E)",
+      "space": "O(V)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Relaxing the distance array in place and allowing too many stops",
+    "Using `k` rounds of flights instead of `k + 1`",
+    "Returning zero for an unreachable destination because the array was initialized incorrectly",
+    "Assuming a direct flight is always cheaper than a multi-stop route"
+  ],
+  "followUps": [
+    "How would you reconstruct the route with the fewest stops among the cheapest ones?",
+    "What changes if prices can be negative but there are no negative cycles?",
+    "How would you answer many queries with different stop limits?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

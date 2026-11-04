@@ -1,0 +1,16 @@
+{"input": {"s": "", "p": ""}, "expected": true}
+{"input": {"s": "", "p": "a"}, "expected": false}
+{"input": {"s": "", "p": ".*"}, "expected": true}
+{"input": {"s": "a", "p": "."}, "expected": true}
+{"input": {"s": "a", "p": "a*"}, "expected": true}
+{"input": {"s": "b", "p": "a*"}, "expected": false}
+{"input": {"s": "aaa", "p": "a*a"}, "expected": true}
+{"input": {"s": "aaa", "p": "a*."}, "expected": true}
+{"input": {"s": "abc", "p": ".*"}, "expected": true}
+{"input": {"s": "abcd", "p": "a.*d"}, "expected": true}
+{"input": {"s": "ac", "p": "ab*c"}, "expected": true}
+{"input": {"s": "abbc", "p": "ab*c"}, "expected": true}
+{"input": {"s": "abdc", "p": "ab*c"}, "expected": false}
+{"input": {"s": "aaa", "p": "aa"}, "expected": false}
+{"input": {"s": "abc", "p": ".*d"}, "expected": false}
+{"input": {"s": "aab", "p": "a*b"}, "expected": true}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/time-based-key-value-store",
+  "slug": "time-based-key-value-store",
+  "title": "Timestamped String Store",
+  "difficulty": "medium",
+  "patterns": ["hash-map", "binary-search", "design"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "timeMap",
+    "params": [
+      {
+        "name": "operations",
+        "type": "string[]"
+      },
+      {
+        "name": "keys",
+        "type": "string[]"
+      },
+      {
+        "name": "values",
+        "type": "string[]"
+      },
+      {
+        "name": "times",
+        "type": "int[]"
+      }
+    ],
+    "returns": "string[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O((w + q) log w)",
+      "space": "O(w)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O((w + q) log w)",
+      "space": "O(w)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Returning the latest write for the whole store rather than for the requested key",
+    "Using a strict comparison so a write at exactly the query time is skipped",
+    "Failing to return an empty string when the query predates every write for the key",
+    "Assuming query timestamps are sorted"
+  ],
+  "followUps": [
+    "How would you support writes that arrive out of order?",
+    "How would you support range snapshots or rollback to a previous time?",
+    "What is the cost of storing the full history of every key?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

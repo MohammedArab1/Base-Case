@@ -1,0 +1,4 @@
+{"input":{"first":"harvest","second":"traverse"},"expected":4}
+{"input":{"first":"pebble","second":"treble"},"expected":4}
+{"input":{"first":"garden","second":"danger"},"expected":2}
+{"input":{"first":"","second":"drum"},"expected":0}

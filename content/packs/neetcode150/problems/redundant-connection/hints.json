@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "When does an edge create a cycle?",
+      "body": "Add edges one at a time. If the endpoints are already connected through earlier edges, the new edge closes a cycle."
+    },
+    {
+      "level": 2,
+      "title": "Track connected components",
+      "body": "A disjoint-set structure supports the question 'are these two nodes already in the same component?' almost instantly. Start with every node in its own set."
+    },
+    {
+      "level": 3,
+      "title": "The first closure is the answer",
+      "body": "Because the graph has exactly one cycle, the first edge whose endpoints are already connected is the last cycle edge in the input, which is exactly the required removable edge."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nparent = [0, 1, 2, ..., n]\n\nfind(x):\n    while parent[x] != x:\n        parent[x] = parent[parent[x]]\n        x = parent[x]\n    return x\n\nfor (u, v) in edges in input order:\n    root_u = find(u)\n    root_v = find(v)\n    if root_u == root_v:\n        return [u, v]\n    union(root_u, root_v)\n\nreturn []\n```"
+    }
+  ]
+}

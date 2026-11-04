@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/reverse-bits",
+  "slug": "reverse-bits",
+  "title": "Mirror the Bits",
+  "difficulty": "easy",
+  "patterns": ["bit-manipulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "reverseBits",
+    "params": [
+      {
+        "name": "value",
+        "type": "long"
+      }
+    ],
+    "returns": "long",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Stopping when the input becomes zero instead of processing 32 bits",
+    "Returning a signed negative value for patterns with the high bit set",
+    "Shifting the wrong direction while building the result",
+    "Confusing bit reversal with byte reversal"
+  ],
+  "followUps": [
+    "How would you reverse the bits of a 64-bit word?",
+    "How would you reverse the bits in each byte independently?",
+    "How would you use a lookup table to accelerate many reversals?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

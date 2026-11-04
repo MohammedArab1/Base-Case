@@ -1,0 +1,4 @@
+{"input":{"target":12,"position":[10,4,7,1],"speed":[2,3,1,2]},"expected":3}
+{"input":{"target":10,"position":[3],"speed":[3]},"expected":1}
+{"input":{"target":100,"position":[0,50],"speed":[50,1]},"expected":1}
+{"input":{"target":10,"position":[0,2,4],"speed":[1,1,1]},"expected":3}

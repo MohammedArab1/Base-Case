@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think of airports as vertices",
+      "body": "The tickets are directed edges. Using every edge exactly once is an Eulerian trail problem, not a shortest-path problem."
+    },
+    {
+      "level": 2,
+      "title": "Build the trail backwards",
+      "body": "A depth-first walk that keeps taking available edges until it gets stuck records airports in reverse order. Reversing that record produces a valid Eulerian trail."
+    },
+    {
+      "level": 3,
+      "title": "Control the tie-breaking",
+      "body": "Sort each airport's outgoing destinations so the smallest one is taken first. Using a stack or a descending list that is popped from the end avoids repeatedly removing from the front."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfor each ticket in descending lexicographic order:\n    append destination to graph[source]\nroute = []\nvisit(airport):\n    while graph[airport] is not empty:\n        visit(pop last destination)\n    route.append(airport)\nvisit(\"JFK\")\nreverse route\nreturn route\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

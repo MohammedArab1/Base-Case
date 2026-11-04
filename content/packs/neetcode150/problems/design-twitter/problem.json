@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/design-twitter",
+  "slug": "design-twitter",
+  "title": "Social Feed Simulator",
+  "difficulty": "medium",
+  "patterns": ["design", "hash-table", "heap", "simulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "twitterFeed",
+    "params": [
+      {
+        "name": "operations",
+        "type": "string[]"
+      },
+      {
+        "name": "arguments",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1) post/follow, O(T) per feed",
+      "space": "O(T + R) plus output",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1) post/follow, O(T) per feed",
+      "space": "O(T + R) plus output"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Ordering tweets by ID rather than publication time",
+    "Treating follows as transitive",
+    "Including tweets from unfollowed users",
+    "Returning more than ten tweets",
+    "Adding entries for non-feed commands"
+  ],
+  "followUps": [
+    "How would you make each feed query faster with many posts?",
+    "How would deleting a tweet affect the timeline?",
+    "How would you merge per-user tweet lists with a heap?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

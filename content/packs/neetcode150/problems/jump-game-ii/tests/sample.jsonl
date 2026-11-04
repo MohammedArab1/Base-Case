@@ -1,0 +1,4 @@
+{"input":{"steps":[3,1,2,0,4,1]},"expected":3}
+{"input":{"steps":[2,0,1,0]},"expected":2}
+{"input":{"steps":[0]},"expected":0}
+{"input":{"steps":[4,0,0,0,0]},"expected":1}

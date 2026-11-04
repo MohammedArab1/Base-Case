@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A range of balances",
+      "body": "A joker means there is not just one possible balance; track the smallest and largest possible balances."
+    },
+    {
+      "level": 2,
+      "title": "Joker effects",
+      "body": "A joker can decrease the balance by one, leave it unchanged, or increase it by one."
+    },
+    {
+      "level": 3,
+      "title": "Keep the range alive",
+      "body": "If the maximum possible balance becomes negative, the prefix has too many closes. At the end, zero must be inside the range."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlow = 0\nhigh = 0\nfor ch in text:\n    if ch == '(':\n        low += 1\n        high += 1\n    else if ch == ')':\n        low = max(0, low - 1)\n        high -= 1\n        if high < 0: return false\n    else:\n        low = max(0, low - 1)\n        high += 1\nreturn low == 0\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

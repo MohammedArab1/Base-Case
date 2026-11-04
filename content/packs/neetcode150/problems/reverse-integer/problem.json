@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/reverse-integer",
+  "slug": "reverse-integer",
+  "title": "Digit Reversal",
+  "difficulty": "medium",
+  "patterns": ["math", "simulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "reverseDigits",
+    "params": [
+      {
+        "name": "value",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(log |value|)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(log |value|)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using the same positive limit for both signs",
+    "Returning a wrapped value instead of `0` on overflow",
+    "Losing the sign while reversing",
+    "Failing to drop zeros that become leading zeros"
+  ],
+  "followUps": [
+    "How would you reverse the digits of a decimal string without converting it to an integer?",
+    "How would you check whether a number is a palindrome without reversing it?",
+    "How would you reverse the digits in another base?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/redundant-connection",
+  "slug": "redundant-connection",
+  "title": "Edge to Break the Cycle",
+  "difficulty": "medium",
+  "patterns": ["graph", "union-find", "depth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "findRedundantConnection",
+    "params": [
+      {
+        "name": "edges",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n alpha(n))",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n alpha(n))",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Returning the first edge of the cycle rather than the last one in input order",
+    "Checking connectivity only after all edges are added",
+    "Forgetting path compression",
+    "Sorting the returned edge instead of preserving its input orientation"
+  ],
+  "followUps": [
+    "What would you return if more than one extra edge was added?",
+    "How would you find all edges that can be removed?",
+    "How would you handle a directed version of the problem?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

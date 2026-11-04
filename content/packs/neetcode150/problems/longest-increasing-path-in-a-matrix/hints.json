@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "It is a directed graph",
+      "body": "Draw an edge from every cell to each neighboring cell with a larger value. The graph is acyclic because values strictly increase, and the answer is the longest path in this DAG."
+    },
+    {
+      "level": 2,
+      "title": "Memoize the search",
+      "body": "Let `best[r][c]` be the longest increasing path starting at cell `(r, c)`. It is one plus the best result among strictly larger neighbors."
+    },
+    {
+      "level": 3,
+      "title": "Process in elevation order",
+      "body": "Sort cells by elevation. When a cell is processed, every strictly smaller neighbor has already been processed, so its best value is final. Update from those smaller neighbors instead of using recursion."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbest = all ones\nfor each cell in increasing elevation order:\n    for each neighbor with smaller elevation:\n        best[cell] = max(best[cell], best[neighbor] + 1)\nreturn maximum value in best\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Separate the signs",
+      "body": "Suppose the entries receiving plus signs sum to `P` and the entries receiving minus signs sum to `N`. Then `P - N = target` and `P + N = total`."
+    },
+    {
+      "level": 2,
+      "title": "Turn it into subset sum",
+      "body": "Adding the equations gives `2P = total + target`, so the problem is to count subsets whose sum is `(total + target) / 2`."
+    },
+    {
+      "level": 3,
+      "title": "Validate first",
+      "body": "If the target's absolute value exceeds the total, no assignment works. If `total + target` is odd, the required subset sum is not an integer. Both cases return zero."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntotal = sum(values)\nif abs(target) > total or (total + target) is odd:\n    return 0\nwanted = (total + target) / 2\nways = zeros of length wanted + 1\nways[0] = 1\nfor value in values:\n    for subtotal from wanted down to value:\n        ways[subtotal] += ways[subtotal - value]\nreturn ways[wanted]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

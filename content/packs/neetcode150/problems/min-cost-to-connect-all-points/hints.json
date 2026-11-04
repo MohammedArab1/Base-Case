@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What must be built",
+      "body": "You need a set of roads that connects every settlement without cycles. Such a set is a spanning tree, and the cheapest one is a minimum spanning tree."
+    },
+    {
+      "level": 2,
+      "title": "Every pair is a candidate",
+      "body": "The graph is complete: any two settlements can be joined, with cost equal to their Manhattan distance."
+    },
+    {
+      "level": 3,
+      "title": "Grow one tree",
+      "body": "Prim's algorithm starts from one settlement. Repeatedly add the unconnected settlement whose cheapest road to the current tree is smallest. Keep a `best` array instead of materializing every edge."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbest[0] = 0, all other best values = infinity\nrepeat n times:\n    choose unvisited u with minimum best[u]\n    mark u visited\n    add best[u] to total\n    for every unvisited v:\n        best[v] = min(best[v], manhattan(u, v))\nreturn total\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

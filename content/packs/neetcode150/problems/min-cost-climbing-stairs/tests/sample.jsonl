@@ -1,0 +1,4 @@
+{"input":{"cost":[7,3,8,4]},"expected":7}
+{"input":{"cost":[5,1]},"expected":1}
+{"input":{"cost":[2,5,1,6,2]},"expected":5}
+{"input":{"cost":[0,0,0]},"expected":0}

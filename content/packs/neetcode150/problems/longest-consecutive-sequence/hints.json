@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Order in the input does not matter",
+      "body": "A run is about which values exist, not where they appear. Duplicates add no new information. What data structure removes duplicates and answers 'does this value exist?' quickly?"
+    },
+    {
+      "level": 2,
+      "title": "Find where a run starts",
+      "body": "A value `x` can start a run exactly when `x - 1` is absent. If `x - 1` is present, `x` is in the middle of a run and expanding from it would repeat work."
+    },
+    {
+      "level": 3,
+      "title": "Expand only from starts",
+      "body": "Put every value in a hash set. Scan the set; when `x - 1` is missing, count upward with `x + 1`, `x + 2`, and so on while those values remain in the set. Every value is visited a constant number of times."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nvalues = set(nums)\nbest = 0\nfor value in values:\n    if value - 1 in values:\n        continue\n    length = 1\n    while value + length in values:\n        length += 1\n    best = max(best, length)\nreturn best\n```\n\nThis is pseudocode, not a complete solution. Handle the empty input naturally."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think in layers",
+      "body": "All markers reachable with at most `k` jumps form a contiguous range starting at index `0`."
+    },
+    {
+      "level": 2,
+      "title": "Layer boundary",
+      "body": "Track the last index of the current jump layer and the farthest index visible from anywhere in that layer."
+    },
+    {
+      "level": 3,
+      "title": "Count when crossing",
+      "body": "When the scan reaches the current layer boundary, one more jump is needed and a new layer begins."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\njumps = 0\nlayerEnd = 0\nfarthest = 0\nfor i from 0 to length(steps) - 2:\n    farthest = max(farthest, i + steps[i])\n    if i == layerEnd:\n        jumps += 1\n        layerEnd = farthest\nreturn jumps\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

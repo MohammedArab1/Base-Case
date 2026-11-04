@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Why is a plain delimiter unsafe?",
+      "body": "If you join words with a character, a word may contain that character, so the decoder cannot tell a separator from data. You need a way to know where each word ends."
+    },
+    {
+      "level": 2,
+      "title": "Put the length first",
+      "body": "Write the word's length in decimal, then `'#'`, then the word. The decoder reads digits until `'#'`, converts them to a number, and then consumes exactly that many characters. This works even when the word itself contains `'#'`."
+    },
+    {
+      "level": 3,
+      "title": "Handle both directions and the empty cases",
+      "body": "Encoding no words produces the empty string. Encoding one empty word produces `\"0#\"`. Decoding the empty string produces no words. For each operation, append the appropriate list to the result; an encode result is a one-element list containing the encoded text."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nencode(words):\n    result = \"\"\n    for word in words:\n        result += decimal(length(word)) + \"#\" + word\n    return result\n\ndecode(text):\n    words = []\n    index = 0\n    while index < length(text):\n        marker = position of '#' at or after index\n        size = integer from text[index:marker]\n        start = marker + 1\n        words.append(text[start:start + size])\n        index = start + size\n    return words\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pick a center",
+      "body": "Every palindrome has a center. An odd-length palindrome shares one central character, while an even-length palindrome has a gap between two central characters."
+    },
+    {
+      "level": 2,
+      "title": "Expand outward",
+      "body": "Starting from a center, move one character left and one character right. As long as both characters match, the enclosed section is another palindrome."
+    },
+    {
+      "level": 3,
+      "title": "Count both center types",
+      "body": "For each index, expand around the character itself and around the gap to its right. Together those two expansions cover every non-empty palindromic slice exactly once."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ntotal = 0\nfor center from 0 to length(text) - 1:\n    total += expand(center, center)\n    total += expand(center, center + 1)\n\nexpand(left, right):\n    count = 0\n    while left >= 0 and right < length(text) and text[left] == text[right]:\n        count += 1\n        left -= 1\n        right += 1\n    return count\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

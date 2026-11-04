@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/valid-sudoku",
+  "slug": "valid-sudoku",
+  "title": "Sudoku Grid Check",
+  "difficulty": "medium",
+  "patterns": ["matrix", "hash-map", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "isValidSudoku",
+    "params": [{ "name": "board", "type": "string[][]" }],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Returning false when the grid contains blanks instead of ignoring blanks",
+    "Checking only rows and columns and forgetting the nine 3x3 boxes",
+    "Computing a box index from the wrong row or column grouping",
+    "Requiring the grid to be complete or solvable"
+  ],
+  "followUps": [
+    "How would you check whether the grid has a unique completion?",
+    "How can bitmasks replace the row, column, and box sets?",
+    "How would you validate a 16x16 grid with hexadecimal digits?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

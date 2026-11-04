@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/remove-nth-node-from-end-of-list",
+  "slug": "remove-nth-node-from-end-of-list",
+  "title": "Drop the Nth from the Tail",
+  "difficulty": "medium",
+  "patterns": ["linked-list", "two-pointers"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "removeNthFromEnd",
+    "params": [
+      {
+        "name": "head",
+        "type": "ListNode"
+      },
+      {
+        "name": "n",
+        "type": "int"
+      }
+    ],
+    "returns": "ListNode",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Off-by-one in the initial gap",
+    "Forgetting the dummy node when the head is removed",
+    "Advancing the trailing pointer too far",
+    "Returning the dummy node rather than its next pointer"
+  ],
+  "followUps": [
+    "How would you remove the middle node without knowing the length?",
+    "What if you had to remove every node whose value equals a target?",
+    "Can you solve it with two full passes, and what is the trade-off?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{"input":{"triplets":[[1,2,3]],"target":[1,2,3]},"expected":true}
+{"input":{"triplets":[[1,2,4]],"target":[1,2,3]},"expected":false}
+{"input":{"triplets":[[2,1,1],[1,2,1],[1,1,2]],"target":[2,2,2]},"expected":true}
+{"input":{"triplets":[[5,5,0],[0,5,5],[5,0,5]],"target":[5,5,5]},"expected":true}
+{"input":{"triplets":[[5,5,4],[4,5,5]],"target":[5,5,5]},"expected":true}
+{"input":{"triplets":[[4,4,0],[4,0,4],[0,4,4]],"target":[4,4,4]},"expected":true}
+{"input":{"triplets":[[7,3,8],[7,2,9],[6,3,9]],"target":[7,3,9]},"expected":true}
+{"input":{"triplets":[[3,3,4]],"target":[2,3,4]},"expected":false}
+{"input":{"triplets":[],"target":[1,1,1]},"expected":false}
+{"input":{"triplets":[[2,2,2],[0,0,0]],"target":[2,2,2]},"expected":true}
+{"input":{"triplets":[[9,10,10],[10,9,10],[10,10,9]],"target":[10,10,10]},"expected":true}
+{"input":{"triplets":[[8,8,7],[8,7,8],[7,8,8]],"target":[8,8,8]},"expected":true}
+{"input":{"triplets":[[3,3,3],[3,3,3]],"target":[3,3,3]},"expected":true}
+{"input":{"triplets":[[2,3,4],[4,3,2]],"target":[2,3,4]},"expected":true}
+{"input":{"triplets":[[1,1,1]],"target":[1,1,2]},"expected":false}
+{"input":{"triplets":[[0,0,0]],"target":[1,1,1]},"expected":false}

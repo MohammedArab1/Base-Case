@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/regular-expression-matching",
+  "slug": "regular-expression-matching",
+  "title": "Pattern Match with Wildcards",
+  "difficulty": "hard",
+  "patterns": ["dynamic-programming", "strings", "recursion"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "isMatch",
+    "params": [
+      {
+        "name": "s",
+        "type": "string"
+      },
+      {
+        "name": "p",
+        "type": "string"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(m * n)",
+      "space": "O(m * n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(m * n)",
+      "space": "O(m * n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Attaching `*` to the following character",
+    "Forgetting that a starred element can match zero characters",
+    "Using a greedy star that never backtracks",
+    "Accepting a match that consumes only part of the string"
+  ],
+  "followUps": [
+    "How would you support `+` for one or more repetitions?",
+    "Can the DP be reduced to one row?",
+    "How would you find the longest prefix of `s` matched by `p`?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

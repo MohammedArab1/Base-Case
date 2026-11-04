@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/hand-of-straights",
+  "slug": "hand-of-straights",
+  "title": "Card Runs",
+  "difficulty": "medium",
+  "patterns": ["greedy", "sorting", "hash-map"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "canGroup",
+    "params": [
+      {
+        "name": "hand",
+        "type": "int[]"
+      },
+      {
+        "name": "groupSize",
+        "type": "int"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n log n)",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n log n)",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Forgetting the divisibility check before grouping",
+    "Starting runs at an arbitrary value rather than the smallest remaining one",
+    "Consuming only one run when the smallest value has several copies",
+    "Treating equal values as consecutive without checking gaps"
+  ],
+  "followUps": [
+    "How would you return one valid grouping rather than only deciding whether it exists?",
+    "What changes if a group may contain repeated values but must still be consecutive as a set?",
+    "How would you handle a stream of cards arriving one at a time?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

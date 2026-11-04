@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/koko-eating-bananas",
+  "slug": "koko-eating-bananas",
+  "title": "Minimum Eating Rate",
+  "difficulty": "medium",
+  "patterns": ["binary-search", "greedy"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "minEatingRate",
+    "params": [
+      {
+        "name": "piles",
+        "type": "int[]"
+      },
+      {
+        "name": "hours",
+        "type": "int"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n log M)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n log M)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Rounding pile division down instead of up",
+    "Trying rate `0`",
+    "Using the total number of grain units as the upper bound",
+    "Letting the worker switch piles inside one hour"
+  ],
+  "followUps": [
+    "How would the answer change with two workers eating in parallel?",
+    "What if each worker has a different maximum rate?",
+    "Can you find the answer without binary search when all piles are equal?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

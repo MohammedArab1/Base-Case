@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Prefix state",
+      "body": "Imagine consuming the candidate from left to right. At any point, some prefix of the first thread and some prefix of the second thread have been used. The lengths of those prefixes determine how much of the candidate has been consumed."
+    },
+    {
+      "level": 2,
+      "title": "Two-dimensional table",
+      "body": "Let `possible[i][j]` indicate whether the first `i` characters of `first` and the first `j` characters of `second` can weave the first `i + j` characters of `woven`."
+    },
+    {
+      "level": 3,
+      "title": "Look at the last character",
+      "body": "The current candidate prefix ends with either the last used character of `first` or the last used character of `second`. Try each source that matches and consult the state without that source character."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif length(woven) != length(first) + length(second): return false\nprevious = row for consuming only second\nfor i from 1 to length(first):\n    current[0] = previous[0] and first[i-1] == woven[i-1]\n    for j from 1 to length(second):\n        current[j] =\n            (previous[j] and first[i-1] == woven[i+j-1]) or\n            (current[j-1] and second[j-1] == woven[i+j-1])\n    previous = current\nreturn previous[length(second)]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

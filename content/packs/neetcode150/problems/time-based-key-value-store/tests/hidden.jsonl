@@ -1,0 +1,16 @@
+{"input":{"operations":["set","get"],"keys":["k","k"],"values":["v",""],"times":[0,0]},"expected":["v"]}
+{"input":{"operations":["set","get"],"keys":["k","k"],"values":["v",""],"times":[10,9]},"expected":[""]}
+{"input":{"operations":["set","get"],"keys":["k","k"],"values":["v",""],"times":[10,11]},"expected":["v"]}
+{"input":{"operations":["get","set","get"],"keys":["k","k","k"],"values":["","later",""],"times":[1,5,5]},"expected":["","later"]}
+{"input":{"operations":["set","set","get","get"],"keys":["k","k","k","k"],"values":["a","b","",""],"times":[1,9,1,8]},"expected":["a","a"]}
+{"input":{"operations":["set","set","set","get","get","get","get"],"keys":["k","k","k","k","k","k","k"],"values":["a","b","c","","","",""],"times":[2,4,6,1,2,4,5]},"expected":["","a","b","b"]}
+{"input":{"operations":["set","set","get","get","get"],"keys":["a","b","a","b","c"],"values":["a1","b1","","",""],"times":[1,2,2,1,3]},"expected":["a1","",""]}
+{"input":{"operations":["set","set","set","get","get"],"keys":["a","a","b","a","b"],"values":["first","second","third","",""],"times":[5,15,20,100,100]},"expected":["second","third"]}
+{"input":{"operations":["set","set","get","get"],"keys":["k","k","k","k"],"values":["old","new","",""],"times":[999999999,1000000000,1000000000,999999999]},"expected":["new","old"]}
+{"input":{"operations":["set","get","set","get"],"keys":["x","x","y","y"],"values":["x1","","y1",""],"times":[3,2,4,4]},"expected":["","y1"]}
+{"input":{"operations":["set","set","get","get","get"],"keys":["k","k","k","k","k"],"values":["a","b","","",""],"times":[10,20,9,10,20]},"expected":["","a","b"]}
+{"input":{"operations":["set","get","get","get"],"keys":["k","k","k","k"],"values":["v","","",""],"times":[7,6,7,8]},"expected":["","v","v"]}
+{"input":{"operations":["set","set"],"keys":["a","b"],"values":["one","two"],"times":[1,2]},"expected":[]}
+{"input":{"operations":["get","get","get"],"keys":["a","b","c"],"values":["","",""],"times":[5,5,5]},"expected":["","",""]}
+{"input":{"operations":["set","set","get","get","get","get"],"keys":["a","a","b","a","b","c"],"values":["x","y","","","",""],"times":[2,8,1,5,2,9]},"expected":["","x","",""]}
+{"input":{"operations":["set","get","set","get","set","get"],"keys":["k","k","k","k","k","k"],"values":["a","","b","","c",""],"times":[1,1,2,3,10,9]},"expected":["a","b","b"]}

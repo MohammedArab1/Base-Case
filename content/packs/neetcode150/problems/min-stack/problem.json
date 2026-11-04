@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/min-stack",
+  "slug": "min-stack",
+  "title": "Minimum-Tracking Stack",
+  "difficulty": "medium",
+  "patterns": ["stack", "design", "data-structures", "simulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "minStack",
+    "params": [
+      { "name": "operations", "type": "string[]" },
+      { "name": "arguments", "type": "int[][]" }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(1) per operation",
+      "space": "O(n)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(1) per operation",
+      "space": "O(n)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Scanning the entire stack on every getMin call",
+    "Forgetting that popping the current minimum must reveal the previous minimum",
+    "Treating duplicate minimum values as a single occurrence",
+    "Emitting a value for push operations or forgetting the -1 result for pop"
+  ],
+  "followUps": [
+    "How would you support getMax at the same time?",
+    "Can you implement the stack with one array of values and one array of minima?",
+    "What changes if operations may pop from an empty stack?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

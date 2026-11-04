@@ -1,0 +1,4 @@
+{"input":{"n":5,"edges":[[0,1],[0,2],[0,3],[3,4]]},"expected":true}
+{"input":{"n":3,"edges":[[0,1],[1,2],[2,0]]},"expected":false}
+{"input":{"n":1,"edges":[]},"expected":true}
+{"input":{"n":4,"edges":[[0,1],[2,3]]},"expected":false}

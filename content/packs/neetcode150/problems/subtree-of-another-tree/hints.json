@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Try every candidate root",
+      "body": "The embedded subtree must start at some node of the larger tree. Visit each node and consider it as a candidate."
+    },
+    {
+      "level": 2,
+      "title": "Reuse an equality check",
+      "body": "Write a helper that decides whether two trees are identical. Run it for every candidate node in the larger tree."
+    },
+    {
+      "level": 3,
+      "title": "Cover the empty cases",
+      "body": "An empty `subRoot` always matches. An empty `root` cannot contain a non-empty `subRoot`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nfunction identical(a, b):\n    if a is null and b is null: return true\n    if a is null or b is null: return false\n    return a.value == b.value\n        and identical(a.left, b.left)\n        and identical(a.right, b.right)\n\nfunction contains(root, sub):\n    if sub is null: return true\n    if root is null: return false\n    if identical(root, sub): return true\n    return contains(root.left, sub) or contains(root.right, sub)\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

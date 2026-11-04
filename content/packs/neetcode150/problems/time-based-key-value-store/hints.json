@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Store history per key",
+      "body": "One global list is not enough: a read only cares about writes to its own key. Keep a separate timestamp history for every key."
+    },
+    {
+      "level": 2,
+      "title": "Append without sorting",
+      "body": "Writes are globally increasing in time, so each key's history is automatically sorted. Appending a new write preserves that order."
+    },
+    {
+      "level": 3,
+      "title": "Binary search the cutoff",
+      "body": "For a query time `t`, find the rightmost recorded timestamp less than or equal to `t`. If none exists, the answer is the empty string."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nhistory = empty map from key to list of (time, value)\nanswers = empty list\nfor each operation:\n    if operation is set: append (time, value) to history[key]\n    else:\n        list = history.get(key)\n        if list is missing or empty: append \"\" to answers\n        else:\n            find rightmost index i with list[i].time <= query time\n            append list[i].value if i exists else \"\" to answers\nreturn answers\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

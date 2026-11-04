@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Pick a useful corner",
+      "body": "A full scan repeats work. Which corner lets a single comparison discard an entire row or an entire column?"
+    },
+    {
+      "level": 2,
+      "title": "The top-right corner",
+      "body": "At the top-right cell, every value to the left is no larger and every value below is no smaller. A comparison therefore points in exactly one direction."
+    },
+    {
+      "level": 3,
+      "title": "Shrink the remaining table",
+      "body": "Keep the search inside a rectangle. If the current value is too large, move left; if it is too small, move down. Each move removes one row or one column."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nrow = 0\ncol = last column\nwhile row < rowCount and col >= 0:\n    value = matrix[row][col]\n    if value == target: return true\n    if value > target: col = col - 1\n    else: row = row + 1\nreturn false\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -15,6 +15,7 @@ import { rebuildContentIndex } from './content-sync'
 import { AppError } from './ipc-errors'
 import { getLogger } from './logger'
 import type { ContentIndexRepository } from './repositories/content-index'
+import type { SettingsStore } from './settings'
 import { defaultZipLimits, extractZip, ZipExtractionError } from './zip'
 
 const pendingLifetimeMs = 15 * 60 * 1000
@@ -42,6 +43,7 @@ export class PackManager {
     private readonly userDataPath: string,
     private readonly content: ContentRepository,
     private readonly contentIndex: ContentIndexRepository,
+    private readonly settings: SettingsStore,
   ) {}
 
   async preview(kind: PackImportKind): Promise<PackPreviewResult | null> {
@@ -200,12 +202,22 @@ export class PackManager {
       }
 
       try {
-        await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath)
+        await rebuildContentIndex(
+          this.content,
+          this.contentIndex,
+          this.userDataPath,
+          this.settings.get().enabledBundledPacks,
+        )
       } catch (error) {
         await rm(target, { recursive: true, force: true }).catch(() => undefined)
 
         try {
-          await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath)
+          await rebuildContentIndex(
+            this.content,
+            this.contentIndex,
+            this.userDataPath,
+            this.settings.get().enabledBundledPacks,
+          )
         } catch (rollbackError) {
           log.error('pack.rollback.failed', {
             pack: pending.manifest.id,
@@ -270,9 +282,58 @@ export class PackManager {
     }
 
     await rm(target, { recursive: true, force: true })
-    await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath)
+    await rebuildContentIndex(
+      this.content,
+      this.contentIndex,
+      this.userDataPath,
+      this.settings.get().enabledBundledPacks,
+    )
 
     log.info('pack.uninstalled', { pack: packId })
+  }
+
+  async setEnabled(packId: string, enabled: boolean): Promise<ContentPackSummary[]> {
+    const log = getLogger('packs')
+    const pack = this.installedPack(packId)
+
+    if (!pack) {
+      throw new AppError('not_found', `Unknown content pack: ${packId}`)
+    }
+
+    if (pack.source !== 'bundled' || !pack.optional) {
+      throw new AppError('invalid_request', 'Only bundled optional packs can be turned on or off.')
+    }
+
+    const current = this.settings.get().enabledBundledPacks
+    const next = enabled
+      ? [...new Set([...current, packId])]
+      : current.filter((id) => id !== packId)
+
+    this.settings.update({ enabledBundledPacks: next })
+
+    try {
+      await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath, next)
+    } catch (error) {
+      this.settings.update({ enabledBundledPacks: current })
+
+      try {
+        await rebuildContentIndex(this.content, this.contentIndex, this.userDataPath, current)
+      } catch (rollbackError) {
+        log.error('pack.toggle.rollback.failed', {
+          pack: packId,
+          message: errorMessage(rollbackError),
+        })
+      }
+
+      throw new AppError(
+        'internal_error',
+        `The pack setting was saved but the catalog could not be reloaded: ${errorMessage(error)}`,
+      )
+    }
+
+    log.info('pack.toggled', { pack: packId, enabled })
+
+    return this.content.listPacks()
   }
 
   async cleanupStaleImports(): Promise<void> {
@@ -371,6 +432,8 @@ export class PackManager {
       license: manifest.license,
       attribution: manifest.attribution,
       source,
+      optional: manifest.optional === true,
+      enabled: true,
       problemCount: manifest.problems.length,
       designCount: manifest.designs.length,
       lessonCount: (manifest.lessons ?? []).length,

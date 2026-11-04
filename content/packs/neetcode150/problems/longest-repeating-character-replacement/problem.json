@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/longest-repeating-character-replacement",
+  "slug": "longest-repeating-character-replacement",
+  "title": "Replace to Repeat",
+  "difficulty": "medium",
+  "patterns": ["sliding-window", "strings", "hash-map"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "characterReplacement",
+    "params": [
+      { "name": "s", "type": "string" },
+      { "name": "k", "type": "int" }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(26n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(26n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting replacements as the number of characters that differ from the first character of the window",
+    "Shrinking the window only by one step instead of while it remains invalid",
+    "Forgetting that every position already counts as the majority letter, so zero replacements are needed for a single character",
+    "Assuming the answer always equals the whole string length"
+  ],
+  "followUps": [
+    "How can maintaining the maximum frequency avoid scanning 26 counters after every step?",
+    "What changes if replacements may turn a letter into any Unicode code point?",
+    "How would you return the substring rather than its length?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

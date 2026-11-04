@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "What makes two words equivalent?",
+      "body": "Ignore the order of the letters. Two words are anagrams exactly when every letter of the alphabet appears the same number of times in both. What compact value could represent those counts?"
+    },
+    {
+      "level": 2,
+      "title": "Build a hashable signature",
+      "body": "Sorting a word's letters produces a signature shared by all of its anagrams: `\"listen\"` and `\"silent\"` both become `\"eilnst\"`. A 26-element count array converted to a string or tuple is an alternative signature."
+    },
+    {
+      "level": 3,
+      "title": "Group first, order later",
+      "body": "Use a hash map from signature to the list of words that produce it. After every word has been placed, sort each list. Then sort the lists by their first element so the outer order is fixed. Keep duplicate words; do not use a set."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ngroups = empty map from signature to list of words\nfor each word in words:\n    signature = sorted letters of word\n    append word to groups[signature]\n\nresult = empty list\nfor each group in groups:\n    sort group lexicographically\n    append group to result\n\nsort result by the first word of each group\nreturn result\n```\n\nThis is pseudocode, not a complete solution. Handle the empty word and the empty input list explicitly when you translate it."
+    }
+  ]
+}

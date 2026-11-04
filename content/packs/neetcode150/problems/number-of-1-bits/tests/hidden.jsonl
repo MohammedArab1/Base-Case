@@ -1,0 +1,16 @@
+{"input":{"value":1},"expected":1}
+{"input":{"value":2},"expected":1}
+{"input":{"value":3},"expected":2}
+{"input":{"value":7},"expected":3}
+{"input":{"value":255},"expected":8}
+{"input":{"value":256},"expected":1}
+{"input":{"value":2147483647},"expected":31}
+{"input":{"value":1073741824},"expected":1}
+{"input":{"value":5},"expected":2}
+{"input":{"value":8},"expected":1}
+{"input":{"value":1024},"expected":1}
+{"input":{"value":999999},"expected":12}
+{"input":{"value":65535},"expected":16}
+{"input":{"value":65536},"expected":1}
+{"input":{"value":123456789},"expected":16}
+{"input":{"value":31},"expected":5}

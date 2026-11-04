@@ -1,0 +1,16 @@
+{"input":{"operations":["addWord","search","search","search"],"words":["cat",".at","c.t","ca."]},"expected":[true,true,true,true]}
+{"input":{"operations":["addWord","search","search"],"words":["hello","h.llo","he..o"]},"expected":[true,true,true]}
+{"input":{"operations":["search","addWord","search","search"],"words":[".","hi","h.","hi."]},"expected":[false,true,true,false]}
+{"input":{"operations":["addWord","addWord","search","search"],"words":["a","b",".",".."]},"expected":[true,true,true,false]}
+{"input":{"operations":["addWord","search","search","search"],"words":["ab","a.","..","..."]},"expected":[true,true,true,false]}
+{"input":{"operations":["addWord","addWord","search","search"],"words":["abc","abd","ab.","a.."]},"expected":[true,true,true,true]}
+{"input":{"operations":["addWord","addWord","search","search","search"],"words":["a","ab","a","..","."]},"expected":[true,true,true,true,true]}
+{"input":{"operations":["addWord","search","search","search"],"words":["x","..","x",".."]},"expected":[true,false,true,false]}
+{"input":{"operations":["addWord","addWord","search","search"],"words":["apple","apply","appl.","app.y"]},"expected":[true,true,true,true]}
+{"input":{"operations":["addWord","search","search"],"words":["zebra","z...a","z...."]},"expected":[true,true,true]}
+{"input":{"operations":["addWord","search","search","search"],"words":["car","c.r","c..","c..."]},"expected":[true,true,true,false]}
+{"input":{"operations":["search","addWord","search","search"],"words":["..","no","..",".o"]},"expected":[false,true,true,true]}
+{"input":{"operations":["addWord","search","search","search"],"words":["test","t.st","te.t","t..t"]},"expected":[true,true,true,true]}
+{"input":{"operations":["addWord","addWord","search","search","search"],"words":["ab","ba","..","a.",".a"]},"expected":[true,true,true,true,true]}
+{"input":{"operations":["addWord","search","search","search"],"words":["fun","f.n","...","...."]},"expected":[true,true,true,false]}
+{"input":{"operations":["addWord","addWord","search","search","search"],"words":["a","abc",".b.","a.c","a..."]},"expected":[true,true,true,true,false]}

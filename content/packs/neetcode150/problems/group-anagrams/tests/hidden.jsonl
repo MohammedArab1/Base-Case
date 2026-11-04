@@ -1,0 +1,16 @@
+{"input":{"words":[]},"expected":[]}
+{"input":{"words":[""]},"expected":[[""]]}
+{"input":{"words":["a"]},"expected":[["a"]]}
+{"input":{"words":["ab","ba"]},"expected":[["ab","ba"]]}
+{"input":{"words":["ab","ba","abc","cba","bac"]},"expected":[["ab","ba"],["abc","bac","cba"]]}
+{"input":{"words":["a","b","c"]},"expected":[["a"],["b"],["c"]]}
+{"input":{"words":["abcd","dcba","bcda","abdc","x"]},"expected":[["abcd","abdc","bcda","dcba"],["x"]]}
+{"input":{"words":["aabb","abab","baba","bbaa","ab","ba"]},"expected":[["aabb","abab","baba","bbaa"],["ab","ba"]]}
+{"input":{"words":["a","aa","aaa","aa","a"]},"expected":[["a","a"],["aa","aa"],["aaa"]]}
+{"input":{"words":["cat","tac","act","dog","god","odg"]},"expected":[["act","cat","tac"],["dog","god","odg"]]}
+{"input":{"words":["z","zz","zzz","zzzz","zzz"]},"expected":[["z"],["zz"],["zzz","zzz"],["zzzz"]]}
+{"input":{"words":["hello","world"]},"expected":[["hello"],["world"]]}
+{"input":{"words":["abc","def","ghi"]},"expected":[["abc"],["def"],["ghi"]]}
+{"input":{"words":["aab","aba","baa","abb","bab","bba"]},"expected":[["aab","aba","baa"],["abb","bab","bba"]]}
+{"input":{"words":["m","n","m","n","mn","nm"]},"expected":[["m","m"],["mn","nm"],["n","n"]]}
+{"input":{"words":["aaa","bbb","ccc","aaa","bbb","ccc","abc","bca","cab"]},"expected":[["aaa","aaa"],["abc","bca","cab"],["bbb","bbb"],["ccc","ccc"]]}

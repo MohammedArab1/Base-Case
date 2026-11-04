@@ -1,0 +1,4 @@
+{"input":{"nums1":[1,4,7],"nums2":[2,3,8,9]},"expected":4.0}
+{"input":{"nums1":[1,2],"nums2":[3,4]},"expected":2.5}
+{"input":{"nums1":[],"nums2":[7,10,14]},"expected":10.0}
+{"input":{"nums1":[5,6,7],"nums2":[]},"expected":6.0}

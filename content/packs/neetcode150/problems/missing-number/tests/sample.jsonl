@@ -1,0 +1,4 @@
+{"input":{"labels":[4,1,0,2]},"expected":3}
+{"input":{"labels":[0,1,2,4,5]},"expected":3}
+{"input":{"labels":[1,2,3]},"expected":0}
+{"input":{"labels":[0]},"expected":1}

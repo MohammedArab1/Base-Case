@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Simulate",
+      "body": "Compute the sum of squared digits and repeat from the new value."
+    },
+    {
+      "level": 2,
+      "title": "A cycle means no",
+      "body": "If a value repeats before reaching `1`, the process is trapped and will never reach `1`."
+    },
+    {
+      "level": 3,
+      "title": "Remember seen values",
+      "body": "Use a set of previously visited values, or Floyd slow/fast pointers, to detect repetition."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nseen = empty set\ncurrent = value\nwhile current != 1 and current not in seen:\n    add current to seen\n    total = 0\n    while current > 0:\n        digit = current % 10\n        total += digit * digit\n        current = current // 10\n    current = total\nreturn current == 1\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

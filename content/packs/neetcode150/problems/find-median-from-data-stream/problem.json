@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/find-median-from-data-stream",
+  "slug": "find-median-from-data-stream",
+  "title": "Streaming Median Tracker",
+  "difficulty": "hard",
+  "patterns": ["heap", "design", "data-stream", "sorting"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "medianOperations",
+    "params": [
+      {
+        "name": "operations",
+        "type": "string[]"
+      },
+      {
+        "name": "values",
+        "type": "int[]"
+      }
+    ],
+    "returns": "double[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "float",
+    "absoluteTolerance": 1e-5,
+    "relativeTolerance": 1e-9
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n) per add, O(1) per median",
+      "space": "O(n) plus output",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n) per add, O(1) per median",
+      "space": "O(n) plus output"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Averaging the wrong two elements for an even-sized collection",
+    "Using integer division when averaging",
+    "Ignoring the placeholder value consumed by a median query",
+    "Reporting the mean instead of the median"
+  ],
+  "followUps": [
+    "How would you reduce insertion time to O(log n) with two heaps?",
+    "How would you support removing a value from the stream?",
+    "What changes if the median must be reported as an exact fraction?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

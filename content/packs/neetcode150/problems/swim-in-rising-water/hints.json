@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Think in terms of a bottleneck",
+      "body": "For a fixed path, the time required is the maximum elevation on that path. You want the path whose maximum elevation is as small as possible."
+    },
+    {
+      "level": 2,
+      "title": "Test a water level",
+      "body": "For a candidate time `t`, cells with elevation at most `t` are passable. A breadth-first search tells you whether the destination is reachable at that level."
+    },
+    {
+      "level": 3,
+      "title": "Search the time",
+      "body": "Reachability only improves as `t` increases, so binary search the answer between the start elevation and the largest elevation. Alternatively, run a Dijkstra-style search that minimizes the maximum elevation seen so far."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nlow = grid[0][0], high = maximum elevation in grid\nwhile low < high:\n    mid = floor((low + high) / 2)\n    if destination is reachable using cells <= mid:\n        high = mid\n    else:\n        low = mid + 1\nreturn low\n```\n\nThe reachability check is a four-direction breadth-first search that refuses cells above the candidate level. This is pseudocode, not a complete implementation."
+    }
+  ]
+}

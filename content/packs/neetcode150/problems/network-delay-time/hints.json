@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Earliest arrival",
+      "body": "For each node you need the shortest travel time from `k`. The answer is the largest of those shortest times."
+    },
+    {
+      "level": 2,
+      "title": "Nonnegative weights",
+      "body": "All link times are nonnegative, so Dijkstra's algorithm applies even though the fastest route may use many links."
+    },
+    {
+      "level": 3,
+      "title": "Settle nodes in order",
+      "body": "Repeatedly settle the unsettled node with the smallest known distance and relax its outgoing links. With at most 100 nodes, a simple linear scan for the minimum is fast enough."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndist[k] = 0, all other dist values = infinity\nrepeat until no reachable unsettled node remains:\n    u = unsettled node with smallest dist\n    mark u settled\n    for each link (u, v, w):\n        dist[v] = min(dist[v], dist[u] + w)\nif any dist is infinity: return -1\nreturn max(dist)\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

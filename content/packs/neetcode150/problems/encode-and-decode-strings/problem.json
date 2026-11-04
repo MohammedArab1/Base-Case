@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/encode-and-decode-strings",
+  "slug": "encode-and-decode-strings",
+  "title": "Reversible String Codec",
+  "difficulty": "medium",
+  "patterns": ["strings", "design", "encoding", "simulation"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "runCodec",
+    "params": [
+      { "name": "operations", "type": "string[]" },
+      { "name": "arguments", "type": "string[][]" }
+    ],
+    "returns": "string[][]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": { "python": 3, "javascript": 3, "typescript": 3 }
+  },
+  "checker": { "kind": "exact" },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(C)",
+      "space": "O(C)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(C)",
+      "space": "O(C)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Joining words with a delimiter that can also appear inside a word",
+    "Forgetting that an empty word still needs a length prefix",
+    "Returning a bare string for an encode operation instead of a one-element list",
+    "Decoding by splitting on '#' without reading exactly the declared number of characters"
+  ],
+  "followUps": [
+    "How would you decode the stream one chunk at a time without storing all of it?",
+    "What changes if lengths must count Unicode code points rather than ASCII characters?",
+    "How could a version byte support future format changes?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

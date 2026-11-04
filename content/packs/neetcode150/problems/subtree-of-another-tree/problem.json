@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/subtree-of-another-tree",
+  "slug": "subtree-of-another-tree",
+  "title": "Embedded Subtree",
+  "difficulty": "easy",
+  "patterns": ["trees", "depth-first-search", "recursion"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "isSubtree",
+    "params": [
+      {
+        "name": "root",
+        "type": "TreeNode"
+      },
+      {
+        "name": "subRoot",
+        "type": "TreeNode"
+      }
+    ],
+    "returns": "boolean",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n * m)",
+      "space": "O(h)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n * m)",
+      "space": "O(h)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Treating an empty `subRoot` as never matching",
+    "Accepting a subtree with extra descendants",
+    "Forgetting to search both children of the larger tree",
+    "Reusing a value-only comparison instead of a structural one"
+  ],
+  "followUps": [
+    "How would you achieve linear time with tree serialization?",
+    "How would you count how many times `subRoot` appears in `root`?",
+    "What would change if node values could be wildcards?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

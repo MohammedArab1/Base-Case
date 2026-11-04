@@ -119,6 +119,11 @@ export interface HintFile {
 
 export interface ContentCollection {
   readonly id: string
+  /**
+   * Collections in different packs that share a groupId are merged into one
+   * app-level filter. Use this for study lists that span packs.
+   */
+  readonly groupId?: string
   readonly name: string
   readonly description: string
   readonly problems: readonly string[]
@@ -133,6 +138,8 @@ export interface PackManifest {
   readonly version: string
   readonly license: string
   readonly attribution: string
+  /** Bundled packs marked optional stay off until the user enables them. */
+  readonly optional?: boolean
   readonly problems: readonly string[]
   readonly designs: readonly string[]
   readonly lessons?: readonly string[]

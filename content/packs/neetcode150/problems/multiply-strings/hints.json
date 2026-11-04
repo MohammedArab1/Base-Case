@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Grade school",
+      "body": "Use the multiplication method taught for multi-digit numbers, working from right to left."
+    },
+    {
+      "level": 2,
+      "title": "Positional contributions",
+      "body": "The digit at position `i` of one number and position `j` of the other contribute to position `i + j + 1` from the right."
+    },
+    {
+      "level": 3,
+      "title": "Carry array",
+      "body": "Accumulate products in a digit array, then normalize carries and strip leading zeros."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif num1 == \"0\" or num2 == \"0\": return \"0\"\ndigits = array of length m + n filled with 0\nfor i from m - 1 down to 0:\n    for j from n - 1 down to 0:\n        product = value(num1[i]) * value(num2[j])\n        total = product + digits[i + j + 1]\n        digits[i + j + 1] = total % 10\n        digits[i + j] += total // 10\nskip leading zeros\nreturn digits joined as text\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

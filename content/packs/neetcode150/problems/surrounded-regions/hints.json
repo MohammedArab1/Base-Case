@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Which regions are safe?",
+      "body": "Instead of finding enclosed regions directly, find the regions that can escape. Any `O` connected to a border `O` survives."
+    },
+    {
+      "level": 2,
+      "title": "Start at the border",
+      "body": "Run a flood fill from every border `O`, moving through orthogonal `O` neighbors. Mark all cells reached by these searches as safe."
+    },
+    {
+      "level": 3,
+      "title": "Flip the rest",
+      "body": "After marking safe cells, scan the copied board. Change an `O` to `X` only when it was not reached from the border. Leave every other cell as it is."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ngrid = copy of board\nsafe = grid of false\nstack = all border cells containing 'O'\nmark those border cells safe\n\nwhile stack is not empty:\n    r, c = pop\n    for each orthogonal neighbor inside the grid:\n        if grid[nr][nc] == 'O' and not safe[nr][nc]:\n            safe[nr][nc] = true\n            push (nr, nc)\n\nfor every cell:\n    if grid[r][c] == 'O' and not safe[r][c]:\n        grid[r][c] = 'X'\nreturn grid\n```"
+    }
+  ]
+}

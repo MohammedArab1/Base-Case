@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Thirty-two positions",
+      "body": "Process exactly 32 bits, even if the value is small."
+    },
+    {
+      "level": 2,
+      "title": "Read one bit",
+      "body": "The lowest bit of the input becomes the next bit of the result."
+    },
+    {
+      "level": 3,
+      "title": "Shift both sides",
+      "body": "Shift the result left and the input right after each step."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = 0\nfor step from 1 to 32:\n    result = result * 2 + (value % 2)\n    value = value // 2\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

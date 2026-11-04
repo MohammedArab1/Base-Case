@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/partition-labels",
+  "slug": "partition-labels",
+  "title": "Letter Blocks",
+  "difficulty": "medium",
+  "patterns": ["greedy", "strings", "hash-map"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "partitionLengths",
+    "params": [
+      {
+        "name": "text",
+        "type": "string"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Recording first occurrences instead of last occurrences",
+    "Cutting a block before every contained letter has appeared for the final time",
+    "Losing track of the start index for the next block",
+    "Returning characters or substrings instead of block lengths"
+  ],
+  "followUps": [
+    "How would you return the actual substrings as well as their lengths?",
+    "What changes if the string is a stream and its final length is unknown?",
+    "How would you minimize the number of blocks under the same uniqueness rule?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

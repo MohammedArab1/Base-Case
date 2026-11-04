@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Measure one region at a time",
+      "body": "When you find unvisited land, every orthogonally connected land cell belongs to the same region. Count those cells before moving on."
+    },
+    {
+      "level": 2,
+      "title": "Flood the region",
+      "body": "Use a stack or queue to visit the region. Mark each cell as soon as it is added so it is counted exactly once."
+    },
+    {
+      "level": 3,
+      "title": "Track the maximum",
+      "body": "For each region, count how many cells the flood fill visits, then update the best area seen so far. The outer scan continues from the next cell."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nbest = 0\nfor every cell:\n    if cell is land and not visited:\n        area = 0\n        stack = [cell]\n        mark cell visited\n        while stack is not empty:\n            current = pop(stack)\n            area += 1\n            for each orthogonal neighbor inside the grid:\n                if neighbor is land and not visited:\n                    mark visited\n                    push neighbor\n        best = max(best, area)\nreturn best\n```"
+    }
+  ]
+}

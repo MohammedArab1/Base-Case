@@ -1,0 +1,4 @@
+{"input": {"s": "abc", "p": "a.c"}, "expected": true}
+{"input": {"s": "abc", "p": "a.c*"}, "expected": true}
+{"input": {"s": "ab", "p": ".*c"}, "expected": false}
+{"input": {"s": "", "p": "a*"}, "expected": true}

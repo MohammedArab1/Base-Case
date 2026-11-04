@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A tree has a precise edge count",
+      "body": "Any tree on `n` nodes has exactly `n - 1` edges. If the input has a different number, it cannot be a tree."
+    },
+    {
+      "level": 2,
+      "title": "Edge count is not enough",
+      "body": "A graph with `n - 1` edges can still be disconnected if it contains a cycle in one component and leaves another component isolated."
+    },
+    {
+      "level": 3,
+      "title": "Union and detect cycles",
+      "body": "Process edges with a disjoint-set structure. If an edge joins two nodes already in the same component, it creates a cycle. A self-loop also joins a node to itself."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif edges.length != n - 1: return false\n\nparent = [0, 1, ..., n - 1]\n\nfind(x):\n    while parent[x] != x:\n        parent[x] = parent[parent[x]]\n        x = parent[x]\n    return x\n\nfor (u, v) in edges:\n    root_u = find(u)\n    root_v = find(v)\n    if root_u == root_v: return false\n    union(root_u, root_v)\n\nreturn true\n```"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/implement-trie-prefix-tree",
+  "slug": "implement-trie-prefix-tree",
+  "title": "Prefix Tree Operations",
+  "difficulty": "medium",
+  "patterns": ["trie", "string", "design"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "trieOperations",
+    "params": [
+      {
+        "name": "operations",
+        "type": "string[]"
+      },
+      {
+        "name": "words",
+        "type": "string[]"
+      }
+    ],
+    "returns": "boolean[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(L) per operation",
+      "space": "O(C) for the trie",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(L) per operation",
+      "space": "O(C) for the trie"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Treating a prefix match as an exact word match",
+    "Marking every visited node as the end of a word",
+    "Creating duplicate child nodes for an existing character",
+    "Forgetting that a repeated insertion is harmless"
+  ],
+  "followUps": [
+    "How would you delete a word while keeping shared prefixes intact?",
+    "How much memory could you save with a compressed trie?",
+    "How would you return all stored words that begin with a prefix?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

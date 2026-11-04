@@ -1,0 +1,4 @@
+{"input":{"value":23},"expected":true}
+{"input":{"value":5},"expected":false}
+{"input":{"value":1},"expected":true}
+{"input":{"value":4},"expected":false}

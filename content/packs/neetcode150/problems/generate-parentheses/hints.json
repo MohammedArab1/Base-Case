@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Build the string from left to right",
+      "body": "At every position you choose either `'('` or `')'`. Which choices are legal after a given prefix? Track how many opening and closing parentheses have been used so far."
+    },
+    {
+      "level": 2,
+      "title": "State the two legality conditions",
+      "body": "You may add an opening parenthesis while fewer than `n` have been used. You may add a closing parenthesis only while the number used is less than the number of openings used. These conditions prevent invalid prefixes."
+    },
+    {
+      "level": 3,
+      "title": "Stop only at full length",
+      "body": "When the built string has length `2n`, it is complete and must be recorded. Explore openings before closings so the natural order is lexicographic; sorting at the end also works and is harder to get wrong."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nresult = empty list\npath = empty list\n\ndef build(opened, closed):\n    if length(path) == 2 * n:\n        append joined path to result\n        return\n    if opened < n:\n        append \"(\" to path\n        build(opened + 1, closed)\n        remove last from path\n    if closed < opened:\n        append \")\" to path\n        build(opened, closed + 1)\n        remove last from path\n\nbuild(0, 0)\nsort result lexicographically\nreturn result\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

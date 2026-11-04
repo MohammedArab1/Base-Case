@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/course-schedule-ii",
+  "slug": "course-schedule-ii",
+  "title": "Course Ordering with Ties",
+  "difficulty": "medium",
+  "patterns": ["graph", "topological-sort", "heap", "breadth-first-search"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "findOrder",
+    "params": [
+      {
+        "name": "numCourses",
+        "type": "int"
+      },
+      {
+        "name": "prerequisites",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int[]",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O((V + E) log V)",
+      "space": "O(V + E)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O((V + E) log V)",
+      "space": "O(V + E)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Using an ordinary queue and returning a non-lexicographic order",
+    "Reversing the meaning of a prerequisite pair",
+    "Returning a partial order when a cycle exists",
+    "Forgetting that several courses can become available at once"
+  ],
+  "followUps": [
+    "How would you return any valid order instead of the lexicographically smallest?",
+    "How would you count all valid orderings?",
+    "How would you handle prerequisite pairs that are added online?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

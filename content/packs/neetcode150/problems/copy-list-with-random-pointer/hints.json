@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Create the copies first",
+      "body": "You cannot connect a back-reference until the target copy exists. First create one new node for every original node."
+    },
+    {
+      "level": 2,
+      "title": "Remember the mapping",
+      "body": "A hash map from an original node to its copy lets you translate any reference, whether it points forward or backward."
+    },
+    {
+      "level": 3,
+      "title": "Connect both kinds of links",
+      "body": "For each original node, set the copy's `next` to the copy of the original's next node, and set the copy's back-reference to the copy of the original's target."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nif values is empty: return []\noriginals = one new node per value, linked in order\ncopies = one new node per value, linked in order\nmap = empty dictionary\nfor each index: map[originals[index]] = copies[index]\nfor each index:\n    if random[index] is not -1:\n        originals[index].random = originals[random[index]]\n        copies[index].random = copies[random[index]]\noutput = []\nwalk the copies in order:\n    find the index of node.random in copies\n    append [node.value, index or -1]\nreturn output\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

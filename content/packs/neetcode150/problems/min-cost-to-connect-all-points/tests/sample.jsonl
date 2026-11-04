@@ -1,0 +1,4 @@
+{"input": {"points": [[0, 0], [3, 4], [6, 0]]}, "expected": 13}
+{"input": {"points": [[0, 0]]}, "expected": 0}
+{"input": {"points": [[0, 0], [1, 0], [2, 0], [3, 0]]}, "expected": 3}
+{"input": {"points": [[1, 1], [1, 1], [4, 5]]}, "expected": 7}

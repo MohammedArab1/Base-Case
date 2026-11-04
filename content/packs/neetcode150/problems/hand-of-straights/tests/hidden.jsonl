@@ -1,0 +1,16 @@
+{"input":{"hand":[9,2,8,7,2,2],"groupSize":1},"expected":true}
+{"input":{"hand":[1,2,3,4],"groupSize":2},"expected":true}
+{"input":{"hand":[1,2,4,5],"groupSize":2},"expected":true}
+{"input":{"hand":[1,1,2,3],"groupSize":2},"expected":false}
+{"input":{"hand":[1,2,2,3],"groupSize":2},"expected":true}
+{"input":{"hand":[5,5,6,6,7,7],"groupSize":3},"expected":true}
+{"input":{"hand":[5,6,7,8,9],"groupSize":5},"expected":true}
+{"input":{"hand":[1,3,2,2,3,4],"groupSize":3},"expected":true}
+{"input":{"hand":[0,1,2,3,4,5,7,8,9],"groupSize":3},"expected":true}
+{"input":{"hand":[1,2,3,4,5,6],"groupSize":4},"expected":false}
+{"input":{"hand":[1000000000,999999999,999999998],"groupSize":3},"expected":true}
+{"input":{"hand":[1,2,3,3,4,5],"groupSize":3},"expected":true}
+{"input":{"hand":[1,2,2,3,4,4],"groupSize":3},"expected":false}
+{"input":{"hand":[7,8,9,7,8,9],"groupSize":3},"expected":true}
+{"input":{"hand":[1,1,1,2,2,3],"groupSize":3},"expected":false}
+{"input":{"hand":[2,3,4,5,6,7],"groupSize":3},"expected":true}

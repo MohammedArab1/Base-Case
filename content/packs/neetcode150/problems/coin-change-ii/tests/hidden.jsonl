@@ -1,0 +1,16 @@
+{"input":{"amount":1,"coins":[2]},"expected":0}
+{"input":{"amount":3,"coins":[1,2]},"expected":2}
+{"input":{"amount":4,"coins":[1,2]},"expected":3}
+{"input":{"amount":5,"coins":[1,2,3]},"expected":5}
+{"input":{"amount":6,"coins":[2,3,4]},"expected":3}
+{"input":{"amount":10,"coins":[5]},"expected":1}
+{"input":{"amount":10,"coins":[1,5]},"expected":3}
+{"input":{"amount":12,"coins":[1,2,5]},"expected":13}
+{"input":{"amount":15,"coins":[3,5,7]},"expected":3}
+{"input":{"amount":20,"coins":[2,3,5]},"expected":11}
+{"input":{"amount":11,"coins":[1,2,5]},"expected":11}
+{"input":{"amount":13,"coins":[2,3,7]},"expected":4}
+{"input":{"amount":25,"coins":[5,10,25]},"expected":4}
+{"input":{"amount":30,"coins":[1,4,6]},"expected":27}
+{"input":{"amount":18,"coins":[2,4,6]},"expected":12}
+{"input":{"amount":50,"coins":[1,5,10,25]},"expected":49}

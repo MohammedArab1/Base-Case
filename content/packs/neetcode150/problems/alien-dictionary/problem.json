@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/alien-dictionary",
+  "slug": "alien-dictionary",
+  "title": "Alien Alphabet Order",
+  "difficulty": "hard",
+  "patterns": ["graph", "topological-sort", "strings", "heap"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "alienOrder",
+    "params": [
+      {
+        "name": "words",
+        "type": "string[]"
+      }
+    ],
+    "returns": "string",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(L + A log A)",
+      "space": "O(A + L)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(L + A^2)",
+      "space": "O(A + L)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Forgetting the prefix rule when the longer word appears first",
+    "Omitting letters that appear only inside words after the first character",
+    "Returning an arbitrary topological order rather than the smallest one",
+    "Adding duplicate edges and corrupting indegree counts"
+  ],
+  "followUps": [
+    "How can you tell whether the recovered alphabet is unique?",
+    "What should happen if the words contain uppercase letters?",
+    "How would the problem change if the list were only partially sorted?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

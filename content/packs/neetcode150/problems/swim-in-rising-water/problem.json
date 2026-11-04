@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/swim-in-rising-water",
+  "slug": "swim-in-rising-water",
+  "title": "Rising Water Crossing",
+  "difficulty": "hard",
+  "patterns": ["graph", "shortest-path", "binary-search", "heap"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "swimInWater",
+    "params": [
+      {
+        "name": "grid",
+        "type": "int[][]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n^2 log n)",
+      "space": "O(n^2)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n^2 log C)",
+      "space": "O(n^2)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Accumulating elevation costs instead of tracking the path maximum",
+    "Starting the binary search below the start cell's elevation",
+    "Permitting diagonal movement",
+    "Using a reachability check that ignores the destination's elevation"
+  ],
+  "followUps": [
+    "How would you reconstruct an optimal path?",
+    "What changes if diagonal moves are allowed?",
+    "How would the answer differ if the hiker could wait at the start but not elsewhere?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

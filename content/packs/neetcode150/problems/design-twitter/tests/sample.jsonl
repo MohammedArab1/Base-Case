@@ -1,0 +1,4 @@
+{"input":{"operations":["post","post","post","feed","follow","feed","unfollow","feed"],"arguments":[[2,41],[5,52],[2,63],[2],[2,5],[2],[2,5],[2]]},"expected":[[63,41],[63,52,41],[63,41]]}
+{"input":{"operations":["post","post","post","feed"],"arguments":[[3,11],[3,12],[4,13],[3]]},"expected":[[12,11]]}
+{"input":{"operations":["post","follow","post","feed"],"arguments":[[1,10],[2,1],[2,20],[2]]},"expected":[[20,10]]}
+{"input":{"operations":["feed","post","feed"],"arguments":[[1],[1,42],[1]]},"expected":[[],[42]]}

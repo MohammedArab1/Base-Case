@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Prefix states",
+      "body": "Let `dp[i][j]` mean that the first `i` characters of `s` match the first `j` characters of `p`. Work from shorter prefixes to longer ones."
+    },
+    {
+      "level": 2,
+      "title": "Ordinary characters and dots",
+      "body": "If `p[j-1]` is not a star and matches `s[i-1]`, the state falls back to `dp[i-1][j-1]`."
+    },
+    {
+      "level": 3,
+      "title": "Handling a star",
+      "body": "A star can match zero copies, which corresponds to `dp[i][j-2]`. It can also match one more copy when the preceding pattern character matches the current string character, corresponding to `dp[i-1][j]`."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\ndp[0][0] = true\nfor j from 2 to length(p):\n    if p[j-1] == \"*\": dp[0][j] = dp[0][j-2]\nfor i from 1 to length(s):\n    for j from 1 to length(p):\n        if p[j-1] == \"*\":\n            dp[i][j] = dp[i][j-2]\n            if p[j-2] == \".\" or p[j-2] == s[i-1]:\n                dp[i][j] = dp[i][j] or dp[i-1][j]\n        else if p[j-1] == \".\" or p[j-1] == s[i-1]:\n            dp[i][j] = dp[i-1][j-1]\nreturn dp[length(s)][length(p)]\n```\n\nThis is pseudocode, not a complete implementation."
+    }
+  ]
+}

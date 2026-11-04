@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "A plain stack is not enough",
+      "body": "`top` and `pop` are easy with an array. The hard part is `getMin` after a pop: the minimum may have been removed, and the previous minimum must come back."
+    },
+    {
+      "level": 2,
+      "title": "Remember the minimum at each depth",
+      "body": "Whenever you push a value, also store the minimum of the stack after that push. The current minimum is then available at the top, and popping automatically restores the previous entry."
+    },
+    {
+      "level": 3,
+      "title": "One pair per element",
+      "body": "Store `(value, current_min)` for every push. For a new value `v`, the entry's minimum is `min(v, previous_min)` when the stack is non-empty, and `v` when it is empty. Both `top` and `getMin` become reads of the last entry."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nstack = empty list of pairs\nresults = empty list\nfor each operation and its arguments:\n    if operation == \"push\":\n        value = arguments[0]\n        if stack is empty: current = value\n        else: current = min(value, stack[-1].minimum)\n        stack.append((value, current))\n    elif operation == \"pop\":\n        stack.remove_last()\n        results.append(-1)\n    elif operation == \"top\":\n        results.append(stack[-1].value)\n    else:  # getMin\n        results.append(stack[-1].minimum)\nreturn results\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

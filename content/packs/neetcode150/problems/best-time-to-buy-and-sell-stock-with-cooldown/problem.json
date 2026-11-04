@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/best-time-to-buy-and-sell-stock-with-cooldown",
+  "slug": "best-time-to-buy-and-sell-stock-with-cooldown",
+  "title": "Trading with Rest Days",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "arrays", "state-machine"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "maxRestProfit",
+    "params": [
+      {
+        "name": "prices",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n)",
+      "space": "O(1)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n)",
+      "space": "O(1)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Buying on the cooldown day after a sale",
+    "Buying and selling on the same day",
+    "Forgetting to carry the cooling profit into the free state",
+    "Using the updated holding value when computing today's sale"
+  ],
+  "followUps": [
+    "How would you adapt the states for a transaction fee?",
+    "How would the solution change for a cooldown of `k` days?",
+    "How would you limit the number of completed transactions?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

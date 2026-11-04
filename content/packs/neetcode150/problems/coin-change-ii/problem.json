@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/coin-change-ii",
+  "slug": "coin-change-ii",
+  "title": "Coin Combination Ledger",
+  "difficulty": "medium",
+  "patterns": ["dynamic-programming", "arrays", "combinatorics"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "countCoinCombinations",
+    "params": [
+      {
+        "name": "amount",
+        "type": "int"
+      },
+      {
+        "name": "coins",
+        "type": "int[]"
+      }
+    ],
+    "returns": "int",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 2000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(amount * c)",
+      "space": "O(amount)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(amount * c)",
+      "space": "O(amount)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Counting ordered sequences instead of unordered combinations",
+    "Forgetting the single empty combination for amount zero",
+    "Walking totals downward, which prevents reusing a coin",
+    "Treating duplicate denominations as distinct coins"
+  ],
+  "followUps": [
+    "How would you compute the fewest coins needed instead of the number of combinations?",
+    "How would you handle a limited supply of each denomination?",
+    "How would you reconstruct one combination that reaches the target?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

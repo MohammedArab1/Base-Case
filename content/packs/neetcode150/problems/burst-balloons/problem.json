@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "neetcode150/burst-balloons",
+  "slug": "burst-balloons",
+  "title": "Balloon Burst Bounty",
+  "difficulty": "hard",
+  "patterns": ["dynamic-programming", "interval-dp", "arrays"],
+  "statement": "statement.md",
+  "signature": {
+    "kind": "function",
+    "className": "Solution",
+    "method": "maxCoins",
+    "params": [
+      {
+        "name": "nums",
+        "type": "int[]"
+      }
+    ],
+    "returns": "long",
+    "mutates": []
+  },
+  "limits": {
+    "timeMs": 3000,
+    "memoryMb": 256,
+    "languageMultipliers": {
+      "python": 3,
+      "javascript": 3,
+      "typescript": 3
+    }
+  },
+  "checker": {
+    "kind": "exact"
+  },
+  "tests": {
+    "sample": "tests/sample.jsonl",
+    "hidden": "tests/hidden.jsonl"
+  },
+  "hints": "hints.json",
+  "solutions": [
+    {
+      "language": "python",
+      "path": "solutions/python.py",
+      "time": "O(n^3)",
+      "space": "O(n^2)",
+      "isCanonical": true
+    },
+    {
+      "language": "typescript",
+      "path": "solutions/typescript.ts",
+      "time": "O(n^3)",
+      "space": "O(n^2)"
+    }
+  ],
+  "explanation": "explanation.md",
+  "commonMistakes": [
+    "Omitting the value-1 sentinels at both ends",
+    "Reasoning about the first burst instead of the last burst in an interval",
+    "Using stale neighbor values after other balloons have burst",
+    "Iterating intervals in the wrong order so subproblems are not ready"
+  ],
+  "followUps": [
+    "How would you reconstruct an optimal burst order?",
+    "What changes if bursting a balloon also awards a bonus for adjacent pairs?",
+    "Can the DP be reduced below quadratic space?"
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original problem by the Base Case contributors.",
+  "version": 1
+}

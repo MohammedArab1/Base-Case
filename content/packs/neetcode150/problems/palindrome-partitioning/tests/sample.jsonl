@@ -1,0 +1,4 @@
+{"input":{"s":"a"},"expected":[["a"]]}
+{"input":{"s":"aa"},"expected":[["a","a"],["aa"]]}
+{"input":{"s":"aba"},"expected":[["a","b","a"],["aba"]]}
+{"input":{"s":"baa"},"expected":[["b","a","a"],["b","aa"]]}

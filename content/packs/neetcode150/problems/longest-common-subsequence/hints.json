@@ -1,0 +1,24 @@
+{
+  "hints": [
+    {
+      "level": 1,
+      "title": "Compare prefixes",
+      "body": "Define the answer for prefixes of the two strings. The last characters decide how the prefixes can be shortened."
+    },
+    {
+      "level": 2,
+      "title": "Two-dimensional state",
+      "body": "Let `common[i][j]` be the length of the longest shared thread between the first `i` characters of `first` and the first `j` characters of `second`."
+    },
+    {
+      "level": 3,
+      "title": "Match or skip",
+      "body": "If the current last characters match, extend the answer for both shorter prefixes by one. Otherwise discard the last character of one prefix and take the better of the two possibilities."
+    },
+    {
+      "level": 4,
+      "title": "Pseudocode",
+      "body": "```\nprevious = zeros of length length(second) + 1\nfor each character c in first:\n    current = zeros of length length(second) + 1\n    for j from 1 to length(second):\n        if c == second[j-1]:\n            current[j] = previous[j-1] + 1\n        else:\n            current[j] = max(previous[j], current[j-1])\n    previous = current\nreturn previous[length(second)]\n```\n\nThis is pseudocode, not a complete solution."
+    }
+  ]
+}

@@ -6,6 +6,16 @@ semantic versioning once releases begin.
 
 ## [Unreleased]
 
+### Added
+
+- Optional bundled content packs with a Settings on/off control, persisted in
+  settings and excluded from the live catalog until enabled.
+- The optional 150 Essential Problems extension pack: 88 original coding
+  problems that complete the 150-problem study list alongside the 62 core
+  problems already covered.
+- Cross-pack collection groups (`groupId`) so one filter can span the core and
+  extension packs.
+
 ## [0.1.0-alpha] — 2026-11-01
 
 ### Added
