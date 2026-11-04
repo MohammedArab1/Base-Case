@@ -191,6 +191,11 @@ type session struct {
 	input     *io.PipeWriter
 	responses chan protocol.Response
 	done      chan error
+	// Final responses can arrive out of order (for example, a cancelled run
+	// may finish before the cancel acknowledgement is written). Keep any
+	// responses observed while looking for a different id so a later wait can
+	// still find them.
+	pending map[string][]protocol.Response
 }
 
 func startSession(t *testing.T, runner server.Runner) *session {
@@ -224,7 +229,13 @@ func startSession(t *testing.T, runner server.Runner) *session {
 		}
 	}()
 
-	s := &session{t: t, input: inputWriter, responses: responses, done: done}
+	s := &session{
+		t:         t,
+		input:     inputWriter,
+		responses: responses,
+		done:      done,
+		pending:   make(map[string][]protocol.Response),
+	}
 	t.Cleanup(s.close)
 	return s
 }
@@ -256,6 +267,16 @@ func (s *session) next(timeout time.Duration) protocol.Response {
 func (s *session) waitForID(id string, timeout time.Duration) protocol.Response {
 	s.t.Helper()
 
+	if queued := s.pending[id]; len(queued) > 0 {
+		response := queued[0]
+		if len(queued) == 1 {
+			delete(s.pending, id)
+		} else {
+			s.pending[id] = queued[1:]
+		}
+		return response
+	}
+
 	deadline := time.After(timeout)
 	for {
 		select {
@@ -265,6 +286,9 @@ func (s *session) waitForID(id string, timeout time.Duration) protocol.Response 
 			}
 			if response.ID == id && response.Event == "" {
 				return response
+			}
+			if response.Event == "" {
+				s.pending[response.ID] = append(s.pending[response.ID], response)
 			}
 		case <-deadline:
 			s.t.Fatalf("timed out waiting for response %q", id)
