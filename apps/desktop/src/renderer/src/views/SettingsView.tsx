@@ -1255,7 +1255,7 @@ export function SettingsView(): JSX.Element {
             </div>
             <div className="info-wide">
               <dt>Logs</dt>
-              <dd>
+              <dd className="flex flex-col items-start gap-1">
                 <code>{appInfo.logsPath}</code>
                 <button
                   type="button"
@@ -1264,7 +1264,7 @@ export function SettingsView(): JSX.Element {
                 >
                   Open logs folder
                 </button>
-                <p className="muted small">
+                <p className="muted small m-0">
                   AI failures are logged as ai.request_failed or provider.http_error. Keys, header
                   values, code, and prompts are never logged.
                 </p>
