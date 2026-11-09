@@ -63,7 +63,7 @@ jobs:
         run: node scripts/checksums.mjs apps/desktop/dist
 
       - name: Upload installers
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: base-case-${{ runner.os }}
           path: |
