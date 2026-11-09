@@ -2,10 +2,14 @@
 
 A graph is a collection of nodes connected by edges. A tree is a special graph with no cycles and one path between any two nodes. A general graph can have loops, one-way edges, and disconnected pieces.
 
-```text
-A --- B --- C
-|     |     |
-D --- E     F
+```mermaid
+flowchart LR
+    A["A"] --- B["B"]
+    B --- C["C"]
+    A --- D["D"]
+    B --- E["E"]
+    C --- F["F"]
+    D --- E
 ```
 
 ## Two common representations
@@ -46,10 +50,12 @@ dfs(node):
         dfs(neighbor)
 ```
 
-```text
-visit A -> B -> C -> F
-back up to C -> B
-visit E -> D
+```mermaid
+flowchart LR
+    A["A"] --> B["B"] --> C["C"] --> F["F"]
+    F -.->|"back up"| C
+    C -.->|"back up"| B
+    B --> E["E"] --> D["D"]
 ```
 
 DFS is good for:
@@ -120,11 +126,11 @@ This computes the distance to the nearest source, not just one source. It is the
 
 An edge can have a direction: `A -> B` does not mean `B -> A`.
 
-```text
-A -> B -> C
-     |
-     v
-     D
+```mermaid
+flowchart LR
+    A["A"] --> B["B"]
+    B --> C["C"]
+    B --> D["D"]
 ```
 
 When you build an adjacency list, add the reverse edge only when the graph is undirected. For directed graphs, keep the direction; it matters for reachability and topological order.

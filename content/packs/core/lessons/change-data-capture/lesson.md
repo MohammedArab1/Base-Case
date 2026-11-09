@@ -6,25 +6,19 @@ Most systems have one source of truth and several copies. A search index, cache,
 
 A service writes the database, then publishes an event.
 
-```text
-request
-  |
-  v
-write primary database   (succeeds)
-  |
-  v
-publish "product updated" (fails)
+```mermaid
+flowchart TD
+    R["request"] --> W["write primary database (succeeds)"]
+    W --> P["publish 'product updated' (fails)"]
 ```
 
 The database is fresh and the search index is stale. Nothing retries the event because the request already returned success.
 
 The reverse order is no better.
 
-```text
-publish "product updated" (succeeds)
-  |
-  v
-write primary database    (fails)
+```mermaid
+flowchart TD
+    P["publish 'product updated' (succeeds)"] --> W["write primary database (fails)"]
 ```
 
 Now the search index contains a product that does not exist.
@@ -35,14 +29,15 @@ Two systems, one request, and no shared transaction. A retry helps only when the
 
 Most databases already write a log for replication and recovery: the write-ahead log in PostgreSQL, the binary log in MySQL, or the oplog in MongoDB. A CDC connector reads that log, turns row changes into events, and publishes them to a broker. Some databases expose logical replication, which presents row changes in a stable format instead of raw storage blocks.
 
-```text
-application
-    |
-    v
-primary database --> transaction log --> CDC connector --> topic
-                                                       |--> search indexer
-                                                       |--> cache invalidator
-                                                       |--> read-model builder
+```mermaid
+flowchart LR
+    A["application"] --> DB["primary database"]
+    DB --> L["transaction log"]
+    L --> C["CDC connector"]
+    C --> T["topic"]
+    T --> S["search indexer"]
+    T --> CI["cache invalidator"]
+    T --> RM["read-model builder"]
 ```
 
 The application writes once. The connector captures inserts, updates, and deletes after they commit. Tools such as Debezium and Kafka Connect follow this shape, but the product name is less important than the guarantees.
@@ -117,13 +112,12 @@ BEGIN
   update product row
   insert outbox row (product_id, version, changed fields)
 COMMIT
-  |
-  v
-relay -> topic partitioned by product_id
-  |
-  v
-indexer: dedupe by product_id + version
-         update or delete the search document
+```
+
+```mermaid
+flowchart TD
+    R["relay"] --> T["topic partitioned by product_id"]
+    T --> I["indexer: dedupe by product_id + version, update or delete the search document"]
 ```
 
 The indexer acknowledges only after the search write succeeds. A mapping change builds a new index and switches an alias. A nightly job compares product IDs and document counts, then reindexes the differences. The freshness target is part of the contract: 99% of changes visible within 2 seconds, with an alert at 30 seconds.
@@ -134,14 +128,11 @@ One product decision remains. A user who edits a product may expect to see the c
 
 A ledger stores immutable double-entry postings. A read model needs current balances and a recent history view.
 
-```text
-ledger database --> CDC stream (keyed by account_id)
-                         |
-                         v
-                    projector
-                         |
-                         v
-             balance row + history read model
+```mermaid
+flowchart TD
+    L["ledger database"] --> C["CDC stream (keyed by account_id)"]
+    C --> P["projector"]
+    P --> R["balance row + history read model"]
 ```
 
 The projector applies each posting once, updates the balance, and records a checkpoint. It can rebuild by loading a balance snapshot at a log position and replaying later postings. The ledger remains the source of truth. The projection can be deleted and rebuilt without touching the ledger.

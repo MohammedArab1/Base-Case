@@ -59,6 +59,9 @@ jobs:
       - name: Validate content
         run: pnpm content:validate
 
+      - name: Validate Mermaid diagrams
+        run: pnpm mermaid:check
+
       - name: Build app bundles
         run: pnpm build
 

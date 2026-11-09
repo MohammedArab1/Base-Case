@@ -4,16 +4,18 @@ A trie (sometimes called a prefix tree) stores words one character at a time. Wo
 
 ```text
 words: cat, car, cart, dog
+```
 
-            (root)
-           /      \
-          c        d
-          |        |
-          a        o
-         / \       |
-        t   r      g
-            |
-            t
+```mermaid
+flowchart TD
+    R["(root)"] --> C["c"]
+    R --> D["d"]
+    C --> CA["a"]
+    D --> DO["o"]
+    CA --> CAT["t"]
+    CA --> CAR["r"]
+    DO --> DOG["g"]
+    CAR --> CART["t"]
 ```
 
 The path `c -> a -> r` spells `"car"`. The path continues to `t` for `"cart"`. The shared `"car"` prefix is stored once.

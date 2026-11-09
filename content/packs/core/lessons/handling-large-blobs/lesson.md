@@ -2,9 +2,18 @@
 
 A blob is a file or object: an image, a video, a PDF, a backup. The bytes can be large, and the metadata is small. Treat them as two different problems.
 
-```text
-control plane: who may upload, what the file is, whether it is ready
-data plane:    the bytes themselves
+```mermaid
+flowchart LR
+    subgraph CP["Control plane"]
+        direction TB
+        A["Who may upload"]
+        B["What the file is"]
+        C["Whether it is ready"]
+    end
+    subgraph DP["Data plane"]
+        direction TB
+        D["The bytes themselves"]
+    end
 ```
 
 The application server belongs in the control plane. The object store belongs in the data plane.
@@ -19,13 +28,21 @@ The object store is built for large transfers. It supports multipart upload, ran
 
 The API creates a short-lived URL that grants permission to write one object.
 
-```text
-client -> API:  POST /uploads {name, size, type}
-API -> DB:      insert row status = pending
-API -> client:  presigned PUT URL + object key
-client -> store: PUT bytes
-store -> queue: object created event
-worker -> API:  verify object, mark uploaded
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant DB as Database
+    participant S as Object store
+    participant Q as Queue
+    participant W as Worker
+
+    C->>A: POST /uploads {name, size, type}
+    A->>DB: insert row status = pending
+    A-->>C: presigned PUT URL + object key
+    C->>S: PUT bytes
+    S->>Q: object created event
+    W->>A: verify object, mark uploaded
 ```
 
 The URL is a capability. Scope it to one key, one method, an expiry, and a maximum size. Never let the client choose an arbitrary key, because it could overwrite another user's file.
@@ -36,13 +53,17 @@ A presigned URL does not prove the upload finished. The client can crash after t
 
 Large files are split into parts.
 
-```text
-file -> part 1, part 2, part 3, ...
-        |        |        |
-        v        v        v
-      store    store    store
-        \        |        /
-         complete upload
+```mermaid
+flowchart TD
+    F["File"] --> P1["part 1"]
+    F --> P2["part 2"]
+    F --> P3["part 3, ..."]
+    P1 --> S1["store"]
+    P2 --> S2["store"]
+    P3 --> S3["store"]
+    S1 --> C["complete upload"]
+    S2 --> C
+    S3 --> C
 ```
 
 Each part can be retried on its own, and parts can upload in parallel. Smaller parts mean more requests; larger parts mean more work to repeat after a failure. Typical sizes are a few megabytes to tens of megabytes, tuned to the network and store.
@@ -62,11 +83,14 @@ checksum, status, version, created_at
 
 Status is a state machine:
 
-```text
-pending -> uploaded -> scanning -> ready
-                |          |
-                v          v
-            rejected    quarantined
+```mermaid
+stateDiagram-v2
+    [*] --> pending
+    pending --> uploaded
+    uploaded --> scanning
+    scanning --> ready
+    uploaded --> rejected
+    scanning --> quarantined
 ```
 
 A file is not ready because the bytes arrived. It is ready when the size and checksum match, the scan is clean, and any required variants exist. Make the complete call idempotent. A retried complete request must return the same result, not create a second file.
@@ -75,10 +99,11 @@ A file is not ready because the bytes arrived. It is ready when the size and che
 
 Scan asynchronously. Put new objects in a quarantine prefix or mark them `scanning`. A download service refuses anything that is not `ready`.
 
-```text
-upload -> quarantine -> scanner -> clean -> move to ready prefix
-                            |
-                            +-> infected -> delete, block, notify
+```mermaid
+flowchart LR
+    U["Upload"] --> Q["Quarantine"] --> S["Scanner"]
+    S --> C["Clean"] --> R["Move to ready prefix"]
+    S --> I["Infected"] --> D["Delete, block, notify"]
 ```
 
 Scanning every large video can take time. Set a size limit, scan metadata and archive contents where possible, and fail closed for file types the product considers risky. Do not scan inside the upload request, because the client would wait and the scanner would become part of the request path.
@@ -87,9 +112,10 @@ Scanning every large video can take time. Set a size limit, scan metadata and ar
 
 Derived files are produced by workers.
 
-```text
-original -> image resizer -> thumbnail, medium, large
-         -> video transcoder -> 360p, 720p, 1080p, manifest
+```mermaid
+flowchart LR
+    O["Original"] --> I["Image resizer"] --> V1["Thumbnail, medium, large"]
+    O --> V["Video transcoder"] --> V2["360p, 720p, 1080p, manifest"]
 ```
 
 Store each variant as its own object. Key it by content hash and transform version, so a retry writes the same object and a changed transform produces a new one. Record variant status in the metadata row. A video is not ready for playback until its manifest and required renditions exist.
@@ -100,12 +126,18 @@ Transcoding is long-running and CPU-heavy. Use a queue, limit concurrency, and r
 
 Public files can be served from a CDN with a long cache lifetime and a versioned URL. Private files need a check before the bytes leave.
 
-```text
-client -> API: GET /files/42
-API: authorize, check status = ready
-API -> client: signed CDN URL, expires in 5 minutes
-client -> CDN: GET
-CDN -> store: fetch on miss
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant CDN as CDN
+    participant S as Object store
+
+    C->>A: GET /files/42
+    Note over A: authorize, check status = ready
+    A-->>C: signed CDN URL, expires in 5 minutes
+    C->>CDN: GET
+    CDN->>S: fetch on miss
 ```
 
 A signed URL or cookie limits who can fetch and for how long. Keep the lifetime short. Revocation is hard once a URL is shared, so never put permanent credentials in a URL.

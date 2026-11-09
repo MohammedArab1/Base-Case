@@ -23,14 +23,14 @@ If the input does not get smaller, the calls never stop and the stack runs out o
 
 Each call waits for the next one to finish.
 
-```text
-countdown(3)
-  countdown(2)
-    countdown(1)
-      countdown(0)
-      return
-    return
-  return
+```mermaid
+flowchart TD
+    C3["countdown(3)"] -->|call| C2["countdown(2)"]
+    C2 -->|call| C1["countdown(1)"]
+    C1 -->|call| C0["countdown(0)"]
+    C0 -.->|return| C1
+    C1 -.->|return| C2
+    C2 -.->|return| C3
 ```
 
 The maximum number of waiting calls is the depth. That is why a recursive solution has `O(depth)` space even if it creates no arrays.
@@ -39,16 +39,16 @@ The maximum number of waiting calls is the depth. That is why a recursive soluti
 
 Backtracking explores a decision tree. At each node, you make a choice, recurse, and then undo the choice.
 
-```text
-subsets of [1, 2]
+Subsets of `[1, 2]`:
 
-start: []
-  include 1 -> [1]
-    include 2 -> [1, 2]  record
-    exclude 2 -> [1]     record
-  exclude 1 -> []
-    include 2 -> [2]     record
-    exclude 2 -> []      record
+```mermaid
+flowchart TD
+    S["start: []"] --> I1["include 1 → [1]"]
+    S --> E1["exclude 1 → []"]
+    I1 --> I2["include 2 → [1, 2] (record)"]
+    I1 --> E2["exclude 2 → [1] (record)"]
+    E1 --> I3["include 2 → [2] (record)"]
+    E1 --> E3["exclude 2 → [] (record)"]
 ```
 
 The shape:
@@ -65,12 +65,14 @@ If you forget `pop`, the path leaks into sibling branches. If you store `path` d
 
 For permutations, order matters, so you need to know which values are already used.
 
-```text
-[1, 2, 3]
-
-choose 1 -> choose 2 -> choose 3  => 1, 2, 3
-          choose 3 -> choose 2  => 1, 3, 2
-choose 2 -> ...
+```mermaid
+flowchart TD
+    R["[1, 2, 3]"] --> C1["choose 1"]
+    R --> C2["choose 2 → ..."]
+    C1 --> C12["choose 2"]
+    C1 --> C13["choose 3"]
+    C12 --> P123["1, 2, 3"]
+    C13 --> P132["1, 3, 2"]
 ```
 
 Use a `used` array or swap values in place. Swapping avoids an extra array but makes the undo step explicit.

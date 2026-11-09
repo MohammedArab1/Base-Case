@@ -13,8 +13,9 @@ Four pressures drive the decision.
 
 Try the cheaper moves first: query and index tuning, caching, read replicas, a larger primary, and archiving cold data. Sharding is close to last because it raises operational cost permanently.
 
-```text
-one primary -> read replicas -> cache -> bigger primary -> archive -> shard
+```mermaid
+flowchart LR
+    P["One primary"] --> R["Read replicas"] --> C["Cache"] --> B["Bigger primary"] --> A["Archive"] --> S["Shard"]
 ```
 
 ## Choose a shard key
@@ -52,8 +53,9 @@ Range scans within a shard are cheap. Hotspots appear when writes cluster at one
 
 **Directory sharding** uses a lookup service that maps each key to a shard.
 
-```text
-app -> directory -> shard 7
+```mermaid
+flowchart LR
+    A["App"] --> D["Directory"] --> S["Shard 7"]
 ```
 
 Placement is flexible and migration is explicit. The directory is another hop and another system to keep available. Cache the mapping and version it.
@@ -91,12 +93,16 @@ For writes, a counter on a hot row is a serialization point. Split the counter i
 
 A query without the shard key must go to every shard.
 
-```text
-app -> shard 0
-    -> shard 1
-    -> shard 2
-    -> shard 3
-merge results, then handle a slow or failed shard
+```mermaid
+flowchart TD
+    A["App"] --> S0["Shard 0"]
+    A --> S1["Shard 1"]
+    A --> S2["Shard 2"]
+    A --> S3["Shard 3"]
+    S0 --> M["Merge results, then handle a slow or failed shard"]
+    S1 --> M
+    S2 --> M
+    S3 --> M
 ```
 
 Costs: latency is the slowest shard, results need merging and pagination, and one failed shard makes the answer partial. Keep such queries off the request path when you can.

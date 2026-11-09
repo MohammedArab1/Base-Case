@@ -8,13 +8,19 @@ A system should explain what it is doing before an incident forces you to guess.
 - **Logs** are structured events with context: request id, user or tenant, operation, result. They are detailed and expensive at volume.
 - **Traces** follow one request across services, with a span for each hop.
 
-```text
-trace 8f2a  total 88 ms
-  API            88 ms
-    auth          8 ms
-    feed cache    2 ms
-    database     61 ms
-    render        5 ms
+```mermaid
+sequenceDiagram
+    participant API
+    participant Auth
+    participant Cache as Feed cache
+    participant DB as Database
+    participant Render
+
+    Note over API: trace 8f2a, total 88 ms
+    API->>Auth: 8 ms
+    API->>Cache: 2 ms
+    API->>DB: 61 ms
+    API->>API: render 5 ms
 ```
 
 A correlation id ties the three together. The trace shows where the time went. The metric shows whether the problem affects everyone. The log explains the specific failure. Without a shared id, you have three unrelated piles of data.

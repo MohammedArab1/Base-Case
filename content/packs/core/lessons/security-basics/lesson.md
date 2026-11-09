@@ -15,12 +15,20 @@ A threat model answers four questions:
 
 Draw the trust boundary.
 
-```text
-untrusted: browser, mobile client, public API callers
-------------------------------------------------------
-trusted:   your server processes, your database, your secrets
-
-But "trusted" is not one thing. A compromised service is inside the boundary.
+```mermaid
+flowchart TD
+    subgraph U["untrusted"]
+        B["browser"]
+        M["mobile client"]
+        A["public API callers"]
+    end
+    subgraph T["trusted"]
+        S["your server processes"]
+        D["your database"]
+        K["your secrets"]
+        X["a compromised service is still inside the boundary"]
+    end
+    U -.->|"trust boundary"| T
 ```
 
 Then design so that one broken assumption does not expose everything.
@@ -29,8 +37,11 @@ Then design so that one broken assumption does not expose everything.
 
 Use TLS for every connection that crosses a network, including internal service traffic when the data is sensitive.
 
-```text
-client --TLS--> reverse proxy --TLS--> service --TLS--> database
+```mermaid
+flowchart LR
+    C["client"] -->|"TLS"| P["reverse proxy"]
+    P -->|"TLS"| S["service"]
+    S -->|"TLS"| D["database"]
 ```
 
 TLS protects confidentiality and integrity in transit. It does not protect data after it is decrypted. Certificates should be valid and rotated; HSTS instructs browsers to use HTTPS for future requests to a domain, and it is an enforced policy rather than a preference. For service-to-service identity, mutual TLS can verify both sides.
@@ -41,8 +52,10 @@ Do not disable certificate validation to "make it work." That converts encryptio
 
 Encryption at rest protects disks, backups, and object storage if the underlying storage is stolen or copied.
 
-```text
-data -> encrypted with a data key -> data key encrypted by a master key
+```mermaid
+flowchart LR
+    D["data"] -->|"encrypted with"| DK["data key"]
+    DK -->|"encrypted by"| MK["master key"]
 ```
 
 This is **envelope encryption**. Keep master keys in a managed key service with access control and audit. Rotate keys on a schedule and after suspected exposure.

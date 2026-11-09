@@ -19,26 +19,18 @@ Skip the brand names until you can explain the role each component plays. "We us
 
 Most large web systems are variations on one shape.
 
-```text
-client
-  |
-  v
-DNS resolution  (a lookup, not a request hop)
-  |
-  v
-CDN / edge cache
-  |
-  v
-reverse proxy / load balancer
-  |
-  v
-stateless application tier  <---->  cache
-  |                    \
-  v                     v
-primary database      queue  ---->  workers  ---->  external services
-  |
-  v
-read replicas
+```mermaid
+flowchart TD
+    C["client"] --> DNS["DNS resolution (a lookup, not a request hop)"]
+    DNS --> CDN["CDN / edge cache"]
+    CDN --> RP["reverse proxy / load balancer"]
+    RP --> APP["stateless application tier"]
+    APP <--> CA["cache"]
+    APP --> DB["primary database"]
+    APP --> Q["queue"]
+    Q --> W["workers"]
+    W --> X["external services"]
+    DB --> RR["read replicas"]
 ```
 
 Not every system needs every box. The skeleton is a checklist of questions:
@@ -55,12 +47,16 @@ Not every system needs every box. The skeleton is a checklist of questions:
 
 When one event must reach many readers, there are two directions.
 
-```text
-fan-out on write:
-  post -> write one feed entry per follower -> fast reads, expensive writes
-
-fan-out on read:
-  post -> store once -> merge at read time -> cheap writes, expensive reads
+```mermaid
+flowchart LR
+    subgraph FW["fan-out on write"]
+        direction LR
+        P1["post"] --> F1["write one feed entry per follower"] --> R1["fast reads, expensive writes"]
+    end
+    subgraph FR["fan-out on read"]
+        direction LR
+        P2["post"] --> S2["store once"] --> M2["merge at read time"] --> R2["cheap writes, expensive reads"]
+    end
 ```
 
 Most feeds use a hybrid: fan out for normal accounts and merge celebrity posts at read time, so one popular account does not create millions of writes.
@@ -69,14 +65,9 @@ Most feeds use a hybrid: fan out for normal accounts and merge celebrity posts a
 
 Consistent hashing maps keys onto a ring of nodes.
 
-```text
-            node A
-          /        \
-      key 7        key 1
-        |            |
-      node D      node B
-          \        /
-            node C
+```mermaid
+flowchart LR
+    A["node A"] --- K7["key 7"] --- D["node D"] --- C["node C"] --- B["node B"] --- K1["key 1"] --- A
 ```
 
 When a node is added or removed, only the keys near it move. Without consistent hashing, changing the number of nodes can remap almost every key and cause a cache miss storm.
@@ -87,11 +78,15 @@ It is a building block, not a complete storage design. Replication, rebalancing,
 
 A scatter-gather request sends work to several shards or services in parallel, then combines the results.
 
-```text
-request
-  |----> shard 1 ----|
-  |----> shard 2 ----|--> merge -> response
-  |----> shard 3 ----|
+```mermaid
+flowchart LR
+    R["request"] --> S1["shard 1"]
+    R --> S2["shard 2"]
+    R --> S3["shard 3"]
+    S1 --> M["merge"]
+    S2 --> M
+    S3 --> M
+    M --> RS["response"]
 ```
 
 It reduces latency when the parts are independent. It also makes tail latency worse: the response waits for the slowest shard. Limit the fan-out, use deadlines, and decide whether a partial result is acceptable.
@@ -100,17 +95,11 @@ It reduces latency when the parts are independent. It also makes tail latency wo
 
 MapReduce is a batch pattern for processing a large data set across many machines.
 
-```text
-split input
-  |
-  v
-map:    turn each record into key/value pairs
-  |
-  v
-shuffle: group values by key
-  |
-  v
-reduce: combine each group into a result
+```mermaid
+flowchart TD
+    S["split input"] --> M["map: turn each record into key/value pairs"]
+    M --> SH["shuffle: group values by key"]
+    SH --> R["reduce: combine each group into a result"]
 ```
 
 A word count is the classic shape: map each word to `(word, 1)`, group by word, then sum. MapReduce is for large offline jobs, not for a user waiting on a page. Modern systems often use a similar split-map-shuffle-reduce model with different execution engines.

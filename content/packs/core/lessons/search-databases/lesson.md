@@ -43,11 +43,11 @@ Writes pay for analysis and postings updates. Reads pay for walking postings lis
 
 An analyzer runs a character filter, tokenizer, and token filters. A common chain lowercases text, removes punctuation and stop words, and stems words to a root.
 
-```text
-"Running caches quickly"
-  -> tokenize: [Running, caches, quickly]
-  -> lowercase: [running, caches, quickly]
-  -> stem: [run, cach, quick]
+```mermaid
+flowchart LR
+    T["Running caches quickly"] --> TOK["tokenize: [Running, caches, quickly]"]
+    TOK --> LOW["lowercase: [running, caches, quickly]"]
+    LOW --> STEM["stem: [run, cach, quick]"]
 ```
 
 Index-time and query-time analyzers must agree. If the index stores stems and the query sends raw words, matches disappear. Language analyzers handle plurals and accents differently, and mixed-language content needs a plan.
@@ -95,10 +95,13 @@ The search index is a derived copy, not the source of truth. The transactional d
 
 The reliable path is to commit the change and an event in one database transaction, then let a relay publish the event.
 
-```text
-API -> database:  commit post + outbox row
-relay -> queue:   publish post.changed
-indexer -> search: upsert document by post id
+```mermaid
+flowchart LR
+    A["API"] -->|"commit post + outbox row"| D["Database"]
+    R["Relay"] -->|"publish post.changed"| Q["Queue"]
+    I["Indexer"] -->|"upsert document by post id"| S["Search index"]
+    D -.-> R
+    Q -.-> I
 ```
 
 Change data capture is an alternative. The indexer reads the database replication log and turns row changes into index updates. Both paths are asynchronous and usually at-least-once, so make the upsert idempotent. Store a document version and ignore an event that is older than the version already indexed. Deletes need a tombstone event, and a periodic reconciliation job catches missed changes.
@@ -124,23 +127,36 @@ Reindexing needs double storage and time, and it competes with live traffic. Thr
 
 Assume 50 million new posts per day, 2 KB of indexable text each, and a 30-day search window. The raw index is about 100 GB per day, or 3 TB for the window. One replica doubles it to 6 TB before overhead.
 
-```text
-write
-  API -> database: insert post + outbox row
-  relay -> queue: post.changed
-  indexer -> search: analyze, upsert by post id + version
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as User
+    participant A as API
+    participant AN as Analyzer
+    participant D as Database
+    participant R as Relay
+    participant Q as Queue
+    participant I as Indexer
+    participant S as Search cluster
+    participant C as Cache / database
 
-search
-  user -> API: q = "cache invalidation"
-  API -> analyzer: [cache, invalid]
-  API -> search shards: top 20 per shard
-  API -> merge: global top 20
-  API -> cache/database: hydrate author and counts
-  API -> user: results and next cursor
+    Note over U,C: write
+    A->>D: insert post + outbox row
+    R->>Q: post.changed
+    I->>S: analyze, upsert by post id + version
 
-autocomplete
-  keystroke "cach" -> completion index -> top 8
-  suggestion list cached for 5 minutes
+    Note over U,C: search
+    U->>A: q = "cache invalidation"
+    A->>AN: [cache, invalid]
+    A->>S: top 20 per shard
+    A->>A: merge global top 20
+    A->>C: hydrate author and counts
+    A-->>U: results and next cursor
+
+    Note over U,C: autocomplete
+    U->>A: keystroke "cach"
+    A->>S: completion index, top 8
+    Note over C: suggestion list cached for 5 minutes
 ```
 
 If the search cluster is unavailable, fall back to a limited database query over recent or title fields and mark the response as degraded. If the index lags, show recent database results beside search results. If a document keeps failing to index, send it to a dead-letter queue with the source id.

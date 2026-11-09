@@ -2,16 +2,14 @@
 
 A stack is a pile of plates. You add to the top and take from the top. The last plate you put down is the first one you pick up. That is **LIFO**: last in, first out.
 
-```text
-push 3   push 7   push 1
-
-| 1 |    <- top
-| 7 |
-| 3 |
-+---+
-
-pop -> 1
-pop -> 7
+```mermaid
+flowchart TD
+    subgraph Stack["stack after push 3, push 7, push 1"]
+        direction TB
+        Top["1 (top)"] ~~~ Seven["7"] ~~~ Three["3"]
+    end
+    Top -.->|"pop"| P1["1 leaves"]
+    Seven -.->|"pop next"| P2["7 leaves"]
 ```
 
 Push, pop, and peek are all `O(1)`.

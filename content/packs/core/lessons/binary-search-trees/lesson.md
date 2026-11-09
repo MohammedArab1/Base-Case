@@ -4,41 +4,48 @@ A binary search tree (BST) is a binary tree with one extra rule:
 
 > For every node, all values in the left subtree are smaller, and all values in the right subtree are larger.
 
-```text
-        8
-       / \
-      3   10
-     / \    \
-    1   6    14
-       / \   /
-      4   7 13
+```mermaid
+flowchart TD
+    N8["8"] --> N3["3"]
+    N8 --> N10["10"]
+    N3 --> N1["1"]
+    N3 --> N6["6"]
+    N10 --> N14["14"]
+    N6 --> N4["4"]
+    N6 --> N7["7"]
+    N14 --> N13["13"]
 ```
 
 This rule turns a search into a series of choices.
 
 ## Searching
 
-```text
-find 7
-
-8  -> 7 < 8, go left
-3  -> 7 > 3, go right
-6  -> 7 > 6, go right
-7  -> found
+```mermaid
+flowchart TD
+    F["find 7"] --> N8["8"]
+    N8 -->|"7 < 8, go left"| N3["3"]
+    N3 -->|"7 > 3, go right"| N6["6"]
+    N6 -->|"7 > 6, go right"| N7["7 (found)"]
 ```
 
 At each node you discard one entire subtree. If the tree is balanced, the height is about `log n`, so the search is `O(log n)`. If the tree is skewed, the height is `n`, and the search is `O(n)`.
 
-```text
-balanced:            skewed:
+```mermaid
+flowchart TD
+    subgraph BAL["balanced"]
+        B4["4"] --> B2["2"]
+        B4 --> B6["6"]
+        B2 --> B1["1"]
+        B2 --> B3["3"]
+        B6 --> B5["5"]
+        B6 --> B7["7"]
+    end
 
-    4                1
-   / \                \
-  2   6                2
- / \ / \                \
-1  3 5  7                3
-                          \
-                           4
+    subgraph SKEW["skewed"]
+        S1["1"] --> S2["2"]
+        S2 --> S3["3"]
+        S3 --> S4["4"]
+    end
 ```
 
 A BST is not automatically balanced. The insertion order decides the shape.
@@ -60,12 +67,12 @@ For a valid BST, this sequence is sorted. That gives two useful facts:
 
 The tempting check is "left child is smaller and right child is larger." That is not enough.
 
-```text
-        10
-       /  \
-      5    15
-     / \
-    3   12
+```mermaid
+flowchart TD
+    N10["10"] --> N5["5"]
+    N10 --> N15["15"]
+    N5 --> N3["3"]
+    N5 --> N12["12"]
 ```
 
 `12` is smaller than `15` and larger than `5`, but it is in the left subtree of `10`. It violates the rule.

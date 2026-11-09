@@ -4,11 +4,13 @@ Most system design failures are network failures wearing a disguise: a missing t
 
 ## Layers in plain language
 
-```text
-application   HTTP, RPC, WebSocket, DNS
-transport     TCP, UDP, QUIC
-network       IP addresses and routing
-link          Wi-Fi, Ethernet, cellular
+```mermaid
+flowchart TD
+    A["Application<br/>HTTP, RPC, WebSocket, DNS"]
+    B["Transport<br/>TCP, UDP, QUIC"]
+    C["Network<br/>IP addresses and routing"]
+    D["Link<br/>Wi-Fi, Ethernet, cellular"]
+    A --> B --> C --> D
 ```
 
 Each layer solves one problem and exposes a simpler contract to the layer above. The application does not manage packet loss; TCP does. TCP does not choose the route; IP does.
@@ -66,13 +68,16 @@ The version matters less than the timeout and retry behavior around it.
 
 TCP provides an ordered, reliable stream of bytes.
 
-```text
-client                              server
-  | -------- SYN --------------->    |
-  | <------- SYN-ACK ------------    |
-  | -------- ACK --------------->    |
-  | -------- request ----------->    |
-  | <------- response -----------    |
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+
+    C->>S: SYN
+    S-->>C: SYN-ACK
+    C->>S: ACK
+    C->>S: Request
+    S-->>C: Response
 ```
 
 It handles sequence numbers, acknowledgements, retransmission, flow control, and congestion control. The application sees a stream, not packets.
@@ -103,8 +108,12 @@ Use UDP for real-time voice and video, games, telemetry, and some DNS traffic. I
 
 Remote procedure call makes a network call look like a local function.
 
-```text
-client code -> stub -> network -> server stub -> service method
+```mermaid
+flowchart LR
+    A["Client code"] --> B["Stub"]
+    B --> C["Network"]
+    C --> D["Server stub"]
+    D --> E["Service method"]
 ```
 
 The stub serializes arguments and results. A schema, often with code generation, keeps both sides aligned. gRPC is a common example: HTTP/2 transport, protocol buffers, and support for streaming.

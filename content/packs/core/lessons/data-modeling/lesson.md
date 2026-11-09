@@ -8,12 +8,13 @@ Circle the nouns in the requirements: user, order, payment, file, message, seat.
 
 Draw the relationships.
 
-```text
-User 1 ---- * Order
-Order 1 --- * OrderItem
-OrderItem * ---- 1 Product
-Order 1 --- 1 Payment
-Payment 1 -- * LedgerEntry
+```mermaid
+erDiagram
+    User ||--o{ Order : places
+    Order ||--|{ OrderItem : contains
+    OrderItem }o--|| Product : references
+    Order ||--|| Payment : has
+    Payment ||--o{ LedgerEntry : records
 ```
 
 Cardinality matters. One user has many orders; one order has many items. A many-to-many relationship needs a join record, such as `order_items` or `chat_members`.

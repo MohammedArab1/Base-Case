@@ -6,21 +6,15 @@ A growing system does not become good by adding boxes. It becomes manageable by 
 
 Most web systems end up with four broad layers.
 
-```text
-client
-  |
-  v
-[ edge ]          TLS, routing, static files, caching
-  |
-  v
-[ application ]   auth, validation, business logic
-  |        |
-  |        +------> [ cache ]
-  v
-[ data ]          database, object store
-  |
-  v
-[ workers ] <---- [ queue ] <---- application
+```mermaid
+flowchart TD
+    C["client"] --> E["edge<br/>TLS, routing, static files, caching"]
+    E --> A["application<br/>auth, validation, business logic"]
+    A --> K["cache"]
+    A --> D["data<br/>database, object store"]
+    D --> W["workers"]
+    A --> Q["queue"]
+    Q --> W
 ```
 
 - **Edge**: accepts public traffic and handles concerns common to every request.
@@ -57,14 +51,22 @@ A **modular monolith** keeps one deployable unit but enforces clear internal bou
 
 **Microservices** are independently deployable services, each owning a business capability and its data.
 
-```text
-modular monolith:
-  [ app: users | orders | billing | search ]
-
-microservices:
-  [ users ] [ orders ] [ billing ] [ search ]
-       \        |          |          /
-              network
+```mermaid
+flowchart TD
+    subgraph mm["modular monolith"]
+        APP["app: users | orders | billing | search"]
+    end
+    subgraph ms["microservices"]
+        U["users"]
+        O["orders"]
+        B["billing"]
+        S["search"]
+    end
+    NET["network"]
+    U --> NET
+    O --> NET
+    B --> NET
+    S --> NET
 ```
 
 The trade is real:
@@ -113,17 +115,33 @@ It should not become the place where business logic lives. A gateway that knows 
 
 A synchronous call waits for an answer.
 
-```text
-client -> service A -> service B -> response
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as Service A
+    participant B as Service B
+
+    C->>A: request
+    A->>B: request
+    B-->>A: response
+    A-->>C: response
 ```
 
 It is simple to reason about, but a slow or failed dependency becomes the caller's problem.
 
 An asynchronous call hands work to a queue.
 
-```text
-client -> service A -> [ queue ] -> worker
-                       response
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as Service A
+    participant Q as Queue
+    participant W as Worker
+
+    C->>A: request
+    A->>Q: enqueue job
+    A-->>C: response
+    Q->>W: deliver job
 ```
 
 It decouples availability and absorbs bursts, but the result is eventual and failures are harder to trace.

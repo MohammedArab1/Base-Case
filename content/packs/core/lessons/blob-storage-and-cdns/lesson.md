@@ -56,14 +56,21 @@ Generate the object key on the server. Never accept a client-supplied path, beca
 
 A presigned URL is a time-limited signature that authorizes one operation on one object. The API server creates the signature without handling the bytes.
 
-```text
-client -> API:      POST /files {name, size, type}
-API -> database:    insert row, status = pending
-API -> client:      upload URL, object key, expiry = 5 min
-client -> storage:  PUT bytes
-client -> API:      POST /files/{id}/complete
-API -> storage:     HEAD object, verify size and checksum
-API -> database:    status = ready
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as API
+    participant D as Database
+    participant S as Storage
+
+    C->>A: POST /files {name, size, type}
+    A->>D: insert row, status = pending
+    A-->>C: upload URL, object key, expiry = 5 min
+    C->>S: PUT bytes
+    C->>A: POST /files/{id}/complete
+    A->>S: HEAD object, verify size and checksum
+    A->>D: status = ready
 ```
 
 Downloads use the same idea. The API checks permission, then returns a short-lived GET URL or a CDN signed URL.
@@ -95,9 +102,12 @@ A durability claim such as eleven nines describes hardware failure. It does not 
 
 A pull CDN fetches from the origin bucket on the first request and serves later requests from an edge location.
 
-```text
-viewer -> edge cache -> (miss) -> origin bucket
-viewer <- edge cache
+```mermaid
+flowchart LR
+    V["Viewer"] --> E["Edge cache"]
+    E -->|"miss"| O["Origin bucket"]
+    O --> E
+    E -->|"response"| V
 ```
 
 Public assets use a long TTL and a content-hashed or versioned key. When the asset changes, publish a new key. The old key ages out on its own. This is safer than purging, because a purge is best effort and may take minutes to reach every edge.
@@ -122,23 +132,34 @@ Egress often costs more than storage. If 20 million views per day fetch 3 MB eac
 
 Assume 2 million uploads per day, 3 MB average, 12 MB at p95, and 20 million views per day.
 
-```text
-upload
-  phone  -> API:        create upload
-  API    -> database:   pending metadata row
-  API    -> phone:      presigned multipart URLs
-  phone  -> storage:    parts in parallel
-  phone  -> API:        complete upload
-  API    -> storage:    HEAD and checksum
-  API    -> database:   status = ready
-  API    -> queue:      thumbnail job
-  worker -> storage:    read original, write three sizes
-  worker -> database:   record variant keys
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as Phone
+    participant A as API
+    participant D as Database
+    participant S as Storage
+    participant Q as Queue
+    participant W as Worker
+    participant V as Viewer
+    participant CDN
 
-read
-  viewer -> CDN:        GET /photos/123/v7/medium.jpg
-  CDN    -> storage:    fetch on miss
-  CDN    -> viewer:     bytes
+    Note over P,CDN: upload
+    P->>A: create upload
+    A->>D: pending metadata row
+    A-->>P: presigned multipart URLs
+    P->>S: parts in parallel
+    P->>A: complete upload
+    A->>S: HEAD and checksum
+    A->>D: status = ready
+    A->>Q: thumbnail job
+    W->>S: read original, write three sizes
+    W->>D: record variant keys
+
+    Note over P,CDN: read
+    V->>CDN: GET /photos/123/v7/medium.jpg
+    CDN->>S: fetch on miss
+    CDN-->>V: bytes
 ```
 
 The version in the path makes a replacement safe: publish `v8`, and no edge can serve `v7` bytes under the new name. Metadata lookups stay indexed and small. The bytes never pass through the API tier.

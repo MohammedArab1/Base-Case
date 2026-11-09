@@ -8,10 +8,12 @@ An in-process cache lives in the application's memory. A hit costs nanoseconds, 
 
 A shared cache lives beside the application, usually in Redis or Memcached.
 
-```text
-app instance A --\
-app instance B ----> shared cache ----> database
-app instance C --/
+```mermaid
+flowchart LR
+    A["app instance A"] --> C["shared cache"]
+    B["app instance B"] --> C
+    D["app instance C"] --> C
+    C --> DB["database"]
 ```
 
 A hit costs a network round trip, often under a millisecond inside one region. The benefit is one logical view for sessions, counters, and hot objects. The cache still has to be populated, invalidated, and sized.
@@ -44,9 +46,10 @@ Options:
 
 A stampede happens when a popular key expires and many requests miss at once. They all query the database, which may be the system you were protecting.
 
-```text
-key expires
-  1000 requests -> 1000 database reads
+```mermaid
+flowchart LR
+    K["key expires"] --> R["1000 requests"]
+    R --> D["1000 database reads"]
 ```
 
 Use single-flight population. One request takes a short lock and recomputes; the others wait, retry, or receive the stale value. Add jitter to TTLs so keys do not expire together. Serve stale while revalidating when the product allows it.
@@ -101,21 +104,35 @@ Without the token check, a holder whose lease expired could delete the next hold
 
 The hard failure is a holder that pauses longer than the lease. A garbage collection pause or network partition can keep the process alive while the lease expires and a second holder enters.
 
-```text
-A acquires lock, token 7
-A pauses for 40 s; lease is 30 s
-lock expires
-B acquires lock, token 8
-A wakes and writes, believing it still owns the lock
+```mermaid
+sequenceDiagram
+    participant A
+    participant L as Lock
+    participant B
+
+    A->>L: acquires lock, token 7
+    Note over A: pauses for 40 s, lease is 30 s
+    L-->>L: lock expires
+    B->>L: acquires lock, token 8
+    Note over A: wakes and writes, believing it still owns the lock
 ```
 
 Mutual exclusion is broken. The fix is a **fencing token**. The lock service issues a monotonically increasing number on every acquisition. The holder sends that number with each write, and the resource rejects a token lower than the highest one it has seen.
 
-```text
-A gets token 7, stalls
-B gets token 8, writes with 8
-resource records highest = 8
-A wakes, writes with 7 -> rejected
+```mermaid
+sequenceDiagram
+    participant A
+    participant L as Lock
+    participant B
+    participant R as Resource
+
+    A->>L: gets token 7
+    Note over A: stalls
+    B->>L: gets token 8
+    B->>R: writes with 8
+    R->>R: records highest = 8
+    A->>R: wakes, writes with 7
+    R-->>A: rejected
 ```
 
 A lock without fencing protects against accidental overlap, not against a stale holder.

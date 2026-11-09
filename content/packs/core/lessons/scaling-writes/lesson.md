@@ -35,9 +35,16 @@ Each durable write may require a disk flush. If one flush costs 1 ms and the dat
 
 Group commit collects several writes and flushes them together.
 
-```text
-without group commit:  W1 fsync  W2 fsync  W3 fsync  W4 fsync
-with group commit:     [ W1 W2 W3 W4 ] one fsync
+```mermaid
+flowchart TD
+    subgraph NG["Without group commit"]
+        direction LR
+        N1["W1"] --> N2["fsync"] --> N3["W2"] --> N4["fsync"] --> N5["W3"] --> N6["fsync"] --> N7["W4"] --> N8["fsync"]
+    end
+    subgraph GC["With group commit"]
+        direction LR
+        G1["[ W1 W2 W3 W4 ]"] --> G2["one fsync"]
+    end
 ```
 
 If a batch of 100 writes shares one flush, the same disk can support far more writes. The cost is a small wait while the batch fills. Flush on a size limit or a timer, whichever comes first, so a quiet system does not wait forever.
@@ -50,8 +57,12 @@ Trade-off: a larger batch raises tail latency and makes one failure affect more 
 
 A durable queue between the API and the storage layer absorbs bursts.
 
-```text
-clients -> API -> [ durable log ] -> consumer group -> database
+```mermaid
+flowchart LR
+    C["Clients"] --> A["API"]
+    A --> L["Durable log"]
+    L --> G["Consumer group"]
+    G --> D["Database"]
 ```
 
 The queue does not create capacity. If consumers process 20,000 events per second and producers send 30,000, the backlog grows by 10,000 every second. The queue only decides where the pain appears.
@@ -90,9 +101,16 @@ A **B-tree** updates pages in place and writes a write-ahead log for recovery. R
 
 An **LSM-tree** appends writes to a memory table, flushes sorted files to disk, and merges them later through compaction. It turns random writes into sequential writes, which suits write-heavy workloads.
 
-```text
-B-tree:   update page -> WAL -> flush
-LSM-tree: append memtable -> flush SSTable -> compact
+```mermaid
+flowchart TD
+    subgraph BT["B-tree"]
+        direction LR
+        B1["Update page"] --> B2["WAL"] --> B3["Flush"]
+    end
+    subgraph LSM["LSM-tree"]
+        direction LR
+        L1["Append memtable"] --> L2["Flush SSTable"] --> L3["Compact"]
+    end
 ```
 
 Write amplification is the bytes written to disk per logical byte of data. An LSM-tree may write the same record several times as it moves through levels. Compaction consumes disk bandwidth and CPU later, sometimes during peak traffic. B-trees have their own amplification from page updates and WAL.
@@ -132,12 +150,13 @@ Do not hide the gap; decide how long it may last.
 
 Suppose a telemetry system receives 50,000 events per second, with bursts to 200,000.
 
-```text
-devices -> API (validate, assign event_id)
-        -> partitioned log keyed by device_id
-        -> consumer group (batch 500 events or 50 ms)
-        -> time-series store
-        -> query service
+```mermaid
+flowchart TD
+    D["Devices"] --> A["API<br/>validate, assign event_id"]
+    A --> L["Partitioned log<br/>keyed by device_id"]
+    L --> C["Consumer group<br/>batch 500 events or 50 ms"]
+    C --> T["Time-series store"]
+    T --> Q["Query service"]
 ```
 
 The API authenticates the device, validates the payload, assigns an `event_id`, and appends to the log. It acknowledges only after the log accepts the write. Consumers batch into the time-series store and record the highest processed offset. A retry replays from that offset, and the store upserts by `event_id`.

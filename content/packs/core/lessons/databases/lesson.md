@@ -17,12 +17,14 @@ The choice is not a badge. It is a fit to the queries.
 
 An index is a sorted structure that lets the database jump to matching rows instead of scanning.
 
-```text
-without index:
-scan every row -> find code = "a7K2"
-
-with index:
-look up "a7K2" in the index -> follow the pointer to the row
+```mermaid
+flowchart LR
+    subgraph without["Without index"]
+        S["Scan every row"] --> F["Find code = a7K2"]
+    end
+    subgraph withidx["With index"]
+        L["Look up a7K2 in the index"] --> P["Follow the pointer to the row"]
+    end
 ```
 
 A B-tree index supports equality lookups in `O(log n)`. A range query costs `O(log n + k)` when it returns `k` rows, because the index finds the start and then walks the matching entries. Hash indexes give `O(1)` average-case equality lookups, with `O(n)` worst case when many keys collide.
@@ -64,18 +66,13 @@ The classic guarantees are ACID: atomicity, consistency, isolation, durability. 
 
 A primary handles writes and replicates to followers.
 
-```text
-          writes
-            |
-            v
-        +--------+
-        | primary|
-        +--------+
-          |    |
-          v    v
-      replica replica
-          ^
-        reads
+```mermaid
+flowchart TD
+    W["Writes"] --> P["Primary"]
+    P --> R1["Replica"]
+    P --> R2["Replica"]
+    RD["Reads"] --> R1
+    RD --> R2
 ```
 
 Benefits:
@@ -96,11 +93,11 @@ If a user writes a value and immediately reads it, a lagging replica may return 
 
 Some systems let more than one node accept writes.
 
-```text
-        writes          writes
-          |               |
-          v               v
-      [ master A ] <--> [ master B ]
+```mermaid
+flowchart TD
+    WA["Writes"] --> A["Master A"]
+    WB["Writes"] --> B["Master B"]
+    A <-->|Replication| B
 ```
 
 Both masters serve reads and writes and replicate to each other. If one is unavailable, the other can continue accepting writes. That improves write availability, but it creates conflicts: two clients can update the same record at the same time.
@@ -131,11 +128,18 @@ Cross-shard joins and transactions are expensive. Design around them or accept t
 
 Federation splits databases by business function instead of by key.
 
-```text
-single database          federated databases
-  [ users     ]            [ users DB ]
-  [ billing   ]            [ billing DB ]
-  [ content   ]            [ content DB ]
+```mermaid
+flowchart LR
+    subgraph single["Single database"]
+        U["Users"]
+        BI["Billing"]
+        CO["Content"]
+    end
+    subgraph federated["Federated databases"]
+        UD["Users DB"]
+        BD["Billing DB"]
+        CD["Content DB"]
+    end
 ```
 
 Each database holds a smaller data set and can be tuned, replicated, and scaled for its own workload. There is no single primary serializing every write, so independent functions can write in parallel.
@@ -148,12 +152,14 @@ Federation and sharding are different. Federation splits by function; sharding s
 
 Normalization removes duplicate facts. Denormalization adds some duplication back to make reads cheaper.
 
-```text
-normalized:
-  orders -> customer_id -> customers
-
-denormalized:
-  orders with customer_name copied into each row
+```mermaid
+flowchart LR
+    subgraph normalized["Normalized"]
+        O["Orders"] -->|customer_id| C["Customers"]
+    end
+    subgraph denormalized["Denormalized"]
+        OD["Orders with customer_name copied into each row"]
+    end
 ```
 
 The read no longer needs a join. The cost is write work: a customer rename must update every copied row, or the copies will disagree.
@@ -180,9 +186,9 @@ An index speeds reads and costs write time, storage, and memory. Add an index fo
 
 For files, store the bytes in an object store and the metadata in a database.
 
-```text
-metadata row: file_id, owner, size, checksum, object_key
-object store: bytes at object_key
+```mermaid
+flowchart LR
+    M["Metadata row: file_id, owner, size, checksum, object_key"] -->|object_key| O["Object store: bytes"]
 ```
 
 This keeps the database small and lets the object store handle large transfers.

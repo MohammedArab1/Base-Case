@@ -21,11 +21,11 @@ Holding a database transaction open across a network call ties up locks and conn
 
 Consider an order with three steps.
 
-```text
-order 812
-  reserve inventory   done
-  charge card         done
-  create shipment     failed
+```mermaid
+flowchart LR
+    O["Order 812"] --> R["Reserve inventory<br/>done"]
+    R --> C["Charge card<br/>done"]
+    C --> S["Create shipment<br/>failed"]
 ```
 
 The customer has been charged and no shipment exists. Retrying the shipment may be enough. If the item is out of stock, the system must release the inventory and refund the charge. That is a business decision, not a database rollback.
@@ -36,14 +36,18 @@ Record the state of each step before and after every external call. A row with `
 
 There are two ways to connect the steps.
 
-```text
-orchestration:
-  workflow service -> inventory
-                   -> payments
-                   -> shipping
-
-choreography:
-  order.created -> inventory.reserved -> payment.charged -> shipment.created
+```mermaid
+flowchart TD
+    subgraph OR["Orchestration"]
+        direction LR
+        W["Workflow service"] --> I["Inventory"]
+        W --> P["Payments"]
+        W --> S["Shipping"]
+    end
+    subgraph CH["Choreography"]
+        direction LR
+        E1["order.created"] --> E2["inventory.reserved"] --> E3["payment.charged"] --> E4["shipment.created"]
+    end
 ```
 
 An orchestrator owns the sequence. It knows which step comes next, sets timeouts, and starts compensations. It is easier to inspect and change. The cost is a central component that must be available and a service that accumulates knowledge of every step.
@@ -56,10 +60,12 @@ Most large systems mix both. A workflow engine coordinates the critical path, wh
 
 A saga is a sequence of local transactions. If a later step fails, earlier steps are undone with compensating actions.
 
-```text
-reserve inventory -> authorize card -> create shipment
-        |                 |                  |
-   release stock      void or refund      cancel shipment
+```mermaid
+flowchart LR
+    R["Reserve inventory"] --> A["Authorize card"] --> S["Create shipment"]
+    R --> RS["Release stock"]
+    A --> V["Void or refund"]
+    S --> C["Cancel shipment"]
 ```
 
 A compensation is not a rollback. The original effect may already be visible. A refund is a new transaction, not the removal of the old charge. An email cannot be unsent. Order steps so that irreversible actions happen late, or ask for confirmation before the point of no return.
@@ -70,10 +76,17 @@ Compensations need the same care as forward steps: an idempotency key, retries, 
 
 A durable execution engine, such as Temporal, Amazon Step Functions, or a comparable cloud workflow service, stores the workflow state and step results. The code can look like a normal function, but the engine checkpoints each step. If the process crashes, the workflow resumes on another worker.
 
-```text
-worker: run step 1 -> checkpoint
-worker: run step 2 -> crash
-engine: start worker -> resume at step 2
+```mermaid
+sequenceDiagram
+    participant W1 as Worker
+    participant E as Engine
+    participant W2 as New worker
+
+    W1->>E: checkpoint after step 1
+    W1->>W1: run step 2
+    Note over W1: crash
+    E->>W2: start worker
+    W2->>E: resume at step 2
 ```
 
 This removes a large amount of hand-written state management. It also adds a dependency, a new operational model, and rules about deterministic code and workflow versioning. Use it when workflows are long, numerous, and important. A single queue task does not need it.
@@ -116,10 +129,16 @@ Keep an append-only record of state transitions: workflow ID, step, old state, n
 
 ## Worked example: authorize, capture, refund
 
-```text
-pending -> authorized -> captured -> refunded
-   |           |            |
-   +-> failed  +-> voided   +-> refund_pending
+```mermaid
+stateDiagram-v2
+    [*] --> pending
+    pending --> authorized
+    authorized --> captured
+    captured --> refunded
+    pending --> failed
+    authorized --> voided
+    captured --> refund_pending
+    refund_pending --> refunded
 ```
 
 1. The client posts a payment with an idempotency key. The API writes a `pending` row and starts a workflow.

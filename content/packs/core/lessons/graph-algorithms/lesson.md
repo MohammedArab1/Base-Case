@@ -6,10 +6,15 @@ Some graph problems are not about the shortest path. They are about **order** or
 
 A topological order lists nodes so that every directed edge points from earlier to later.
 
-```text
-A -> B -> D
-A -> C -> D
+```mermaid
+flowchart LR
+    A["A"] --> B["B"]
+    A --> C["C"]
+    B --> D["D"]
+    C --> D
+```
 
+```text
 valid orders:
 A, B, C, D
 A, C, B, D
@@ -61,27 +66,32 @@ Union-find (also called disjoint set union) answers:
 
 Each group has a representative root node. `find` walks to the root. `union` attaches one root under another.
 
-```text
-initial:  A   B   C   D
+```mermaid
+flowchart TD
+    subgraph ST1["initial"]
+        A1["A"]
+        B1["B"]
+        C1["C"]
+        D1["D"]
+    end
 
-union(A, B):
-          A       C   D
-          |
-          B
+    subgraph ST2["union(A, B)"]
+        A2["A"] --> B2["B"]
+        C2["C"]
+        D2["D"]
+    end
 
-union(C, D):
-          A       C
-          |       |
-          B       D
+    subgraph ST3["union(C, D)"]
+        A3["A"] --> B3["B"]
+        C3["C"] --> D3["D"]
+    end
 
-union(B, D):
-          A
-         / \
-        B   C
-            |
-            D
-
-find(D) -> A
+    subgraph ST4["union(B, D)"]
+        A4["A"] --> B4["B"]
+        A4 --> C4["C"]
+        C4 --> D4["D"]
+        D4 -.->|"find(D) → root A"| A4
+    end
 ```
 
 A naive tree can become a long chain. Two optimizations fix that:

@@ -27,16 +27,17 @@ Availability is not the same as durability. Durability means data survives; avai
 
 Components are either in sequence or in parallel. The math is different.
 
-```text
-sequence: request must pass through A and B
-
-client -> [ A ] -> [ B ] -> response
-
-parallel: request can use A or B
-
-        +--> [ A ] --+
-client -|            |-> response
-        +--> [ B ] --+
+```mermaid
+flowchart LR
+    subgraph SEQ["sequence: request must pass through A and B"]
+        direction LR
+        C1["client"] --> A1["A"] --> B1["B"] --> R1["response"]
+    end
+    subgraph PAR["parallel: request can use A or B"]
+        direction LR
+        C2["client"] --> A2["A"] --> R2["response"]
+        C2 --> B2["B"] --> R2
+    end
 ```
 
 For components in sequence, multiply their availability:
@@ -61,15 +62,12 @@ That is about 99.9999%. The word **independent** matters. Two app servers behind
 
 Failover moves traffic from a failed component to a standby.
 
-```text
-active   [ primary ]  <-- heartbeats -->  [ standby ]  passive
-             |
-          traffic
-
-primary stops answering
-             |
-             v
-active   [ failed  ]                      [ standby ]  now active
+```mermaid
+flowchart TD
+    T["traffic"] --> P["primary (active)"]
+    P <-->|"heartbeats"| S["standby (passive)"]
+    P -->|"stops answering"| F["failed primary"]
+    F -->|"promote standby, move address or routing"| S2["standby (now active)"]
 ```
 
 A health check or heartbeat detects the failure. A controller promotes the standby, moves the address or updates routing, and tells the system that a new leader exists.
@@ -102,14 +100,11 @@ Guard against this with a quorum, a lease with an expiry, or a fencing token tha
 
 Replication keeps copies of the same data.
 
-```text
-          writes
-            |
-            v
-        [ primary ]
-          |     |
-          v     v
-      [ copy ] [ copy ]
+```mermaid
+flowchart TD
+    W["writes"] --> P["primary"]
+    P --> C1["copy"]
+    P --> C2["copy"]
 ```
 
 - **Synchronous replication** waits for a copy before acknowledging. Less data loss, more write latency.

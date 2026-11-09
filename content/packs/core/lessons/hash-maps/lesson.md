@@ -2,10 +2,11 @@
 
 A hash map is like a wall of labelled drawers.
 
-```text
-key "apple"  ->  [ drawer 42 ] -> value 3
-key "banana" ->  [ drawer 17 ] -> value 1
-key "cherry" ->  [ drawer 09 ] -> value 7
+```mermaid
+flowchart LR
+    KA["key apple"] --> DA["drawer 42"] --> VA["value 3"]
+    KB["key banana"] --> DB["drawer 17"] --> VB["value 1"]
+    KC["key cherry"] --> DC["drawer 09"] --> VC["value 7"]
 ```
 
 You do not open every drawer. You compute a label from the key, go to that drawer, and take what you need. That is the everyday idea behind a hash function.

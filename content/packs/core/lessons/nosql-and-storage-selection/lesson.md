@@ -67,10 +67,11 @@ Good for time-series data, event logs, and messages read in time order. The acce
 
 A graph store treats records as nodes and relationships as edges.
 
-```text
-(ana) --follows--> (ben)
-  |                    |
-  +--likes--> (post) <--+
+```mermaid
+flowchart LR
+    Ana["Ana"] -->|"follows"| Ben["Ben"]
+    Ana -->|"likes"| Post["Post"]
+    Ben -->|"likes"| Post
 ```
 
 Graph databases are useful when relationships are the main query: friend-of-friend, recommendations, permission chains, and fraud rings. For simple lookups, a relational table with an index is often enough.
@@ -91,12 +92,14 @@ object store: bytes at object_key
 
 Normalization removes duplication. Denormalization puts some duplication back to make reads cheaper.
 
-```text
-normalized:
-  orders -> customer_id -> customers
-
-denormalized:
-  orders with customer_name copied into each order row
+```mermaid
+flowchart LR
+    subgraph norm["normalized"]
+        O["orders"] -->|"customer_id"| C["customers"]
+    end
+    subgraph denorm["denormalized"]
+        D["orders with customer_name copied into each order row"]
+    end
 ```
 
 The read no longer needs a join. The cost is that a customer rename must update every copied row, or the copies will disagree.
@@ -140,16 +143,24 @@ BASE is not a free pass. Decide which invariant the product cannot break. A doub
 
 These are different ways to spread data.
 
-```text
-replication:  same data, multiple copies
-
-federation:   split by function
-
-  [ users DB ] [ billing DB ] [ content DB ]
-
-sharding:     split one data set by key
-
-  [ users 0-999 ] [ users 1000-1999 ] [ users 2000-... ]
+```mermaid
+flowchart TD
+    subgraph rep["replication: same data"]
+        R["multiple copies"]
+    end
+    subgraph fed["federation: split by function"]
+        direction LR
+        F1["users DB"]
+        F2["billing DB"]
+        F3["content DB"]
+    end
+    subgraph shard["sharding: split one data set by key"]
+        direction LR
+        S1["users 0-999"]
+        S2["users 1000-1999"]
+        S3["users 2000-..."]
+    end
+    rep ~~~ fed ~~~ shard
 ```
 
 - **Replication** improves read capacity and availability. It does not reduce the size of one logical data set.

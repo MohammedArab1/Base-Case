@@ -26,17 +26,17 @@ Each pointer crosses the array once, so the scan is `O(n)`.
 
 On a linked list, the "positions" are nodes rather than indices.
 
-```text
-slow: 1 step
-fast: 2 steps
-
-head -> [a] -> [b] -> [c] -> [d] -> [e]
-          ↑
-        slow, fast
-
-head -> [a] -> [b] -> [c] -> [d] -> [e]
-                  ↑      ↑
-                slow    fast
+```mermaid
+flowchart TB
+    subgraph S1["start: both at a (slow moves 1, fast moves 2)"]
+        direction LR
+        A1["a (slow, fast)"] --> B1["b"] --> C1["c"] --> D1["d"] --> E1["e"]
+    end
+    subgraph S2["after one step"]
+        direction LR
+        A2["a"] --> B2["b (slow)"] --> C2["c (fast)"] --> D2["d"] --> E2["e"]
+    end
+    E1 ~~~ A2
 ```
 
 When the fast pointer reaches the end, the slow pointer is at the middle. If the list has a cycle, the fast pointer eventually meets the slow pointer inside the loop. Both ideas use `O(1)` extra space and `O(n)` time.

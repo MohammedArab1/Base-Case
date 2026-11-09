@@ -2,12 +2,13 @@
 
 A tree is a set of nodes connected by edges, with one root and no cycles.
 
-```text
-        A
-       / \
-      B   C
-     / \   \
-    D   E   F
+```mermaid
+flowchart TD
+    A["A"] --> B["B"]
+    A --> C["C"]
+    B --> D["D"]
+    B --> E["E"]
+    C --> F["F"]
 ```
 
 - `A` is the **root**.
@@ -19,12 +20,13 @@ Each node can be visited in a different order. The order changes which questions
 
 ## Three depth-first orders
 
-```text
-        A
-       / \
-      B   C
-     / \   \
-    D   E   F
+```mermaid
+flowchart TD
+    A["A"] --> B["B"]
+    A --> C["C"]
+    B --> D["D"]
+    B --> E["E"]
+    C --> F["F"]
 ```
 
 **Preorder**: visit the node before its children.
@@ -119,12 +121,16 @@ A level-order list uses `null` for a missing child:
 
 ```text
 [4, 2, 7, 1, 3, 6, 9]
+```
 
-        4
-       / \
-      2   7
-     / \ / \
-    1  3 6  9
+```mermaid
+flowchart TD
+    N4["4"] --> N2["2"]
+    N4 --> N7["7"]
+    N2 --> N1["1"]
+    N2 --> N3["3"]
+    N7 --> N6["6"]
+    N7 --> N9["9"]
 ```
 
 To reconstruct a tree from traversals, read the root from preorder, split the inorder list into left and right subtrees, and recurse. **Tree Rebuild** is the exercise for that. A level-order list is only the judge's input encoding; it is not the traversal used for reconstruction.

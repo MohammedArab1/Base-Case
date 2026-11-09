@@ -52,12 +52,12 @@ The order matters. Reading a reference before an attempt creates a feeling of fa
 
 Read a concept lesson when a practice rep exposes a gap. Then return to a prompt and use the idea.
 
-```text
-read API design
-   -> practice URL shortener
-   -> notice weak cursor pagination
-   -> reread that section
-   -> practice chat history with the same pattern
+```mermaid
+flowchart TD
+    A["Read API design"] --> B["Practice URL shortener"]
+    B --> C["Notice weak cursor pagination"]
+    C --> D["Reread that section"]
+    D --> E["Practice chat history with the same pattern"]
 ```
 
 The eight design scenarios fall into rough groups:

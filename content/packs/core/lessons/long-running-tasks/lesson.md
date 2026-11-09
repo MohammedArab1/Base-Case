@@ -22,11 +22,13 @@ Keep the request synchronous when the user needs the result to continue, the wor
 
 The API should validate the request, create a durable job record, and return quickly.
 
-```text
-client -> API -> job store -> 202 Accepted + job_id
-                   |
-                   v
-              worker pool -> result store
+```mermaid
+flowchart TD
+    C["Client"] --> A["API"]
+    A --> J["Job store"]
+    J --> R["202 Accepted + job_id"]
+    J --> W["Worker pool"]
+    W --> S["Result store"]
 ```
 
 The job record contains the type, payload, owner, status, attempt count, timestamps, and idempotency key. Persist it before acknowledging. If the process crashes after the response, the job must still exist.
@@ -129,14 +131,16 @@ For side effects outside the worker, use the provider's idempotency key. For a p
 
 ## Worked example: video transcode
 
-```text
-upload -> object storage
-       -> create job (video_id, source, renditions)
-       -> 202 + job_id
-worker -> download source
-       -> transcode 360p, 720p, 1080p
-       -> upload renditions
-       -> update progress and status
+```mermaid
+flowchart TD
+    subgraph UP["Upload"]
+        direction LR
+        U["Upload"] --> O["Object storage"] --> CJ["Create job<br/>video_id, source, renditions"] --> A["202 + job_id"]
+    end
+    subgraph WK["Worker"]
+        direction LR
+        W["Worker"] --> D["Download source"] --> T["Transcode 360p, 720p, 1080p"] --> R["Upload renditions"] --> P["Update progress and status"]
+    end
 ```
 
 The upload completes before the job is created, so the worker never reads a half-written file. Each rendition is keyed by job and resolution, so a retry overwrites instead of duplicating. A corrupt source fails permanently and goes to the dead-letter queue with a clear error. A transient encoder crash retries with backoff. Cancellation stops between renditions and removes partial outputs.

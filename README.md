@@ -75,6 +75,7 @@ corepack pnpm lint
 corepack pnpm typecheck
 corepack pnpm test
 corepack pnpm content:validate
+corepack pnpm mermaid:check
 corepack pnpm content:test
 corepack pnpm smoke:e2e
 corepack pnpm smoke:playwright

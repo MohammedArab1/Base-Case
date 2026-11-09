@@ -29,11 +29,10 @@ Users notice these more than the abstract label. A user who posts a comment and 
 
 CAP says that during a network partition, a distributed system must choose between consistency and availability. CAP stands for consistency, availability, and partition tolerance. A CP system favors consistency during a partition; an AP system favors availability and may serve stale data.
 
-```text
-partition: two replicas cannot talk
-
-choice A: refuse reads/writes that cannot be consistent
-choice B: serve reads that may be stale
+```mermaid
+flowchart TD
+    P["Partition: two replicas cannot talk"] --> A["Choice A: refuse reads/writes that cannot be consistent"]
+    P --> B["Choice B: serve reads that may be stale"]
 ```
 
 Most systems are not "CP" or "AP" all the time. They make different choices per operation. A payment ledger may refuse a write it cannot confirm. A feed may serve a slightly old timeline.
@@ -76,10 +75,16 @@ A retry after a timeout is common. The client does not know whether the first re
 
 An **idempotency key** solves this:
 
-```text
-client generates key = "order-123-attempt-1"
-server stores key + result
-retry with same key -> return the stored result
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C: Generate key "order-123-attempt-1"
+    C->>S: Request with key
+    S->>S: Store key + result
+    S-->>C: Result
+    C->>S: Retry with the same key
+    S-->>C: Stored result
 ```
 
 The key must be unique per logical operation, and the server must enforce uniqueness atomically. Store a hash of the request as well, so a reused key with a different payload is rejected rather than silently returning the wrong result.

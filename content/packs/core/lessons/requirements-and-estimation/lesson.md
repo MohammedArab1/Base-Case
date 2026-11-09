@@ -129,12 +129,25 @@ What this step produces: a contract the rest of the design must satisfy. You can
 
 Skip this for a simple design. For a flow with several stages, write the path in words or a short diagram.
 
-```text
-create:
-  client -> API -> code generator -> database -> cache warm
+```mermaid
+flowchart LR
+    subgraph Create["Create"]
+        direction TD
+        C1["Client"] --> C2["API"]
+        C2 --> C3["Code generator"]
+        C3 --> C4["Database"]
+        C4 --> C5["Cache warm"]
+    end
 
-redirect:
-  client -> edge -> API -> cache -> (miss) database -> 302
+    subgraph Redirect["Redirect"]
+        direction TD
+        R1["Client"] --> R2["Edge"]
+        R2 --> R3["API"]
+        R3 --> R4["Cache"]
+        R4 -->|"miss"| R5["Database"]
+        R5 --> R6["302"]
+        R4 -->|"hit"| R6
+    end
 ```
 
 This makes the read and write paths explicit and shows where a queue, cache, or replica belongs. If the path takes more than a few lines, the design is not ready.
@@ -145,20 +158,16 @@ What this step produces: a concrete path for the requests that matter.
 
 Draw the smallest diagram that covers the core flow. Label each arrow with what it carries.
 
-```text
-client
-  |
-  v
-load balancer
-  |
-  v
-API service  --->  cache
-  |                  |
-  v                  v
-primary DB  --->  read replicas
-  |
-  v
-analytics queue ---> worker ---> analytics store
+```mermaid
+flowchart TD
+    C["Client"] --> LB["Load balancer"]
+    LB --> API["API service"]
+    API --> Cache["Cache"]
+    API --> PDB["Primary DB"]
+    PDB --> RR["Read replicas"]
+    PDB --> AQ["Analytics queue"]
+    AQ --> W["Worker"]
+    W --> AS["Analytics store"]
 ```
 
 Every box needs a job and every arrow a reason. If a component serves no requirement, remove it or mark it as future work.

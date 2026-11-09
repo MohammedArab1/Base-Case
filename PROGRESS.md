@@ -76,11 +76,17 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
     converted the DNS resolution and reverse-proxy diagrams to Mermaid.
   - Added an Enlarge control that opens each diagram in a large modal with the
     SVG scaled to the available width.
+  - Audited every lesson and converted 140 structural diagrams across 46 lessons
+    to Mermaid. Left pseudocode, formulas, tables, array traces, and arithmetic
+    as fenced text.
+  - Added `pnpm mermaid:check` and a CI step that parses every Mermaid block with
+    jsdom-backed Mermaid validation.
   - Updated the README, architecture overview, FAQ, known limitations, authoring
     guide, release notes, smoke test, schema/content tests, and Playwright
     coverage for 60 lessons and 38 system-design lessons.
 - Tests run:
   - `pnpm content:validate` — valid; 81 problems, 8 designs, 60 lessons.
+  - `pnpm mermaid:check` — 140 diagrams parsed successfully.
   - `pnpm content:test` — 162/162 core reference solutions pass.
   - `pnpm test` — 141 desktop tests, 14 schema tests, and Go judge tests pass.
   - `pnpm smoke:e2e` — passed with 60 lessons.

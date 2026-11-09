@@ -205,9 +205,13 @@ nothing essential.
 
 ```sh
 pnpm content:validate
+pnpm mermaid:check
 pnpm typecheck
 pnpm test
 ```
+
+`mermaid:check` parses every fenced Mermaid block and reports the lesson file
+and line number for invalid diagrams.
 
 Then open **Learn**, read the lesson at the minimum window size, open every
 linked exercise, and mark the lesson complete and incomplete.

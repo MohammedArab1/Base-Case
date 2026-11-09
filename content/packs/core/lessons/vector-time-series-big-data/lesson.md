@@ -6,10 +6,16 @@ A general-purpose database is a good default. Some questions have a different sh
 
 An embedding is a fixed-length list of numbers that represents meaning. A model turns text, images, or audio into vectors. Similar meaning tends to produce nearby vectors.
 
-```text
-document -> split into chunks -> embedding model -> vector + metadata -> index
-
-query -> embedding model -> approximate search -> filter -> rerank -> results
+```mermaid
+flowchart LR
+    subgraph ING["document ingestion"]
+        direction LR
+        D["document"] --> S["split into chunks"] --> EM["embedding model"] --> VM["vector + metadata"] --> I["index"]
+    end
+    subgraph QRY["query path"]
+        direction LR
+        Q["query"] --> QE["embedding model"] --> AS["approximate search"] --> F["filter"] --> RR["rerank"] --> RS["results"]
+    end
 ```
 
 A vector database stores vectors and metadata and answers "which vectors are closest?" It fits semantic search, recommendations, deduplication, and retrieval for a language model.
@@ -24,10 +30,20 @@ Exact nearest-neighbor search compares the query with every vector. At 50 millio
 
 Hierarchical Navigable Small World (HNSW) builds a layered graph. Upper layers are sparse highways; lower layers hold every vector. Search starts at the top, moves greedily toward the query, then drops a layer.
 
-```text
-layer 2:   A ----------- F
-layer 1:   A ---- C ---- F ---- H
-layer 0:   A - B - C - D - E - F - G - H
+```mermaid
+flowchart TD
+    subgraph L2["layer 2"]
+        direction LR
+        A2["A"] --- F2["F"]
+    end
+    subgraph L1["layer 1"]
+        direction LR
+        A1["A"] --- C1["C"] --- F1["F"] --- H1["H"]
+    end
+    subgraph L0["layer 0"]
+        direction LR
+        A0["A"] --- B0["B"] --- C0["C"] --- D0["D"] --- E0["E"] --- F0["F"] --- G0["G"] --- H0["H"]
+    end
 ```
 
 HNSW gives high recall and low latency, but the graph lives in memory and updates cost more than appends.
@@ -36,12 +52,18 @@ HNSW gives high recall and low latency, but the graph lives in memory and update
 
 Inverted File (IVF) clusters vectors around centroids. A query checks the nearest centroids and scans those lists.
 
-```text
-vectors -> cluster 1 (centroid c1)
-        -> cluster 2 (centroid c2)
-        -> cluster 3 (centroid c3)
-
-query -> nearest centroids -> scan nprobe lists -> candidates
+```mermaid
+flowchart LR
+    subgraph BUILD["index build"]
+        direction TB
+        V["vectors"] --> C1["cluster 1 (centroid c1)"]
+        V --> C2["cluster 2 (centroid c2)"]
+        V --> C3["cluster 3 (centroid c3)"]
+    end
+    subgraph SEARCH["query"]
+        direction LR
+        Q["query"] --> N["nearest centroids"] --> S["scan nprobe lists"] --> CA["candidates"]
+    end
 ```
 
 IVF uses less memory than HNSW and gives a direct recall/latency knob: probe more lists for better recall. Uneven clusters hurt it.
@@ -52,10 +74,15 @@ Quantization converts float32 vectors to int8 or product codes, cutting memory b
 
 Keyword search is better for exact names, codes, rare terms, and fresh documents. Vector search is better for paraphrase and synonyms. A hybrid pipeline runs both, merges the ranked lists, and reranks the top candidates.
 
-```text
-query
-  |--> keyword index --> top 100 --|
-  |--> vector index  --> top 100 --|--> merge -> rerank -> top 10
+```mermaid
+flowchart LR
+    Q["query"] --> K["keyword index"]
+    Q --> V["vector index"]
+    K --> T1["top 100"]
+    V --> T2["top 100"]
+    T1 --> M["merge"]
+    T2 --> M
+    M --> R["rerank"] --> T10["top 10"]
 ```
 
 Merging can use weighted scores or reciprocal rank fusion. A reranker can be a cross-encoder or a rule. Filters such as tenant, locale, or access level must apply during the search; post-filtering an ANN result can return too few rows.
@@ -130,8 +157,9 @@ A count-min sketch estimates item frequency. It uses a grid of counters and seve
 
 External sort handles data larger than memory.
 
-```text
-input -> sorted runs on disk -> k-way merge -> sorted output
+```mermaid
+flowchart LR
+    I["input"] --> R["sorted runs on disk"] --> M["k-way merge"] --> O["sorted output"]
 ```
 
 Read a chunk that fits in memory, sort it, write a run, then merge runs with small buffers. Deduplication compares adjacent sorted records. A 2 TB file with 16 GB of memory becomes a few hundred runs, merged in several passes.

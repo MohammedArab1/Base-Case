@@ -10,14 +10,21 @@ Merge sort uses three ideas:
 2. Sort each half.
 3. Merge the two sorted halves.
 
-```text
-[5, 2, 8, 1]
-      ↓ split
-[5, 2]   [8, 1]
-  ↓         ↓
-[2, 5]   [1, 8]
-      ↓ merge
-[1, 2, 5, 8]
+```mermaid
+flowchart TD
+    Root["[5, 2, 8, 1]"]
+    L["[5, 2]"]
+    R["[8, 1]"]
+    LS["[2, 5]"]
+    RS["[1, 8]"]
+    M["[1, 2, 5, 8]"]
+
+    Root -->|split| L
+    Root -->|split| R
+    L -->|sort| LS
+    R -->|sort| RS
+    LS -->|merge| M
+    RS -->|merge| M
 ```
 
 The merge step is like zipping two sorted queues:

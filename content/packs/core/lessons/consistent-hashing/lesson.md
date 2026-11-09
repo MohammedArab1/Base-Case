@@ -30,9 +30,15 @@ The exact fraction depends on the old and new counts. In a cache, a remap means 
 
 Consistent hashing maps both nodes and keys onto a circle. It helps to unroll the circle into a line.
 
-```text
-hash space 0 ---------------------------------------> 2^32-1
-             A        k1        B        k2        C     (wraps to A)
+```mermaid
+flowchart LR
+    H0["Hash space 0"] --> A["Node A"]
+    A --> K1["Key k1"]
+    K1 --> B["Node B"]
+    B --> K2["Key k2"]
+    K2 --> C["Node C"]
+    C --> HMAX["2^32 - 1 (wraps to A)"]
+    HMAX -.-> A
 ```
 
 Each node hashes to a position. Each key hashes to a position. To find the owner, walk clockwise from the key until you reach a node. `k1` belongs to B. `k2` belongs to C. A key past C wraps around and belongs to A.
@@ -43,9 +49,14 @@ The ring works because each node owns only the arc between its predecessor and i
 
 When a node joins, it takes only the keys between its predecessor and itself. Those keys used to belong to the next node clockwise.
 
-```text
-before:  A ---- k1 ---- B ---- k2 ---- C ---- (wrap to A)
-after:   A ---- k1 ---- N ---- B ---- k2 ---- C ---- (wrap to A)
+```mermaid
+flowchart TD
+    subgraph before["Before"]
+        A1["A"] --> K1A["k1"] --> B1["B"] --> K2A["k2"] --> C1["C"] --> W1["wrap to A"]
+    end
+    subgraph after["After"]
+        A2["A"] --> K1B["k1"] --> N2["N"] --> B2["B"] --> K2B["k2"] --> C2["C"] --> W2["wrap to A"]
+    end
 ```
 
 Node N takes `k1`. It does not touch `k2`, which still belongs to C. On average, adding the (N+1)th node moves about `1/(N+1)` of the keys.
@@ -83,8 +94,11 @@ One position is a single sample of the hash space, and one sample is easy to imb
 
 A common pattern stores each key on the first N distinct physical nodes clockwise. The first node is the owner; the next ones are replicas.
 
-```text
-key k -> owner B, replicas C and D
+```mermaid
+flowchart LR
+    K["Key k"] --> B["Owner B"]
+    B --> C["Replica C"]
+    C --> D["Replica D"]
 ```
 
 If B fails, C can serve the key. The ring still needs a repair process to restore the replica count. Virtual nodes complicate this: several consecutive positions may belong to the same physical node, so the implementation must skip duplicates when choosing replicas.

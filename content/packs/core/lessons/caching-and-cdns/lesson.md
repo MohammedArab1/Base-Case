@@ -8,23 +8,13 @@ A cache keeps a copy of data somewhere faster than the source. The trade is simp
 
 Caching is not one layer. The same idea appears at several points between the user and the source of truth.
 
-```text
-browser cache
-  |
-  v
-CDN edge cache
-  |
-  v
-reverse proxy / web server cache
-  |
-  v
-application cache
-  |
-  v
-database buffer cache
-  |
-  v
-disk
+```mermaid
+flowchart TD
+    B["Browser cache"] --> C["CDN edge cache"]
+    C --> R["Reverse proxy / web server cache"]
+    R --> A["Application cache"]
+    A --> D["Database buffer cache"]
+    D --> K["Disk"]
 ```
 
 - **Client cache**: the browser or operating system keeps a copy. Fast and free, but you do not control eviction.
@@ -125,8 +115,9 @@ Mitigations:
 
 A content delivery network is a cache at the edge of the network, close to users.
 
-```text
-user -> edge location -> origin
+```mermaid
+flowchart LR
+    U["User"] --> E["Edge location"] --> O["Origin"]
 ```
 
 Static assets such as images, CSS, and videos are ideal. They change rarely and can be cached for a long time.
@@ -135,17 +126,24 @@ There are two ways to fill the edge.
 
 **Push CDN**: you upload content to the CDN when it changes.
 
-```text
-you -> upload -> CDN edge
+```mermaid
+flowchart LR
+    Y["You"] --> UP["Upload"] --> E["CDN edge"]
 ```
 
 You control when content is published and can set a long TTL. Storage costs more, and every change needs an upload step. Push works well for a small, stable set of large files.
 
 **Pull CDN**: the edge fetches from your origin on the first request and caches the result.
 
-```text
-user -> edge (miss) -> origin
-user <- edge (cached)
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant E as Edge
+    participant O as Origin
+    U->>E: Request
+    E->>O: Miss, fetch content
+    O-->>E: Content
+    E-->>U: Cached response
 ```
 
 You keep the origin as the source of truth and rewrite URLs to the CDN. The first request is slower, and expired content may be fetched again even if it did not change. Pull works well for large, changing catalogs of content.

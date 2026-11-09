@@ -21,10 +21,15 @@ The exact timing depends on cache, disk, and row size. The shape does not: scan 
 
 Most relational indexes are B-trees. A B-tree keeps keys sorted in a shallow tree. Each node holds many keys, so a few page reads reach any value.
 
-```text
-             [ 10 | 20 ]
-            /     |     \
-      [1..9]  [11..19]  [21..]
+```mermaid
+flowchart TD
+    Root["[10 | 20]"]
+    Left["[1..9]"]
+    Mid["[11..19]"]
+    Right["[21..]"]
+    Root --> Left
+    Root --> Mid
+    Root --> Right
 ```
 
 A B-tree supports exact lookup, range scans, sorting by the indexed columns, and prefix matching on a composite key.

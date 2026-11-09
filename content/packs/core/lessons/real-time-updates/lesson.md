@@ -27,9 +27,14 @@ Start with polling. Move to SSE when the server pushes often and the client only
 
 An HTTP request can land on any server. A WebSocket connection is pinned to the server that accepted it.
 
-```text
-HTTP:      client -> any API instance
-WebSocket: client <-> gateway instance 7
+```mermaid
+flowchart LR
+    subgraph H["HTTP"]
+        C1["Client"] --> A["Any API instance"]
+    end
+    subgraph W["WebSocket"]
+        C2["Client"] <--> G["Gateway instance 7"]
+    end
 ```
 
 That pinned state changes deployment, scaling, and failure handling. If gateway 7 dies, every client on it reconnects. The design needs a reconnect path, not a hope that servers stay up.
@@ -53,8 +58,10 @@ Plan for deploys. Draining a gateway means stopping new connections, letting exi
 
 A gateway that holds a connection is not the place to decide who should receive a message. Use a publish/subscribe layer.
 
-```text
-message service -> topic "user:41" -> gateways subscribed to user 41
+```mermaid
+flowchart LR
+    M["Message service"] --> T["Topic user:41"]
+    T --> G["Gateways subscribed to user 41"]
 ```
 
 A simple approach subscribes each gateway to the channels of its connected users. The message service publishes once, and only gateways with interested clients receive it.
@@ -67,11 +74,17 @@ Presence is a hint, not a fact. A client can lose connectivity without a clean c
 
 Use a heartbeat and a short TTL:
 
-```text
-connect    -> set presence:user:41 = gateway-7, TTL 30s
-heartbeat  -> refresh TTL every 10s
-disconnect -> delete key
-crash      -> key expires
+```mermaid
+stateDiagram-v2
+    [*] --> Online: connect, set presence key with TTL 30s
+    note right of Online
+        presence:user:41 = gateway-7
+    end note
+    Online --> Online: heartbeat, refresh TTL every 10s
+    Online --> Offline: disconnect, delete key
+    Online --> Expired: crash, key expires
+    Offline --> [*]
+    Expired --> [*]
 ```
 
 Multi-device presence needs one entry per device, then a rollup. Do not mark a user offline the moment one socket closes if another device is still connected.
@@ -94,10 +107,14 @@ Networks drop. Clients must reconnect without losing messages or showing duplica
 
 Give every message in a conversation a sequence number.
 
-```text
-client last seen: conversation 9, seq 1042
-reconnect -> "resume after 1042"
-server -> replay 1043, 1044, ...
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+
+    Note over C: last seen conversation 9, seq 1042
+    C->>S: resume after 1042
+    S-->>C: replay 1043, 1044, ...
 ```
 
 SSE uses `Last-Event-ID` for the same purpose. The server keeps a replay buffer or reads from a durable log. If the requested position is too old, the client fetches a fresh snapshot and then resumes.
@@ -108,8 +125,11 @@ Sequence numbers should be per conversation or channel, not one global counter, 
 
 A slow client can make the server queue updates in memory.
 
-```text
-fast producer -> gateway -> slow socket -> growing buffer
+```mermaid
+flowchart LR
+    P["Fast producer"] --> G["Gateway"]
+    G --> S["Slow socket"]
+    S --> B["Growing buffer"]
 ```
 
 For each connection, keep a bounded outbound queue. When it fills:
@@ -132,9 +152,14 @@ For live scores or likes, the latest value is enough. Coalesce old updates and s
 
 Put gateways near users and route each connection to the nearest region. A user in Europe should not have every keystroke cross an ocean.
 
-```text
-EU clients -> EU gateway -> regional pub/sub
-US clients -> US gateway -> regional pub/sub
+```mermaid
+flowchart LR
+    subgraph EU["EU"]
+        EC["EU clients"] --> EG["EU gateway"] --> EP["Regional pub/sub"]
+    end
+    subgraph US["US"]
+        UC["US clients"] --> UG["US gateway"] --> UP["Regional pub/sub"]
+    end
 ```
 
 Cross-region rooms need a bridge between regional buses. Decide which region owns the room's order, or accept merge rules for concurrent updates. Presence can stay regional with a global rollup. The wider the fan-out, the more the design pays in latency and cost.
@@ -147,11 +172,15 @@ Polling is often cheaper at low scale and easier to operate. Measure the request
 
 ## Worked example: chat
 
-```text
-sender -> API -> persist message (conversation seq)
-              -> publish to conversation channel
-              -> recipient gateway -> live socket
-              -> offline? push notification
+```mermaid
+flowchart TD
+    S["Sender"] --> A["API"]
+    A --> P["Persist message<br/>conversation seq"]
+    A --> C["Publish to conversation channel"]
+    C --> G["Recipient gateway"]
+    G --> L["Live socket"]
+    G --> O{"Offline?"}
+    O -->|"yes"| N["Push notification"]
 ```
 
 The API writes the message and its sequence number in one transaction, then publishes. The recipient's gateway pushes it. The client acknowledges, and the sender sees a delivered state. On reconnect, the client sends its last sequence number and the server replays the gap. Duplicate IDs are ignored. A slow client gets a bounded queue and a resync, not an unbounded memory leak.

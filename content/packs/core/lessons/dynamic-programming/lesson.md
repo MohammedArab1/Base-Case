@@ -11,14 +11,14 @@ Start with a recursive idea. If the recursion keeps asking the same questions, s
 
 Naive Fibonacci has both:
 
-```text
-fib(5)
-  fib(4)
-    fib(3)
-      fib(2)
-      fib(1)
-    fib(2)   <- repeated
-  fib(3)     <- repeated
+```mermaid
+flowchart TD
+    F5["fib(5)"] --> F4["fib(4)"]
+    F5 --> F3R["fib(3) (repeated)"]
+    F4 --> F3["fib(3)"]
+    F4 --> F2R["fib(2) (repeated)"]
+    F3 --> F2["fib(2)"]
+    F3 --> F1["fib(1)"]
 ```
 
 The repeated calls make it `O(2ⁿ)`. Caching each result makes it `O(n)`.

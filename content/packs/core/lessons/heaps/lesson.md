@@ -11,14 +11,17 @@ A heap is a complete binary tree, so it fits in an array with no pointers.
 ```text
 values: [1, 3, 5, 7, 9, 8]
 
-           1
-         /   \
-        3     5
-       / \   /
-      7   9 8
-
 index:   0  1  2  3  4  5
 value:   1  3  5  7  9  8
+```
+
+```mermaid
+flowchart TD
+    H1["1"] --> H3["3"]
+    H1 --> H5["5"]
+    H3 --> H7["7"]
+    H3 --> H9["9"]
+    H5 --> H8["8"]
 ```
 
 For a node at index `i`:
@@ -35,35 +38,19 @@ That arithmetic is why heaps are compact and fast.
 
 When you push a value, put it at the end and bubble it up while it is smaller than its parent.
 
-```text
-push 2:
-
-[1, 3, 5, 7, 9, 8, 2]
-                    ↑
-compare with parent 5 -> swap
-
-[1, 3, 2, 7, 9, 8, 5]
-      ↑
-compare with parent 1 -> stop
+```mermaid
+flowchart TD
+    P["push 2"] --> A["[1, 3, 5, 7, 9, 8, 2]<br/>compare with parent 5 → swap"]
+    A --> B["[1, 3, 2, 7, 9, 8, 5]<br/>compare with parent 1 → stop"]
 ```
 
 When you pop the root, move the last item to the root and bubble it down.
 
-```text
-pop 1:
-
-move the last value 8 to the root:
-[8, 3, 5, 7, 9]
- ↑
-compare with children 3 and 5 -> swap with 3
-
-[3, 8, 5, 7, 9]
-   ↑
-compare with children 7 and 9 -> 8 is larger than 7, swap with 7
-
-[3, 7, 5, 8, 9]
-      ↑
-8 is now a leaf, so stop
+```mermaid
+flowchart TD
+    P["pop 1<br/>move the last value 8 to the root"] --> A["[8, 3, 5, 7, 9]<br/>compare with children 3 and 5 → swap with 3"]
+    A --> B["[3, 8, 5, 7, 9]<br/>compare with children 7 and 9; 8 is larger than 7 → swap with 7"]
+    B --> C["[3, 7, 5, 8, 9]<br/>8 is now a leaf → stop"]
 ```
 
 Each step moves one level, so push and pop are `O(log n)`. Peeking at the root is `O(1)`.

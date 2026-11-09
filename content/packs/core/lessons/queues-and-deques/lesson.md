@@ -2,13 +2,11 @@
 
 A queue is a line at a coffee shop. The first person in line is served first. That is **FIFO**: first in, first out.
 
-```text
-front                 back
-  ↓                     ↓
-[a] -> [b] -> [c] -> [d]
-
-enqueue e:  a b c d e
-dequeue:    b c d e     (a leaves)
+```mermaid
+flowchart LR
+    A["a<br/>front"] --> B["b"] --> C["c"] --> D["d<br/>back"]
+    D -.->|"enqueue e"| E["e"]
+    A -.->|"dequeue"| Out["a leaves<br/>front becomes b"]
 ```
 
 Enqueue at the back and dequeue from the front. Both are `O(1)` in a proper queue.
@@ -17,12 +15,25 @@ Enqueue at the back and dequeue from the front. Both are `O(1)` in a proper queu
 
 Breadth-first search visits a graph in rings of distance:
 
-```text
-start -> its neighbors -> their neighbors -> ...
-
-level 0:        A
-level 1:      B   C
-level 2:    D   E   F
+```mermaid
+flowchart TD
+    subgraph L0["level 0"]
+        A["A"]
+    end
+    subgraph L1["level 1"]
+        B["B"]
+        C["C"]
+    end
+    subgraph L2["level 2"]
+        D["D"]
+        E["E"]
+        F["F"]
+    end
+    A --> B
+    A --> C
+    B --> D
+    B --> E
+    C --> F
 ```
 
 A queue processes `A`, then `B` and `C`, then `D`, `E`, and `F`. A stack would dive down one branch first, which is DFS instead.

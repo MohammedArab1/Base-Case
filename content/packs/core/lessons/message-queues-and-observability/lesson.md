@@ -2,8 +2,10 @@
 
 A queue lets one part of the system hand work to another part without waiting. That is useful for slow, bursty, or unreliable work.
 
-```text
-producer -> [ queue ] -> consumer
+```mermaid
+flowchart LR
+    P["Producer"] --> Q["Queue"]
+    Q --> C["Consumer"]
 ```
 
 ## What to put on a queue
@@ -76,11 +78,11 @@ Choosing to drop work is a product decision. Say it explicitly rather than letti
 
 A news feed often needs to notify many followers about one post.
 
-```text
-post created
-  |
-  v
-fan-out worker -> per-user feed entries -> followers
+```mermaid
+flowchart TD
+    P["post created"] --> F["fan-out worker"]
+    F --> E["per-user feed entries"]
+    E --> FO["followers"]
 ```
 
 This is **fan-out on write**. It makes reads fast and writes expensive. The alternative is **fan-out on read**: gather posts at read time. It makes writes cheap and reads expensive.
@@ -103,13 +105,19 @@ Three signals, tied together:
 - **Logs**: structured events with a request ID, user or tenant (never secrets), and a result.
 - **Traces**: one request followed across services, with a span per hop.
 
-```text
-trace 8f2a  total 88 ms
-  API           88 ms
-  auth           8 ms
-  feed cache     2 ms
-  database      61 ms
-  render         5 ms
+```mermaid
+sequenceDiagram
+    participant API
+    participant Auth
+    participant Cache as Feed cache
+    participant DB as Database
+    participant Render
+
+    Note over API: trace 8f2a, total 88 ms
+    API->>Auth: 8 ms
+    API->>Cache: 2 ms
+    API->>DB: 61 ms
+    API->>Render: 5 ms
 ```
 
 The trace shows where the time went. The metric shows whether it is happening to everyone. The log explains the specific failure.

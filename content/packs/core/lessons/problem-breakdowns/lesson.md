@@ -74,20 +74,15 @@ A cursor is better than an offset for a feed. A create endpoint should accept an
 
 Start with one end-to-end path. Add a component only when a requirement forces it.
 
-```text
-client
-  |
-  v
-API tier  --->  post database
-  |                  |
-  |                  v
-  |            fan-out queue
-  |                  |
-  |                  v
-  |            fan-out worker
-  |                  |
-  |                  v
-  +---------->  feed store  --->  feed cache
+```mermaid
+flowchart TD
+    C["client"] --> A["API tier"]
+    A --> DB["post database"]
+    A --> FS["feed store"]
+    DB --> Q["fan-out queue"]
+    Q --> W["fan-out worker"]
+    W --> FS
+    FS --> FC["feed cache"]
 ```
 
 Then trace two paths:

@@ -39,14 +39,12 @@ Stateful pieces still exist: databases, caches, queues. The goal is to concentra
 
 A load balancer sits in front of the servers and chooses one for each request.
 
-```text
-clients
-   |
-   v
-load balancer
-   |     |     |
-   v     v     v
- API   API   API
+```mermaid
+flowchart TD
+    C["clients"] --> LB["load balancer"]
+    LB --> A1["API"]
+    LB --> A2["API"]
+    LB --> A3["API"]
 ```
 
 Common strategies:
@@ -62,14 +60,16 @@ Health checks tell the balancer which backends are alive. A shallow check might 
 
 The load balancer itself must not be a single point of failure. Two common arrangements:
 
-```text
-active-passive:
-  [ balancer A ]  <-- heartbeats -->  [ balancer B ]
-       active                           standby
-
-active-active:
-  [ balancer A ]  <-- traffic -->  [ balancer B ]
-       active                         active
+```mermaid
+flowchart TD
+    subgraph ap["active-passive"]
+        direction LR
+        A1["balancer A<br/>active"] <-->|"heartbeats"| B1["balancer B<br/>standby"]
+    end
+    subgraph aa["active-active"]
+        direction LR
+        A2["balancer A<br/>active"] <-->|"traffic"| B2["balancer B<br/>active"]
+    end
 ```
 
 Active-passive is simpler because only one balancer takes traffic. Failover takes time and the standby must be ready. Active-active uses both, but clients need a way to reach either address, and both must agree on backend health and routing.
@@ -91,8 +91,10 @@ layer 7:  HTTP method, path, host, header, cookie
 
 TLS termination decrypts the client connection at the balancer or reverse proxy. Backends receive plain HTTP inside the private network.
 
-```text
-client --TLS--> [ load balancer ] --HTTP--> [ app ]
+```mermaid
+flowchart LR
+    C["client"] -->|"TLS"| LB["load balancer"]
+    LB -->|"HTTP"| A["app"]
 ```
 
 This centralizes certificates, simplifies backend configuration, and lets the balancer inspect the request for layer 7 routing. It also means traffic after the balancer is unencrypted unless you re-encrypt it. For sensitive data, terminate at the edge and re-encrypt to the backend, or pass the connection through and terminate at the backend.
@@ -118,8 +120,9 @@ Scaling in should be slower than scaling out. A rapid scale-in can remove capaci
 
 Adding web servers does not help if every request waits on one database.
 
-```text
-10 API servers -> 1 database
+```mermaid
+flowchart LR
+    A["10 API servers"] --> D["1 database"]
 ```
 
 The database is the shared bottleneck. The next steps are caching, read replicas, query optimization, and eventually partitioning.

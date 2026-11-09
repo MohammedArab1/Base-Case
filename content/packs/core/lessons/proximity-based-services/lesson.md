@@ -70,15 +70,16 @@ A grid assigns each entity to a fixed cell, such as a 500 m square. A query chec
 
 A quadtree splits a region into four children when it holds too many points. Dense areas get smaller cells and empty areas stay coarse.
 
-```text
-+---------+---------+
-|         |   +--+  |
-|         |   |  |  |
-|         |   +--+  |
-+---------+---------+
-|         |         |
-|         |         |
-+---------+---------+
+```mermaid
+flowchart TD
+    R["Region"] --> Q1["Top-left cell"]
+    R --> Q2["Top-right dense cell"]
+    R --> Q3["Bottom-left cell"]
+    R --> Q4["Bottom-right cell"]
+    Q2 --> C1["Child cell"]
+    Q2 --> C2["Child cell"]
+    Q2 --> C3["Child cell"]
+    Q2 --> C4["Child cell"]
 ```
 
 The adaptive split handles skewed density, but the tree needs rebalancing as points move. Spatial databases use R-trees or similar structures for points and shapes.
@@ -118,22 +119,24 @@ A query goes to one shard plus neighbors when the radius crosses a boundary. Bus
 
 A driver sends a position every few seconds. The current position is hot and short-lived. History is append-only and less urgent.
 
-```text
-driver app -> location service -> validate
-                              -> update live index
-                              -> append history asynchronously
+```mermaid
+flowchart LR
+    D["Driver app"] --> L["Location service"]
+    L --> V["Validate"]
+    V --> I["Update live index"]
+    V --> H["Append history asynchronously"]
 ```
 
 Throttle updates and store `last_seen`. Expire entries that stop updating, and never dispatch to a driver outside the freshness window. A cell update should remove the old entry and add the new one, or use a version so a late write cannot replace a newer position.
 
 ## Radius queries and ranking
 
-```text
-1. encode the user's point
-2. fetch candidate cells that cover the radius
-3. compute exact distance
-4. filter by availability, hours, price, and permissions
-5. rank and return the top N
+```mermaid
+flowchart TD
+    S1["1. Encode the user's point"] --> S2["2. Fetch candidate cells that cover the radius"]
+    S2 --> S3["3. Compute exact distance"]
+    S3 --> S4["4. Filter by availability, hours, price, and permissions"]
+    S4 --> S5["5. Rank and return the top N"]
 ```
 
 Distance is a filter and a ranking input. A blended score might add rating, wait time, and paid placement. Compute distance first so the candidate set stays small.
@@ -175,9 +178,11 @@ Even a few hundred thousand rows can work with a bounding-box index and a distan
 
 Requirements: find drivers within 5 km; return the 10 nearest available; update positions every 3 seconds; never offer one driver to two riders.
 
-```text
-driver -> location service -> live geo index
-rider  -> dispatch service -> query nearby -> rank -> reserve -> offer
+```mermaid
+flowchart LR
+    D["Driver"] --> L["Location service"] --> G["Live geo index"]
+    R["Rider"] --> DS["Dispatch service"] --> Q["Query nearby"] --> Rank["Rank"] --> Res["Reserve"] --> O["Offer"]
+    G -.-> Q
 ```
 
 1. A driver sends latitude, longitude, and status. The service validates it, writes to Redis with a TTL, and appends a history event.

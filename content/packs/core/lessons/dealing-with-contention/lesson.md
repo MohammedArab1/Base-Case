@@ -8,12 +8,19 @@ _This lesson follows the Common Patterns part of a curriculum structured around 
 
 The classic failure is read-modify-write without protection.
 
-```text
-inventory = 1
-request A reads 1
-request B reads 1
-request A writes 0
-request B writes 0
+```mermaid
+sequenceDiagram
+    participant A as Request A
+    participant DB as Inventory row
+    participant B as Request B
+
+    Note over DB: inventory = 1
+    A->>DB: read
+    DB-->>A: 1
+    B->>DB: read
+    DB-->>B: 1
+    A->>DB: write 0
+    B->>DB: write 0
 ```
 
 Both requests believe they sold the last item. The database recorded one decrement, but two customers have a confirmation. A lost update is a correctness bug, not a performance problem.
@@ -97,21 +104,35 @@ The labels are guides. Measure the conflict rate and the cost of a retry.
 
 A lock in one process does not protect data written by another service. A distributed lock uses a shared store with a lease.
 
-```text
-acquire lock "seat-17" with TTL 10s
-do work
-release lock
+```mermaid
+sequenceDiagram
+    participant H as Holder
+    participant L as Lock store
+
+    H->>L: acquire "seat-17" with TTL 10s
+    Note over H: do work
+    H->>L: release lock
 ```
 
 Leases expire when a holder crashes, which is useful. They also expire when a holder pauses: a garbage collection stop, a slow disk, or a network delay. The old holder may resume after the lease is gone and write anyway.
 
 A **fencing token** fixes this. Each acquisition gets a larger number, and storage rejects writes with a token lower than the last one seen.
 
-```text
-holder A gets token 7, pauses
-lease expires
-holder B gets token 8, writes
-holder A resumes, tries token 7 -> rejected
+```mermaid
+sequenceDiagram
+    participant A as Holder A
+    participant S as Lock store
+    participant B as Holder B
+
+    A->>S: acquire lock
+    S-->>A: token 7
+    Note over A: pauses
+    Note over S: lease expires
+    B->>S: acquire lock
+    S-->>B: token 8
+    B->>S: write with token 8
+    A->>S: write with token 7
+    S-->>A: rejected
 ```
 
 Without fencing, a lease is a hint, not a guarantee. Prefer a database constraint or a single-writer partition when the invariant must be absolute.
@@ -120,8 +141,10 @@ Without fencing, a lease is a hint, not a guarantee. Prefer a database constrain
 
 Another option is to remove concurrency. Route all commands for an entity to one queue partition, and let one consumer process them in order.
 
-```text
-commands for seat 17 -> partition 4 -> single consumer
+```mermaid
+flowchart LR
+    C["Commands for seat 17"] --> P["Partition 4"]
+    P --> S["Single consumer"]
 ```
 
 This trades latency for simplicity. It works well for workflows, order state machines, and operations that already tolerate delay. It is a poor fit for a low-latency read-modify-write loop.
@@ -140,9 +163,12 @@ When a cross-shard write is unavoidable, use a saga with compensating actions, o
 
 A deadlock happens when two transactions each hold a lock the other needs.
 
-```text
-A locks row 1, waits for row 2
-B locks row 2, waits for row 1
+```mermaid
+flowchart LR
+    A["Transaction A"] -->|"locks"| R1["Row 1"]
+    B["Transaction B"] -->|"locks"| R2["Row 2"]
+    A -.->|"waits for"| R2
+    B -.->|"waits for"| R1
 ```
 
 Databases detect most deadlocks and abort one transaction. Retry the aborted transaction with backoff. Reduce the chance by locking rows in a fixed order and keeping transactions small.
