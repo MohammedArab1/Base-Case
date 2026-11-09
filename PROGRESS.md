@@ -74,6 +74,8 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
     under visible curriculum subheadings in the Learn library.
   - Added lazy-loaded, offline Mermaid rendering to the Markdown renderer and
     converted the DNS resolution and reverse-proxy diagrams to Mermaid.
+  - Added an Enlarge control that opens each diagram in a large modal with the
+    SVG scaled to the available width.
   - Updated the README, architecture overview, FAQ, known limitations, authoring
     guide, release notes, smoke test, schema/content tests, and Playwright
     coverage for 60 lessons and 38 system-design lessons.

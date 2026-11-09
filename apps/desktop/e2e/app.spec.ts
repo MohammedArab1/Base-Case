@@ -695,6 +695,12 @@ test('renders Mermaid diagrams in lessons', async () => {
     await expect(diagrams).toHaveCount(2)
     await expect(diagrams.locator('svg')).toHaveCount(2)
     await expect(page.locator('.mermaid-diagram-error')).toHaveCount(0)
+
+    await page.getByTestId('mermaid-expand').first().click()
+    await expect(page.getByTestId('mermaid-dialog')).toBeVisible()
+    await expect(page.getByTestId('mermaid-dialog').locator('svg')).toHaveCount(1)
+    await page.getByRole('button', { name: 'Close' }).click()
+    await expect(page.getByTestId('mermaid-dialog')).toHaveCount(0)
   } finally {
     await launched?.app.close().catch(() => undefined)
     rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })

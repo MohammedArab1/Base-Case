@@ -120,8 +120,8 @@ runtimes. See ADR-0010.
   data capture. All explanations, diagrams, and examples are original to Base
   Case; the HelloInterview outline is used descriptively as a structural
   reference and does not imply affiliation. Each lesson has plain-language
-  explanations, offline Mermaid diagrams for structural flows, worked examples,
-  a complexity cheatsheet,
+  explanations, offline Mermaid diagrams for structural flows (expandable to a
+  large view), worked examples, a complexity cheatsheet,
   interview notes, common mistakes, self-check questions, and linked coding or
   design exercises. Completion is stored locally, and every lesson remains
   readable without AI.
