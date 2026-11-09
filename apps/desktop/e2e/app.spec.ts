@@ -674,6 +674,33 @@ test('learns a lesson, asks for clarification, and opens linked practice', async
   }
 })
 
+test('renders Mermaid diagrams in lessons', async () => {
+  const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-playwright-mermaid-'))
+  let launched: LaunchedApp | null = null
+
+  try {
+    launched = await launchApp(userDataDirectory)
+    const page = launched.page
+
+    await completeOnboarding(page, 'python')
+
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Learn' })
+      .click()
+    await page.getByRole('searchbox', { name: 'Search lessons' }).fill('DNS')
+    await page.getByRole('button', { name: /Networking Essentials: DNS/ }).click()
+
+    const diagrams = page.locator('.mermaid-diagram')
+    await expect(diagrams).toHaveCount(2)
+    await expect(diagrams.locator('svg')).toHaveCount(2)
+    await expect(page.locator('.mermaid-diagram-error')).toHaveCount(0)
+  } finally {
+    await launched?.app.close().catch(() => undefined)
+    rmSync(userDataDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+  }
+})
+
 test('previews AI assistance, checks an explanation, and applies suggested tags', async () => {
   const userDataDirectory = mkdtempSync(join(tmpdir(), 'base-case-ai-'))
   let launched: LaunchedApp | null = null

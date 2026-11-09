@@ -7,7 +7,7 @@
   150-problem Essential Problems collection that spans both coding packs.
 - Reference solutions: **162/162 core** and **176/176 extension** pass.
 - Checks: `format:check`, `lint`, `typecheck`, `test`, `content:validate`,
-  `content:test`, `build`, `smoke:e2e`, and `smoke:playwright` (13/13) pass.
+  `content:test`, `build`, `smoke:e2e`, and `smoke:playwright` (14/14) pass.
 - The CDP smoke test enables and disables the optional pack and verifies the
   default/expanded problem and collection counts.
 

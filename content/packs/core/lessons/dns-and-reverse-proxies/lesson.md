@@ -6,20 +6,23 @@ Before a request reaches your application, two things happen. A name is turned i
 
 People use names. Computers use addresses. The Domain Name System translates one into the other.
 
-```text
-browser
-  |
-  v
-local resolver  --->  root nameserver
-  |                        |
-  |                        v
-  |                   top-level domain
-  |                        |
-  |                        v
-  +---------------->  authoritative nameserver for example.com
-                           |
-                           v
-                      203.0.113.10
+```mermaid
+sequenceDiagram
+    autonumber
+    participant B as Browser
+    participant R as Local resolver
+    participant Root as Root nameserver
+    participant TLD as TLD nameserver
+    participant Auth as Authoritative server
+
+    B->>R: resolve example.com
+    R->>Root: query example.com
+    Root-->>R: refer to .com
+    R->>TLD: query example.com
+    TLD-->>R: refer to example.com
+    R->>Auth: query example.com
+    Auth-->>R: 203.0.113.10
+    R-->>B: 203.0.113.10
 ```
 
 The resolver asks from the top down, then caches the answer for a while. Your operating system and browser also cache answers. A lookup that is already cached can be nearly free.
@@ -75,14 +78,11 @@ Practical defenses:
 
 A **reverse proxy** accepts requests from the public and forwards them to internal services.
 
-```text
-client
-  |
-  v
-[ reverse proxy ]  TLS, routing, compression, limits
-  |          |
-  v          v
-[ app A ]  [ app B ]
+```mermaid
+flowchart LR
+    C[client] --> P["reverse proxy<br/>TLS, routing, compression, limits"]
+    P --> A[app A]
+    P --> B[app B]
 ```
 
 It often handles:

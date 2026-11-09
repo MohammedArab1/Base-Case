@@ -72,21 +72,25 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
     guidance.
   - Added optional lesson `section` metadata and grouped system-design lessons
     under visible curriculum subheadings in the Learn library.
+  - Added lazy-loaded, offline Mermaid rendering to the Markdown renderer and
+    converted the DNS resolution and reverse-proxy diagrams to Mermaid.
   - Updated the README, architecture overview, FAQ, known limitations, authoring
     guide, release notes, smoke test, schema/content tests, and Playwright
     coverage for 60 lessons and 38 system-design lessons.
 - Tests run:
   - `pnpm content:validate` — valid; 81 problems, 8 designs, 60 lessons.
   - `pnpm content:test` — 162/162 core reference solutions pass.
-  - `pnpm test` — 139 desktop tests, 14 schema tests, and Go judge tests pass.
+  - `pnpm test` — 141 desktop tests, 14 schema tests, and Go judge tests pass.
   - `pnpm smoke:e2e` — passed with 60 lessons.
-  - `pnpm smoke:playwright` — 13/13 passed, including the new curriculum section
-    headings.
+  - `pnpm smoke:playwright` — 14/14 passed, including the new curriculum section
+    headings and Mermaid lesson diagrams.
   - `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm build`.
 - Files:
   - `content/packs/core/lessons/`, `content/packs/core/pack.json`,
     `packages/schema/src/*`, `apps/desktop/src/main/content.ts`,
     `apps/desktop/src/renderer/src/views/LearnView.tsx`,
+    `apps/desktop/src/renderer/src/components/Markdown.tsx`,
+    `apps/desktop/src/renderer/src/components/MermaidDiagram.tsx`,
     `apps/desktop/src/renderer/src/workspace.css`, `docs/*`, `README.md`,
     `scripts/smoke-electron.mjs`, `apps/desktop/e2e/app.spec.ts`.
 

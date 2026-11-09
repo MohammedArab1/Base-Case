@@ -54,8 +54,9 @@ need work outside this repository are tracked in `project/open-blockers.md`.
   deep-dives and advanced topics are written from general knowledge and may not
   match the depth or examples of paid HelloInterview material; the outline is
   used as a structural reference, not a text source.
-- Lesson diagrams are offline ASCII diagrams. They render consistently and
-  require no network, but they are not interactive.
+- Lesson diagrams use offline Mermaid rendering for structural flows. They
+  require no network but are not editable in the lesson viewer. Pseudocode,
+  tables, and formulas may remain fenced text.
 - Lesson completion is manual. Reading a lesson does not automatically mark it
   complete, and lessons are not scheduled by FSRS.
 - The content has automated validation and passing reference solutions. B4 is

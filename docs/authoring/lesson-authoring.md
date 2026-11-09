@@ -63,9 +63,13 @@ Connect the operations back to the complexity table in `lesson.json`.
 Contrast it with one or two nearby tools.
 ```
 
-Diagrams should be fenced `text` blocks so they render without a network or a
-diagram library. They must stay readable at 1024 px width. Use box-drawing
-characters or plain arrows; do not use images that require a remote URL.
+Use fenced `mermaid` blocks for flowcharts, sequence diagrams, and other
+structural diagrams. The renderer loads Mermaid lazily, renders offline, and
+uses Mermaid's strict security level. Keep diagrams readable at 1024 px width.
+
+Use fenced `text` blocks for pseudocode, tables, formulas, and simple
+value examples that are not structural diagrams. Do not use images that require
+a remote URL.
 
 ## lesson.json
 

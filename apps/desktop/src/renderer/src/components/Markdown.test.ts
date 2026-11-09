@@ -21,4 +21,20 @@ describe('Markdown', () => {
     expect(html).not.toContain('<script')
     expect(html).not.toContain('onerror')
   })
+
+  it('renders mermaid fences in a diagram container', () => {
+    const html = render('```mermaid\nflowchart LR\n  A[client] --> B[app]\n```')
+
+    expect(html).toContain('data-testid="mermaid-diagram"')
+    expect(html).toContain('Rendering diagram')
+    expect(html).not.toContain('language-mermaid')
+  })
+
+  it('keeps ordinary fenced code as code', () => {
+    const html = render('```ts\nconst answer = 42\n```')
+
+    expect(html).toContain('class="language-ts"')
+    expect(html).toContain('const answer = 42')
+    expect(html).not.toContain('mermaid-diagram')
+  })
 })

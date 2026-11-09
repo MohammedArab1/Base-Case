@@ -1894,6 +1894,44 @@ pre {
   margin: 8px 0;
 }
 
+/* Mermaid diagrams render to SVG at runtime and need a stable container. */
+.markdown .mermaid-diagram {
+  margin: 0 0 1em;
+  padding: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.markdown .mermaid-diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.mermaid-loading {
+  padding: 8px 4px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.lesson-article .markdown .mermaid-diagram pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  white-space: pre-wrap;
+}
+
+.markdown .mermaid-diagram figcaption {
+  margin-top: 8px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
 @media (max-width: 1180px) {
   .lesson-layout {
     grid-template-columns: minmax(0, 1fr);

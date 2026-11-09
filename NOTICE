@@ -17,6 +17,7 @@ the lockfile and packaged notices before release):
 | CodeMirror 6 | MIT | Code editor |
 | Excalidraw | MIT | System design canvas |
 | react-markdown / remark / rehype | MIT | Markdown rendering |
+| Mermaid | MIT | Offline lesson diagrams |
 | KaTeX | MIT | Math rendering |
 | better-sqlite3 (or node:sqlite) | MIT / Node license | Local database |
 | Zod | MIT | IPC validation |
