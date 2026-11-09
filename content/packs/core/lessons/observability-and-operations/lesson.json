@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/observability-and-operations",
+  "slug": "observability-and-operations",
+  "title": "Observability and Operations",
+  "category": "system-design",
+  "summary": "Make the system explain what it is doing before an incident forces you to guess.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 45,
+  "section": "Key Technologies",
+  "tags": ["system-design", "observability", "metrics", "tracing", "slo", "incidents"],
+  "prerequisites": ["message-queues-and-observability"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Metrics show trends, logs explain one event, and traces show the path and timing of a request.",
+    "RED covers request-serving services; USE covers resources such as CPU, memory, and queues.",
+    "Report p50 with p95 or p99, because averages hide the tail users remember.",
+    "An SLO turns reliability into a target, and the error budget guides release and alerting decisions.",
+    "Alert on user-facing symptoms with an owner and a runbook, not on every internal cause.",
+    "Queue age, dead-letter counts, and worker saturation reveal problems that queue depth alone can hide."
+  ],
+  "complexity": [
+    {
+      "operation": "Counter update",
+      "time": "O(1)",
+      "space": "O(1) per label set",
+      "note": "Cardinality controls total cost."
+    },
+    {
+      "operation": "Histogram observation",
+      "time": "O(1) amortized",
+      "space": "fixed buckets",
+      "note": "Buckets determine percentile accuracy."
+    },
+    {
+      "operation": "Trace span write",
+      "time": "O(1) per span",
+      "space": "O(spans) until sampling and retention",
+      "note": "Sampling and retention dominate storage cost."
+    },
+    {
+      "operation": "Percentile query",
+      "time": "O(buckets) per series",
+      "space": "time-series storage",
+      "note": "Merge histograms instead of averaging percentiles."
+    },
+    {
+      "operation": "Log search",
+      "time": "depends on index and range",
+      "space": "retained log volume",
+      "note": "Structured fields and a request id make search useful."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["payment-ledger", "news-feed", "file-sync"]
+  },
+  "commonMistakes": [
+    "Monitoring average latency while the p99 is far above the user-facing target.",
+    "Paging on a cause such as CPU usage instead of a symptom such as a failing checkout.",
+    "Using unbounded labels like user id or request id in metrics, which explodes cardinality.",
+    "Alerting on queue depth without tracking message age or drain time."
+  ],
+  "interviewNotes": [
+    "Name the user-facing SLO and the metric that measures it before listing dashboards.",
+    "Separate symptom alerts from cause dashboards, and say who gets paged.",
+    "Use p95 or p99 with a stated window, and explain why the average is insufficient.",
+    "Include queue age, retry rate, and dead-letter depth when the design has asynchronous work.",
+    "End with the runbook and incident response: detection, mitigation, rollback, and follow-up."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is p99 more useful than average latency for a user-facing service?",
+      "answer": "The average hides slow requests. p99 shows the experience of the slowest group, which is often what users notice and what fan-out amplifies."
+    },
+    {
+      "question": "What is an error budget?",
+      "answer": "It is the amount of unreliability an SLO allows, such as 0.1% of a 30-day window. It gives the team a shared measure for balancing releases and reliability work."
+    },
+    {
+      "question": "Why can queue depth be a misleading alert?",
+      "answer": "Depth changes with arrival rate. A stable depth can still mean messages wait too long, so track oldest message age and drain time as well."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

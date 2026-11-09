@@ -1,4 +1,4 @@
-# Message Queues and Observability
+# Queues, Streams, and Observability
 
 A queue lets one part of the system hand work to another part without waiting. That is useful for slow, bursty, or unreliable work.
 
@@ -86,6 +86,14 @@ fan-out worker -> per-user feed entries -> followers
 This is **fan-out on write**. It makes reads fast and writes expensive. The alternative is **fan-out on read**: gather posts at read time. It makes writes cheap and reads expensive.
 
 A hybrid is common: fan out for normal users, and merge celebrity posts at read time to avoid millions of writes for one account.
+
+## Streams and event sourcing
+
+A **stream** is an append-only log. Unlike a queue, it keeps events for a retention window, and several consumer groups can read the same event independently. That makes streams useful when the same change must update a feed, a search index, an analytics job, and an audit trail without coupling those consumers to the producer.
+
+Partition the stream by a key when ordering matters. Events with the same key land on the same partition and are delivered in order; different partitions can be processed in parallel.
+
+**Event sourcing** takes the idea further: store the sequence of state-changing events as the source of truth, then build current state by replaying them. It gives you an audit trail and the ability to rebuild derived views, but it adds snapshots, schema evolution, replay cost, and a new way for the system to fail. Most interview designs do not need full event sourcing; a normal database plus a stream for asynchronous side effects is enough.
 
 ## Observability
 

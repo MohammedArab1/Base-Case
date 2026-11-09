@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/sharding",
+  "slug": "sharding",
+  "title": "Sharding",
+  "category": "system-design",
+  "summary": "Split data across independent stores only when one database cannot keep up.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 32,
+  "section": "Core Concepts",
+  "tags": ["system-design", "sharding", "partitioning", "scalability", "hot-keys"],
+  "prerequisites": ["data-modeling"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Sharding splits one logical data set across independent stores.",
+    "The shard key decides which queries are single-shard and which fan out.",
+    "Hash, range, and directory routing trade balance, range efficiency, and control.",
+    "Hot keys overload one shard even when the key distribution is even.",
+    "Cross-shard queries and transactions add latency, partial failures, and coordination.",
+    "Exhaust indexes, caching, replicas, and vertical scale before sharding."
+  ],
+  "complexity": [
+    {
+      "operation": "Single-shard lookup",
+      "time": "O(1) routing plus one shard",
+      "space": "one shard",
+      "note": "Requires the shard key in the query."
+    },
+    {
+      "operation": "Cross-shard query",
+      "time": "slowest of N shards",
+      "space": "fan-out to N shards",
+      "note": "Results need merging and partial-failure handling."
+    },
+    {
+      "operation": "Hash routing",
+      "time": "O(1)",
+      "space": "small routing map",
+      "note": "Range queries scatter."
+    },
+    {
+      "operation": "Range routing",
+      "time": "O(log shards) or O(1)",
+      "space": "range map",
+      "note": "Good for ordered scans, risky for monotonic writes."
+    },
+    {
+      "operation": "Resharding",
+      "time": "O(data moved)",
+      "space": "temporary double copy",
+      "note": "Throttle the copy and keep a rollback path."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "payment-ledger", "news-feed"]
+  },
+  "commonMistakes": [
+    "Sharding before trying query tuning, caching, or read replicas.",
+    "Choosing a low-cardinality shard key that creates a few huge shards.",
+    "Using a time-based key for a write-heavy table and sending every new row to one shard.",
+    "Assuming a cross-shard join or transaction will behave like a single-database one."
+  ],
+  "interviewNotes": [
+    "State the shard key and the main query it makes cheap.",
+    "Name the queries that must fan out and how you merge or avoid them.",
+    "Say how unique ids are generated across shards.",
+    "Explain how you would reshard without downtime."
+  ],
+  "checkYourself": [
+    {
+      "question": "What makes a good shard key?",
+      "answer": "High cardinality, even storage and access, stability, and alignment with the most common query so requests touch one shard."
+    },
+    {
+      "question": "Why does adding read replicas not fix a write bottleneck?",
+      "answer": "Replicas copy writes from the primary. Every write still passes through the primary, so replicas add read capacity, not write capacity."
+    },
+    {
+      "question": "What is a hotspot and one way to reduce it?",
+      "answer": "A key or shard that receives far more traffic than the others. Cache the hot value, split the key into sub-keys, or give the hot object dedicated capacity."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

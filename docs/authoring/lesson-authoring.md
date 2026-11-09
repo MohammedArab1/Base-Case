@@ -129,18 +129,36 @@ Example:
 
 ## System-design track
 
-The core pack has 17 system-design lessons. They cover requirements and
-estimation, scaling and load balancing, caching and CDNs, databases, consistency
-and idempotency, queues and observability, rate limiting, performance and
-scalability, availability and failover, DNS and reverse proxies, application
-architecture, NoSQL and storage selection, network protocols, security,
-estimation references, and reading real-world architectures.
+The core pack has 38 system-design lessons. The curriculum follows the public
+[HelloInterview System Design in a Hurry](https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction)
+outline as a structural reference:
 
-Coverage follows the public [System Design Primer](https://github.com/donnemartin/system-design-primer)
-topic index (CC BY 4.0) as a checklist. It is not a text source: write original
-prose, diagrams, examples, and tables. Do not reproduce the primer's wording,
-its tables, or its diagrams. When a lesson references the index, use a
-descriptive attribution note and a link, and do not imply affiliation.
+- **In a Hurry:** introduction and assessment, how to prepare, and the delivery
+  framework.
+- **Core Concepts:** networking, API design, data modeling, indexing, caching,
+  sharding, consistent hashing, CAP and consistency, modern numbers to know,
+  performance, and a latency/capacity reference.
+- **Key Technologies:** relational and NoSQL databases, blob storage and CDNs,
+  search databases, API gateways and application architecture, queues and
+  streams, distributed caches and locks, and observability.
+- **Common Patterns:** scaling reads, scaling writes, contention, rate limiting,
+  real-time updates, long-running tasks, multi-step processes, large blobs, and
+  proximity-based services.
+- **Question Breakdowns:** a worked method for turning a prompt into a design,
+  linked to the eight bundled design scenarios.
+- **Advanced Topics:** availability and disaster recovery, security,
+  vector/time-series/big-data structures, and change data capture.
+- **In the Wild:** reading real architecture write-ups.
+
+Use the optional `section` field in `lesson.json` for the bold headings above.
+`LearnView` renders those sections as subheadings inside the system-design
+group. The field is optional for DSA lessons.
+
+The HelloInterview outline is a topic checklist and structure reference, not a
+text source. Write original prose, diagrams, examples, and tables. Do not
+reproduce HelloInterview wording, tables, diagrams, or locked lesson content.
+When a lesson references the outline, use a descriptive attribution note and a
+link, and do not imply affiliation.
 
 Every design scenario must be linked from at least one system-design lesson.
 The schema test checks this so a new scenario cannot be added without practice

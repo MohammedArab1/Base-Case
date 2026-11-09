@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/numbers-to-know",
+  "slug": "numbers-to-know",
+  "title": "Numbers to Know",
+  "category": "system-design",
+  "summary": "Use modern latency and capacity numbers when a calculation changes the design.",
+  "difficulty": "easy",
+  "estimatedMinutes": 12,
+  "order": 35,
+  "section": "Core Concepts",
+  "tags": ["system-design", "estimation", "latency", "capacity", "numbers"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Run an estimate only when it changes a component choice.",
+    "Modern hardware changes capacity assumptions; 2010-era disk and network numbers can mislead.",
+    "Peak traffic is 2-5x average for many consumer products, and higher for events.",
+    "Little's Law turns throughput and latency into the concurrency you need.",
+    "Storage grows with replication, indexes, and retention, not only raw writes.",
+    "Read rate, write rate, and storage are separate tests; find the binding constraint."
+  ],
+  "complexity": [
+    {
+      "operation": "QPS from daily actions",
+      "time": "divide by 86,400",
+      "space": "—",
+      "note": "Then multiply by the peak factor."
+    },
+    {
+      "operation": "Storage per year",
+      "time": "writes/day * size * 365",
+      "space": "replicas and indexes",
+      "note": "Retention cuts the total."
+    },
+    {
+      "operation": "Little's Law",
+      "time": "concurrency = throughput * latency",
+      "space": "—",
+      "note": "Keep seconds and requests in matching units."
+    },
+    {
+      "operation": "Bandwidth",
+      "time": "QPS * response size",
+      "space": "ingress and egress",
+      "note": "Convert bytes to bits before comparing to a link."
+    },
+    {
+      "operation": "Capacity check",
+      "time": "compare demand to per-node range",
+      "space": "headroom",
+      "note": "Plan for peak and leave room for failure."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "news-feed", "search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Using 2010-era spinning-disk and 1 Gbps assumptions for a modern cloud design.",
+    "Planning for average QPS and ignoring the peak factor.",
+    "Forgetting replicas, indexes, and retention when sizing storage.",
+    "Adding servers when the measured bottleneck is the database write path."
+  ],
+  "interviewNotes": [
+    "Write the formula and round; do not present false precision.",
+    "Say which number is an assumption and which is measured.",
+    "Use the estimate to choose a component, then move on.",
+    "Name the binding constraint: reads, writes, storage, or bandwidth."
+  ],
+  "checkYourself": [
+    {
+      "question": "How many requests are in flight at 2,000 requests per second with 100 ms latency?",
+      "answer": "2,000 * 0.1 = 200 requests in flight on average. Size pools for the peak, not only the average."
+    },
+    {
+      "question": "Why is average QPS a poor capacity target?",
+      "answer": "The system must survive the busiest moment. Provisioning for the average leaves it overloaded during peaks."
+    },
+    {
+      "question": "Which three multipliers turn raw storage into provisioned storage?",
+      "answer": "Replicas, index overhead, and retention. Backups and compression can change the total further."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

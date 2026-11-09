@@ -175,6 +175,8 @@ export interface Lesson {
   readonly difficulty: Difficulty
   readonly estimatedMinutes: number
   readonly order: number
+  /** Optional subsection inside a category, such as a curriculum track. */
+  readonly section?: string
   readonly tags: readonly string[]
   readonly prerequisites: readonly string[]
   readonly content: string

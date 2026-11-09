@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "core/system-design-reference",
   "slug": "system-design-reference",
-  "title": "System Design Cheat Sheet",
+  "title": "Reference: Latency and Capacity Cheat Sheet",
   "category": "system-design",
-  "summary": "The conversions, latency numbers, and capacity formulas to keep beside you during an estimate.",
+  "summary": "The conversions, latency numbers, and capacity formulas to keep beside you during a calculation.",
   "difficulty": "easy",
   "estimatedMinutes": 10,
-  "order": 38,
+  "order": 37,
   "tags": ["system-design", "estimation", "latency", "capacity", "reference"],
-  "prerequisites": ["requirements-and-estimation"],
+  "prerequisites": ["numbers-to-know"],
   "content": "lesson.md",
   "keyPoints": [
     "Round aggressively and state every assumption; the goal is the right order of magnitude.",
@@ -82,5 +82,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors. Order-of-magnitude figures are widely published engineering rules of thumb; hardware and networks vary.",
-  "version": 1
+  "version": 1,
+  "section": "Core Concepts"
 }

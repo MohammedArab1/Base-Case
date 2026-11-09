@@ -1,4 +1,4 @@
-# System Design Cheat Sheet
+# Reference: Latency and Capacity Cheat Sheet
 
 An interview estimate is not an accounting exercise. It is a quick check that the design is the right order of magnitude. Keep a few conversions and tables in your head, state your assumptions, and round aggressively.
 

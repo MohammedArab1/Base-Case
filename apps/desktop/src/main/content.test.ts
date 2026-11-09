@@ -109,5 +109,20 @@ describe('ContentRepository optional bundles', () => {
     expect(
       content.listProblems().filter((problem) => problem.collections.includes('neetcode150')),
     ).toHaveLength(150)
+
+    const lessons = content.listLessons()
+    const systemDesign = lessons.filter((lesson) => lesson.category === 'system-design')
+
+    expect(lessons).toHaveLength(60)
+    expect(systemDesign).toHaveLength(38)
+    expect([...new Set(systemDesign.map((lesson) => lesson.section))]).toEqual([
+      'In a Hurry',
+      'Core Concepts',
+      'Key Technologies',
+      'Common Patterns',
+      'Question Breakdowns',
+      'Advanced Topics',
+      'In the Wild',
+    ])
   }, 60_000)
 })

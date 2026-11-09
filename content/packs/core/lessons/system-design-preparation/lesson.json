@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/system-design-preparation",
+  "slug": "system-design-preparation",
+  "title": "How to Prepare for System Design Interviews",
+  "category": "system-design",
+  "summary": "A practical preparation loop: build the foundation, practice under time pressure, and review your gaps.",
+  "difficulty": "easy",
+  "estimatedMinutes": 11,
+  "order": 24,
+  "section": "In a Hurry",
+  "tags": ["system-design", "interview-prep", "practice", "study-plan"],
+  "prerequisites": ["system-design-interview"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Preparation is a loop of study, timed practice, and review, not a reading list.",
+    "Pick a path based on your calendar; urgent interviews need the framework and one complete rep.",
+    "Build the foundation in order: delivery framework, core concepts, key technologies, then patterns.",
+    "Attempt each design before reading the reference, then compare decisions and note gaps.",
+    "Track weak patterns across reps and spend extra time on the ones that repeat.",
+    "The week of the interview is for light review, two or three mocks, and sleep."
+  ],
+  "complexity": [
+    {
+      "operation": "Foundation pass",
+      "time": "3-7 days",
+      "space": "notes and one-page framework",
+      "note": "Framework, core concepts, key technologies, patterns."
+    },
+    {
+      "operation": "Timed practice rep",
+      "time": "30-45 min",
+      "space": "whiteboard or blank page",
+      "note": "Attempt first, then read the reference."
+    },
+    {
+      "operation": "Review after a rep",
+      "time": "15-20 min",
+      "space": "weak-pattern log",
+      "note": "Name two gaps and the next action."
+    },
+    {
+      "operation": "Peer mock",
+      "time": "45-60 min",
+      "space": "whiteboard and rubric",
+      "note": "Catches vague claims and time management."
+    },
+    {
+      "operation": "Week-of review",
+      "time": "1-2 hours per day",
+      "space": "notes and mocks",
+      "note": "No new topics after midweek."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "rate-limiter", "news-feed"]
+  },
+  "commonMistakes": [
+    "Reading designs and walkthroughs without ever drawing one from a blank page.",
+    "Practicing only familiar prompts and avoiding the areas that stay weak.",
+    "Spending the week before the interview on new technologies instead of review and mocks.",
+    "Scheduling many designs with no time to compare, review, and repeat."
+  ],
+  "interviewNotes": [
+    "Rehearse a two-minute opening that states the plan and the assumptions.",
+    "Practice with a timer so you learn how much depth fits in the session.",
+    "Keep a one-page sheet of numbers, framework steps, and failure questions.",
+    "Use each mock to test one weak pattern, not to prove you know everything."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is reading a reference before an attempt a weak study method?",
+      "answer": "It creates familiarity with the answer without testing whether you can produce the design from a blank page. Attempt first, then compare decisions."
+    },
+    {
+      "question": "How should an experienced candidate with one week prepare?",
+      "answer": "Take one diagnostic design, run three timed reps on unfamiliar prompts, and spend the remaining time on the two weakest patterns with a mock."
+    },
+    {
+      "question": "What belongs in a weak-pattern log?",
+      "answer": "The prompt, the area that broke, and the next action. Repeats across entries show which topic deserves the next practice session."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

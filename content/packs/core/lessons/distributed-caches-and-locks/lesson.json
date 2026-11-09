@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/distributed-caches-and-locks",
+  "slug": "distributed-caches-and-locks",
+  "title": "Distributed Caches and Locks",
+  "category": "system-design",
+  "summary": "Share fast state across services, and coordinate short critical sections safely.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 44,
+  "section": "Key Technologies",
+  "tags": ["system-design", "redis", "cache", "distributed-locks", "zookeeper"],
+  "prerequisites": ["caching-and-cdns", "consistency-and-idempotency"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "An in-process cache is fast but private to one instance; a shared cache gives the fleet one logical view.",
+    "Cache-aside is the default shared-cache pattern, with TTLs, eviction limits, and invalidation on write.",
+    "Hot keys, stampedes, and cache outages are capacity events that need sharding, single-flight, and fail-open or fail-closed choices.",
+    "A Redis lock needs a unique owner token and an expiry, but a lease can expire while the holder is still running.",
+    "Fencing tokens make stale lock holders harmless; the protected resource must reject older tokens.",
+    "Use a database transaction or unique constraint for invariants; locks are for short coordination, not long workflows."
+  ],
+  "complexity": [
+    {
+      "operation": "Local cache hit",
+      "time": "nanoseconds",
+      "space": "process memory",
+      "note": "No network call, but each instance has its own copy."
+    },
+    {
+      "operation": "Shared cache hit",
+      "time": "sub-millisecond to a few ms",
+      "space": "cache memory",
+      "note": "One network round trip in the same region."
+    },
+    {
+      "operation": "Acquire a lock",
+      "time": "one round trip",
+      "space": "one lock key plus lease",
+      "note": "Contention adds retries and backoff."
+    },
+    {
+      "operation": "Fenced write",
+      "time": "one lock check plus one storage write",
+      "space": "highest-token metadata",
+      "note": "The resource rejects a token below the highest seen."
+    },
+    {
+      "operation": "Atomic counter update",
+      "time": "one script round trip",
+      "space": "one counter key",
+      "note": "Lua avoids a read-modify-write race."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["rate-limiter", "seat-reservation", "chat-system"]
+  },
+  "commonMistakes": [
+    "Using a distributed lock for a long workflow or an external side effect that can outlive the lease.",
+    "Releasing a lock without checking that the caller still owns the same token.",
+    "Assuming a lock prevents double booking, then discovering that an expired holder can still write.",
+    "Keeping shared counters in per-instance memory so the effective limit multiplies with the fleet."
+  ],
+  "interviewNotes": [
+    "Separate local cache, shared cache, and source of truth, and say what stale window each one allows.",
+    "Name the eviction policy, TTL, and hot-key or stampede protection for the shared cache.",
+    "For a lock, state the lease length, owner token, release check, and fencing token.",
+    "Explain why Redlock is not consensus and when ZooKeeper or etcd is a better coordination layer.",
+    "Prefer a database transaction, unique constraint, or idempotency key when the invariant lives in one database."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is a per-instance cache wrong for rate-limit counters?",
+      "answer": "Each instance counts separately, so the effective limit is multiplied by the number of instances. A shared atomic counter keeps one logical limit."
+    },
+    {
+      "question": "What does a fencing token add to a distributed lock?",
+      "answer": "It gives each acquisition a monotonically increasing number. The protected resource rejects writes from an older token, so a holder whose lease expired cannot overwrite newer work."
+    },
+    {
+      "question": "When is a unique constraint better than a distributed lock?",
+      "answer": "When the invariant is in one database and can be enforced by the database. A unique constraint cannot expire or be bypassed by a paused lock holder."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

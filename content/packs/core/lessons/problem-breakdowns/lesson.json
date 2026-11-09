@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "id": "core/problem-breakdowns",
+  "slug": "problem-breakdowns",
+  "title": "Working Through a Problem Breakdown",
+  "category": "system-design",
+  "summary": "Use one repeatable route from a vague prompt to a defended design.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 55,
+  "section": "Question Breakdowns",
+  "tags": ["system-design", "practice", "interview", "problem-breakdown", "delivery"],
+  "prerequisites": [
+    "requirements-and-estimation",
+    "caching-and-cdns",
+    "consistency-and-idempotency",
+    "message-queues-and-observability"
+  ],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Pick three features: the core flow, the architecture-changing feature, and the constraint that could break the design.",
+    "Turn prompt nouns into entities, verbs into API calls, and promises into non-functional requirements.",
+    "Draw the smallest end-to-end design before adding caches, queues, or extra services.",
+    "Use the hard part of the prompt to choose the deep dive: fan-out, concurrency, ranking, sync, or correctness.",
+    "A 45-minute answer needs a stated plan for scope, numbers, API, design, deep dives, and failure.",
+    "Review with a rubric instead of adding more boxes."
+  ],
+  "complexity": [
+    {
+      "operation": "Read and scope the prompt",
+      "time": "5 minutes",
+      "space": "3 features",
+      "note": "State what is out of scope."
+    },
+    {
+      "operation": "Requirements and estimates",
+      "time": "5-8 minutes",
+      "space": "4-5 numbers",
+      "note": "Use peak traffic, not average."
+    },
+    {
+      "operation": "Entities and API",
+      "time": "5-7 minutes",
+      "space": "4-6 endpoints",
+      "note": "Include pagination and idempotency."
+    },
+    {
+      "operation": "High-level design",
+      "time": "10 minutes",
+      "space": "one end-to-end flow",
+      "note": "Every box gets a role."
+    },
+    {
+      "operation": "Deep dives",
+      "time": "10-12 minutes",
+      "space": "2 hard parts",
+      "note": "Mechanism, number, and trade-off."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": [
+      "url-shortener",
+      "rate-limiter",
+      "chat-system",
+      "news-feed",
+      "seat-reservation",
+      "search-autocomplete",
+      "file-sync",
+      "payment-ledger"
+    ]
+  },
+  "commonMistakes": [
+    "Spending most of the time on requirements and never drawing the system.",
+    "Choosing a database or broker before naming the access pattern.",
+    "Listing technologies without explaining the role each one plays.",
+    "Skipping the deep dive because the high-level overview looks complete."
+  ],
+  "interviewNotes": [
+    "Open with the three features and the out-of-scope list.",
+    "Say the read and write estimates before choosing components.",
+    "Trace one write and one read through the diagram.",
+    "Reserve time for one hard part, its failure path, and its trade-off.",
+    "Finish with the metric you would watch and what changes at 10x."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why choose only three features at the start?",
+      "answer": "A short scope leaves time for the API, data model, and deep dives. A broad scope usually produces a shallow design with no defended trade-offs."
+    },
+    {
+      "question": "What makes a good deep-dive topic?",
+      "answer": "It is the part of the prompt where scale or correctness breaks the simple design, such as celebrity fan-out, double booking, ordering, or sync conflicts."
+    },
+    {
+      "question": "What should a self-review rubric catch?",
+      "answer": "It should catch missing numbers, an untraced request path, an overview that never goes deeper, and the absence of a failure or monitoring plan."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

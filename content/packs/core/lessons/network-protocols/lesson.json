@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "core/network-protocols",
   "slug": "network-protocols",
-  "title": "Network Protocols for System Design",
+  "title": "Networking Essentials: Protocols and Connections",
   "category": "system-design",
-  "summary": "HTTP, TCP, UDP, and RPC: what each one promises, what it costs, and how to fail safely.",
+  "summary": "HTTP, TCP, UDP, WebSockets, SSE, and RPC: what each promises, what it costs, and how to fail safely.",
   "difficulty": "medium",
   "estimatedMinutes": 15,
-  "order": 36,
+  "order": 26,
   "tags": ["system-design", "http", "tcp", "udp", "rpc", "rest", "timeouts"],
-  "prerequisites": ["scaling-and-load-balancing"],
+  "prerequisites": ["requirements-and-estimation"],
   "content": "lesson.md",
   "keyPoints": [
     "HTTP is a stateless request/response protocol; method semantics decide what is safe to retry.",
@@ -58,7 +58,7 @@
   ],
   "exercises": {
     "problems": [],
-    "designs": ["rate-limiter", "chat-system", "search-autocomplete"]
+    "designs": ["chat-system", "rate-limiter", "search-autocomplete"]
   },
   "commonMistakes": [
     "Retrying a POST without an idempotency key and creating duplicate work.",
@@ -89,5 +89,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Core Concepts"
 }

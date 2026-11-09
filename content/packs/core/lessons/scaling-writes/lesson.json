@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/scaling-writes",
+  "slug": "scaling-writes",
+  "title": "Scaling Writes",
+  "category": "system-design",
+  "summary": "Protect the write path with batching, partitioning, queues, and honest limits.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 47,
+  "section": "Common Patterns",
+  "tags": ["system-design", "scaling", "writes", "batching", "queues", "partitioning"],
+  "prerequisites": ["sharding", "message-queues-and-observability"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Write throughput is limited by fsync, locks, indexes, and replication, not only CPU.",
+    "Group commit and batching trade a small latency increase for much higher throughput.",
+    "A durable queue absorbs bursts but cannot create capacity; bound it and shed load when consumers fall behind.",
+    "Partition writes on a high-cardinality key, and give hot keys their own treatment.",
+    "LSM-trees favor write-heavy workloads by appending, then pay for compaction later.",
+    "Async writes need status tracking, idempotency, and a read-your-writes plan."
+  ],
+  "complexity": [
+    {
+      "operation": "Durable single write",
+      "time": "one or more fsyncs",
+      "space": "row, index entries, WAL",
+      "note": "Durability dominates latency."
+    },
+    {
+      "operation": "Group commit",
+      "time": "amortized fsync across a batch",
+      "space": "one batch of writes",
+      "note": "A size or time limit caps added latency."
+    },
+    {
+      "operation": "Queue ingest",
+      "time": "append to a durable log",
+      "space": "retained log segments",
+      "note": "Consumer lag is the real risk."
+    },
+    {
+      "operation": "Shard routing",
+      "time": "O(1) key lookup",
+      "space": "shard metadata",
+      "note": "A hot shard can still overload one node."
+    },
+    {
+      "operation": "LSM-tree write",
+      "time": "sequential append plus later compaction",
+      "space": "write amplification",
+      "note": "Compaction competes with foreground traffic."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["payment-ledger", "seat-reservation", "chat-system"]
+  },
+  "commonMistakes": [
+    "Adding a queue in front of a saturated database and calling it scaling.",
+    "Using a sequential ID as a partition key and sending every insert to one shard.",
+    "Acknowledging an async write before it is durable or discoverable.",
+    "Watching queue length while ignoring the age of the oldest item."
+  ],
+  "interviewNotes": [
+    "Separate read scaling from write scaling; the fixes are different.",
+    "Name the write bottleneck: fsync, lock contention, index maintenance, replication, or a hot partition.",
+    "If you batch, state the batch size, the time window, and the tail-latency cost.",
+    "Say how the queue is bounded and what happens when it fills.",
+    "For async writes, show the status endpoint and the read-your-writes strategy."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does group commit increase write throughput?",
+      "answer": "Several writes share one disk flush, so the expensive durability step is amortized across the batch. The trade-off is a short wait while the batch fills."
+    },
+    {
+      "question": "What does a queue in front of a database actually solve?",
+      "answer": "It absorbs bursts and decouples producers from consumers. It does not increase the database's sustained write capacity, so a backlog still grows when producers are faster."
+    },
+    {
+      "question": "Why can a hot key defeat sharding?",
+      "answer": "Sharding distributes keys, not individual key traffic. One key with a large share of writes still maps to one shard, which becomes the bottleneck."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

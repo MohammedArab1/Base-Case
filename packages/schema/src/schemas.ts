@@ -348,6 +348,7 @@ export const lessonSchema = {
     difficulty: { enum: ['easy', 'medium', 'hard'] },
     estimatedMinutes: { type: 'integer', minimum: 1, maximum: 600 },
     order: { type: 'integer', minimum: 1, maximum: 999 },
+    section: { type: 'string', minLength: 1 },
     tags: { type: 'array', minItems: 1, items: { type: 'string', minLength: 1 } },
     prerequisites: {
       type: 'array',

@@ -1,4 +1,4 @@
-# Network Protocols for System Design
+# Networking Essentials: Protocols and Connections
 
 Most system design failures are network failures wearing a disguise: a missing timeout, a retry that duplicates a charge, a connection pool that runs dry, or a protocol that promises more than it can deliver.
 

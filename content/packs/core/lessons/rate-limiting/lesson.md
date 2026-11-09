@@ -1,4 +1,4 @@
-# Rate Limiting
+# Rate Limiting and Load Shedding
 
 A rate limiter answers one question:
 

@@ -1,4 +1,4 @@
-# Application Architecture: Web, Workers, and Services
+# API Gateways and Application Architecture
 
 A growing system does not become good by adding boxes. It becomes manageable by separating responsibilities that change at different speeds.
 

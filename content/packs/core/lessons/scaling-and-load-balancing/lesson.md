@@ -1,4 +1,4 @@
-# Scaling and Load Balancing
+# Scaling Reads and Load Balancing
 
 A single server can handle a surprising amount of traffic. Eventually it cannot. Scaling is the plan for what happens next.
 

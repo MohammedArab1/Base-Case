@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/proximity-based-services",
+  "slug": "proximity-based-services",
+  "title": "Proximity-Based Services",
+  "category": "system-design",
+  "summary": "Find nearby entities without scanning the whole map.",
+  "difficulty": "medium",
+  "estimatedMinutes": 10,
+  "order": 54,
+  "section": "Common Patterns",
+  "tags": ["system-design", "geospatial", "proximity", "geohash", "postgis"],
+  "prerequisites": ["database-indexing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Proximity search prunes space first, then ranks a small candidate set.",
+    "Geohash, grids, and quadtrees map a radius query to a few indexed cells.",
+    "PostGIS, Redis geospatial, and Elasticsearch trade durability, speed, and query richness.",
+    "Shard by region or geohash prefix and handle queries that cross a boundary.",
+    "Live location updates need TTLs, versions, and a plan for stale entities.",
+    "Coarse or noisy locations protect privacy when exact distance is not required."
+  ],
+  "complexity": [
+    {
+      "operation": "Geohash encode",
+      "time": "O(1) per point",
+      "space": "fixed-length string",
+      "note": "Precision sets cell size."
+    },
+    {
+      "operation": "Radius query with cell index",
+      "time": "O(candidates + log n)",
+      "space": "candidate list",
+      "note": "Check neighbor cells at edges."
+    },
+    {
+      "operation": "PostGIS GiST search",
+      "time": "O(log n + k)",
+      "space": "spatial index",
+      "note": "k is the result count."
+    },
+    {
+      "operation": "Redis GEOSEARCH",
+      "time": "sub-millisecond to low ms",
+      "space": "in-memory index",
+      "note": "Fast but memory-bound."
+    },
+    {
+      "operation": "Location update",
+      "time": "one write plus index update",
+      "space": "current position + history",
+      "note": "Expire stale entries."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["search-autocomplete", "news-feed", "seat-reservation"]
+  },
+  "commonMistakes": [
+    "Querying one geohash cell and forgetting the eight neighbors.",
+    "Comparing latitude and longitude degrees as if they were equal distances.",
+    "Using an eventually consistent search index as the source of truth for dispatch.",
+    "Keeping precise user locations forever without a retention or privacy rule."
+  ],
+  "interviewNotes": [
+    "Clarify the radius, result limit, freshness, and accuracy before choosing an index.",
+    "Explain the two-step query: cell or bounding box, then exact distance.",
+    "Say how live updates are stored and how stale entries are removed.",
+    "Name the shard key and what happens at a shard boundary.",
+    "State the privacy rule for stored and returned locations."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why query neighboring geohash cells?",
+      "answer": "A point near the edge of a cell can be within the radius of a point in the next cell. The prefix alone would miss it."
+    },
+    {
+      "question": "When is PostGIS a better choice than Redis?",
+      "answer": "When the location data must be durable, transactional, or joined with other relational data. Redis is better for hot, frequently changing positions where speed matters most."
+    },
+    {
+      "question": "Why is a linear scan sometimes acceptable?",
+      "answer": "With a small data set, low query rate, or offline job, computing every distance is cheap. A separate geo index adds operational work that may not pay off."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

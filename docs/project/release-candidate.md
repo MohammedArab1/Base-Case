@@ -3,7 +3,7 @@
 ## Optional content pack update — 2026-11-03
 
 - Content: **81 core coding problems plus an optional 88-problem extension**,
-  8 design scenarios, 39 lessons, 75-problem Grind 75 collection, and a
+  8 design scenarios, 60 lessons, 75-problem Grind 75 collection, and a
   150-problem Essential Problems collection that spans both coding packs.
 - Reference solutions: **162/162 core** and **176/176 extension** pass.
 - Checks: `format:check`, `lint`, `typecheck`, `test`, `content:validate`,

@@ -1,4 +1,4 @@
-# Consistency and Idempotency
+# CAP Theorem and Consistency
 
 Two questions shape most distributed designs:
 

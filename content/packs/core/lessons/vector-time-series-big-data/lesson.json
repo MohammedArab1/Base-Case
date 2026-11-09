@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/vector-time-series-big-data",
+  "slug": "vector-time-series-big-data",
+  "title": "Vector, Time-Series, and Big Data Structures",
+  "category": "system-design",
+  "summary": "Recognize when a specialized store or sketch beats a general-purpose database.",
+  "difficulty": "hard",
+  "estimatedMinutes": 12,
+  "order": 58,
+  "section": "Advanced Topics",
+  "tags": ["system-design", "vector-database", "time-series", "bloom-filter", "hyperloglog"],
+  "prerequisites": ["nosql-and-storage-selection", "database-indexing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A vector index answers similarity questions; exact-key lookup should stay in a normal store.",
+    "HNSW favors low latency and high recall; IVF trades some recall for memory control.",
+    "Hybrid search combines keyword precision with vector recall, then reranks the merged list.",
+    "Time-series stores win on append-heavy writes, time-range reads, compression, and retention.",
+    "Bloom filters, HyperLogLog, count-min sketches, and external sort answer large-data questions with bounded resources.",
+    "Add a specialized store only when the access pattern or scale justifies another system to operate."
+  ],
+  "complexity": [
+    {
+      "operation": "Exact k-NN scan",
+      "time": "O(N x d) per query",
+      "space": "N vectors",
+      "note": "Too slow at millions of vectors."
+    },
+    {
+      "operation": "HNSW search",
+      "time": "about O(log N)",
+      "space": "graph plus vectors",
+      "note": "High recall, memory heavy."
+    },
+    {
+      "operation": "IVF search",
+      "time": "O(nprobe x bucket size)",
+      "space": "centroids plus vectors",
+      "note": "Tune nprobe for recall."
+    },
+    {
+      "operation": "Time-series range read",
+      "time": "O(points in range)",
+      "space": "compressed blocks",
+      "note": "Rollups cut old-range work."
+    },
+    {
+      "operation": "HyperLogLog update",
+      "time": "O(1)",
+      "space": "12 KB at about 0.8% error",
+      "note": "Sketches merge across time windows."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["search-autocomplete", "news-feed", "file-sync"]
+  },
+  "commonMistakes": [
+    "Using a vector index for exact lookups or small data sets where a normal index already works.",
+    "Reporting ANN latency without measuring recall on real queries.",
+    "Putting high-cardinality values in a time-series tag and creating millions of series.",
+    "Using a probabilistic sketch for billing or another exact-count requirement."
+  ],
+  "interviewNotes": [
+    "Name the query shape first: similarity, time range, membership, cardinality, frequency, or sort.",
+    "State the recall or error bound when you choose an approximate structure.",
+    "Translate vector count and dimensions into memory before choosing a shard count.",
+    "Keep the source of truth in a normal store and treat the vector index as derived.",
+    "For retention, say what stays raw, what is rolled up, and for how long."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is an HNSW index often memory heavy?",
+      "answer": "It stores the vectors plus a layered proximity graph. That graph improves recall and latency but adds memory beyond the raw vector size."
+    },
+    {
+      "question": "When is a Bloom filter useful?",
+      "answer": "It can reject keys that are definitely absent before a disk or network lookup. It has no false negatives, but false positives are possible."
+    },
+    {
+      "question": "Why downsample time-series data?",
+      "answer": "Raw points are expensive to store and most old queries need a trend, not every sample. Rollups cut storage and read cost while keeping recent detail."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

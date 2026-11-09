@@ -1,4 +1,4 @@
-# Databases, Indexes, Replication, and Sharding
+# Core Databases: Relational, Indexes, and Transactions
 
 Storage decisions follow access patterns. Ask what the system reads and writes before asking which database to use.
 

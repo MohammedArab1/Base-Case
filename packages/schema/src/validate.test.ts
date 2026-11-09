@@ -63,13 +63,44 @@ describe('validatePack', () => {
   it('exposes the learning library and its linked exercises', async () => {
     const result = await validatePack(corePackDirectory)
 
-    expect(result.pack?.lessons).toHaveLength(39)
+    expect(result.pack?.lessons).toHaveLength(60)
     expect(result.pack?.lessons).toContain('complexity-and-big-o')
     expect(result.pack?.lessons).toContain('tries')
     expect(result.pack?.lessons).toContain('rate-limiting')
     expect(result.pack?.lessons).toContain('dns-and-reverse-proxies')
     expect(result.pack?.lessons).toContain('system-design-reference')
+    expect(result.pack?.lessons).toContain('system-design-preparation')
+    expect(result.pack?.lessons).toContain('problem-breakdowns')
     expect(result.pack?.lessons).toContain('real-world-architectures')
+  }, 30_000)
+
+  it('organizes the system-design track into curriculum sections', async () => {
+    const result = await validatePack(corePackDirectory)
+    const lessons = await Promise.all(
+      (result.pack?.lessons ?? []).map(async (slug) => {
+        const lesson = JSON.parse(
+          await readFile(join(corePackDirectory, 'lessons', slug, 'lesson.json'), 'utf8'),
+        ) as { readonly category: string; readonly section?: string; readonly order: number }
+
+        return lesson
+      }),
+    )
+    const systemDesign = lessons
+      .filter((lesson) => lesson.category === 'system-design')
+      .sort((left, right) => left.order - right.order)
+    const sections = [...new Set(systemDesign.map((lesson) => lesson.section))]
+
+    expect(systemDesign).toHaveLength(38)
+    expect(sections).toEqual([
+      'In a Hurry',
+      'Core Concepts',
+      'Key Technologies',
+      'Common Patterns',
+      'Question Breakdowns',
+      'Advanced Topics',
+      'In the Wild',
+    ])
+    expect(new Set(systemDesign.map((lesson) => lesson.order)).size).toBe(systemDesign.length)
   }, 30_000)
 
   it('links every design scenario from a system-design lesson', async () => {

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/data-modeling",
+  "slug": "data-modeling",
+  "title": "Data Modeling: Entities and Access Patterns",
+  "category": "system-design",
+  "summary": "Choose entities and relationships from the queries the system must serve.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 29,
+  "section": "Core Concepts",
+  "tags": ["system-design", "data-modeling", "sql", "nosql", "schema"],
+  "prerequisites": ["api-design"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Start with four to six core entities and the relationships that carry invariants.",
+    "List the top queries before choosing keys, indexes, or a storage engine.",
+    "Normalize by default; denormalize only with a repair rule or a historical snapshot.",
+    "Primary keys, sort keys, and partition keys are chosen to match the main access path.",
+    "Relational, document, key-value, and wide-column stores fit different query shapes.",
+    "Model the transactions and unique constraints that protect invariants, not every field."
+  ],
+  "complexity": [
+    {
+      "operation": "Point read by primary key",
+      "time": "O(log n) in a B-tree",
+      "space": "one row",
+      "note": "The simplest access path."
+    },
+    {
+      "operation": "List by partition and sort key",
+      "time": "index range scan",
+      "space": "O(page size)",
+      "note": "The key order must match the query."
+    },
+    {
+      "operation": "Join order and items",
+      "time": "depends on indexes",
+      "space": "matched rows",
+      "note": "A denormalized copy can remove the join."
+    },
+    {
+      "operation": "Append a ledger entry",
+      "time": "O(1) append",
+      "space": "one row plus indexes",
+      "note": "History is never rewritten."
+    },
+    {
+      "operation": "Hot-row update",
+      "time": "serialized writes",
+      "space": "one row and its index entries",
+      "note": "Contention grows with concurrent writers."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "payment-ledger", "file-sync"]
+  },
+  "commonMistakes": [
+    "Drawing entities without listing the queries they must serve.",
+    "Using a mutable natural key such as an email address as the primary key.",
+    "Denormalizing a value without a rule to repair every copy when the source changes.",
+    "Modeling an unbounded list inside one document or one partition and creating a hot spot."
+  ],
+  "interviewNotes": [
+    "State the top three to five access patterns and the key or index that serves each one.",
+    "Distinguish a cached duplicate from a historical snapshot when you denormalize.",
+    "Name the invariant and the constraint or transaction that protects it.",
+    "Stop at four to six entities and say what you are leaving out of scope."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why write the queries before choosing a schema?",
+      "answer": "The queries decide which keys, indexes, and store shape are useful. A schema with no access path forces scans or a redesign."
+    },
+    {
+      "question": "What is the difference between denormalizing a name and copying a purchase price?",
+      "answer": "The name is a mutable duplicate that must be repaired or expire. The purchase price is a historical snapshot that should not change when the product price changes."
+    },
+    {
+      "question": "How do you stop two users from booking the same seat?",
+      "answer": "Use a unique constraint or a conditional transaction so only one active reservation can exist for that seat. An application check alone is a race."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

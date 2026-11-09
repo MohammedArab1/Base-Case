@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/search-databases",
+  "slug": "search-databases",
+  "title": "Search-Optimized Databases",
+  "category": "system-design",
+  "summary": "When LIKE queries stop working, use an inverted index and plan for freshness.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 41,
+  "section": "Key Technologies",
+  "tags": ["system-design", "search", "elasticsearch", "inverted-index", "cdc"],
+  "prerequisites": ["database-indexing"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A leading-wildcard LIKE query scans text; an inverted index maps terms to the documents that contain them.",
+    "Analysis controls matching: tokenization, stemming, synonyms, and language rules must agree at index and query time.",
+    "Ranking is product logic, not only a text score; field boosts and recency change what users see first.",
+    "A search index is a derived copy, kept current through an outbox or change data capture with idempotent upserts.",
+    "Search freshness is a trade-off; state the lag and what users see while the index catches up.",
+    "Shards and replicas scale the index, while mapping changes usually require a parallel reindex and alias swap."
+  ],
+  "complexity": [
+    {
+      "operation": "Index a document",
+      "time": "O(tokens) analysis and postings",
+      "space": "inverted index plus stored fields",
+      "note": "Writes also update segment structures and replicas."
+    },
+    {
+      "operation": "Term lookup",
+      "time": "O(postings for the term)",
+      "space": "postings lists",
+      "note": "Phrase and fuzzy queries read more postings."
+    },
+    {
+      "operation": "Rank top-k results",
+      "time": "O(m log k) for m matches",
+      "space": "O(k) heap",
+      "note": "Merge top-k across shards."
+    },
+    {
+      "operation": "Fuzzy expansion",
+      "time": "depends on edit distance and term count",
+      "space": "automaton or n-gram index",
+      "note": "Cap expansions to protect latency."
+    },
+    {
+      "operation": "Full reindex",
+      "time": "O(n documents)",
+      "space": "second index copy",
+      "note": "Backfill, replay changes, then switch the alias."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["search-autocomplete", "news-feed", "chat-system"]
+  },
+  "commonMistakes": [
+    "Treating the search index as the source of truth instead of a derived copy.",
+    "Using LIKE with a leading wildcard on a large text column and expecting an index to help.",
+    "Mismatching the index-time and query-time analyzers, then wondering why relevant documents are missing.",
+    "Ignoring index lag and showing users a search result that omits the item they created seconds ago."
+  ],
+  "interviewNotes": [
+    "Explain why a normal B-tree index cannot serve free-text search, then introduce the inverted index.",
+    "Name the freshness path: outbox or CDC, idempotent upserts, version checks, and reconciliation.",
+    "Describe ranking signals and say which ones are product policy rather than text relevance.",
+    "State the stale window and the fallback when the search cluster is unavailable or behind.",
+    "Cover sharding, replicas, deep pagination, and the cost of a reindex."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does an inverted index make text search faster than a table scan?",
+      "answer": "It maps each term directly to the documents that contain it, so a query reads only the relevant postings lists instead of every row."
+    },
+    {
+      "question": "Why must index-time and query-time analyzers match?",
+      "answer": "The query must produce the same terms that were stored. If one side stems or normalizes differently, the terms will not match."
+    },
+    {
+      "question": "How do you keep a search index fresh without dual-writing synchronously?",
+      "answer": "Commit the record and an outbox event in one database transaction, publish the event asynchronously, and have an idempotent indexer upsert by document id and version."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

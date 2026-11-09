@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "core/availability-and-failover",
   "slug": "availability-and-failover",
-  "title": "Availability, Failover, and Replication",
+  "title": "Availability, Failover, and Disaster Recovery",
   "category": "system-design",
   "summary": "Keep serving useful requests when a machine, a zone, or a dependency goes away.",
   "difficulty": "medium",
   "estimatedMinutes": 14,
-  "order": 32,
+  "order": 56,
   "tags": ["system-design", "availability", "failover", "replication", "slo", "disaster-recovery"],
-  "prerequisites": ["requirements-and-estimation"],
+  "prerequisites": ["consistency-and-idempotency"],
   "content": "lesson.md",
   "keyPoints": [
     "Availability is the fraction of time useful requests succeed, not whether a process is running.",
@@ -88,5 +88,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Advanced Topics"
 }

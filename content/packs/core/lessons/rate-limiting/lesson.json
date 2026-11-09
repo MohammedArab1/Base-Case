@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "core/rate-limiting",
   "slug": "rate-limiting",
-  "title": "Rate Limiting",
+  "title": "Rate Limiting and Load Shedding",
   "category": "system-design",
   "summary": "Protect shared capacity by deciding who may do how much, and what happens when they ask for more.",
   "difficulty": "medium",
   "estimatedMinutes": 12,
-  "order": 30,
+  "order": 49,
   "tags": ["system-design", "rate-limiting", "redis", "abuse", "token-bucket"],
-  "prerequisites": ["scaling-and-load-balancing", "requirements-and-estimation"],
+  "prerequisites": ["distributed-caches-and-locks"],
   "content": "lesson.md",
   "keyPoints": [
     "Rate limiting protects capacity, fairness, and cost rather than blocking all traffic.",
@@ -76,5 +76,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Common Patterns"
 }

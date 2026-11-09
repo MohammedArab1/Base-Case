@@ -105,6 +105,8 @@ Denormalize when a read path is measured and the join is the bottleneck. Keep on
 
 ## SQL or NoSQL
 
+In an interview, do not turn this into a broad SQL-versus-NoSQL debate. Pick the store you know best and explain how its specific features fit the access patterns. The lists below are a planning aid, not a script.
+
 Choose SQL when:
 
 - records have clear relationships and joins;

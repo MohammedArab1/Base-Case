@@ -804,6 +804,7 @@ export class ContentRepository {
       difficulty: lesson.manifest.difficulty,
       estimatedMinutes: lesson.manifest.estimatedMinutes,
       order: lesson.manifest.order,
+      section: lesson.manifest.section,
       tags: lesson.manifest.tags,
       exerciseCount:
         lesson.manifest.exercises.problems.length + lesson.manifest.exercises.designs.length,

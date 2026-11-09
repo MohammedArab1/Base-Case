@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/blob-storage-and-cdns",
+  "slug": "blob-storage-and-cdns",
+  "title": "Blob Storage and CDNs",
+  "category": "system-design",
+  "summary": "Keep large files out of the database and move them close to readers.",
+  "difficulty": "easy",
+  "estimatedMinutes": 11,
+  "order": 40,
+  "section": "Key Technologies",
+  "tags": ["system-design", "blob-storage", "cdn", "s3", "uploads"],
+  "prerequisites": ["caching-and-cdns"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Object stores hold immutable bytes while the database holds small, queryable metadata.",
+    "Presigned URLs let clients upload and download directly, so application servers never carry the bytes.",
+    "Multipart uploads make large transfers resumable, parallel, and verifiable with checksums.",
+    "Versioning, lifecycle rules, and encryption protect durability, recovery, and cost.",
+    "A CDN caches public objects at the edge; private objects need signed URLs and careful cache keys.",
+    "Versioned object keys are safer than purge calls when content changes."
+  ],
+  "complexity": [
+    {
+      "operation": "Presigned URL creation",
+      "time": "O(1) signing",
+      "space": "O(1) server memory",
+      "note": "No bytes pass through the API server."
+    },
+    {
+      "operation": "Direct object upload",
+      "time": "network-bound",
+      "space": "client and storage buffers",
+      "note": "Throughput depends on the client link and part size."
+    },
+    {
+      "operation": "Metadata lookup",
+      "time": "O(log n) with an index",
+      "space": "one row",
+      "note": "Ownership and status stay queryable."
+    },
+    {
+      "operation": "CDN edge hit",
+      "time": "tens of milliseconds",
+      "space": "edge storage",
+      "note": "The origin is skipped on a hit."
+    },
+    {
+      "operation": "Multipart upload",
+      "time": "O(parts) requests",
+      "space": "O(part size) per buffer",
+      "note": "Each part can be retried independently."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["file-sync", "news-feed", "chat-system"]
+  },
+  "commonMistakes": [
+    "Storing image or video bytes as large blobs in the primary database.",
+    "Routing every upload and download through application servers instead of using direct storage access.",
+    "Making private objects public because signed URLs add a step.",
+    "Assuming a CDN purge is instant and global, then serving stale content after an in-place replace."
+  ],
+  "interviewNotes": [
+    "Separate the metadata path from the bytes path, and say which store is authoritative for each.",
+    "Walk through the upload as sign, direct write, commit, verify, then enqueue follow-up work.",
+    "Name multipart upload and checksums when files can be large or connections unreliable.",
+    "For private content, use short-lived signed URLs and explain why a shared edge key is unsafe.",
+    "Cover durability, versioning, lifecycle, encryption, and the cost of storage and egress."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why keep large files out of a relational database?",
+      "answer": "Large values inflate backups, replication, logs, and memory use, and they make row queries slower. An object store is built for large immutable bytes."
+    },
+    {
+      "question": "What does a presigned URL authorize?",
+      "answer": "It carries a signature that permits one operation, such as PUT or GET, on one object key for a limited time, often with constraints on content type and size."
+    },
+    {
+      "question": "Why version the object key instead of purging the CDN?",
+      "answer": "A new key cannot serve old bytes, while a purge is best effort and may take time to reach every edge location."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

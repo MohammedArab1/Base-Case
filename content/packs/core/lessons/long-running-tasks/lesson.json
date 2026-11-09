@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/long-running-tasks",
+  "slug": "long-running-tasks",
+  "title": "Managing Long-Running Tasks",
+  "category": "system-design",
+  "summary": "Acknowledge quickly, do the work in the background, and make progress observable.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 51,
+  "section": "Common Patterns",
+  "tags": ["system-design", "async", "workers", "queues", "jobs", "backpressure"],
+  "prerequisites": ["message-queues-and-observability"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Move work to the background when its duration is unpredictable or exceeds the request budget.",
+    "Persist a job record before acknowledging; return 202 with a job ID and status URL.",
+    "Workers claim jobs with leases and must be idempotent because delivery is at-least-once.",
+    "Retry transient failures with backoff and jitter, then send exhausted jobs to a dead-letter queue.",
+    "Scale workers on queue depth and oldest-job age, and bound the queue with load shedding.",
+    "Keep short, predictable work synchronous; a queue adds real operational cost."
+  ],
+  "complexity": [
+    {
+      "operation": "Submit a job",
+      "time": "one durable write",
+      "space": "job row plus payload",
+      "note": "Return 202 only after the job is persisted."
+    },
+    {
+      "operation": "Claim a job",
+      "time": "one queue or table operation",
+      "space": "lease and attempt count",
+      "note": "A lease lets another worker recover a crashed job."
+    },
+    {
+      "operation": "Progress update",
+      "time": "throttled write",
+      "space": "one status row",
+      "note": "Update every few seconds or percent, not every item."
+    },
+    {
+      "operation": "Retry with backoff",
+      "time": "grows exponentially plus jitter",
+      "space": "attempt metadata",
+      "note": "Cap attempts and classify permanent failures."
+    },
+    {
+      "operation": "Dead-letter replay",
+      "time": "same as original processing",
+      "space": "failed job payloads",
+      "note": "Needs an owner, an alert, and a replay tool."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["file-sync", "news-feed", "payment-ledger"]
+  },
+  "commonMistakes": [
+    "Running a multi-minute task inside the request and hoping the gateway timeout is generous enough.",
+    "Retrying a permanent failure such as an invalid file format until the queue fills.",
+    "Scaling workers on CPU while the queue grows because workers are waiting on a remote service.",
+    "Promising exactly-once processing instead of at-least-once delivery with idempotent outputs."
+  ],
+  "interviewNotes": [
+    "State the request budget and why the task cannot fit inside it.",
+    "Show the job record, the 202 response, and the status endpoint.",
+    "Explain the lease and what happens when a worker dies mid-job.",
+    "Separate transient failures from permanent ones, and name the dead-letter policy.",
+    "Say how cancellation works and whether the partial output is kept or removed."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why return 202 instead of 200 after submitting a job?",
+      "answer": "202 means the request was accepted for processing but has not completed. It matches the truth: the job exists, and the client should poll or subscribe for the result."
+    },
+    {
+      "question": "How does a worker lease help after a crash?",
+      "answer": "The lease expires if the worker stops heartbeating. Another worker can then claim the job and finish the work, instead of leaving it stuck forever."
+    },
+    {
+      "question": "Why is a dead-letter queue not a trash can?",
+      "answer": "It holds jobs that need inspection, repair, and replay. Without an owner and a process, failures accumulate silently and users never receive their results."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

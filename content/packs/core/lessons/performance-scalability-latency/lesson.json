@@ -7,9 +7,9 @@
   "summary": "Tell the difference between a system that is slow for one person and one that cannot keep up with many.",
   "difficulty": "easy",
   "estimatedMinutes": 12,
-  "order": 31,
+  "order": 36,
   "tags": ["system-design", "performance", "scalability", "latency", "throughput", "percentiles"],
-  "prerequisites": ["requirements-and-estimation"],
+  "prerequisites": ["numbers-to-know"],
   "content": "lesson.md",
   "keyPoints": [
     "Performance is how fast one request feels; scalability is how well the system handles more work.",
@@ -82,5 +82,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Core Concepts"
 }

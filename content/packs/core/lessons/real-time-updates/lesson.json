@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/real-time-updates",
+  "slug": "real-time-updates",
+  "title": "Pushing Real-Time Updates",
+  "category": "system-design",
+  "summary": "Start with polling; add SSE or WebSockets only when the product needs a live connection.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 50,
+  "section": "Common Patterns",
+  "tags": ["system-design", "realtime", "websockets", "sse", "pub-sub", "presence"],
+  "prerequisites": ["network-protocols", "message-queues-and-observability"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Polling is the simplest real-time mechanism and is often fast enough.",
+    "SSE streams server-to-client events over HTTP and reconnects with an event ID.",
+    "WebSockets are bidirectional and stateful, so they need connection-aware scaling.",
+    "Publish through a fan-out layer instead of making one gateway the message router.",
+    "Per-conversation sequence numbers turn reconnect into a replay problem.",
+    "Bound every per-connection buffer; slow clients must resync, not grow memory without limit."
+  ],
+  "complexity": [
+    {
+      "operation": "Polling request",
+      "time": "one request per interval",
+      "space": "stateless",
+      "note": "Freshness is capped by the interval."
+    },
+    {
+      "operation": "Long poll",
+      "time": "held until an event or timeout",
+      "space": "one open request",
+      "note": "Works through most proxies but reconnects per update."
+    },
+    {
+      "operation": "SSE connection",
+      "time": "one long HTTP response",
+      "space": "per-connection state",
+      "note": "Automatic reconnect and Last-Event-ID resume."
+    },
+    {
+      "operation": "WebSocket connection",
+      "time": "persistent after upgrade",
+      "space": "socket, buffers, registry entry",
+      "note": "Bidirectional with the lowest per-message overhead."
+    },
+    {
+      "operation": "Fan-out publish",
+      "time": "one publish, many deliveries",
+      "space": "one entry per interested gateway",
+      "note": "Large rooms need sharded topics or read-time merge."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["chat-system", "news-feed", "file-sync"]
+  },
+  "commonMistakes": [
+    "Opening a WebSocket for a feature that only needs a five-second poll.",
+    "Treating the socket as the source of truth and losing messages when a client disconnects.",
+    "Round-robining long-lived connections and ending up with uneven gateway load.",
+    "Queuing every update for a slow client until the gateway runs out of memory."
+  ],
+  "interviewNotes": [
+    "Ask how fresh the data must be before choosing a transport.",
+    "Say whether the connection is one-way or bidirectional and whether it must survive reconnects.",
+    "Name the connection registry and where it lives.",
+    "Explain resume with sequence numbers or Last-Event-ID, plus the snapshot fallback.",
+    "Say what is allowed to drop: presence and typing yes, chat messages no."
+  ],
+  "checkYourself": [
+    {
+      "question": "When is SSE a better fit than a WebSocket?",
+      "answer": "When updates flow only from server to client, such as notifications, live scores, or progress. SSE reuses HTTP, reconnects automatically, and avoids a custom bidirectional protocol."
+    },
+    {
+      "question": "Why do persistent connections make load balancing harder?",
+      "answer": "A connection stays pinned to one server, so connect-time round robin can leave capacity uneven and a server failure forces all of its clients to reconnect."
+    },
+    {
+      "question": "How does a reconnecting client avoid missing messages?",
+      "answer": "It sends the last sequence number or event ID it processed. The server replays from that point, or sends a fresh snapshot if the gap is too large."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

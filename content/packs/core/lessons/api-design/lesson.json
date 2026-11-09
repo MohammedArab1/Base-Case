@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/api-design",
+  "slug": "api-design",
+  "title": "API Design",
+  "category": "system-design",
+  "summary": "Sketch a small, clear contract before drawing components.",
+  "difficulty": "easy",
+  "estimatedMinutes": 11,
+  "order": 28,
+  "section": "Core Concepts",
+  "tags": ["system-design", "api", "rest", "pagination", "idempotency"],
+  "prerequisites": ["requirements-and-estimation"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "The API is the contract: resources, inputs, outputs, errors, auth, and change rules.",
+    "REST with plural nouns and standard HTTP methods is a safe default for public APIs.",
+    "Derive the caller from the token; never trust a user ID from the request body.",
+    "Use status codes with their standard meanings and one consistent error shape.",
+    "Cursor pagination is stable under inserts; offset pagination is easier but can skip or repeat rows.",
+    "Idempotency keys make retried writes safe; versioning and GraphQL or gRPC need a stated reason."
+  ],
+  "complexity": [
+    {
+      "operation": "Read one resource",
+      "time": "index lookup",
+      "space": "O(1) response",
+      "note": "By an opaque primary key."
+    },
+    {
+      "operation": "List with cursor",
+      "time": "index range scan",
+      "space": "O(page size)",
+      "note": "Stable position in a changing list."
+    },
+    {
+      "operation": "List with deep offset",
+      "time": "walks offset rows",
+      "space": "O(page size)",
+      "note": "Gets slower as the offset grows."
+    },
+    {
+      "operation": "Create with idempotency key",
+      "time": "one write plus key lookup",
+      "space": "stored response per key",
+      "note": "Retries return the first result."
+    },
+    {
+      "operation": "Versioned change",
+      "time": "depends on migration",
+      "space": "two contracts during the window",
+      "note": "Additive changes usually need no new version."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["url-shortener", "seat-reservation", "chat-system"]
+  },
+  "commonMistakes": [
+    "Taking the acting user from a request body or query parameter instead of the verified token.",
+    "Returning an unbounded list or using offset pagination for a feed that changes constantly.",
+    "Retrying a POST without an idempotency key and creating a duplicate payment or reservation.",
+    "Changing or removing a response field without a versioning and deprecation plan."
+  ],
+  "interviewNotes": [
+    "Aim for four to six endpoints that cover the core flows; name the rest as out of scope.",
+    "State the trust boundary: authentication from the token, authorization per object.",
+    "Say how lists are paginated and how writes are made safe to retry.",
+    "Mention GraphQL or gRPC only when the client or call pattern justifies the extra cost."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why should the sender of a message come from the token rather than the body?",
+      "answer": "A body field can be edited by the client, which allows impersonation. The token is verified by the server, so it establishes the caller's identity."
+    },
+    {
+      "question": "When is cursor pagination better than offset pagination?",
+      "answer": "When the list changes often or is large. A cursor continues from a stable position, while an offset can skip or repeat rows after inserts and deletes."
+    },
+    {
+      "question": "What does an idempotency key protect against?",
+      "answer": "A client retry after an unknown outcome. Repeating the same key and request returns the original result instead of performing the write twice."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

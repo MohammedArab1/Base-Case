@@ -70,7 +70,7 @@ practice app for macOS (Apple Silicon and Intel) and Windows.
 
 What works: 81 original coding problems (including a 75-problem Grind 75
 collection) plus an optional 88-problem extension for the 150 Essential
-Problems study list, 8 design scenarios, 39 offline DSA and system-design lessons with
+Problems study list, 8 design scenarios, 60 offline DSA and system-design lessons with
 linked practice, a local Python and TypeScript judge, hints and explanations,
 FSRS review, a design canvas with Markdown/PNG export, data export/import,
 accessible core flows, and an optional experimental AI tutor with explain-back,

@@ -1,4 +1,4 @@
-# Reading Real-World Architectures
+# In the Wild: Reading Real Architecture Write-Ups
 
 Architecture posts look different on the surface: one has a dozen boxes, another has a queue, another has three regions. Underneath, the same small set of patterns repeats. Learning to read those patterns is more useful than memorizing one company's diagram.
 

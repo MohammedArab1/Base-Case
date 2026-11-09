@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "core/databases",
   "slug": "databases",
-  "title": "Databases, Indexes, Replication, and Sharding",
+  "title": "Core Databases: Relational, Indexes, and Transactions",
   "category": "system-design",
-  "summary": "Choose storage from access patterns, then make reads, writes, and growth fit the shape of the data.",
+  "summary": "What a relational core gives you, how indexes and transactions work, and where its limits begin.",
   "difficulty": "medium",
   "estimatedMinutes": 15,
-  "order": 27,
+  "order": 38,
   "tags": ["system-design", "databases", "indexes", "replication", "sharding"],
-  "prerequisites": ["requirements-and-estimation"],
+  "prerequisites": ["data-modeling"],
   "content": "lesson.md",
   "keyPoints": [
     "Choose a database from the access pattern: point lookups, ranges, joins, transactions, or blobs.",
@@ -72,7 +72,7 @@
   ],
   "exercises": {
     "problems": [],
-    "designs": ["url-shortener", "payment-ledger", "seat-reservation", "file-sync"]
+    "designs": ["payment-ledger", "seat-reservation", "file-sync"]
   },
   "commonMistakes": [
     "Choosing a database by reputation instead of by access pattern.",
@@ -106,5 +106,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Key Technologies"
 }

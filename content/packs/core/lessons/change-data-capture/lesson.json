@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/change-data-capture",
+  "slug": "change-data-capture",
+  "title": "Change Data Capture and Derived Stores",
+  "category": "system-design",
+  "summary": "Keep caches, search indexes, and read models in sync without dual writes.",
+  "difficulty": "hard",
+  "estimatedMinutes": 10,
+  "order": 59,
+  "section": "Advanced Topics",
+  "tags": ["system-design", "cdc", "outbox", "search-index", "derived-data"],
+  "prerequisites": ["message-queues-and-observability", "search-databases"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "A dual write can leave the database and a derived store disagreeing after a partial failure.",
+    "CDC reads the database log and turns committed changes into an ordered stream.",
+    "The outbox pattern makes the event part of the same transaction as the business write.",
+    "Consumers must be idempotent, and partitioning by entity key preserves per-key order.",
+    "Snapshots, replay, and reconciliation are required to rebuild and repair derived stores.",
+    "CDC is overkill when a read replica, short TTL cache, or nightly batch meets the freshness need."
+  ],
+  "complexity": [
+    {
+      "operation": "Dual write",
+      "time": "one request",
+      "space": "two systems disagree",
+      "note": "No shared transaction across the steps."
+    },
+    {
+      "operation": "CDC log read",
+      "time": "near-real-time",
+      "space": "log retention",
+      "note": "The connector follows commit order."
+    },
+    {
+      "operation": "Outbox publish",
+      "time": "one extra row per write",
+      "space": "table growth until pruned",
+      "note": "The relay is at-least-once."
+    },
+    {
+      "operation": "Consumer apply",
+      "time": "at-least-once",
+      "space": "dedupe state",
+      "note": "The handler must be idempotent."
+    },
+    {
+      "operation": "Rebuild from replay",
+      "time": "hours for large data",
+      "space": "full derived store",
+      "note": "Snapshot, replay the tail, then switch."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["search-autocomplete", "news-feed", "payment-ledger"]
+  },
+  "commonMistakes": [
+    "Writing the database and publishing the event as two independent steps.",
+    "Assuming a broker delivers exactly once instead of deduplicating in the consumer.",
+    "Using global ordering when per-entity ordering is enough.",
+    "Letting a stopped connector fill the database log or a stopped consumer lose its place."
+  ],
+  "interviewNotes": [
+    "Name the source of truth before naming the derived stores.",
+    "Prefer an outbox or log-based CDC over a dual write.",
+    "State the partition key that preserves the order you need.",
+    "Describe the snapshot, replay, and alias swap for a rebuild.",
+    "Give a freshness target and a lag alert; say when batch would be enough."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why is a dual write unsafe?",
+      "answer": "The database and the derived store do not share a transaction. A crash or timeout between the two steps can leave one updated and the other stale or wrong."
+    },
+    {
+      "question": "What does the outbox pattern guarantee?",
+      "answer": "The business change and the event row commit together. Publication is at-least-once, so consumers still need to deduplicate."
+    },
+    {
+      "question": "Why is per-key ordering often enough?",
+      "answer": "Changes to the same entity stay in order, while changes to different entities can proceed independently. Global order adds cost with little benefit for most derived stores."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

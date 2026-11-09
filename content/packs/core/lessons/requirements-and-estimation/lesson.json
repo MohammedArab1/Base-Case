@@ -2,75 +2,84 @@
   "schemaVersion": 1,
   "id": "core/requirements-and-estimation",
   "slug": "requirements-and-estimation",
-  "title": "Requirements and Back-of-Envelope Estimation",
+  "title": "The Delivery Framework",
   "category": "system-design",
-  "summary": "Turn a vague prompt into numbers you can design against, without pretending the estimates are exact.",
-  "difficulty": "easy",
-  "estimatedMinutes": 12,
-  "order": 24,
-  "tags": ["system-design", "requirements", "capacity", "estimation"],
+  "summary": "A 45-minute path from vague prompt to working design, with estimation only where it changes a decision.",
+  "difficulty": "medium",
+  "estimatedMinutes": 13,
+  "order": 25,
+  "section": "In a Hurry",
+  "tags": ["system-design", "delivery", "requirements", "api", "entities", "deep-dives"],
   "prerequisites": ["system-design-interview"],
   "content": "lesson.md",
   "keyPoints": [
-    "Functional requirements define what the system does; non-functional requirements define how well it must do it.",
-    "Estimate reads, writes, storage, and bandwidth from daily users and per-user actions.",
-    "Average QPS is not peak QPS; peak is often 2-5x average for consumer systems.",
-    "State assumptions and round aggressively. The goal is the right order of magnitude.",
-    "Availability and latency targets determine replication, caching, and timeout budgets."
+    "Requirements come before components: functional, non-functional, and the top three to five constraints.",
+    "Estimate only when a number changes a design decision; you can also estimate later in context.",
+    "Name core entities and a small interface before drawing the high-level design.",
+    "Keep the first diagram boring and end to end; add components only when a requirement forces them.",
+    "Lead one or two deep dives, then invite the interviewer to probe.",
+    "Close with the main bottleneck, the trade-offs, and what you would change at 10x."
   ],
   "complexity": [
     {
-      "operation": "Daily active users to QPS",
-      "time": "divide by 86,400",
-      "space": "peak = 2-5x average",
-      "note": "Use seconds per day for requests."
+      "operation": "Requirements",
+      "time": "5-8 min",
+      "space": "functional, non-functional, constraints",
+      "note": "Write a short in-scope and out-of-scope list."
     },
     {
-      "operation": "Storage per year",
-      "time": "daily writes * bytes * 365",
-      "space": "add replication and indexes",
-      "note": "Replication multiplies raw storage."
+      "operation": "Entities and interface",
+      "time": "8-12 min",
+      "space": "records and endpoints",
+      "note": "Make the contract concrete."
     },
     {
-      "operation": "Bandwidth",
-      "time": "QPS * payload size",
-      "space": "ingress and egress",
-      "note": "Convert bytes/s to Mbps."
+      "operation": "High-level design",
+      "time": "10-15 min",
+      "space": "components and data flow",
+      "note": "Smallest diagram that covers the core path."
     },
     {
-      "operation": "Availability",
-      "time": "99.9% = ~43 min/month",
-      "space": "99.99% = ~4.3 min/month",
-      "note": "Each nine is expensive."
+      "operation": "Deep dives",
+      "time": "about 10 min",
+      "space": "one or two risky areas",
+      "note": "State the risk before the solution."
+    },
+    {
+      "operation": "Wrap-up",
+      "time": "3-5 min",
+      "space": "trade-offs and next steps",
+      "note": "Take a clear position."
     }
   ],
   "exercises": {
     "problems": [],
-    "designs": ["url-shortener", "rate-limiter", "search-autocomplete"]
+    "designs": ["url-shortener", "seat-reservation", "payment-ledger"]
   },
   "commonMistakes": [
-    "Designing for average QPS without a peak estimate.",
-    "Forgetting replication and index overhead when estimating storage.",
-    "Treating an availability target as free; each additional nine adds complexity and cost.",
-    "Changing the assumptions halfway through without updating the numbers."
+    "Spending ten minutes on estimation before the design has a decision to inform.",
+    "Listing features instead of choosing the three to five requirements that shape the system.",
+    "Drawing services and queues before defining the core entities and interface.",
+    "Letting the interviewer carry every deep dive without stating your own risks."
   ],
   "interviewNotes": [
-    "Write the formula, not just the result, so the interviewer can follow your reasoning.",
-    "Ask whether the read-to-write ratio is known; it changes the caching and replication strategy.",
-    "If you are unsure, give a range and say which end you would design for."
+    "Write requirements where the interviewer can see them and refer back to them.",
+    "When a number changes a choice, show the arithmetic; otherwise skip it.",
+    "Say why you chose each component and what you would remove at a smaller scale.",
+    "If you get stuck, walk one request through the diagram and name the weak point."
   ],
   "checkYourself": [
     {
-      "question": "Why is peak QPS more important than average QPS for capacity planning?",
-      "answer": "The system must survive the busiest moment. Provisioning for the average leaves it overloaded during peaks."
+      "question": "Why can estimation wait until later in the interview?",
+      "answer": "An estimate is useful when it informs a decision. If the design choice is clear, a number produced at the start may never affect the architecture."
     },
     {
-      "question": "How many seconds are in a day, rounded for estimation?",
-      "answer": "About 86,400. Round to 100,000 when a rough estimate is enough."
+      "question": "What should the high-level design show before deep dives begin?",
+      "answer": "One complete flow: where requests enter, where data is written, where it is read, and where it is cached."
     },
     {
-      "question": "What does 99.9% availability mean in downtime per month?",
-      "answer": "About 43 minutes per month, assuming a 30-day month."
+      "question": "How do you lead a deep dive without ignoring the interviewer?",
+      "answer": "State the risk, propose a solution, name the trade-off, and invite the interviewer to choose the next area."
     }
   ],
   "license": "CC-BY-SA-4.0",

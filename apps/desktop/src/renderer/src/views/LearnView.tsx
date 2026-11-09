@@ -105,6 +105,63 @@ export function LearnView({ onOpenProblem, onOpenDesign }: LearnViewProps): JSX.
 
   const completedCount = lessons.filter((lesson) => progress.get(lesson.id)?.completed).length
 
+  const renderLessonRows = (entries: readonly LessonSummary[]): JSX.Element[] =>
+    entries.map((lesson) => {
+      const entry = progress.get(lesson.id)
+
+      return (
+        <button
+          key={lesson.id}
+          type="button"
+          className="lesson-row"
+          onClick={() => setSelectedLessonId(lesson.id)}
+          data-testid="lesson-row"
+        >
+          <span className="lesson-row-main">
+            <span className="lesson-row-title">
+              {lesson.title}
+              {entry?.completed ? <span className="tag tag-accepted">Complete</span> : null}
+            </span>
+            <span className="lesson-row-summary">{lesson.summary}</span>
+            <span className="problem-meta">
+              {lesson.tags.slice(0, 4).map((tag) => (
+                <span className="tag" key={tag}>
+                  {tag}
+                </span>
+              ))}
+              <span className="tag">{lesson.estimatedMinutes} min read</span>
+              <span className="tag">
+                {lesson.exerciseCount} {lesson.exerciseCount === 1 ? 'exercise' : 'exercises'}
+              </span>
+            </span>
+          </span>
+          <span className={`difficulty difficulty-${lesson.difficulty}`}>{lesson.difficulty}</span>
+          <span className="problem-arrow" aria-hidden="true">
+            →
+          </span>
+        </button>
+      )
+    })
+
+  const groupBySection = (
+    entries: readonly LessonSummary[],
+  ): [string, readonly LessonSummary[]][] => {
+    const groups = new Map<string, LessonSummary[]>()
+
+    for (const lesson of entries) {
+      const key = lesson.section ?? ''
+      const group = groups.get(key)
+
+      if (group) {
+        group.push(lesson)
+      } else {
+        groups.set(key, [lesson])
+      }
+    }
+
+    return [...groups.entries()]
+  }
+
   if (selectedLessonId) {
     return (
       <LessonWorkspace
@@ -202,49 +259,18 @@ export function LearnView({ onOpenProblem, onOpenDesign }: LearnViewProps): JSX.
                   <span className="tag">{entries.length}</span>
                 </div>
 
-                <div className="lesson-list">
-                  {entries.map((lesson) => {
-                    const entry = progress.get(lesson.id)
-
-                    return (
-                      <button
-                        key={lesson.id}
-                        type="button"
-                        className="lesson-row"
-                        onClick={() => setSelectedLessonId(lesson.id)}
-                        data-testid="lesson-row"
-                      >
-                        <span className="lesson-row-main">
-                          <span className="lesson-row-title">
-                            {lesson.title}
-                            {entry?.completed ? (
-                              <span className="tag tag-accepted">Complete</span>
-                            ) : null}
-                          </span>
-                          <span className="lesson-row-summary">{lesson.summary}</span>
-                          <span className="problem-meta">
-                            {lesson.tags.slice(0, 4).map((tag) => (
-                              <span className="tag" key={tag}>
-                                {tag}
-                              </span>
-                            ))}
-                            <span className="tag">{lesson.estimatedMinutes} min read</span>
-                            <span className="tag">
-                              {lesson.exerciseCount}{' '}
-                              {lesson.exerciseCount === 1 ? 'exercise' : 'exercises'}
-                            </span>
-                          </span>
-                        </span>
-                        <span className={`difficulty difficulty-${lesson.difficulty}`}>
-                          {lesson.difficulty}
-                        </span>
-                        <span className="problem-arrow" aria-hidden="true">
-                          →
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
+                {entries.some((lesson) => lesson.section) ? (
+                  <div className="learn-subgroups">
+                    {groupBySection(entries).map(([section, sectionEntries]) => (
+                      <section key={section} className="learn-subgroup">
+                        <h4>{section}</h4>
+                        <div className="lesson-list">{renderLessonRows(sectionEntries)}</div>
+                      </section>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="lesson-list">{renderLessonRows(entries)}</div>
+                )}
               </section>
             )
           })}

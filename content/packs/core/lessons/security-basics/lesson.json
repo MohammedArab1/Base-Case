@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "id": "core/security-basics",
   "slug": "security-basics",
-  "title": "Security Basics for System Design",
+  "title": "Security for System Design",
   "category": "system-design",
   "summary": "Protect data in transit and at rest, give every actor the least access, and trust nothing the client sends.",
   "difficulty": "medium",
   "estimatedMinutes": 14,
-  "order": 37,
+  "order": 57,
   "tags": [
     "system-design",
     "security",
@@ -91,5 +91,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Advanced Topics"
 }

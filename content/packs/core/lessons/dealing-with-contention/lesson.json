@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/dealing-with-contention",
+  "slug": "dealing-with-contention",
+  "title": "Dealing with Contention",
+  "category": "system-design",
+  "summary": "Decide how two users fighting over the same row should be resolved.",
+  "difficulty": "medium",
+  "estimatedMinutes": 12,
+  "order": 48,
+  "section": "Common Patterns",
+  "tags": ["system-design", "contention", "locking", "transactions", "optimistic-concurrency"],
+  "prerequisites": ["consistency-and-idempotency"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Contention is a correctness problem before it is a performance problem.",
+    "A conditional single-row update is the simplest protection against lost updates.",
+    "Unique constraints encode one-of-a-kind invariants without application-level locks.",
+    "Pessimistic locking suits likely conflicts; optimistic version checks suit rare ones.",
+    "A distributed lock needs a fencing token to remain safe after a lease expires.",
+    "The simplest database primitive that protects the invariant is usually the right choice."
+  ],
+  "complexity": [
+    {
+      "operation": "Atomic conditional update",
+      "time": "O(1) row lock",
+      "space": "one row",
+      "note": "Check affected rows to detect the losing write."
+    },
+    {
+      "operation": "Unique constraint insert",
+      "time": "index lookup plus insert",
+      "space": "unique index",
+      "note": "The second writer gets a duplicate error."
+    },
+    {
+      "operation": "Pessimistic lock",
+      "time": "wait for the current holder",
+      "space": "lock state and connection",
+      "note": "Set a timeout and a consistent lock order."
+    },
+    {
+      "operation": "Optimistic retry",
+      "time": "one read, one conditional write, then retry",
+      "space": "version field",
+      "note": "Retries multiply under heavy contention."
+    },
+    {
+      "operation": "Queue serialization",
+      "time": "queue delay plus processing",
+      "space": "ordered command log",
+      "note": "Removes concurrency at the cost of latency."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["seat-reservation", "payment-ledger", "rate-limiter"]
+  },
+  "commonMistakes": [
+    "Reading a value, checking it in application code, and writing it back without an atomic guard.",
+    "Holding a transaction open across a network call to a payment provider.",
+    "Using a distributed lock without a fencing token and assuming the lease is a guarantee.",
+    "Choosing pessimistic locking everywhere and turning contention into connection-pool exhaustion."
+  ],
+  "interviewNotes": [
+    "State the invariant first: no oversell, no double charge, no lost increment.",
+    "Name the database primitive that enforces it, not only the application check.",
+    "Say which isolation level you need and what happens when a transaction aborts.",
+    "Choose pessimistic or optimistic locking based on the expected conflict rate.",
+    "If you use a lease, explain how a paused holder is prevented from writing after expiry."
+  ],
+  "checkYourself": [
+    {
+      "question": "How does a conditional update prevent a lost update?",
+      "answer": "The database evaluates the condition and changes the row under one lock. A second writer either waits and sees the new value or changes zero rows, so both writers cannot act on the same old value."
+    },
+    {
+      "question": "When is optimistic concurrency a poor fit?",
+      "answer": "When conflicts are frequent. Many writers retry, waste work, and can create a retry storm, so a pessimistic lock or serialized queue may be better."
+    },
+    {
+      "question": "Why is a fencing token needed with a distributed lease?",
+      "answer": "A holder can pause past its lease expiry and resume after another holder takes over. The token lets storage reject the stale holder's write."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

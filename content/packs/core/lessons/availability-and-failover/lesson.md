@@ -1,4 +1,4 @@
-# Availability, Failover, and Replication
+# Availability, Failover, and Disaster Recovery
 
 A service is available when it answers useful requests. A process can be running and still be unavailable: if it returns errors, times out, or cannot reach its database, users experience an outage. Availability is a property of the whole path, not of one green status light.
 

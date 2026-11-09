@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "id": "core/application-architecture",
   "slug": "application-architecture",
-  "title": "Application Architecture: Web, Workers, and Services",
+  "title": "API Gateways and Application Architecture",
   "category": "system-design",
-  "summary": "Split the system into layers that can grow, deploy, and fail independently.",
+  "summary": "Split the system into layers that can grow, deploy, and fail independently, with one clear front door.",
   "difficulty": "medium",
   "estimatedMinutes": 14,
-  "order": 34,
+  "order": 42,
   "tags": [
     "system-design",
     "application-layer",
@@ -15,7 +15,7 @@
     "service-discovery",
     "api-gateway"
   ],
-  "prerequisites": ["scaling-and-load-balancing"],
+  "prerequisites": ["dns-and-reverse-proxies"],
   "content": "lesson.md",
   "keyPoints": [
     "Separate the edge, application, worker, and data layers so each can scale and fail independently.",
@@ -88,5 +88,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Key Technologies"
 }

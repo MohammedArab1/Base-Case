@@ -4,7 +4,7 @@
 
 **Status:** `v0.1.0-alpha` release preparation. The app has 81 original coding problems
 (including a 75-problem Grind 75 collection) plus an optional 88-problem extension
-for the 150 Essential Problems study list, 8 system design scenarios, 39
+for the 150 Essential Problems study list, 8 system design scenarios, 60
 offline lessons covering DSA and system-design fundamentals, a real
 Python/TypeScript judge, FSRS review, an optional guarded AI tutor, local
 persistence, a diagnostics self-test, dual-arch macOS packaging, and a security
@@ -101,21 +101,29 @@ runtimes. See ADR-0010.
   greedy, matrix traversal, and dynamic programming. Each has 3–5 sample tests,
   at least 15 hidden tests, four hints, an explanation, common mistakes,
   follow-ups, and Python/TypeScript reference solutions.
-- A **Learn** library with 39 offline lessons: 22 DSA/foundation lessons and 17
+- A **Learn** library with 60 offline lessons: 22 DSA/foundation lessons and 38
   system-design lessons. The DSA track covers Big O, arrays and strings, hash
   maps, two pointers, sliding windows, prefix sums, sorting, binary search,
   stacks, queues/deques, linked lists, recursion/backtracking, trees, BSTs,
   heaps, tries, graphs/traversal, topological sort and union-find, greedy and
   intervals, bit manipulation, matrix traversal, and dynamic programming. The
-  system-design track covers the core topic index of the public System Design
-  Primer (CC BY 4.0), from performance and availability through DNS, reverse
-  proxies, application architecture, storage selection, network protocols,
-  security, estimation references, and reading real architectures. All
-  explanations, diagrams, and examples are original to Base Case. Each lesson
-  has plain-language explanations, ASCII diagrams, worked examples, a complexity
-  cheatsheet, interview notes, common mistakes, self-check questions, and linked
-  coding or design exercises. Completion is stored locally, and every lesson
-  remains readable without AI.
+  system-design track follows the structure of the public
+  [HelloInterview System Design in a Hurry](https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction)
+  outline: introduction and preparation, the delivery framework, core concepts,
+  key technologies, common patterns, question breakdowns, advanced topics, and
+  real-world architecture reading. The track covers networking, API design, data
+  modeling, indexing, caching, sharding, consistent hashing, CAP, modern
+  capacity numbers, databases, blob storage, search, API gateways, queues and
+  streams, distributed caches and locks, observability, scaling reads and
+  writes, contention, real-time updates, long-running tasks, multi-step
+  workflows, large blobs, proximity search, vector/time-series data, and change
+  data capture. All explanations, diagrams, and examples are original to Base
+  Case; the HelloInterview outline is used descriptively as a structural
+  reference and does not imply affiliation. Each lesson has plain-language
+  explanations, ASCII diagrams, worked examples, a complexity cheatsheet,
+  interview notes, common mistakes, self-check questions, and linked coding or
+  design exercises. Completion is stored locally, and every lesson remains
+  readable without AI.
 - A **Grind 75** collection filter over a 75-problem core subset of the public
   Grind 75 study list. The list is maintained by Tech Interview Handbook; this
   app is not affiliated with or endorsed by it. Every statement, example, hint,
@@ -169,7 +177,7 @@ apps/desktop/          Electron main, preload, React renderer
 services/judge/        Go judge sidecar, harnesses, checkers, protocol tests
 packages/schema/       Content schemas, types, pack validation
 packages/content-cli/  validate and test commands for content packs
-content/packs/core/    Bundled core pack (81 coding + 8 designs + 39 lessons; 75-problem Grind 75 collection)
+content/packs/core/    Bundled core pack (81 coding + 8 designs + 60 lessons; 75-problem Grind 75 collection)
 content/packs/neetcode150/  Optional 88-problem extension for the 150 Essential Problems collection
 docs/evals/            Bug zoo, eval runner notes, and recorded results
 content/templates/     Problem and design templates

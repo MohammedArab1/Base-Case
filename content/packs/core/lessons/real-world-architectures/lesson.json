@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "id": "core/real-world-architectures",
   "slug": "real-world-architectures",
-  "title": "Reading Real-World Architectures",
+  "title": "In the Wild: Reading Real Architecture Write-Ups",
   "category": "system-design",
   "summary": "Turn architecture write-ups into reusable patterns, and map interview prompts to practice.",
   "difficulty": "medium",
   "estimatedMinutes": 15,
-  "order": 39,
+  "order": 60,
   "tags": [
     "system-design",
     "architecture",
@@ -18,9 +18,10 @@
   ],
   "prerequisites": [
     "requirements-and-estimation",
-    "scaling-and-load-balancing",
-    "databases",
-    "message-queues-and-observability"
+    "caching-and-cdns",
+    "consistency-and-idempotency",
+    "message-queues-and-observability",
+    "availability-and-failover"
   ],
   "content": "lesson.md",
   "keyPoints": [
@@ -102,5 +103,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors. Coverage topics follow the public System Design Primer topic index (https://github.com/donnemartin/system-design-primer) under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). All explanations, diagrams, and examples are original to Base Case; no primer text or diagrams are reproduced.",
-  "version": 1
+  "version": 1,
+  "section": "In the Wild"
 }

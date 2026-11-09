@@ -1,8 +1,8 @@
 # Progress Log
 
 > Last updated: 2026-11-03
-> Current phase: Phase 9 — MVP expansion (81 + 8 content, optional 88-problem extension, 39-lesson Learn library with full system-design topic coverage, Grind 75 and 150 Essential Problems collection filters, importer, polish, platform, AI, performance, security, docs, and demo media complete; release checks passed, tag pending)
-> Overall status: On track — the expanded 81-problem coding pack, optional 88-problem extension for the 150 Essential Problems collection, 75-problem Grind 75 collection, 8 design scenarios, 39 offline lessons with linked practice and complete coverage of the System Design Primer's core topic index, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is the release tag and post-tag artifact verification. B1–B12 are closed or accepted by the owner; no blockers remain.
+> Current phase: Phase 9 — MVP expansion (81 + 8 content, optional 88-problem extension, 60-lesson Learn library with a HelloInterview-structured system-design track, Grind 75 and 150 Essential Problems collection filters, importer, polish, platform, AI, performance, security, docs, and demo media complete; release checks passed, tag pending)
+> Overall status: On track — the expanded 81-problem coding pack, optional 88-problem extension for the 150 Essential Problems collection, 75-problem Grind 75 collection, 8 design scenarios, 60 offline lessons with linked practice and a 38-lesson system-design track organized into In a Hurry, Core Concepts, Key Technologies, Common Patterns, Question Breakdowns, Advanced Topics, and In the Wild, lesson completion, optional lesson clarification, dual-arch macOS packaging, AI mistake suggestions and explain-back, a real-model bug-zoo eval, a clean production dependency audit, packaged performance measurements, generated screenshots, and a 10-second GIF/MP4 walkthrough are in place. Remaining Phase 9 work is the release tag and post-tag artifact verification. B1–B12 are closed or accepted by the owner; no blockers remain.
 > Next milestone: tag `v0.1.0-alpha` when the owner is ready; no blockers remain.
 
 This is the living status document for the project. `PLAN.md` describes the intended work; this file records what is actually done, what is in progress, what is blocked, and what comes next. Update it at the end of every work session and whenever a phase, section, or significant task is completed. See `PLAN.md` Section 0.1 for the full rules and template.
@@ -53,6 +53,42 @@ See `docs/project/open-blockers.md` for the canonical, owner-ready list. Current
 - **No open blockers.** B8 reference scenes are closed as not needed.
 
 ## Work log (newest first)
+
+### 2026-11-08 — Restructured the system-design curriculum around HelloInterview
+
+- Status: done
+- Done:
+  - Reorganized the system-design track into In a Hurry, Core Concepts, Key
+    Technologies, Common Patterns, Question Breakdowns, Advanced Topics, and In
+    the Wild.
+  - Added 21 new lessons: preparation, API design, data modeling, indexing,
+    sharding, consistent hashing, numbers to know, blob storage, search
+    databases, distributed caches and locks, observability, scaling writes,
+    contention, real-time updates, long-running tasks, multi-step processes,
+    large blobs, proximity search, problem breakdowns, vector/time-series/big
+    data, and change data capture.
+  - Rewrote the introduction and delivery lessons to match the new sequence and
+    assessment model, including the "estimate only when it changes a decision"
+    guidance.
+  - Added optional lesson `section` metadata and grouped system-design lessons
+    under visible curriculum subheadings in the Learn library.
+  - Updated the README, architecture overview, FAQ, known limitations, authoring
+    guide, release notes, smoke test, schema/content tests, and Playwright
+    coverage for 60 lessons and 38 system-design lessons.
+- Tests run:
+  - `pnpm content:validate` — valid; 81 problems, 8 designs, 60 lessons.
+  - `pnpm content:test` — 162/162 core reference solutions pass.
+  - `pnpm test` — 139 desktop tests, 14 schema tests, and Go judge tests pass.
+  - `pnpm smoke:e2e` — passed with 60 lessons.
+  - `pnpm smoke:playwright` — 13/13 passed, including the new curriculum section
+    headings.
+  - `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm build`.
+- Files:
+  - `content/packs/core/lessons/`, `content/packs/core/pack.json`,
+    `packages/schema/src/*`, `apps/desktop/src/main/content.ts`,
+    `apps/desktop/src/renderer/src/views/LearnView.tsx`,
+    `apps/desktop/src/renderer/src/workspace.css`, `docs/*`, `README.md`,
+    `scripts/smoke-electron.mjs`, `apps/desktop/e2e/app.spec.ts`.
 
 ### 2026-11-03 — Optional content packs and the 150 Essential Problems extension
 

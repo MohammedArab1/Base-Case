@@ -445,8 +445,8 @@ async function main() {
 
   const lessons = await evaluate('window.baseCase.learn.list()')
   assert(
-    Array.isArray(lessons) && lessons.length === 39,
-    `Expected 39 lessons, got ${lessons.length}`,
+    Array.isArray(lessons) && lessons.length === 60,
+    `Expected 60 lessons, got ${lessons.length}`,
   )
   assert(
     lessons.some((lesson) => lesson.id === 'core/complexity-and-big-o'),

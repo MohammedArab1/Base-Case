@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/handling-large-blobs",
+  "slug": "handling-large-blobs",
+  "title": "Handling Large Blobs",
+  "category": "system-design",
+  "summary": "Upload directly, download from the edge, and keep metadata honest.",
+  "difficulty": "medium",
+  "estimatedMinutes": 10,
+  "order": 53,
+  "section": "Common Patterns",
+  "tags": ["system-design", "blobs", "uploads", "presigned-urls", "cdn", "transcoding"],
+  "prerequisites": ["blob-storage-and-cdns"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Send bytes directly between the client and object storage; keep metadata and authorization on the API.",
+    "Presigned URLs grant temporary, scoped upload or download permission.",
+    "Multipart uploads make large transfers resumable and parallel.",
+    "A file is ready only after size, checksum, scanning, and any derived variants are complete.",
+    "Content hashes enable deduplication but complicate deletion and privacy.",
+    "Reconcile orphaned objects and unfinished multipart sessions on a schedule."
+  ],
+  "complexity": [
+    {
+      "operation": "Presigned URL issue",
+      "time": "one API call",
+      "space": "URL + pending row",
+      "note": "Keep the TTL short."
+    },
+    {
+      "operation": "Multipart upload",
+      "time": "parallel parts",
+      "space": "object storage",
+      "note": "Retry each part separately."
+    },
+    {
+      "operation": "Metadata status update",
+      "time": "one indexed write",
+      "space": "one row",
+      "note": "Make completion idempotent."
+    },
+    {
+      "operation": "Virus scan or transcode",
+      "time": "seconds to minutes",
+      "space": "worker + queue",
+      "note": "Run outside the request path."
+    },
+    {
+      "operation": "CDN download",
+      "time": "edge latency",
+      "space": "cached object",
+      "note": "Signed URL expiry limits sharing."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["file-sync", "chat-system", "news-feed"]
+  },
+  "commonMistakes": [
+    "Proxying every byte through the API tier and exhausting memory and connections.",
+    "Trusting the client's declared size, type, or hash without checking the stored object.",
+    "Marking a file ready when the upload completes, before scanning or transcoding.",
+    "Creating permanent public URLs for private files."
+  ],
+  "interviewNotes": [
+    "Separate the control plane from the data plane in the first sentence.",
+    "Describe the upload state machine from pending to ready.",
+    "Explain how a lost completion event is reconciled.",
+    "Name the authorization check for both upload and download.",
+    "Say what happens to abandoned multipart uploads and orphaned objects."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why send uploads directly to object storage?",
+      "answer": "The app server would hold every byte in memory and a connection for the length of the transfer. Object storage handles large, parallel, resumable transfers and lets the API stay small."
+    },
+    {
+      "question": "What makes a presigned URL safe?",
+      "answer": "It is scoped to one object key and method, expires quickly, and can limit size and content type. The server still verifies the stored object after upload."
+    },
+    {
+      "question": "When is a file ready to serve?",
+      "answer": "After the object exists, its size and checksum match, the malware scan is clean, and required variants exist. The metadata row records that state."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

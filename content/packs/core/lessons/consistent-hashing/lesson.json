@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "core/consistent-hashing",
+  "slug": "consistent-hashing",
+  "title": "Consistent Hashing",
+  "category": "system-design",
+  "summary": "Add or remove nodes without moving almost every key.",
+  "difficulty": "medium",
+  "estimatedMinutes": 9,
+  "order": 33,
+  "section": "Core Concepts",
+  "tags": ["system-design", "consistent-hashing", "caching", "partitioning"],
+  "prerequisites": ["sharding"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Modulo hashing remaps most keys when the node count changes.",
+    "A hash ring assigns each key to the next node clockwise.",
+    "Adding or removing a node moves only the keys in its arc.",
+    "Virtual nodes smooth the distribution and spread load during failures.",
+    "Consistent hashing balances keys, not request rate; hot keys still need caches or splitting."
+  ],
+  "complexity": [
+    {
+      "operation": "Key lookup on the ring",
+      "time": "O(log v)",
+      "space": "O(v) ring entries",
+      "note": "v is the number of virtual nodes."
+    },
+    {
+      "operation": "Add one node",
+      "time": "about 1/(n+1) of keys move",
+      "space": "moved keys",
+      "note": "Only the new node's arc is copied."
+    },
+    {
+      "operation": "Remove one node",
+      "time": "about 1/n of keys move",
+      "space": "moved keys",
+      "note": "Keys go to the next node clockwise."
+    },
+    {
+      "operation": "Modulo lookup",
+      "time": "O(1)",
+      "space": "no ring metadata",
+      "note": "A node-count change remaps most keys."
+    },
+    {
+      "operation": "Rebalance with virtual nodes",
+      "time": "many small moves",
+      "space": "ring metadata",
+      "note": "Load spreads across neighbors."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["chat-system", "file-sync", "search-autocomplete"]
+  },
+  "commonMistakes": [
+    "Using one ring position per node and assuming the load will be even.",
+    "Expecting consistent hashing to fix a hot key; it only distributes keys.",
+    "Changing ring membership quickly without a plan for replica repair and client refresh.",
+    "Hashing a request id instead of an entity key, which destroys locality."
+  ],
+  "interviewNotes": [
+    "Explain the modulo failure with a one-line example before drawing the ring.",
+    "Mention virtual nodes and why they matter.",
+    "State the replication rule: owner plus the next distinct nodes clockwise.",
+    "Say when a directory or modulo hash is the simpler choice."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why does modulo hashing move so many keys when a node is added?",
+      "answer": "The modulus changes, so almost every key gets a different remainder. Even a small change in node count can remap the majority of the key space."
+    },
+    {
+      "question": "What do virtual nodes solve?",
+      "answer": "They give each physical node many positions on the ring, which smooths the share of keys it owns and spreads its load across many neighbors when it leaves."
+    },
+    {
+      "question": "Does consistent hashing remove hotspots?",
+      "answer": "No. It balances keys across nodes, but a single key with very high request volume still lands on one owner and needs caching, splitting, or dedicated capacity."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

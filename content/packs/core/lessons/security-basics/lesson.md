@@ -1,4 +1,4 @@
-# Security Basics for System Design
+# Security for System Design
 
 Security is not one feature. It is a set of small decisions that must all hold at the same time: how data travels, where it rests, who can reach it, and what happens when input is hostile.
 

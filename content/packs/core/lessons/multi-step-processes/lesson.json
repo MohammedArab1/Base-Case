@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "core/multi-step-processes",
+  "slug": "multi-step-processes",
+  "title": "Multi-Step Processes",
+  "category": "system-design",
+  "summary": "Coordinate workflows that must survive retries, partial failure, and time.",
+  "difficulty": "hard",
+  "estimatedMinutes": 12,
+  "order": 52,
+  "section": "Common Patterns",
+  "tags": ["system-design", "workflows", "sagas", "temporal", "event-sourcing", "idempotency"],
+  "prerequisites": ["message-queues-and-observability", "consistency-and-idempotency"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "Some work spans many steps, services, and long waits, so one database transaction cannot cover it.",
+    "A saga records progress and uses compensating actions when a later step fails.",
+    "Orchestration centralizes control; choreography lets services react to events.",
+    "Durable execution engines checkpoint workflow state so a crash does not restart the whole process.",
+    "Every step needs an idempotency key, a timeout, and a bounded retry policy.",
+    "An append-only audit trail is part of the design, not an afterthought."
+  ],
+  "complexity": [
+    {
+      "operation": "Single transaction commit",
+      "time": "milliseconds",
+      "space": "locks + undo log",
+      "note": "Best when one database covers every write."
+    },
+    {
+      "operation": "Workflow step",
+      "time": "one local transaction + external call",
+      "space": "workflow state + result",
+      "note": "Use idempotency and a timeout."
+    },
+    {
+      "operation": "Saga compensation",
+      "time": "one or more steps",
+      "space": "compensation state",
+      "note": "Cannot erase an external effect."
+    },
+    {
+      "operation": "Event replay",
+      "time": "O(events)",
+      "space": "event log + projection",
+      "note": "Bound the replay window."
+    },
+    {
+      "operation": "Workflow checkpoint",
+      "time": "one durable write per step",
+      "space": "engine state",
+      "note": "Enables resume after a crash."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["payment-ledger", "seat-reservation", "file-sync"]
+  },
+  "commonMistakes": [
+    "Holding a database transaction open while calling an external service.",
+    "Retrying a step without an idempotency key and creating a duplicate charge or shipment.",
+    "Treating a compensating action as a true rollback of an external effect.",
+    "Building a custom workflow engine before checking whether a single transaction or a queue would do."
+  ],
+  "interviewNotes": [
+    "State which steps are local transactions and which call external systems.",
+    "Name the point of no return and the compensation for each reversible step.",
+    "Explain how a crash between an external call and the database write is detected and repaired.",
+    "Choose orchestration or choreography and give the reason.",
+    "Describe what happens to a workflow that exhausts its retries."
+  ],
+  "checkYourself": [
+    {
+      "question": "When is a single database transaction enough?",
+      "answer": "When every write touches one database and the work finishes quickly, with no external call and no long wait. Locks and atomicity then cover the whole change."
+    },
+    {
+      "question": "Why is a compensation not a rollback?",
+      "answer": "The original effect may be visible outside the database. A refund or a cancellation is a new action that offsets it; it cannot erase the first charge or an email that was sent."
+    },
+    {
+      "question": "What does a durable execution engine persist?",
+      "answer": "Workflow state, step results, and timers. After a crash, a worker can resume from the last checkpoint instead of starting the workflow again."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

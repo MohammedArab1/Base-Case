@@ -640,6 +640,8 @@ test('learns a lesson, asks for clarification, and opens linked practice', async
       .getByRole('button', { name: 'Learn' })
       .click()
     await expect(page.getByRole('heading', { name: 'Learning library' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'In a Hurry', level: 4 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Core Concepts', level: 4 })).toBeVisible()
 
     await page.getByRole('searchbox', { name: 'Search lessons' }).fill('trie')
     await page.getByRole('button', { name: /Tries/ }).click()

@@ -7,7 +7,7 @@
   "summary": "Pick storage by access pattern, then decide what to duplicate, partition, and keep transactional.",
   "difficulty": "medium",
   "estimatedMinutes": 15,
-  "order": 35,
+  "order": 39,
   "tags": ["system-design", "nosql", "databases", "denormalization", "sharding", "sql-tuning"],
   "prerequisites": ["databases"],
   "content": "lesson.md",
@@ -88,5 +88,6 @@
   ],
   "license": "CC-BY-SA-4.0",
   "attribution": "Original lesson by the Base Case contributors.",
-  "version": 1
+  "version": 1,
+  "section": "Key Technologies"
 }

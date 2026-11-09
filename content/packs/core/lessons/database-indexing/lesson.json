@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "core/database-indexing",
+  "slug": "database-indexing",
+  "title": "Database Indexing",
+  "category": "system-design",
+  "summary": "Make the common lookup fast, then pay for it on writes.",
+  "difficulty": "medium",
+  "estimatedMinutes": 11,
+  "order": 30,
+  "section": "Core Concepts",
+  "tags": ["system-design", "databases", "indexes", "b-tree", "query-performance"],
+  "prerequisites": ["data-modeling"],
+  "content": "lesson.md",
+  "keyPoints": [
+    "An index is a second structure that speeds reads and adds work to every write.",
+    "B-trees serve equality, range, and sorted queries; hash indexes serve equality only.",
+    "Column order in a composite index decides which queries it can serve.",
+    "A predicate that matches few rows is a good index candidate; one that matches a large share often is not.",
+    "Read the query plan before and after adding an index.",
+    "Full-text and geospatial search need specialized indexes, often in a separate system."
+  ],
+  "complexity": [
+    {
+      "operation": "Full table scan",
+      "time": "O(n)",
+      "space": "O(1)",
+      "note": "Cost grows with table size."
+    },
+    {
+      "operation": "B-tree equality lookup",
+      "time": "O(log n)",
+      "space": "index storage",
+      "note": "A few page reads reach the key."
+    },
+    {
+      "operation": "B-tree range query",
+      "time": "O(log n + k)",
+      "space": "index storage",
+      "note": "k rows returned in order."
+    },
+    {
+      "operation": "Hash equality lookup",
+      "time": "O(1) average, O(n) worst case",
+      "space": "index storage",
+      "note": "No range or sorted queries."
+    },
+    {
+      "operation": "Covering index read",
+      "time": "O(log n)",
+      "space": "larger index",
+      "note": "The table fetch is skipped."
+    }
+  ],
+  "exercises": {
+    "problems": [],
+    "designs": ["search-autocomplete", "news-feed", "url-shortener"]
+  },
+  "commonMistakes": [
+    "Adding an index for every column instead of for a named query.",
+    "Putting the most selective column last in a composite index and expecting it to help.",
+    "Wrapping an indexed column in a function and expecting the index to be used.",
+    "Sending full-text search to the primary database when relevance and scale need a search system."
+  ],
+  "interviewNotes": [
+    "List the queries first, then the indexes. Each index should have an owner query.",
+    "Mention the leftmost-prefix rule when you propose a composite index.",
+    "Say what the index costs: write amplification, storage, and cache pressure.",
+    "For search, say whether it lives in the database or a derived search index, and how it stays in sync."
+  ],
+  "checkYourself": [
+    {
+      "question": "Why can an index make writes slower?",
+      "answer": "Every insert, update, or delete must also update each affected index. More indexes mean more pages to change, more log records, and more storage."
+    },
+    {
+      "question": "When does a composite index on (user_id, created_at) fail to help?",
+      "answer": "When the query does not constrain user_id. The index is ordered by user_id first, so a query on created_at alone cannot use it as a range index."
+    },
+    {
+      "question": "Why might the planner ignore an index on a column that matches a large share of rows?",
+      "answer": "Following the index and fetching many rows costs more than scanning the table once, so the planner chooses the cheaper plan."
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "attribution": "Original lesson by the Base Case contributors.",
+  "version": 1
+}

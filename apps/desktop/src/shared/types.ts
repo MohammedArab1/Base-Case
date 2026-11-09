@@ -151,6 +151,7 @@ export interface LessonSummary {
   readonly difficulty: 'easy' | 'medium' | 'hard'
   readonly estimatedMinutes: number
   readonly order: number
+  readonly section?: string
   readonly tags: readonly string[]
   readonly exerciseCount: number
   readonly packId: string

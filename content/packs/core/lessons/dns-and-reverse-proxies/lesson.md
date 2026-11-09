@@ -1,4 +1,4 @@
-# DNS and Reverse Proxies
+# Networking Essentials: DNS, Proxies, and Load Balancing
 
 Before a request reaches your application, two things happen. A name is turned into an address, and a front door accepts the connection. Both steps are easy to ignore and expensive to get wrong.
 
