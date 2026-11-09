@@ -1238,7 +1238,7 @@ export { Solution }
     20_000,
   )
   await evaluate(
-    `(() => { const button = [...document.querySelectorAll('button')].find((item) => item.textContent.includes('URL Shortener')); button?.click(); return Boolean(button) })()`,
+    `(() => { const button = [...document.querySelectorAll('[data-testid="design-scenario"]')].find((item) => item.textContent.includes('URL Shortener')); button?.click(); return Boolean(button) })()`,
   )
   await waitForValue(
     'document.body.innerText',
